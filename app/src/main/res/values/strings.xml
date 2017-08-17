@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NirogStreet</string>
+    <string name="no_internet">No internet</string>
+
 </resources>
