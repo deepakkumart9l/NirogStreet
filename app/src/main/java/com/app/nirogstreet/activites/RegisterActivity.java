@@ -1,5 +1,6 @@
 package com.app.nirogstreet.activites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -21,7 +22,7 @@ import org.w3c.dom.Text;
  */
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText firstNameEt, lastNameEt, phoneEt, emailEt, confirmpassEt,setPass;
+    EditText firstNameEt, lastNameEt, phoneEt, emailEt, confirmpassEt, setPass;
     ImageView backImageView;
     TextView registerHeader, registerAs, AllreadyhaveAccount, signIn, sentTv;
 
@@ -30,8 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
         registerHeader = (TextView) findViewById(R.id.title_side);
-        sentTv=(TextView)findViewById(R.id.sentTv);
-backImageView=(ImageView)findViewById(R.id.back);
+        sentTv = (TextView) findViewById(R.id.sentTv);
+        backImageView = (ImageView) findViewById(R.id.back);
         AllreadyhaveAccount = (TextView) findViewById(R.id.alreadyTv);
         signIn = (TextView) findViewById(R.id.signIn);
         registerAs = (TextView) findViewById(R.id.registerAs);
@@ -40,7 +41,7 @@ backImageView=(ImageView)findViewById(R.id.back);
         lastNameEt = (EditText) findViewById(R.id.lastNameEt);
         confirmpassEt = (EditText) findViewById(R.id.confirmpassEt);
         emailEt = (EditText) findViewById(R.id.emailEt);
-        setPass=(EditText) findViewById(R.id.passEt);
+        setPass = (EditText) findViewById(R.id.passEt);
 
         TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(registerHeader, RegisterActivity.this);
@@ -67,6 +68,13 @@ backImageView=(ImageView)findViewById(R.id.back);
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
