@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "10854064927",
+    "firebase_url": "https://nirogstreet-e4d72.firebaseio.com",
+    "project_id": "nirogstreet-e4d72",
+    "storage_bucket": "nirogstreet-e4d72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10854064927:android:ae79e9bc93ff5495",
+        "android_client_info": {
+          "package_name": "com.app.nirogstreet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10854064927-r8fqt7009asjrudm69thdss0gm1b14nf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.nirogstreet",
+            "certificate_hash": "83c1b0155970323dd947df4ff4fed821445ca544"
+          }
+        },
+        {
+          "client_id": "10854064927-f57t12todhh5h7lnh2av3pvg1n6pu658.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAITeiNEjGbJ1iSXJJEbKnGUsRbPU7HbHk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10854064927-f57t12todhh5h7lnh2av3pvg1n6pu658.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
