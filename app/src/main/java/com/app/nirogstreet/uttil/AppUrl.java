@@ -7,5 +7,5 @@ package com.app.nirogstreet.uttil;
 public class AppUrl {
     public static String AppBaseUrl="http://nirogstreetapi.appstage.co/v1/";
     public static final String APP_ID_PARAM = "appID";
-    public static final String APP_ID_VALUE_POST = "GiGSTARTREVFR5830FRU@!^AUSER";
+    public static final String APP_ID_VALUE_POST = "NRGSRT$(T(L5830FRU@!^AUSER";
 }

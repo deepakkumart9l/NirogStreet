@@ -6,8 +6,20 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.CAPTURE_SECURE_VIDEO_OUTPUT" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAPTURE_SECURE_VIDEO_OUTPUT" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.READ_SMS" />
     <uses-permission-sdk-23 android:name="android.permission.RECEIVE_SMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,25 +33,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.OtpActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activites.LoginActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".activites.CreateDrProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.OtpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.LoginActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activites.RegisterActivity"
             android:screenOrientation="portrait" />
-        <service
-            android:name=".notifications.MyFirebaseMessagingService">
+
+        <service android:name=".notifications.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".notifications.MyFirebaseInstanceIDService">
+        <service android:name=".notifications.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <receiver android:name=".uttil.IncomingSms">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
@@ -48,6 +65,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9a465f2491e3e6e8f1c1a61ada1352a4d31f8d5f" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.app.nirogstreet.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

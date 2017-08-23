@@ -96,9 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (username == null || username.equals("") || username.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Username is Empty", Toast.LENGTH_LONG).show();
-                } /*else if (!Methods.isValidUsername(username)) {
-                    Toast.makeText(LoginActivity.this, "Username is not valid", Toast.LENGTH_LONG).show();
-                }*/ else if (password == null || password.equals("") || password.trim().isEmpty()) {
+                }  else if (password == null || password.equals("") || password.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Password is Empty", Toast.LENGTH_LONG).show();
                 } else {
 
@@ -187,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent=new Intent(LoginActivity.this,OtpActivity.class);
             startActivity(intent);
             circularProgressBar.setVisibility(View.GONE);
-            try {
+/*            try {
                 if (jo != null) {
                     String nextUri = null, authToken = null, userName = null, profileUrl = null, userId = null;
                     boolean success = false;
@@ -238,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
             //  bar.setVisibility(View.GONE);
 

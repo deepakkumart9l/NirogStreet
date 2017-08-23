@@ -37,7 +37,7 @@
     </style>
 
     <style name="TextAppearance">
-        <item name="android:textColor">@color/cardbluebackground</item>
+        <item name="android:textColor">@color/buttonBackground</item>
         <item name="android:textColorHint">#c6c6c6</item>
 
     </style>

@@ -90,7 +90,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:background="@color/white"
                 app:cardCornerRadius="2dp">
 
@@ -117,7 +117,7 @@
                             android:layout_marginBottom="20dip"
 
                             android:backgroundTint="@color/textcolorgray"
-                            android:hint="Enter your email -id"
+                            android:hint="Enter your email - id"
 
                             android:inputType="text|textNoSuggestions"
 
