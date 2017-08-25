@@ -41,7 +41,8 @@
         <activity
             android:name=".activites.LoginActivity"
             android:screenOrientation="portrait" />
-
+<activity android:name=".activites.Dr_Profile"
+    android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.RegisterActivity"
             android:screenOrientation="portrait" />

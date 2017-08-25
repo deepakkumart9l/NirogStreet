@@ -477,6 +477,7 @@
         android:background="@color/buttonBackground"
         android:gravity="center"
         android:text="Login"
+        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#fff" />
 

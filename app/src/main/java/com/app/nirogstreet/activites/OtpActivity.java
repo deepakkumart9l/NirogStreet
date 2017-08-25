@@ -299,13 +299,8 @@ public class OtpActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            /*circularProgressBar.setVisibility(View.VISIBLE);
-            email = emailEt.getText().toString();
-            password = setPass.getText().toString();
-            fname = firstNameEt.getText().toString();
-            lname = lastNameEt.getText().toString();
-            mobile = phoneEt.getText().toString();
-*/
+            circularProgressBar.setVisibility(View.VISIBLE);
+
             super.onPreExecute();
         }
 
@@ -365,7 +360,7 @@ public class OtpActivity extends AppCompatActivity {
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
 
-                        if (dataJsonObject.has("code") && !dataJsonObject.isNull("code"))
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
 
                         {
                             status = dataJsonObject.getBoolean("status");
@@ -383,31 +378,34 @@ public class OtpActivity extends AppCompatActivity {
 
                                     if (message.has("user") && !message.isNull("user")) {
                                         JSONObject userJsonObject = message.getJSONObject("user");
-                                        if (userJsonObject.has("fname") && userJsonObject.isNull("fname")) {
+                                        if (userJsonObject.has("fname") && !userJsonObject.isNull("fname")) {
                                             fname = userJsonObject.getString("fname");
                                         }
-                                        if (userJsonObject.has("lname") && userJsonObject.isNull("lname")) {
+                                        if (userJsonObject.has("lname") && !userJsonObject.isNull("lname")) {
                                             lname = userJsonObject.getString("lname");
                                         }
-                                        if (userJsonObject.has("id") && userJsonObject.isNull("id")) {
+                                        if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                                             id = userJsonObject.getString("id");
                                         }
-                                        if (userJsonObject.has("email") && userJsonObject.isNull("email")) {
+                                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
                                             email = userJsonObject.getString("email");
                                         }
-                                        if (userJsonObject.has("mobile") && userJsonObject.isNull("mobile")) {
+                                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
                                             mobile = userJsonObject.getString("mobile");
                                         }
-                                        if (userJsonObject.has("user_type") && userJsonObject.isNull("user_type")) {
+                                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
                                             user_type = userJsonObject.getString("user_type");
                                         }
-                                        if (userJsonObject.has("auth_token") && userJsonObject.isNull("auth_token")) {
+                                        if (userJsonObject.has("auth_token") && !userJsonObject.isNull("auth_token")) {
                                             auth_token = userJsonObject.getString("auth_token");
                                         }
                                         if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
                                             createdOn = userJsonObject.getString("createdOn");
                                         }
                                         sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
+                                        Intent intent = new Intent(OtpActivity.this, CreateDrProfile.class);
+                                        intent.putExtra("isSkip",true);
+                                        startActivity(intent);
                                     }
                                 }
 
@@ -415,51 +413,11 @@ public class OtpActivity extends AppCompatActivity {
                         }
                     }
                 }
-                  /*  if (success) {
-                        if (jo.has("nexturi") && !jo.isNull("nexturi")) {
-                            nextUri = jo.getString("nexturi");
-                        }
-                        if (jo.has("authtoken") && !jo.isNull("authtoken")) {
-                            authToken = jo.getString("authtoken");
-                        }
-                        if (jo.has("username") && !jo.isNull("username")) {
-                            userName = jo.getString("username");
-                        }
-                        if (jo.has("profilepic") && !jo.isNull("profilepic")) {
-                            profileUrl = jo.getString("profilepic");
 
-                        }
-                        if (jo.has("userID") && !jo.isNull("userID")) {
-                            userId = jo.getString("userID");
-                        }
-                        sesstionManager.createUserLoginSession(userName, password, authToken, userName, profileUrl, userId);
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
-
-                        finish();
-                    } else {
-                        if (jo.has("message") && !jo.isNull("message")) {
-                            if (jo.getString("message").equalsIgnoreCase("ok")) {
-                                if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {
-                                    loginAsync = new LoginActivity.LoginAsync();
-                                    loginAsync.execute();
-                                } else
-                                    NetworkUtill.showNoInternetDialog(LoginActivity.this);
-
-                            } else {
-                                Toast.makeText(LoginActivity.this, jo.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            //  bar.setVisibility(View.GONE);
 
         }
     }
@@ -568,6 +526,7 @@ public class OtpActivity extends AppCompatActivity {
         }
     }
 
+/*
     public class VerifyOtpAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String mobile, otp;
@@ -661,5 +620,6 @@ public class OtpActivity extends AppCompatActivity {
 
         }
     }
+*/
 
 }

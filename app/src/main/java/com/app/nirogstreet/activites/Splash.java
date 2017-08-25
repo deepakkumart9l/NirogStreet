@@ -31,7 +31,8 @@ import io.fabric.sdk.android.Fabric;
 
 public class Splash extends AppCompatActivity {
     SesstionManager sesstionManager;
-TextView thinkAyurveda,thinkNirog;
+    TextView thinkAyurveda, thinkNirog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +47,10 @@ TextView thinkAyurveda,thinkNirog;
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         setContentView(R.layout.splash_screen);
-        thinkAyurveda=(TextView)findViewById(R.id.think);
-        thinkNirog=(TextView)findViewById(R.id.nirog);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(thinkAyurveda,Splash.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(thinkNirog,Splash.this);
+        thinkAyurveda = (TextView) findViewById(R.id.think);
+        thinkNirog = (TextView) findViewById(R.id.nirog);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(thinkAyurveda, Splash.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(thinkNirog, Splash.this);
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
@@ -63,26 +64,20 @@ TextView thinkAyurveda,thinkNirog;
     @Override
     protected void onResume() {
         super.onResume();
-        if (sesstionManager.isUserLoggedIn()) {
-            if (NetworkUtill.isNetworkAvailable(Splash.this)) {
 
-            } else {
-                NetworkUtill.showNoInternetDialog(Splash.this);
-            }
-        } else {
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
 
-                    if (sesstionManager.isUserLoggedIn()) {
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        finish();
-                    } else {
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        finish();
-                    }
+                if (sesstionManager.isUserLoggedIn()) {
+                    startActivity(new Intent(getApplicationContext(), CreateDrProfile.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    finish();
                 }
-            }, 5000);
-        }
+            }
+        }, 5000);
     }
+
 }

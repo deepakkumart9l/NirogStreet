@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -96,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (username == null || username.equals("") || username.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Username is Empty", Toast.LENGTH_LONG).show();
-                }  else if (password == null || password.equals("") || password.trim().isEmpty()) {
+                } else if (password == null || password.equals("") || password.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Password is Empty", Toast.LENGTH_LONG).show();
                 } else {
 
@@ -159,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
                 HttpPost httppost = new HttpPost(url);
                 HttpResponse response;
 
-                String credentials = email + ":" + password;
+                String credentials = email.toString().trim() + ":" + password;
 
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
@@ -182,63 +184,77 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Intent intent=new Intent(LoginActivity.this,OtpActivity.class);
-            startActivity(intent);
+         /*   Intent intent=new Intent(LoginActivity.this,OtpActivity.class);
+            startActivity(intent);*/
             circularProgressBar.setVisibility(View.GONE);
-/*            try {
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
                 if (jo != null) {
-                    String nextUri = null, authToken = null, userName = null, profileUrl = null, userId = null;
-                    boolean success = false;
-                    if (jo.has("success") && !jo.isNull("success"))
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
 
-                    {
-                        success = jo.getBoolean("success");
-                    }
-                    if (success) {
-                        if (jo.has("nexturi") && !jo.isNull("nexturi")) {
-                            nextUri = jo.getString("nexturi");
-                        }
-                        if (jo.has("authtoken") && !jo.isNull("authtoken")) {
-                            authToken = jo.getString("authtoken");
-                        }
-                        if (jo.has("username") && !jo.isNull("username")) {
-                            userName = jo.getString("username");
-                        }
-                        if (jo.has("profilepic") && !jo.isNull("profilepic")) {
-                            profileUrl = jo.getString("profilepic");
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
 
-                        }
-                        if (jo.has("userID") && !jo.isNull("userID")) {
-                            userId = jo.getString("userID");
-                        }
-                        sesstionManager.createUserLoginSession(userName, password, authToken, userName, profileUrl, userId);
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
-
-                        finish();
-                    } else {
-                        if (jo.has("message") && !jo.isNull("message")) {
-                            if (jo.getString("message").equalsIgnoreCase("ok")) {
-                                if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {
-                                    loginAsync = new LoginAsync();
-                                    loginAsync.execute();
-                                } else
-                                    NetworkUtill.showNoInternetDialog(LoginActivity.this);
-
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
                             } else {
-                                Toast.makeText(LoginActivity.this, jo.getString("message"), Toast.LENGTH_SHORT).show();
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    JSONObject message = dataJsonObject.getJSONObject("message");
+
+                                    if (message.has("user") && !message.isNull("user")) {
+                                        JSONObject userJsonObject = message.getJSONObject("user");
+                                        if (userJsonObject.has("fname") && !userJsonObject.isNull("fname")) {
+                                            fname = userJsonObject.getString("fname");
+                                        }
+                                        if (userJsonObject.has("lname") && !userJsonObject.isNull("lname")) {
+                                            lname = userJsonObject.getString("lname");
+                                        }
+                                        if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
+                                            id = userJsonObject.getString("id");
+                                        }
+                                        if (userJsonObject.has("email") &&!userJsonObject.isNull("email")) {
+                                            email = userJsonObject.getString("email");
+                                        }
+                                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                                            mobile = userJsonObject.getString("mobile");
+                                        }
+                                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                                            user_type = userJsonObject.getString("user_type");
+                                        }
+                                        if (userJsonObject.has("auth_token") && !userJsonObject.isNull("auth_token")) {
+                                            auth_token = userJsonObject.getString("auth_token");
+                                        }
+                                        if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
+                                            createdOn = userJsonObject.getString("createdOn");
+                                        }
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
+                                        Intent intent1 = new Intent(LoginActivity.this, Dr_Profile.class);
+                                        startActivity(intent1);
+                                    }
+                                }
+
                             }
                         }
                     }
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
 
-            //  bar.setVisibility(View.GONE);
 
         }
     }

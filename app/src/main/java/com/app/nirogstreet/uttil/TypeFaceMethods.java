@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 /**
@@ -27,6 +28,12 @@ public class TypeFaceMethods {
     {
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/ubuntu.bold.ttf");
         textView.setTypeface(tf);
+
+    }
+    public static void setRegularTypeFaceRadioButton(RadioButton radioButton, Context context)
+    {
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/ubuntu.regular.ttf");
+        radioButton.setTypeface(tf);
 
     }
 }

@@ -1,7 +1,10 @@
 package com.app.nirogstreet.activites;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,59 +13,208 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
+import android.support.design.widget.TextInputLayout;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ImageProcess;
+import com.app.nirogstreet.uttil.Methods;
+import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.SesstionManager;
+import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.conn.scheme.Scheme;
+import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
+import cz.msebera.android.httpclient.entity.mime.content.FileBody;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.ganfra.materialspinner.MaterialSpinner;
+
+import android.support.design.widget.TextInputLayout;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * Created by Preeti on 23-08-2017.
  */
 
-public class CreateDrProfile extends AppCompatActivity {
+public class CreateDrProfile extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     CircleImageView circleImageView;
+    CircularProgressBar circularProgressBar;
+    RadioGroup genderSpinnerRadioGroup;
+    ImageView backImageView;
+    UpdateProfileAsyncTask updateProfileAsyncTask;
+    TextView registerAs;
     private int REQUEST_CAMERA = 99;
+    String title, category, gender;
+    EditText editTextDob, editTextemail, editTextName, editTextCity, editTextYearOfExpeicence, editTextWebsite, editTextAbout, editTextContactNumber;
+    TextInputLayout textInputLayout;
     File photoFile;
-    private static final String[] ITEMS = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"};
-
+    private static final String[] titleArray = {"DR/Mr", "DR/Mrs", "DR/Miss"};
+    private static final String[] genderArray = {"Male", "Female"};
+    private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
+    boolean isSkip = false;
+    TextView skipTextView;
     String selectedImagePath = null;
-
+    String authToken, userId, email, mobile, userName;
+    TextView saveTv;
     String mCurrentPhotoPath;
-    MaterialSpinner spinnerTitle;
-    private ArrayAdapter<String> adapter;
+    RadioButton maleRadioButton, femaleRadioButton;
+    MaterialSpinner spinnerTitle, spinnerGender, spinnerCategory;
+    private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
 
 
     private int CAMERA_PERMISSION_CODE = 1;
 
     private int SELECT_FILE = 999;
+    SesstionManager sesstionManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_dr_profile);
-        circleImageView=(CircleImageView)findViewById(R.id.pro);
+        if (getIntent().hasExtra("isSkip")) {
+            isSkip = getIntent().getBooleanExtra("isSkip", false);
+        }
+        editTextemail = (EditText) findViewById(R.id.email);
+        backImageView = (ImageView) findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        editTextName = (EditText) findViewById(R.id.firstNameEt);
+        editTextCity = (EditText) findViewById(R.id.cityEt);
+        editTextYearOfExpeicence = (EditText) findViewById(R.id.no_of_year);
+        editTextWebsite = (EditText) findViewById(R.id.website_blog);
+        editTextAbout = (EditText) findViewById(R.id.about_you);
+        editTextContactNumber = (EditText) findViewById(R.id.contact_num);
+        maleRadioButton = (RadioButton) findViewById(R.id.male);
+        registerAs = (TextView) findViewById(R.id.registerAs);
+        genderSpinnerRadioGroup = (RadioGroup) findViewById(R.id.genderSpinner);
+        femaleRadioButton = (RadioButton) findViewById(R.id.female);
+        skipTextView = (TextView) findViewById(R.id.skip);
+        if (isSkip) {
+            skipTextView.setVisibility(View.VISIBLE);
+        } else {
+            skipTextView.setVisibility(View.GONE);
+
+        }
+        skipTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(CreateDrProfile.this,Dr_Qualifications.class);
+                intent.putExtra("isSkip",true);
+                startActivity(intent);
+            }
+        });
+        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, CreateDrProfile.this);
+
+        TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, CreateDrProfile.this);
+
+        TypeFaceMethods.setRegularTypeFaceRadioButton(maleRadioButton, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceRadioButton(femaleRadioButton, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextemail, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextName, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextCity, CreateDrProfile.this);
+
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextYearOfExpeicence, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextWebsite, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextAbout, CreateDrProfile.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextContactNumber, CreateDrProfile.this);
+
+
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
+        circleImageView = (CircleImageView) findViewById(R.id.pro);
+        sesstionManager = new SesstionManager(CreateDrProfile.this);
+
+        if (sesstionManager.isUserLoggedIn()) {
+            authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
+            userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
+            email = sesstionManager.getUserDetails().get(SesstionManager.KEY_EMAIL);
+            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+            mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
+            editTextemail.setText(email);
+            editTextName.setText(userName);
+            editTextContactNumber.setText(mobile);
+
+        }
+
+        editTextemail.setEnabled(false);
+        editTextName.setEnabled(false);
+        editTextContactNumber.setEnabled(false);
+        saveTv = (TextView) findViewById(R.id.saveTv);
+        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, CreateDrProfile.this);
+        saveTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
+                    if (validate()) {
+                        updateProfileAsyncTask = new UpdateProfileAsyncTask(userName, email, mobile, title, category, editTextCity.getText().toString(), gender, editTextYearOfExpeicence.getText().toString(), editTextDob.getText().toString(), editTextWebsite.getText().toString(), editTextAbout.getText().toString());
+                        updateProfileAsyncTask.execute();
+                    }
+
+                } else {
+                    NetworkUtill.showNoInternetDialog(CreateDrProfile.this);
+                }
+                // updateProfileAsyncTask=new UpdateProfileAsyncTask()
+            }
+        });
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,8 +222,45 @@ public class CreateDrProfile extends AppCompatActivity {
 
             }
         });
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ITEMS);
-        initSpinnerScrolling();
+        textInputLayout = (TextInputLayout) findViewById(R.id.dob_layout);
+        textInputLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                showDateDialog();
+
+                return false;
+            }
+        });
+        editTextDob = (EditText) findViewById(R.id.dob);
+        TypeFaceMethods.setRegularTypeFaceForTextView(editTextDob, CreateDrProfile.this);
+        editTextDob.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //  editTextDob.setText("");
+                // showDateDialog();
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        editTextDob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateDialog();
+            }
+        });
+
+
+        initSpinnerScrollingTitle();
+        initSpinnerScrollingCategory();
     }
 
     private void dispatchTakePictureIntent() {
@@ -95,6 +284,51 @@ public class CreateDrProfile extends AppCompatActivity {
         }
     }
 
+    public void showDateDialog() {
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        TimePickerFragment newFragment = new TimePickerFragment(this);
+
+        newFragment.show(fm, "date");
+
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        String dateStr = (new StringBuilder()
+
+                // Month is 0 based, just add 1
+
+                .append(dayOfMonth).append("-").append(month + 1).append("-")
+                .append(year)).toString();
+        editTextDob.setText(dateStr);
+    }
+
+    @SuppressLint("ValidFragment")
+    public static class TimePickerFragment extends DialogFragment {
+
+
+        private DatePickerDialog.OnDateSetListener listener;
+
+        public TimePickerFragment(DatePickerDialog.OnDateSetListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new DatePickerDialog(getActivity(), listener, year, month,
+                    day);
+        }
+
+
+    }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -109,6 +343,7 @@ public class CreateDrProfile extends AppCompatActivity {
 
         return image;
     }
+
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = new ImageProcess(CreateDrProfile.this).getOutputMediaFile("");
@@ -171,6 +406,7 @@ public class CreateDrProfile extends AppCompatActivity {
             }
         }
     }
+
     public String getPath(Uri uri, Activity activity) {
         String[] projection = {MediaStore.MediaColumns.DATA};
         Cursor cursor = managedQuery(uri, projection, null, null, null);
@@ -178,12 +414,14 @@ public class CreateDrProfile extends AppCompatActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
@@ -206,11 +444,97 @@ public class CreateDrProfile extends AppCompatActivity {
         });
         builder.show();
     }
-    private void initSpinnerScrolling() {
-        spinnerTitle = (MaterialSpinner) findViewById(R.id.titleLay);
-        spinnerTitle.setAdapter(adapter);
-        spinnerTitle.setHint("Select an item");
+
+
+    private void initSpinnerScrollingCategory() {
+        spinnerCategory = (MaterialSpinner) findViewById(R.id.categorySpinner);
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != -1)
+                    category = position + 1 + "";
+                else
+                    category = "-1";
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                R.layout.spiner_item, categoryArray) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+
+                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
+
+                return v;
+            }
+
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+
+                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
+
+                return v;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        spinnerCategory.setAdapter(adapter);
+        spinnerCategory.setHint("Select Category");
+        spinnerCategory.setPaddingSafe(0, 0, 0, 0);
+
     }
+
+    private void initSpinnerScrollingTitle() {
+        spinnerTitle = (MaterialSpinner) findViewById(R.id.titleLay);
+        spinnerTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != -1)
+                    title = position + 1 + "";
+                else
+                    title = "-1";
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                R.layout.spiner_item, titleArray) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+
+                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
+
+                return v;
+            }
+
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+
+                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
+
+                return v;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTitle.setAdapter(adapter);
+        spinnerTitle.setHint("Select Title");
+        spinnerTitle.setPaddingSafe(0, 0, 0, 0);
+
+    }
+
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(CreateDrProfile.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(CreateDrProfile.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
@@ -222,5 +546,318 @@ public class CreateDrProfile extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
         }
+    }
+
+    public class UpdateProfileAsyncTask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String fname, lname, email, password, mobile, otp, title, category, city, gender, yearOfExperince, dob, website, about;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public UpdateProfileAsyncTask(String fname, String email, String mobile, String title, String category, String city, String gender, String yearOfExperince, String dob, String website, String about) {
+            this.email = email;
+            this.title = title;
+            this.yearOfExperince = yearOfExperince;
+            this.about = about;
+            this.gender = gender;
+            this.dob = dob;
+            this.website = website;
+            this.fname = fname;
+            this.city = city;
+            this.lname = lname;
+            this.mobile = mobile;
+            this.category = category;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/update-profile";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                MultipartEntityBuilder entityBuilder = MultipartEntityBuilder
+                        .create();
+                entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+                entityBuilder.addTextBody("Content-Type", "applicaion/json");
+                entityBuilder.addTextBody(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST);
+                entityBuilder.addTextBody("User[name]", fname);
+                entityBuilder.addTextBody("userID", userId);
+                entityBuilder.addTextBody("User[email]", email);
+                entityBuilder.addTextBody("User[mobile]", mobile);
+                entityBuilder.addTextBody("DoctorProfile[title]", title);
+                entityBuilder.addTextBody("DoctorProfile[category]", category);
+                entityBuilder.addTextBody("DoctorProfile[city]", city);
+                entityBuilder.addTextBody("DoctorProfile[gender]", gender);
+                entityBuilder.addTextBody("DoctorProfile[experience]", yearOfExperince);
+                entityBuilder.addTextBody("DoctorProfile[description]", about);
+                entityBuilder.addTextBody("DoctorProfile[dob]", dob);
+                entityBuilder.addTextBody("DoctorProfile[website]", website);
+                if (selectedImagePath != null && selectedImagePath.toString().trim().length() > 0) {
+                    File file = new File(selectedImagePath);
+                    FileBody encFile = new FileBody(file);
+                    entityBuilder.addPart("DoctorProfile[imageFile]", encFile);
+                }
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                HttpEntity entity = entityBuilder.build();
+                httppost.setEntity(entity);
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(CreateDrProfile.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    Toast.makeText(CreateDrProfile.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+    public class UserDetailAsyncTask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/profile";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+
+                pairs.add(new BasicNameValuePair("userID", userId));
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                      //  Toast.makeText(OtpActivity.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    JSONObject message = dataJsonObject.getJSONObject("message");
+
+                                    if (message.has("user") && !message.isNull("user")) {
+                                        JSONObject userJsonObject = message.getJSONObject("user");
+                                        if (userJsonObject.has("fname") && !userJsonObject.isNull("fname")) {
+                                            fname = userJsonObject.getString("fname");
+                                        }
+                                        if (userJsonObject.has("lname") && !userJsonObject.isNull("lname")) {
+                                            lname = userJsonObject.getString("lname");
+                                        }
+                                        if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
+                                            id = userJsonObject.getString("id");
+                                        }
+                                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                                            email = userJsonObject.getString("email");
+                                        }
+                                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                                            mobile = userJsonObject.getString("mobile");
+                                        }
+                                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                                            user_type = userJsonObject.getString("user_type");
+                                        }
+                                        if (userJsonObject.has("auth_token") && !userJsonObject.isNull("auth_token")) {
+                                            auth_token = userJsonObject.getString("auth_token");
+                                        }
+                                        if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
+                                            createdOn = userJsonObject.getString("createdOn");
+                                        }
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
+                                       /* Intent intent = new Intent(OtpActivity.this, CreateDrProfile.class);
+                                        intent.putExtra("isSkip",true);
+                                        startActivity(intent);*/
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    public boolean validate() {
+        if (title.equalsIgnoreCase("-1")) {
+            Toast.makeText(CreateDrProfile.this, "Please select Title.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        int radioButtonID = genderSpinnerRadioGroup.getCheckedRadioButtonId();
+        View radioButton = genderSpinnerRadioGroup.findViewById(radioButtonID);
+        int idx = genderSpinnerRadioGroup.indexOfChild(radioButton);
+        if (idx == -1) {
+            Toast.makeText(CreateDrProfile.this, "Please select Gender.", Toast.LENGTH_SHORT).show();
+
+            return false;
+        } else {
+            gender = idx + 1 + "";
+        }
+        if (category.equalsIgnoreCase("-1")) {
+            Toast.makeText(CreateDrProfile.this, "Please select Category.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (editTextCity.getText().toString().length() == 0) {
+            Toast.makeText(CreateDrProfile.this, "Please enter City.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (editTextYearOfExpeicence.getText().toString().length() == 0) {
+            Toast.makeText(CreateDrProfile.this, "Please enter your Experience.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (editTextDob.getText().toString().length() == 0) {
+            Toast.makeText(CreateDrProfile.this, "Please select DOB.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (editTextAbout.getText().toString().length() == 0) {
+            Toast.makeText(CreateDrProfile.this, "Please enter About you.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (editTextWebsite.getText().length() != 0) {
+            if (!Methods.isValidEmailAddress(editTextWebsite.getText().toString())) {
+                Toast.makeText(CreateDrProfile.this, "Please enter valid website or blog.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
     }
 }

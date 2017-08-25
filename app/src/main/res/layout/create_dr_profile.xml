@@ -92,20 +92,27 @@
 
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/titleLay"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/textcolorgray"
+                android:drawableTint="@color/textcolorgray"
+                app:ms_arrowColor="@color/buttonBackground"
+                app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/buttonBackground"
                 app:ms_hintColor="@color/textcolorgray" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_name"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleLay"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
                 app:passwordToggleTint="#000">
 
                 <EditText
@@ -123,22 +130,286 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <TextView
+                android:id="@+id/registerAs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_name"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="20dp"
+                android:text="Gender"
+                android:textColor="@color/textcolorgray"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/genderSpinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/registerAs"
+                android:layout_marginLeft="20dp"
+                android:backgroundTint="@color/textcolorgray"
+                android:orientation="horizontal"
+                android:textColorHighlight="@color/textcolorgray"
+                android:visibility="visible">
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-5dp"
+                    android:backgroundTint="@color/cardbluebackground"
+                    android:buttonTint="@color/buttonBackground"
+                    android:text="Male"
+                    android:textColorHighlight="@color/cardbluebackground" />
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:backgroundTint="@color/buttonBackground"
+
+
+                    android:buttonTint="@color/buttonBackground"
+                    android:text="Female"
+                    android:textColorHighlight="@color/buttonBackground" />
+            </RadioGroup>
+
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/categorySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/genderSpinner"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/textcolorgray"
+                android:drawableTint="@color/textcolorgray"
+                app:ms_arrowColor="@color/buttonBackground"
+                app:ms_baseColor="@color/textcolorgray"
+                app:ms_floatingLabelColor="@color/buttonBackground"
+                app:ms_hintColor="@color/textcolorgray" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/city_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categorySpinner"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/cityEt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="City"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/No_of_Year_Ex_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/city_layout"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/no_of_year"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Year of Experience"
+                    android:inputType="number|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/dob_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/No_of_Year_Ex_lay"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/dob"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="DOB"
+
+                    android:inputType="number|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/webSite_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dob_layout"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/website_blog"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Website Or Blog (If Any)"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/about_you_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/webSite_layout"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/about_you"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="About You"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="4"
+
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/contact_num_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/about_you_layout"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/contact_num"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Contact Number"
+                    android:inputType="number|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/email_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contact_num_layout"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                app:passwordToggleTint="#000">
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Email Address"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+
+            </android.support.design.widget.TextInputLayout>
+
         </RelativeLayout>
 
     </ScrollView>
 
-
-    <TextView
-        android:id="@+id/loginTv"
+    <LinearLayout
+        android:id="@+id/sendOtp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_weight="1"
-        android:background="@color/buttonBackground"
         android:gravity="center"
-        android:text="Login"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#fff" />
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/skip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:background="#e82351"
+
+            android:gravity="center"
+            android:text="Skip"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/saveTv"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:background="@color/buttonBackground"
+            android:gravity="center"
+            android:text="Save"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
 
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"
