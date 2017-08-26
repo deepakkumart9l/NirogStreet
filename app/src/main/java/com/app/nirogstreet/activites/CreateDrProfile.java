@@ -39,6 +39,8 @@ import android.widget.EditText;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
@@ -116,7 +118,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     RadioButton maleRadioButton, femaleRadioButton;
     MaterialSpinner spinnerTitle, spinnerGender, spinnerCategory;
     private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
-
+    UserDetailAsyncTask userDetailAsyncTask;
 
     private int CAMERA_PERMISSION_CODE = 1;
 
@@ -149,6 +151,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         genderSpinnerRadioGroup = (RadioGroup) findViewById(R.id.genderSpinner);
         femaleRadioButton = (RadioButton) findViewById(R.id.female);
         skipTextView = (TextView) findViewById(R.id.skip);
+        spinnerCategory = (MaterialSpinner) findViewById(R.id.categorySpinner);
+        spinnerTitle = (MaterialSpinner) findViewById(R.id.titleLay);
+
         if (isSkip) {
             skipTextView.setVisibility(View.VISIBLE);
         } else {
@@ -158,8 +163,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(CreateDrProfile.this,Dr_Qualifications.class);
-                intent.putExtra("isSkip",true);
+                Intent intent = new Intent(CreateDrProfile.this, Dr_Qualifications.class);
+                intent.putExtra("isSkip", true);
                 startActivity(intent);
             }
         });
@@ -261,6 +266,12 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         initSpinnerScrollingTitle();
         initSpinnerScrollingCategory();
+        if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
+            userDetailAsyncTask = new UserDetailAsyncTask();
+            userDetailAsyncTask.execute();
+        } else {
+            NetworkUtill.showNoInternetDialog(CreateDrProfile.this);
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -447,7 +458,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
 
     private void initSpinnerScrollingCategory() {
-        spinnerCategory = (MaterialSpinner) findViewById(R.id.categorySpinner);
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -493,7 +503,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     }
 
     private void initSpinnerScrollingTitle() {
-        spinnerTitle = (MaterialSpinner) findViewById(R.id.titleLay);
         spinnerTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -682,11 +691,10 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         }
     }
+
     public class UserDetailAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
 
-        CircularProgressBar bar;
-        //PlayServiceHelper regId;
 
         JSONObject jo;
         HttpClient client;
@@ -720,7 +728,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 client.getConnectionManager().getSchemeRegistry().register(sch);
                 HttpPost httppost = new HttpPost(url);
                 HttpResponse response;
-
 
 
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
@@ -764,43 +771,52 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                     errorArray = dataJsonObject.getJSONArray("message");
                                     for (int i = 0; i < errorArray.length(); i++) {
                                         String error = errorArray.getJSONObject(i).getString("error");
-                                      //  Toast.makeText(OtpActivity.this, error, Toast.LENGTH_SHORT).show();
+                                        //  Toast.makeText(OtpActivity.this, error, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             } else {
-                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
-                                    JSONObject message = dataJsonObject.getJSONObject("message");
+                                UserDetailModel userDetailModel = UserDetailPaser.userDetailParser(dataJsonObject);
+                                if (userDetailModel != null) {
+                                    editTextDob.setText(userDetailModel.getDob());
+                                    if (userDetailModel.getWebSite() != null)
+                                        editTextWebsite.setText(userDetailModel.getWebSite());
+                                    if (userDetailModel.getGender() != null) {
+                                        RadioButton radioButtonMale = (RadioButton) findViewById(R.id.male);
+                                        RadioButton radioButtonFemale = (RadioButton) findViewById(R.id.female);
+                                        if (userDetailModel.getGender().equalsIgnoreCase("1")) {
+                                            radioButtonMale.setChecked(true);
+                                        } else {
+                                            radioButtonFemale.setChecked(true);
+                                        }
 
-                                    if (message.has("user") && !message.isNull("user")) {
-                                        JSONObject userJsonObject = message.getJSONObject("user");
-                                        if (userJsonObject.has("fname") && !userJsonObject.isNull("fname")) {
-                                            fname = userJsonObject.getString("fname");
+
+                                    }
+                                    if (userDetailModel.getExperience() != null) {
+                                        editTextYearOfExpeicence.setText(userDetailModel.getExperience());
+                                    }
+                                    if (userDetailModel.getCategory() != null) {
+                                        if (userDetailModel.getCategory().equalsIgnoreCase("1") && !userDetailModel.getCategory().equalsIgnoreCase("")) {
+                                            spinnerCategory.setSelection(1);
+                                        } else {
+                                            spinnerCategory.setSelection(2);
+
                                         }
-                                        if (userJsonObject.has("lname") && !userJsonObject.isNull("lname")) {
-                                            lname = userJsonObject.getString("lname");
+                                    }
+                                    if (userDetailModel.getAbout() != null) {
+                                        editTextAbout.setText(userDetailModel.getAbout());
+                                    }
+                                    if (userDetailModel.getTitle() != null && !userDetailModel.getTitle().equalsIgnoreCase("")) {
+                                        if (userDetailModel.getTitle().equalsIgnoreCase("1")) {
+                                            spinnerTitle.setSelection(0);
+                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("2")) {
+                                            spinnerTitle.setSelection(1);
+
+                                        } else {
+                                            spinnerTitle.setSelection(2);
                                         }
-                                        if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
-                                            id = userJsonObject.getString("id");
-                                        }
-                                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                                            email = userJsonObject.getString("email");
-                                        }
-                                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                                            mobile = userJsonObject.getString("mobile");
-                                        }
-                                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
-                                            user_type = userJsonObject.getString("user_type");
-                                        }
-                                        if (userJsonObject.has("auth_token") && !userJsonObject.isNull("auth_token")) {
-                                            auth_token = userJsonObject.getString("auth_token");
-                                        }
-                                        if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
-                                            createdOn = userJsonObject.getString("createdOn");
-                                        }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
-                                       /* Intent intent = new Intent(OtpActivity.this, CreateDrProfile.class);
-                                        intent.putExtra("isSkip",true);
-                                        startActivity(intent);*/
+                                    }
+                                    if (userDetailModel.getCity() != null) {
+                                        editTextCity.setText(userDetailModel.getCity());
                                     }
                                 }
 
@@ -859,5 +875,16 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             }
         }
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (userDetailAsyncTask != null && !userDetailAsyncTask.isCancelled()) {
+            userDetailAsyncTask.cancelAsyncTask();
+        }
+        if (updateProfileAsyncTask != null && !updateProfileAsyncTask.isCancelled()) {
+            updateProfileAsyncTask.cancelAsyncTask();
+        }
     }
 }

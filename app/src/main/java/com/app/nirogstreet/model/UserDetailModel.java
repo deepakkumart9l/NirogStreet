@@ -87,11 +87,43 @@ public class UserDetailModel {
     String dob;
     String webSite;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite) {
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    String city;
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    String about;
+    String title;
+
+    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite,String about,String title,String city) {
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.gender = gender;
+        this.city=city;
+        this.about=about;
+        this.title=title;
         this.experience = experience;
         this.profile_pic = profile_pic;
         this.category = category;
