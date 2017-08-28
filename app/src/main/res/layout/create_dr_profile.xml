@@ -260,7 +260,7 @@
                     android:drawableTint="@color/textcolorgray"
                     android:hint="DOB"
 
-                    android:inputType="number|textNoSuggestions"
+                    android:inputType="none"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

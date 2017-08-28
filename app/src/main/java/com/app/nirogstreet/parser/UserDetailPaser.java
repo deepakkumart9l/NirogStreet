@@ -55,6 +55,7 @@ public class UserDetailPaser {
                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                         city = userJsonObject.getString("city");
                     }
+
                     userDetailModel=new UserDetailModel(name,email,mobile,gender,experience,profile_pic,category,dob,website,about,title,city);
                 }
             }

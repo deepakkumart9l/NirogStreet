@@ -6,11 +6,21 @@ package com.app.nirogstreet.model;
 
 public class QualificationModel {
     String clgName;
+    String id;
 
-    public QualificationModel(String clgName, String upladedDoc, String passingYear, String degreeName) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public QualificationModel(String clgName, String upladedDoc, String passingYear, String degreeName,String id) {
         this.clgName = clgName;
         this.upladedDoc = upladedDoc;
         this.passingYear = passingYear;
+        this.id=id;
         this.degreeName = degreeName;
     }
 

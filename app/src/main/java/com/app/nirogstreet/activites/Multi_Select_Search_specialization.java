@@ -31,6 +31,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -870,5 +871,139 @@ public class Multi_Select_Search_specialization extends Activity
         }
 
     }
+
+    public class UserSevicesAsyncTask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String fname, lname, email, password, mobile, otp, title, category, city, gender, yearOfExperince, dob, website, about;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+/*
+        public UserSevicesAsyncTask(String fname, String email, String mobile, String title, String category, String city, String gender, String yearOfExperince, String dob, String website, String about) {
+            this.email = email;
+            this.title = title;
+            this.yearOfExperince = yearOfExperince;
+            this.about = about;
+            this.gender = gender;
+            this.dob = dob;
+            this.website = website;
+            this.fname = fname;
+            this.city = city;
+            this.lname = lname;
+            this.mobile = mobile;
+            this.category = category;
+        }
+*/
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/services";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                pairs.add(new BasicNameValuePair("type", "1"));
+                pairs.add(new BasicNameValuePair("UserId", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
+
+                httppost.setHeader("Authorization", "Basic " + sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(Multi_Select_Search_specialization.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("specialities") && !dataJsonObject.isNull("specialities")) {
+                                    ArrayList<SpecializationModel> specializationModels = new ArrayList<>();
+                                    JSONArray jsonArray = dataJsonObject.getJSONArray("specialities");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        String id = "", name = "";
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                        if (jsonObject.has("id") && !jsonObject.isNull("id")) {
+                                            id = jsonObject.getString("id");
+                                        }
+                                        if (jsonObject.has("name") && !jsonObject.isNull("name")) {
+                                            name = jsonObject.getString("name");
+                                        }
+                                        specializationModels.add(new SpecializationModel(name, id));
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
 }
 

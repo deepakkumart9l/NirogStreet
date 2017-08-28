@@ -70,14 +70,14 @@ public class Splash extends AppCompatActivity {
             public void run() {
 
                 if (sesstionManager.isUserLoggedIn()) {
-                    startActivity(new Intent(getApplicationContext(), EditQualificationDetailOrAddQualificationsDetails.class));
+                    startActivity(new Intent(getApplicationContext(), CreateDrProfile.class));
                     finish();
                 } else {
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
                 }
             }
-        }, 5000);
+        }, 3000);
     }
 
 }

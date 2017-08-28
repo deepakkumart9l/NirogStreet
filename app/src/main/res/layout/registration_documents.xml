@@ -38,27 +38,11 @@
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Education &amp; Specialization"
+                android:text="Registration &amp; Documentation"
                 android:textColor="@color/white"
 
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/addualification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:paddingBottom="@dimen/padding_10"
-                android:paddingLeft="@dimen/padding_10"
-                android:paddingRight="18dp"
-                android:paddingTop="@dimen/padding_10"
-                android:text="Qualifications"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-
-                android:visibility="gone" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -97,12 +81,12 @@
             android:textColor="#fff" />
 
         <TextView
-            android:id="@+id/addQualification"
+            android:id="@+id/addRegistration"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-
-            android:layout_weight="1"
             android:background="#e82351"
+
+            android:layout_height="match_parent"
+            android:layout_weight="1"
 
             android:gravity="center"
             android:text="+ Add"

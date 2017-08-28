@@ -1,22 +1,15 @@
 package com.app.nirogstreet.activites;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,88 +21,44 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
-import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
-import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
-import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-
-import javax.net.ssl.SSLContext;
-
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.conn.scheme.Scheme;
-import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
-import cz.msebera.android.httpclient.util.EntityUtils;
 
 /**
- * Created by Preeti on 25-08-2017.
+ * Created by Preeti on 28-08-2017.
  */
 
-public class EditQualificationDetailOrAddQualificationsDetails extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class EditRegistrationAndDocuments extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static int year;
-    static boolean  isVisible = true;
+    static boolean isVisible = true;
     EditText yearEditText, clgEt, degree_name, sepcialization;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     int REQUEST_CODE = 4;
 
 
     TextView title_side_left, saveTv;
-    public void checkPermissionForDoc() {
-        if (
-                ContextCompat.checkSelfPermission(EditQualificationDetailOrAddQualificationsDetails.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(EditQualificationDetailOrAddQualificationsDetails.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.e("", " Permission Already given ");
-            openFile();
-        } else {
-            Log.e("", "Current app does not have READ_PHONE_STATE permission");
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE_DOCUMENT);
-        }
-    }
-    public void openFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        String[] mimeTypes = {"application/pdf", "application/doc", "application/docx", "application/xlsx", "application/xls",
-                "application/ppt", "application/PDF", "application/DOCX", "application/DOC", "application/XLSX",
-                "application/XLS", "application/PPTX", "application/PPT"};
-        intent.setType("documents/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intent, "Select Documents"), REQUEST_CODE);
-    }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_qualification);
+        setContentView(R.layout.edit_registration);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         yearEditText = (EditText) findViewById(R.id.year);
         degree_name = (EditText) findViewById(R.id.degree_name);
         clgEt = (EditText) findViewById(R.id.clgEt);
         sepcialization = (EditText) findViewById(R.id.sepcialization);
         saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, EditQualificationDetailOrAddQualificationsDetails.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, EditQualificationDetailOrAddQualificationsDetails.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, EditRegistrationAndDocuments.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, EditRegistrationAndDocuments.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(degree_name, EditQualificationDetailOrAddQualificationsDetails.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(degree_name, EditRegistrationAndDocuments.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(clgEt, EditQualificationDetailOrAddQualificationsDetails.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(clgEt, EditRegistrationAndDocuments.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, EditQualificationDetailOrAddQualificationsDetails.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, EditQualificationDetailOrAddQualificationsDetails.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, EditRegistrationAndDocuments.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, EditRegistrationAndDocuments.this);
 
         yearEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,13 +71,13 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         saveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
+                if (NetworkUtill.isNetworkAvailable(EditRegistrationAndDocuments.this)) {
                     if (validate()) {
 
                     }
 
                 } else {
-                    NetworkUtill.showNoInternetDialog(EditQualificationDetailOrAddQualificationsDetails.this);
+                    NetworkUtill.showNoInternetDialog(EditRegistrationAndDocuments.this);
                 }
             }
         });
@@ -152,7 +101,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     pd.setListener((View.OnClickListener) this);
     pd.show(getFragmentManager(), "MonthYearPickerDialog");*/
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        MonthYearPickerDialog newFragment = new MonthYearPickerDialog();
+        EditQualificationDetailOrAddQualificationsDetails.MonthYearPickerDialog newFragment = new EditQualificationDetailOrAddQualificationsDetails.MonthYearPickerDialog();
         newFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -175,7 +124,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
     public void showDateDialog() {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        TimePickerFragment newFragment = new TimePickerFragment(this);
+        EditQualificationDetailOrAddQualificationsDetails.TimePickerFragment newFragment = new EditQualificationDetailOrAddQualificationsDetails.TimePickerFragment(this);
 
         newFragment.show(fm, "date");
 
@@ -248,7 +197,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                     })
                     .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            MonthYearPickerDialog.this.getDialog().cancel();
+                            EditRegistrationAndDocuments.MonthYearPickerDialog.this.getDialog().cancel();
                             EditQualificationDetailOrAddQualificationsDetails.isVisible = true;
 
                         }
@@ -259,19 +208,16 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
     public boolean validate() {
         if (clgEt.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Enter College name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, "Enter Council Registration Number.", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (degree_name.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Enter Degree name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, "Enter Council name.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (sepcialization.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Specialization.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
         if (yearEditText.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, "Select Year.", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

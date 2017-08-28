@@ -39,5 +39,5 @@
     <view
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/textcolorgray" />
+android:layout_below="@+id/year_of_passing"        android:background="@color/textcolorgray" />
 </RelativeLayout>

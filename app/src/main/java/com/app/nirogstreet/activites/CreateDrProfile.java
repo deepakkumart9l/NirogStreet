@@ -32,6 +32,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -42,6 +43,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
@@ -102,6 +104,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     UpdateProfileAsyncTask updateProfileAsyncTask;
     TextView registerAs;
     private int REQUEST_CAMERA = 99;
+
     String title, category, gender;
     EditText editTextDob, editTextemail, editTextName, editTextCity, editTextYearOfExpeicence, editTextWebsite, editTextAbout, editTextContactNumber;
     TextInputLayout textInputLayout;
@@ -111,6 +114,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
     TextView skipTextView;
+    boolean isVisible = true;
     String selectedImagePath = null;
     String authToken, userId, email, mobile, userName;
     TextView saveTv;
@@ -119,6 +123,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     MaterialSpinner spinnerTitle, spinnerGender, spinnerCategory;
     private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
     UserDetailAsyncTask userDetailAsyncTask;
+    private int STORAGE_PERMISSION_CODE_VIDEO = 2;
 
     private int CAMERA_PERMISSION_CODE = 1;
 
@@ -183,7 +188,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         TypeFaceMethods.setRegularTypeFaceEditText(editTextAbout, CreateDrProfile.this);
         TypeFaceMethods.setRegularTypeFaceEditText(editTextContactNumber, CreateDrProfile.this);
 
-
+        checkPermissionGeneral();
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.pro);
         sesstionManager = new SesstionManager(CreateDrProfile.this);
@@ -228,40 +233,22 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             }
         });
         textInputLayout = (TextInputLayout) findViewById(R.id.dob_layout);
-        textInputLayout.setOnTouchListener(new View.OnTouchListener() {
+
+        editTextDob = (EditText) findViewById(R.id.dob);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editTextDob.getWindowToken(), 0);
+        editTextDob.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                showDateDialog();
+                if (true) {
+                    showDateDialog();
+                    isVisible = false;
+                }
 
                 return false;
             }
         });
-        editTextDob = (EditText) findViewById(R.id.dob);
         TypeFaceMethods.setRegularTypeFaceForTextView(editTextDob, CreateDrProfile.this);
-        editTextDob.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //  editTextDob.setText("");
-                // showDateDialog();
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        editTextDob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDateDialog();
-            }
-        });
 
 
         initSpinnerScrollingTitle();
@@ -295,6 +282,17 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         }
     }
 
+    public void checkPermissionGeneral() {
+        if (ContextCompat.checkSelfPermission(CreateDrProfile.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(CreateDrProfile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.e("", " Permission Already given ");
+        } else {
+            Log.e("", "Current app does not have READ_PHONE_STATE permission");
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE_VIDEO);
+        }
+    }
+
     public void showDateDialog() {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         TimePickerFragment newFragment = new TimePickerFragment(this);
@@ -305,6 +303,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        // isVisible=true;
         String dateStr = (new StringBuilder()
 
                 // Month is 0 based, just add 1
@@ -817,6 +816,10 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                     }
                                     if (userDetailModel.getCity() != null) {
                                         editTextCity.setText(userDetailModel.getCity());
+                                    }
+                                    if (userDetailModel.getProfile_pic() != null) {
+                                        ImageLoader imageLoader = new ImageLoader(CreateDrProfile.this);
+                                        imageLoader.DisplayImage(CreateDrProfile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
                                     }
                                 }
 
