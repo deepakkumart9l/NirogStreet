@@ -1,8 +1,13 @@
 package com.app.nirogstreet.parser;
 
+import com.app.nirogstreet.model.QualificationModel;
+import com.app.nirogstreet.model.RegistrationAndDocumenModel;
+import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by Preeti on 25-08-2017.
@@ -56,8 +61,26 @@ public class UserDetailPaser {
                         city = userJsonObject.getString("city");
                     }
 
-                    userDetailModel=new UserDetailModel(name,email,mobile,gender,experience,profile_pic,category,dob,website,about,title,city);
                 }
+                ArrayList<SpecializationModel>  specializationModels=new ArrayList<>();
+                ArrayList<QualificationModel>  qualificationModels=new ArrayList<>();
+                ArrayList<RegistrationAndDocumenModel>  registrationAndDocumenModels=new ArrayList<>();
+
+
+                if(message.has("specialities")&&!message.isNull("specialities"))
+                {
+
+                }
+                if(message.has("qualifications")&&!message.isNull("qualifications"))
+                {
+
+                }
+                if(message.has("registrations")&&!message.isNull("registrations"))
+                {
+
+                }
+                userDetailModel=new UserDetailModel(name,email,mobile,gender,experience,profile_pic,category,dob,website,about,title,city,specializationModels);
+
             }
         } catch (Exception e) {
             e.printStackTrace();

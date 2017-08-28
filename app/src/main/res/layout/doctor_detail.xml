@@ -131,12 +131,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
+                            android:textColor="@color/black"
                             android:layout_toRightOf="@+id/imgPublic_icon" />
 
                         <ImageView
                             android:id="@+id/editInfo"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
+                            android:src="@drawable/edit"
                             android:layout_alignParentRight="true" />
                     </RelativeLayout>
 
@@ -155,6 +157,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
+                            android:textColor="@color/black"
                             android:layout_toRightOf="@+id/mail_icon" />
 
                     </RelativeLayout>
@@ -174,6 +177,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
+                            android:textColor="@color/black"
+
                             android:layout_toRightOf="@+id/birthday_icon" />
 
                     </RelativeLayout>
@@ -192,6 +197,8 @@
                             android:id="@+id/WebTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+
+                            android:textColor="@color/black"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/webSite_icon" />
 
@@ -212,6 +219,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
+                            android:textColor="@color/black"
+
                             android:layout_toRightOf="@+id/phone_icon" />
 
                     </RelativeLayout>
@@ -229,6 +238,8 @@
                         <TextView
                             android:id="@+id/emailTv"
                             android:layout_width="wrap_content"
+                            android:textColor="@color/black"
+
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/Email_icon" />
@@ -253,9 +264,9 @@
                             android:id="@+id/about_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/black"
 
                             android:layout_below="@+id/about"
-                            android:textColor="@color/textcolorgray"
                             android:textSize="14sp" />
                     </RelativeLayout>
 

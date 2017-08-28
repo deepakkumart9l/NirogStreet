@@ -1,10 +1,41 @@
 package com.app.nirogstreet.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Preeti on 25-08-2017.
  */
 
 public class UserDetailModel {
+    public ArrayList<SpecializationModel> getSpecializationModels() {
+        return specializationModels;
+    }
+
+    public void setSpecializationModels(ArrayList<SpecializationModel> specializationModels) {
+        this.specializationModels = specializationModels;
+    }
+
+    ArrayList<SpecializationModel> specializationModels;
+
+    public ArrayList<QualificationModel> getQualificationModels() {
+        return qualificationModels;
+    }
+
+    public void setQualificationModels(ArrayList<QualificationModel> qualificationModels) {
+        this.qualificationModels = qualificationModels;
+    }
+
+    public ArrayList<RegistrationAndDocumenModel> getRegistrationAndDocumenModels() {
+        return registrationAndDocumenModels;
+    }
+
+    public void setRegistrationAndDocumenModels(ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels) {
+        this.registrationAndDocumenModels = registrationAndDocumenModels;
+    }
+
+    ArrayList<QualificationModel> qualificationModels;
+
+    ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels;
     public String getName() {
         return name;
     }
@@ -116,8 +147,10 @@ public class UserDetailModel {
     String about;
     String title;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite,String about,String title,String city) {
+    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite,String about,String title,String city,ArrayList<SpecializationModel>specializationModels)
+    {
         this.name = name;
+        this.specializationModels=specializationModels;
         this.email = email;
         this.mobile = mobile;
         this.gender = gender;
