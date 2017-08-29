@@ -37,14 +37,24 @@ public class RegistrationAndDocumenModel {
         this.id = id;
     }
 
+    public String getReg_board() {
+        return reg_board;
+    }
+
+    public void setReg_board(String reg_board) {
+        this.reg_board = reg_board;
+    }
+
+    String reg_board;
     String council_registration_number;
     String council_name;
     String council_year;
     String id;
 
-    public RegistrationAndDocumenModel(String council_registration_number, String council_name, String council_year, String id) {
+    public RegistrationAndDocumenModel(String council_registration_number, String council_name, String council_year, String id,String reg_board) {
         this.council_registration_number = council_registration_number;
         this.council_name = council_name;
+        this.reg_board=reg_board;
         this.council_year = council_year;
         this.id = id;
     }

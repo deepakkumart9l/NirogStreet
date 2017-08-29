@@ -5,8 +5,13 @@ package com.app.nirogstreet.model;
  */
 
 public class QualificationModel {
-    String clgName;
-    String id;
+    public String getClgName() {
+        return clgName;
+    }
+
+    public void setClgName(String clgName) {
+        this.clgName = clgName;
+    }
 
     public String getId() {
         return id;
@@ -16,33 +21,68 @@ public class QualificationModel {
         this.id = id;
     }
 
-    public QualificationModel(String clgName, String upladedDoc, String passingYear, String degreeName,String id) {
-        this.clgName = clgName;
-        this.upladedDoc = upladedDoc;
-        this.passingYear = passingYear;
-        this.id=id;
-        this.degreeName = degreeName;
+    public String getUserId() {
+        return userId;
     }
 
-    String degreeName;
-    String passingYear;
-    String upladedDoc;
-
-
-    public String getUpladedDoc() {
-        return upladedDoc;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setUpladedDoc(String upladedDoc) {
-        this.upladedDoc = upladedDoc;
+    public String getCourse_name() {
+        return course_name;
     }
 
-    public String getPassingYear() {
-        return passingYear;
+    public void setCourse_name(String course_name) {
+        this.course_name = course_name;
     }
 
-    public void setPassingYear(String passingYear) {
-        this.passingYear = passingYear;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
+    }
+
+    public String getCreated_on() {
+        return created_on;
+    }
+
+    public void setCreated_on(String created_on) {
+        this.created_on = created_on;
+    }
+
+    public String getUpdated_on() {
+        return updated_on;
+    }
+
+    public void setUpdated_on(String updated_on) {
+        this.updated_on = updated_on;
+    }
+
+    public String getUpdated_by() {
+        return updated_by;
+    }
+
+    public void setUpdated_by(String updated_by) {
+        this.updated_by = updated_by;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDegreeName() {
@@ -53,12 +93,50 @@ public class QualificationModel {
         this.degreeName = degreeName;
     }
 
-    public String getClgName() {
-        return clgName;
+    public String getPassingYear() {
+        return passingYear;
     }
 
-    public void setClgName(String clgName) {
-        this.clgName = clgName;
+    public void setPassingYear(String passingYear) {
+        this.passingYear = passingYear;
     }
+
+    public String getUpladedDoc() {
+        return upladedDoc;
+    }
+
+    public void setUpladedDoc(String upladedDoc) {
+        this.upladedDoc = upladedDoc;
+    }
+
+    String clgName;
+    String id;
+    String userId,course_name,type,university,created_on,updated_on,updated_by,status;
+
+
+    String degreeName;
+    String passingYear;
+    String upladedDoc;
+
+    public QualificationModel(String clgName, String id, String userId, String course_name, String type, String university, String created_on, String updated_on, String updated_by, String status, String degreeName, String passingYear, String upladedDoc) {
+        this.clgName = clgName;
+        this.id = id;
+        this.userId = userId;
+        this.course_name = course_name;
+        this.type = type;
+        this.university = university;
+        this.created_on = created_on;
+        this.updated_on = updated_on;
+        this.updated_by = updated_by;
+        this.status = status;
+        this.degreeName = degreeName;
+        this.passingYear = passingYear;
+        this.upladedDoc = upladedDoc;
+    }
+
+
+
+
+
 
 }

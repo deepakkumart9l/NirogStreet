@@ -7,6 +7,15 @@ import java.util.ArrayList;
  */
 
 public class UserDetailModel {
+    public ArrayList<ExperinceModel> getExperinceModels() {
+        return experinceModels;
+    }
+
+    public void setExperinceModels(ArrayList<ExperinceModel> experinceModels) {
+        this.experinceModels = experinceModels;
+    }
+
+    ArrayList<ExperinceModel> experinceModels=new ArrayList<>();
     public ArrayList<SpecializationModel> getSpecializationModels() {
         return specializationModels;
     }
@@ -36,6 +45,7 @@ public class UserDetailModel {
     ArrayList<QualificationModel> qualificationModels;
 
     ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels;
+
     public String getName() {
         return name;
     }
@@ -147,16 +157,18 @@ public class UserDetailModel {
     String about;
     String title;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite,String about,String title,String city,ArrayList<SpecializationModel>specializationModels)
-    {
+    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels,ArrayList<ExperinceModel> experinceModels) {
         this.name = name;
-        this.specializationModels=specializationModels;
+        this.specializationModels = specializationModels;
+        this.registrationAndDocumenModels = registrationAndDocumenModels;
+        this.experinceModels=experinceModels;
+        this.qualificationModels = qualificationModels;
         this.email = email;
         this.mobile = mobile;
         this.gender = gender;
-        this.city=city;
-        this.about=about;
-        this.title=title;
+        this.city = city;
+        this.about = about;
+        this.title = title;
         this.experience = experience;
         this.profile_pic = profile_pic;
         this.category = category;
