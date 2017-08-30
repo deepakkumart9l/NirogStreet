@@ -24,9 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Base64;
+
 import android.util.Log;
 import android.support.design.widget.TextInputLayout;
 import android.view.MotionEvent;
@@ -51,7 +49,6 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,7 +77,6 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.ganfra.materialspinner.MaterialSpinner;
 
-import android.support.design.widget.TextInputLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -114,7 +110,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
     TextView skipTextView;
-  public static   boolean isVisible = true;
+    public static boolean isVisible = true;
     String selectedImagePath = null;
     String authToken, userId, email, mobile, userName;
     TextView saveTv;
@@ -227,7 +223,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 } else {
                     NetworkUtill.showNoInternetDialog(CreateDrProfile.this);
                 }
-                // updateProfileAsyncTask=new UpdateProfileAsyncTask()
             }
         });
         circleImageView.setOnClickListener(new View.OnClickListener() {
@@ -308,9 +303,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         imm.hideSoftInputFromWindow(editTextAbout.getWindowToken(), 0);
         InputMethodManager imm1 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm1.hideSoftInputFromWindow(editTextWebsite.getWindowToken(), 0);
-        imm1.hideSoftInputFromWindow(editTextDob.getWindowToken(),0);
-        imm1.hideSoftInputFromWindow(editTextCity.getWindowToken(),0);
-        imm1.hideSoftInputFromWindow(editTextYearOfExpeicence.getWindowToken(),0);
+        imm1.hideSoftInputFromWindow(editTextDob.getWindowToken(), 0);
+        imm1.hideSoftInputFromWindow(editTextCity.getWindowToken(), 0);
+        imm1.hideSoftInputFromWindow(editTextYearOfExpeicence.getWindowToken(), 0);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         TimePickerFragment newFragment = new TimePickerFragment(this);
 
@@ -320,7 +315,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-         isVisible=true;
+        isVisible = true;
         String dateStr = (new StringBuilder()
 
                 // Month is 0 based, just add 1
@@ -342,7 +337,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         @Override
         public void onDestroyView() {
-            CreateDrProfile.isVisible=true;
+            CreateDrProfile.isVisible = true;
             super.onDestroyView();
 
         }
