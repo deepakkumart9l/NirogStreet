@@ -1,5 +1,7 @@
 package com.app.nirogstreet.uttil;
 
+import android.webkit.URLUtil;
+
 /**
  * Created by Preeti on 23-08-2017.
  */
@@ -11,7 +13,14 @@ public class Methods {
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
     }
+public static boolean validWebOrBlog(String str)
+{
+    if(URLUtil.isValidUrl(str))
+        return true;
+    return false;
 
+
+}
     public static boolean isValidPhoneNumber(String phone) {
         if (phone.length() < 10 || phone.length() > 15) {
             return false;

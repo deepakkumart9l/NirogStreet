@@ -98,8 +98,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
+
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
+
                 app:ms_arrowColor="@color/buttonBackground"
                 app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/buttonBackground"
@@ -260,7 +262,7 @@
                     android:drawableTint="@color/textcolorgray"
                     android:hint="DOB"
 
-                    android:inputType="none"
+                    android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

@@ -16,11 +16,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.model.QualificationModel;
+import com.app.nirogstreet.model.RegistrationAndDocumenModel;
+import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -36,14 +40,26 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     EditText yearEditText, clgEt, degree_name, sepcialization;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     int REQUEST_CODE = 4;
-
+ImageView backImageView;
 
     TextView title_side_left, saveTv;
+    private UserDetailModel userDetailModel;
+    private int position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_registration);
+        if (getIntent().hasExtra("userModel")) {
+            userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
+        }
+        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         yearEditText = (EditText) findViewById(R.id.year);
         degree_name = (EditText) findViewById(R.id.degree_name);
@@ -90,7 +106,22 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                 return false;
             }
         });
+        if (getIntent().hasExtra("pos")) {
+            position = getIntent().getIntExtra("pos", -1);
 
+        }
+        if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0 && position != -1)
+
+        {
+
+            RegistrationAndDocumenModel registrationAndDocumenModel = userDetailModel.getRegistrationAndDocumenModels().get(position);
+
+            degree_name.setText(registrationAndDocumenModel.getCouncil_registration_number());
+            clgEt.setText(registrationAndDocumenModel.getCouncil_name());
+            yearEditText.setText(registrationAndDocumenModel.getCouncil_year());
+        } else {
+            title_side_left.setText("Add Registartion & Documentaion");
+        }
     }
 
     public void show() {
@@ -101,7 +132,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     pd.setListener((View.OnClickListener) this);
     pd.show(getFragmentManager(), "MonthYearPickerDialog");*/
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        EditQualificationDetailOrAddQualificationsDetails.MonthYearPickerDialog newFragment = new EditQualificationDetailOrAddQualificationsDetails.MonthYearPickerDialog();
+        MonthYearPickerDialog newFragment = new MonthYearPickerDialog();
         newFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -198,7 +229,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                     .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             EditRegistrationAndDocuments.MonthYearPickerDialog.this.getDialog().cancel();
-                            EditQualificationDetailOrAddQualificationsDetails.isVisible = true;
+                            EditRegistrationAndDocuments.isVisible = true;
 
                         }
                     });

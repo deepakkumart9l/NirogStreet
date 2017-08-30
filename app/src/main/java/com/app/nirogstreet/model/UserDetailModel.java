@@ -1,12 +1,13 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Preeti on 25-08-2017.
  */
 
-public class UserDetailModel {
+public class UserDetailModel implements Serializable{
     public ArrayList<ExperinceModel> getExperinceModels() {
         return experinceModels;
     }
@@ -15,7 +16,8 @@ public class UserDetailModel {
         this.experinceModels = experinceModels;
     }
 
-    ArrayList<ExperinceModel> experinceModels=new ArrayList<>();
+    ArrayList<ExperinceModel> experinceModels = new ArrayList<>();
+
     public ArrayList<SpecializationModel> getSpecializationModels() {
         return specializationModels;
     }
@@ -154,14 +156,24 @@ public class UserDetailModel {
         this.title = title;
     }
 
+    public ArrayList<ClinicDetailModel> getClinicDetailModels() {
+        return clinicDetailModels;
+    }
+
+    public void setClinicDetailModels(ArrayList<ClinicDetailModel> clinicDetailModels) {
+        this.clinicDetailModels = clinicDetailModels;
+    }
+
+    ArrayList<ClinicDetailModel> clinicDetailModels = new ArrayList<>();
     String about;
     String title;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels,ArrayList<ExperinceModel> experinceModels) {
+    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels) {
         this.name = name;
         this.specializationModels = specializationModels;
+        this.clinicDetailModels = clinicDetailModels;
         this.registrationAndDocumenModels = registrationAndDocumenModels;
-        this.experinceModels=experinceModels;
+        this.experinceModels = experinceModels;
         this.qualificationModels = qualificationModels;
         this.email = email;
         this.mobile = mobile;

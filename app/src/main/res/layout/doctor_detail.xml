@@ -51,8 +51,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
-        >
+        android:layout_below="@+id/header">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -131,16 +130,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:textColor="@color/black"
-                            android:layout_toRightOf="@+id/imgPublic_icon" />
+                            android:layout_toRightOf="@+id/imgPublic_icon"
+                            android:textColor="@color/black" />
 
                         <ImageView
                             android:id="@+id/editInfo"
                             android:layout_width="25dp"
-                            android:padding="5dp"
                             android:layout_height="25dp"
-                            android:src="@drawable/edit"
-                            android:layout_alignParentRight="true" />
+                            android:layout_alignParentRight="true"
+                            android:padding="5dp"
+                            android:src="@drawable/edit" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -158,8 +157,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:textColor="@color/black"
-                            android:layout_toRightOf="@+id/mail_icon" />
+                            android:layout_toRightOf="@+id/mail_icon"
+                            android:textColor="@color/black" />
 
                     </RelativeLayout>
 
@@ -178,9 +177,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:textColor="@color/black"
+                            android:layout_toRightOf="@+id/birthday_icon"
 
-                            android:layout_toRightOf="@+id/birthday_icon" />
+                            android:textColor="@color/black" />
 
                     </RelativeLayout>
 
@@ -199,9 +198,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
-                            android:textColor="@color/black"
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/webSite_icon" />
+                            android:layout_toRightOf="@+id/webSite_icon"
+                            android:textColor="@color/black" />
 
                     </RelativeLayout>
 
@@ -220,9 +219,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:textColor="@color/black"
+                            android:layout_toRightOf="@+id/phone_icon"
 
-                            android:layout_toRightOf="@+id/phone_icon" />
+                            android:textColor="@color/black" />
 
                     </RelativeLayout>
 
@@ -239,11 +238,11 @@
                         <TextView
                             android:id="@+id/emailTv"
                             android:layout_width="wrap_content"
-                            android:textColor="@color/black"
-
                             android:layout_height="wrap_content"
+
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/Email_icon" />
+                            android:layout_toRightOf="@+id/Email_icon"
+                            android:textColor="@color/black" />
 
                     </RelativeLayout>
 
@@ -265,10 +264,8 @@
                             android:id="@+id/about_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-
                             android:layout_below="@+id/about"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
                     </RelativeLayout>
 
                     <View
@@ -279,10 +276,10 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_marginTop="10dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
 
-                       >
+                        >
 
                         <TextView
                             android:id="@+id/QualificationSectionTv"
@@ -295,20 +292,20 @@
                         <ImageView
                             android:id="@+id/QualificationSectionEdit"
                             android:layout_width="25dp"
-                            android:padding="5dp"
                             android:layout_height="25dp"
                             android:layout_alignParentRight="true"
+                            android:padding="5dp"
 
-                          android:src="@drawable/edit"
+                            android:src="@drawable/edit"
 
-                             />
+                            />
                     </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/QualificatonLinearLayout"
                         android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                     </LinearLayout>
 
@@ -321,8 +318,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-android:visibility="gone"
-                        android:layout_marginTop="15dp">
+                        android:layout_marginTop="15dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/SpecializationSectionHeadingTv"
@@ -346,18 +343,18 @@ android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Specilization"
-                        android:visibility="gone"
                         android:textColor="@color/black"
-                        android:textSize="14sp"></TextView>
+                        android:textSize="14sp"
+                        android:visibility="gone"></TextView>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:visibility="gone"
                         android:layout_marginTop="10dp"
                         android:background="@color/textcolorgray"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -376,9 +373,9 @@ android:visibility="gone"
                         <ImageView
                             android:id="@+id/RegistrationSectionEdit"
                             android:layout_width="25dp"
-                            android:padding="5dp"
                             android:layout_height="25dp"
                             android:layout_alignParentRight="true"
+                            android:padding="5dp"
 
                             android:src="@drawable/edit"
 
@@ -409,16 +406,18 @@ android:visibility="gone"
                             android:id="@+id/clinicAddressHeading"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
+                            android:text=" Add a Clinic"
                             android:textColor="@color/cardbluebackground"
                             android:textSize="16sp" />
 
                         <ImageView
                             android:id="@+id/clinicAddressEdit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_alignParentRight="true"
-                            android:layout_below="@+id/clinicAddressHeading"
+
+                            android:padding="5dp"
+                            android:src="@drawable/edit"
                             android:textSize="14sp" />
                     </RelativeLayout>
 
@@ -435,7 +434,8 @@ android:visibility="gone"
                         android:layout_marginTop="10dp"
                         android:background="@color/textcolorgray"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -453,7 +453,7 @@ android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Consultation Fee"
-                                android:textColor="@color/cardbluebackground"
+                                android:textColor="@color/black"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -462,7 +462,8 @@ android:visibility="gone"
                                 android:layout_height="wrap_content"
                                 android:text="Inclusive of taxes"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+
+                               android:visibility="gone" android:textSize="16sp" />
                         </LinearLayout>
 
 
@@ -474,8 +475,9 @@ android:visibility="gone"
 
                             <TextView
                                 android:id="@+id/fee"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:gravity="right"
                                 android:text="4000"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
@@ -490,10 +492,11 @@ android:visibility="gone"
                         android:background="@color/textcolorgray"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_marginTop="10dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
 
                         >
 
@@ -508,9 +511,9 @@ android:visibility="gone"
                         <ImageView
                             android:id="@+id/ExperinceEdit"
                             android:layout_width="25dp"
-                            android:padding="5dp"
                             android:layout_height="25dp"
                             android:layout_alignParentRight="true"
+                            android:padding="5dp"
 
                             android:src="@drawable/edit"
 
@@ -520,16 +523,16 @@ android:visibility="gone"
                     <LinearLayout
                         android:id="@+id/experinceLay"
                         android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
+                        android:layout_marginTop="10dp"
                         android:background="@color/textcolorgray" />
 
                 </LinearLayout>
@@ -550,9 +553,9 @@ android:visibility="gone"
         android:background="@color/buttonBackground"
         android:gravity="center"
         android:text="Login"
-        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#fff" />
+        android:textColor="#fff"
+        android:visibility="gone" />
 
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"

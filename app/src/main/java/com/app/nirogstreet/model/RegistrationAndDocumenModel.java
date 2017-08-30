@@ -1,10 +1,12 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Preeti on 28-08-2017.
  */
 
-public class RegistrationAndDocumenModel {
+public class RegistrationAndDocumenModel implements Serializable {
     public String getCouncil_registration_number() {
         return council_registration_number;
     }

@@ -23,12 +23,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.model.QualificationModel;
+import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -60,13 +63,17 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class EditQualificationDetailOrAddQualificationsDetails extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static int year;
-    static boolean  isVisible = true;
+    static boolean isVisible = true;
+    int position = -1;
+    ImageView backImageView;
     EditText yearEditText, clgEt, degree_name, sepcialization;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     int REQUEST_CODE = 4;
+    UserDetailModel userDetailModel;
 
 
     TextView title_side_left, saveTv;
+
     public void checkPermissionForDoc() {
         if (
                 ContextCompat.checkSelfPermission(EditQualificationDetailOrAddQualificationsDetails.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
@@ -79,6 +86,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE_DOCUMENT);
         }
     }
+
     public void openFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         String[] mimeTypes = {"application/pdf", "application/doc", "application/docx", "application/xlsx", "application/xls",
@@ -95,6 +103,16 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_qualification);
+        if (getIntent().hasExtra("userModel")) {
+            userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
+        }
+        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         yearEditText = (EditText) findViewById(R.id.year);
         degree_name = (EditText) findViewById(R.id.degree_name);
@@ -141,7 +159,42 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                 return false;
             }
         });
+        if (getIntent().hasExtra("pos")) {
+            position = getIntent().getIntExtra("pos", -1);
 
+        }
+        if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0 && position != -1)
+
+        {
+            if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() > 0) {
+                sepcialization.setText(getSelectedNameCsv());
+            }
+            QualificationModel qualificationModel = userDetailModel.getQualificationModels().get(position);
+
+            degree_name.setText(qualificationModel.getDegreeName());
+            clgEt.setText(qualificationModel.getClgName());
+            yearEditText.setText(qualificationModel.getPassingYear());
+        }
+        else {
+            title_side_left.setText("Add Qualification");
+        }
+
+    }
+
+    public String getSelectedNameCsv() {
+        String languageCSV = "";
+
+        if (userDetailModel != null && userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() > 0) {
+            for (int i = 0; i < userDetailModel.getSpecializationModels().size(); i++) {
+                String language = userDetailModel.getSpecializationModels().get(i).getSpecializationName();
+                if (language != null && !language.trim().isEmpty()
+                        && languageCSV != null && !languageCSV.trim().isEmpty())
+                    languageCSV = languageCSV + ", ";
+                languageCSV = languageCSV + language;
+
+            }
+        }
+        return languageCSV;
     }
 
     public void show() {

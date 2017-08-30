@@ -38,7 +38,7 @@
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Edit Registration"
+                android:text="Edit Experience"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -67,13 +67,13 @@
                 app:passwordToggleTint="#000">
 
                 <EditText
-                    android:id="@+id/clgEt"
+                    android:id="@+id/from"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Council Registration Number"
+                    android:hint="From"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -82,7 +82,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/degree_la"
+                android:id="@+id/to"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:passwordToggleTint="#000">
@@ -94,7 +94,7 @@
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Council Name"
+                    android:hint="To"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -127,19 +127,37 @@
                 android:layout_height="wrap_content"
                 app:passwordToggleTint="#000">
                 <EditText
-                    android:id="@+id/year"
+                    android:id="@+id/city"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Year"
+                    android:hint="City"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/hospital_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleTint="#000">
+                <EditText
+                    android:id="@+id/hospital"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Hospital or Clinic"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
     </ScrollView>

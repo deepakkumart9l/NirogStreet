@@ -1,6 +1,7 @@
 package com.app.nirogstreet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.EditQualificationDetailOrAddQualificationsDetails;
 import com.app.nirogstreet.model.QualificationModel;
+import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
 import java.util.ArrayList;
@@ -20,12 +23,13 @@ import java.util.ArrayList;
 
 public class QualificationAdapter extends RecyclerView.Adapter<QualificationAdapter.MyHolderView> {
     Context context;
+    UserDetailModel userDetailModel;
     ArrayList<QualificationModel> qualificationModels;
 
-    public QualificationAdapter(Context context, ArrayList<QualificationModel> qualificationModels) {
+    public QualificationAdapter(Context context, ArrayList<QualificationModel> qualificationModels, UserDetailModel userDetailModel) {
         this.context = context;
         this.qualificationModels = qualificationModels;
-
+        this.userDetailModel = userDetailModel;
     }
 
     @Override
@@ -38,16 +42,17 @@ public class QualificationAdapter extends RecyclerView.Adapter<QualificationAdap
     @Override
     public void onBindViewHolder(QualificationAdapter.MyHolderView holder, int position) {
         QualificationModel qualificationModel = qualificationModels.get(position);
-        TypeFaceMethods.setRegularTypeFaceForTextView( holder.degreeNameTv,context);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv,context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv,context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
         holder.clgNameTv.setText(qualificationModel.getClgName());
         holder.degreeNameTv.setText(qualificationModel.getDegreeName());
         holder.passinYearTv.setText(qualificationModel.getPassingYear());
         holder.editImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent=new Intent(context, EditQualificationDetailOrAddQualificationsDetails.class);
+                intent.putExtra("userModel",userDetailModel);
             }
         });
     }

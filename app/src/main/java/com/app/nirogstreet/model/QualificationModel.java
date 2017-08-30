@@ -1,10 +1,12 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Preeti on 25-08-2017.
  */
 
-public class QualificationModel {
+public class QualificationModel implements Serializable {
     public String getClgName() {
         return clgName;
     }

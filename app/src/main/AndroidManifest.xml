@@ -33,7 +33,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.CreateDrProfile"
+        <activity
+            android:name=".activites.CreateDrProfile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.OtpActivity"
@@ -41,13 +42,21 @@
         <activity
             android:name=".activites.LoginActivity"
             android:screenOrientation="portrait" />
-<activity android:name=".activites.Dr_Profile"
-    android:screenOrientation="portrait"/>
-        <activity android:name=".activites.EditQualificationDetailOrAddQualificationsDetails"
-            android:screenOrientation="portrait"/>
-
-
-
+        <activity
+            android:name=".activites.Dr_Profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.Dr_Qualifications"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.EditQualificationDetailOrAddQualificationsDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.EditRegistrationAndDocuments"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.RegistrationAndDocuments"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.RegisterActivity"
             android:screenOrientation="portrait" />

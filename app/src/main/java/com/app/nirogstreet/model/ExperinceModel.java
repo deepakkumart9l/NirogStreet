@@ -1,10 +1,12 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Preeti on 29-08-2017.
  */
 
-public class ExperinceModel {
+public class ExperinceModel implements Serializable {
 
 
     public String getStart_time() {

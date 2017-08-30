@@ -1,8 +1,10 @@
 package com.app.nirogstreet.parser;
 
+import com.app.nirogstreet.model.ClinicDetailModel;
 import com.app.nirogstreet.model.ExperinceModel;
 import com.app.nirogstreet.model.QualificationModel;
 import com.app.nirogstreet.model.RegistrationAndDocumenModel;
+import com.app.nirogstreet.model.ServicesModel;
 import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
 
@@ -65,14 +67,66 @@ public class UserDetailPaser {
                     }
 
                 }
-                ArrayList<ExperinceModel> experinceModels=new ArrayList<>();
+                ArrayList<ExperinceModel> experinceModels = new ArrayList<>();
                 ArrayList<SpecializationModel> specializationModels = new ArrayList<>();
                 ArrayList<QualificationModel> qualificationModels = new ArrayList<>();
                 ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels = new ArrayList<>();
+                ArrayList<ClinicDetailModel> clinicDetailModels = new ArrayList<>();
 
+                if (message.has("clinicsDetails") && !message.isNull("clinicsDetails")) {
+                    JSONArray jsonArrayclinicsDetails = message.getJSONArray("clinicsDetails");
+                    for (int i = 0; i < jsonArrayclinicsDetails.length(); i++) {
 
-                if (message.has("specialities") && !message.isNull("specialities")) {
+                        String clinicId = null;
+                        String clinicName = null;
+                        String clinicMobile = null;
+                        String address = null;
+                        String state = null;
+                        String clinicCity = null;
+                        String pincode = null;
+                        String at_lat = null;
+                        String at_long = null;
+                        String consultation_fee = null;
+                        JSONObject jsonObject = jsonArrayclinicsDetails.getJSONObject(i);
+                        if (jsonObject.has("consultation_fee") && !jsonObject.isNull("consultation_fee")) {
+                            consultation_fee = jsonObject.getString("consultation_fee");
+                        }
+                        if(jsonObject.has("clinicDetail")&&!jsonObject.isNull("clinicDetail"))
+                        {
+                            JSONObject jsonObject1=jsonObject.getJSONObject("clinicDetail");
 
+                        if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
+                            clinicId = jsonObject1.getString("id");
+                        }
+                        if (jsonObject1.has("name") && !jsonObject1.isNull("name")) {
+                            clinicName = jsonObject1.getString("name");
+                        }
+                        if (jsonObject1.has("mobile") && !jsonObject1.isNull("mobile")) {
+                            clinicMobile = jsonObject1.getString("mobile");
+                        }
+                        if (jsonObject1.has("address") && !jsonObject1.isNull("address")) {
+                            address = jsonObject1.getString("address");
+                        }
+                        if (jsonObject1.has("state") && !jsonObject1.isNull("state")) {
+                            state = jsonObject1.getString("state");
+                        }
+                        if (jsonObject1.has("city") && !jsonObject1.isNull("city")) {
+                            clinicCity = jsonObject1.getString("city");
+                        }
+                        if (jsonObject1.has("pincode") && !jsonObject1.isNull("pincode")) {
+                            pincode = jsonObject1.getString("pincode");
+                        }
+                        if (jsonObject1.has("at_lat") && !jsonObject1.isNull("at_lat")) {
+                            at_lat = jsonObject1.getString("at_lat");
+                        }
+                        if (jsonObject1.has("at_long") && !jsonObject1.isNull("at_long")) {
+                            at_long = jsonObject1.getString("at_long");
+                        }}
+                        ArrayList<ServicesModel> servicesModels = new ArrayList<>();
+
+                        clinicDetailModels.add(new ClinicDetailModel(clinicId, clinicName, clinicMobile, address, state, clinicCity, pincode, at_lat, at_long, consultation_fee, servicesModels));
+
+                    }
                 }
                 if (message.has("qualifications") && !message.isNull("qualifications")) {
                     JSONArray qualificationJsonArray = message.getJSONArray("qualifications");
@@ -172,43 +226,36 @@ public class UserDetailPaser {
 
                     }
                 }
-                if(message.has("experiences")&&!message.isNull("experiences"))
-                {
+                if (message.has("experiences") && !message.isNull("experiences")) {
 
-                   JSONArray experiencesJsonObject=message.getJSONArray("experiences") ;
-                    for(int i=0;i<experiencesJsonObject.length();i++)
-                    {
-                        String start_time=null;
-                        String end_time=null;
-                        String address=null;
-                        String experiencesid=null;
-                        String organizationName=null;
-                        JSONObject jsonObject=experiencesJsonObject.getJSONObject(i);
-                        if(jsonObject.has("id")&&!jsonObject.isNull("id"))
-                        {
-                            experiencesid=jsonObject.getString("id");
+                    JSONArray experiencesJsonObject = message.getJSONArray("experiences");
+                    for (int i = 0; i < experiencesJsonObject.length(); i++) {
+                        String start_time = null;
+                        String end_time = null;
+                        String address = null;
+                        String experiencesid = null;
+                        String organizationName = null;
+                        JSONObject jsonObject = experiencesJsonObject.getJSONObject(i);
+                        if (jsonObject.has("id") && !jsonObject.isNull("id")) {
+                            experiencesid = jsonObject.getString("id");
                         }
-                        if(jsonObject.has("organizationName")&&!jsonObject.isNull("organizationName"))
-                        {
-                            organizationName=jsonObject.getString("organizationName");
+                        if (jsonObject.has("organizationName") && !jsonObject.isNull("organizationName")) {
+                            organizationName = jsonObject.getString("organizationName");
                         }
-                        if(jsonObject.has("start_time")&&!jsonObject.isNull("start_time"))
-                        {
-                            start_time=jsonObject.getString("start_time");
+                        if (jsonObject.has("start_time") && !jsonObject.isNull("start_time")) {
+                            start_time = jsonObject.getString("start_time");
                         }
-                        if(jsonObject.has("end_time")&&!jsonObject.isNull("end_time"))
-                        {
-                            end_time=jsonObject.getString("end_time");
+                        if (jsonObject.has("end_time") && !jsonObject.isNull("end_time")) {
+                            end_time = jsonObject.getString("end_time");
                         }
-                        if(jsonObject.has("address")&&!jsonObject.isNull("address"))
-                        {
-                            address=jsonObject.getString("address");
+                        if (jsonObject.has("address") && !jsonObject.isNull("address")) {
+                            address = jsonObject.getString("address");
                         }
-                        experinceModels.add(new ExperinceModel(experiencesid,address,end_time,start_time,organizationName));
+                        experinceModels.add(new ExperinceModel(experiencesid, address, end_time, start_time, organizationName));
                     }
                 }
 
-                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels,experinceModels);
+                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels,clinicDetailModels);
 
             }
         } catch (Exception e) {

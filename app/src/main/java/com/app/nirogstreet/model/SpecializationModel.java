@@ -1,9 +1,11 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Preeti on 26-08-2017.
  */
-public class SpecializationModel {
+public class SpecializationModel implements Serializable{
     public String getSpecializationName() {
         return specializationName;
     }

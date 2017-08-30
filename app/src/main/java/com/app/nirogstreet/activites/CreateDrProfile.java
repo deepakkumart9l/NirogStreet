@@ -114,7 +114,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
     TextView skipTextView;
-    boolean isVisible = true;
+  public static   boolean isVisible = true;
     String selectedImagePath = null;
     String authToken, userId, email, mobile, userName;
     TextView saveTv;
@@ -124,7 +124,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
     UserDetailAsyncTask userDetailAsyncTask;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
-
+    UserDetailModel userDetailModel;
     private int CAMERA_PERMISSION_CODE = 1;
 
     private int SELECT_FILE = 999;
@@ -136,6 +136,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         setContentView(R.layout.create_dr_profile);
         if (getIntent().hasExtra("isSkip")) {
             isSkip = getIntent().getBooleanExtra("isSkip", false);
+        }
+        if (getIntent().hasExtra("userModel")) {
+            userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         editTextemail = (EditText) findViewById(R.id.email);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -150,6 +153,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         editTextYearOfExpeicence = (EditText) findViewById(R.id.no_of_year);
         editTextWebsite = (EditText) findViewById(R.id.website_blog);
         editTextAbout = (EditText) findViewById(R.id.about_you);
+
         editTextContactNumber = (EditText) findViewById(R.id.contact_num);
         maleRadioButton = (RadioButton) findViewById(R.id.male);
         registerAs = (TextView) findViewById(R.id.registerAs);
@@ -215,6 +219,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
                     if (validate()) {
+
                         updateProfileAsyncTask = new UpdateProfileAsyncTask(userName, email, mobile, title, category, editTextCity.getText().toString(), gender, editTextYearOfExpeicence.getText().toString(), editTextDob.getText().toString(), editTextWebsite.getText().toString(), editTextAbout.getText().toString());
                         updateProfileAsyncTask.execute();
                     }
@@ -240,8 +245,13 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         editTextDob.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (true) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editTextAbout.getWindowToken(), 0);
+                InputMethodManager imm1 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm1.hideSoftInputFromWindow(editTextWebsite.getWindowToken(), 0);
+                if (isVisible) {
                     showDateDialog();
+
                     isVisible = false;
                 }
 
@@ -294,6 +304,13 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     }
 
     public void showDateDialog() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editTextAbout.getWindowToken(), 0);
+        InputMethodManager imm1 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm1.hideSoftInputFromWindow(editTextWebsite.getWindowToken(), 0);
+        imm1.hideSoftInputFromWindow(editTextDob.getWindowToken(),0);
+        imm1.hideSoftInputFromWindow(editTextCity.getWindowToken(),0);
+        imm1.hideSoftInputFromWindow(editTextYearOfExpeicence.getWindowToken(),0);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         TimePickerFragment newFragment = new TimePickerFragment(this);
 
@@ -303,7 +320,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        // isVisible=true;
+         isVisible=true;
         String dateStr = (new StringBuilder()
 
                 // Month is 0 based, just add 1
@@ -321,6 +338,13 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         public TimePickerFragment(DatePickerDialog.OnDateSetListener listener) {
             this.listener = listener;
+        }
+
+        @Override
+        public void onDestroyView() {
+            CreateDrProfile.isVisible=true;
+            super.onDestroyView();
+
         }
 
         @Override
@@ -673,6 +697,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                     }
                                 }
                             } else {
+
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                                     Toast.makeText(CreateDrProfile.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
 
@@ -872,7 +897,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             return false;
         }
         if (editTextWebsite.getText().length() != 0) {
-            if (!Methods.isValidEmailAddress(editTextWebsite.getText().toString())) {
+            if (!Methods.validWebOrBlog(editTextWebsite.getText().toString())) {
                 Toast.makeText(CreateDrProfile.this, "Please enter valid website or blog.", Toast.LENGTH_SHORT).show();
                 return false;
             }
