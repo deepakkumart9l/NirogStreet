@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.model.ExperinceModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -29,9 +30,11 @@ import java.util.Calendar;
 
 public class AddOrEditExperience extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static boolean isVisible = true;
+
     ImageView backImageView;
     private SesstionManager sesstionManager;
     UserDetailModel userDetailModel;
+    int position=-1;
     boolean isFromDate = false;
     EditText fromEt, toEt, cityEt, clinicOrhospital;
     TextView title_side_left, saveTv;
@@ -40,8 +43,17 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().hasExtra("userModel")) {
+            userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
+        }
         setContentView(R.layout.add_edit_experience);
         backImageView = (ImageView) findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         sesstionManager = new SesstionManager(AddOrEditExperience.this);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         fromEt = (EditText) findViewById(R.id.from);
@@ -79,6 +91,25 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
 
         TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, AddOrEditExperience.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, AddOrEditExperience.this);
+        if (getIntent().hasExtra("pos")) {
+            position = getIntent().getIntExtra("pos", -1);
+
+        }
+        if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0 && position != -1)
+
+        {
+
+            ExperinceModel experinceModel = userDetailModel.getExperinceModels().get(position);
+
+            clinicOrhospital.setText(experinceModel.getOrganizationName());
+            fromEt.setText(experinceModel.getStart_time());
+            toEt.setText(experinceModel.getEnd_time());
+            cityEt.setText(experinceModel.getAddress());
+
+        }
+        else {
+            title_side_left.setText("Add Qualification");
+        }
 
     }
 

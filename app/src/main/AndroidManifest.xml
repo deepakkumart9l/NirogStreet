@@ -57,8 +57,12 @@
         <activity
             android:name=".activites.RegistrationAndDocuments"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.AddOrEditExperience"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.AddOrEditExperience"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.Experience"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.RegisterActivity"
             android:screenOrientation="portrait" />

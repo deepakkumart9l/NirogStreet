@@ -54,7 +54,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Dr_Profile extends AppCompatActivity {
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading;
     CircularProgressBar circularProgressBar;
-    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit,ExperinceEdit;
+    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit;
     String authToken, userId, email, mobile, userName;
     private SesstionManager sesstionManager;
     UserDetailAsyncTask userDetailAsyncTask;
@@ -73,7 +73,7 @@ public class Dr_Profile extends AppCompatActivity {
                 finish();
             }
         });
-        ExperinceEdit=(ImageView)findViewById(R.id.ExperinceEdit);
+        ExperinceEdit = (ImageView) findViewById(R.id.ExperinceEdit);
         RegistrationSectionEdit = (ImageView) findViewById(R.id.RegistrationSectionEdit);
         QualificationSectionEdit = (ImageView) findViewById(R.id.QualificationSectionEdit);
         experinceLay = (LinearLayout) findViewById(R.id.experinceLay);
@@ -262,7 +262,7 @@ public class Dr_Profile extends AppCompatActivity {
                                 ExperinceEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, AddOrEditExperience.class);
+                                        Intent intent = new Intent(Dr_Profile.this, Experience.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
