@@ -1,7 +1,9 @@
 package com.app.nirogstreet.parser;
 
+import com.app.nirogstreet.model.AwardsModel;
 import com.app.nirogstreet.model.ClinicDetailModel;
 import com.app.nirogstreet.model.ExperinceModel;
+import com.app.nirogstreet.model.MemberShipModel;
 import com.app.nirogstreet.model.QualificationModel;
 import com.app.nirogstreet.model.RegistrationAndDocumenModel;
 import com.app.nirogstreet.model.ServicesModel;
@@ -91,37 +93,37 @@ public class UserDetailPaser {
                         if (jsonObject.has("consultation_fee") && !jsonObject.isNull("consultation_fee")) {
                             consultation_fee = jsonObject.getString("consultation_fee");
                         }
-                        if(jsonObject.has("clinicDetail")&&!jsonObject.isNull("clinicDetail"))
-                        {
-                            JSONObject jsonObject1=jsonObject.getJSONObject("clinicDetail");
+                        if (jsonObject.has("clinicDetail") && !jsonObject.isNull("clinicDetail")) {
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("clinicDetail");
 
-                        if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
-                            clinicId = jsonObject1.getString("id");
+                            if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
+                                clinicId = jsonObject1.getString("id");
+                            }
+                            if (jsonObject1.has("name") && !jsonObject1.isNull("name")) {
+                                clinicName = jsonObject1.getString("name");
+                            }
+                            if (jsonObject1.has("mobile") && !jsonObject1.isNull("mobile")) {
+                                clinicMobile = jsonObject1.getString("mobile");
+                            }
+                            if (jsonObject1.has("address") && !jsonObject1.isNull("address")) {
+                                address = jsonObject1.getString("address");
+                            }
+                            if (jsonObject1.has("state") && !jsonObject1.isNull("state")) {
+                                state = jsonObject1.getString("state");
+                            }
+                            if (jsonObject1.has("city") && !jsonObject1.isNull("city")) {
+                                clinicCity = jsonObject1.getString("city");
+                            }
+                            if (jsonObject1.has("pincode") && !jsonObject1.isNull("pincode")) {
+                                pincode = jsonObject1.getString("pincode");
+                            }
+                            if (jsonObject1.has("at_lat") && !jsonObject1.isNull("at_lat")) {
+                                at_lat = jsonObject1.getString("at_lat");
+                            }
+                            if (jsonObject1.has("at_long") && !jsonObject1.isNull("at_long")) {
+                                at_long = jsonObject1.getString("at_long");
+                            }
                         }
-                        if (jsonObject1.has("name") && !jsonObject1.isNull("name")) {
-                            clinicName = jsonObject1.getString("name");
-                        }
-                        if (jsonObject1.has("mobile") && !jsonObject1.isNull("mobile")) {
-                            clinicMobile = jsonObject1.getString("mobile");
-                        }
-                        if (jsonObject1.has("address") && !jsonObject1.isNull("address")) {
-                            address = jsonObject1.getString("address");
-                        }
-                        if (jsonObject1.has("state") && !jsonObject1.isNull("state")) {
-                            state = jsonObject1.getString("state");
-                        }
-                        if (jsonObject1.has("city") && !jsonObject1.isNull("city")) {
-                            clinicCity = jsonObject1.getString("city");
-                        }
-                        if (jsonObject1.has("pincode") && !jsonObject1.isNull("pincode")) {
-                            pincode = jsonObject1.getString("pincode");
-                        }
-                        if (jsonObject1.has("at_lat") && !jsonObject1.isNull("at_lat")) {
-                            at_lat = jsonObject1.getString("at_lat");
-                        }
-                        if (jsonObject1.has("at_long") && !jsonObject1.isNull("at_long")) {
-                            at_long = jsonObject1.getString("at_long");
-                        }}
                         ArrayList<ServicesModel> servicesModels = new ArrayList<>();
 
                         clinicDetailModels.add(new ClinicDetailModel(clinicId, clinicName, clinicMobile, address, state, clinicCity, pincode, at_lat, at_long, consultation_fee, servicesModels));
@@ -254,8 +256,12 @@ public class UserDetailPaser {
                         experinceModels.add(new ExperinceModel(experiencesid, address, end_time, start_time, organizationName));
                     }
                 }
-
-                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels,clinicDetailModels);
+                ArrayList<AwardsModel> awardsModels = new ArrayList<>();
+                awardsModels.add(new AwardsModel("1", "2012", "nope"));
+                awardsModels.add(new AwardsModel("1", "2012", "nope"));
+                ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
+                memberShipModels.add(new MemberShipModel("1", "user"));
+                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels);
 
             }
         } catch (Exception e) {

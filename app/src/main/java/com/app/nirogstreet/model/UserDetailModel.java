@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by Preeti on 25-08-2017.
  */
 
-public class UserDetailModel implements Serializable{
+public class UserDetailModel implements Serializable {
     public ArrayList<ExperinceModel> getExperinceModels() {
         return experinceModels;
     }
@@ -156,9 +156,29 @@ public class UserDetailModel implements Serializable{
         this.title = title;
     }
 
+    public ArrayList<MemberShipModel> getMemberShipModels() {
+        return memberShipModels;
+    }
+
+    public void setMemberShipModels(ArrayList<MemberShipModel> memberShipModels) {
+        this.memberShipModels = memberShipModels;
+    }
+
+    ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
+
     public ArrayList<ClinicDetailModel> getClinicDetailModels() {
         return clinicDetailModels;
     }
+
+    public ArrayList<AwardsModel> getAwardsModels() {
+        return awardsModels;
+    }
+
+    public void setAwardsModels(ArrayList<AwardsModel> awardsModels) {
+        this.awardsModels = awardsModels;
+    }
+
+    public ArrayList<AwardsModel> awardsModels = new ArrayList<>();
 
     public void setClinicDetailModels(ArrayList<ClinicDetailModel> clinicDetailModels) {
         this.clinicDetailModels = clinicDetailModels;
@@ -168,12 +188,14 @@ public class UserDetailModel implements Serializable{
     String about;
     String title;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels) {
+    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels) {
         this.name = name;
         this.specializationModels = specializationModels;
+        this.memberShipModels = memberShipModels;
         this.clinicDetailModels = clinicDetailModels;
         this.registrationAndDocumenModels = registrationAndDocumenModels;
         this.experinceModels = experinceModels;
+        this.awardsModels = awardsModels;
         this.qualificationModels = qualificationModels;
         this.email = email;
         this.mobile = mobile;

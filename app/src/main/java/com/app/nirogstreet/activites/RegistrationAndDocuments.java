@@ -34,6 +34,7 @@ public class RegistrationAndDocuments extends Activity {
     RegistrationAdapter registrationAdapter;
     boolean isSkip = false;
     RecyclerView recyclerview;
+    ImageView backImageView;
     private LinearLayoutManager linearLayoutManager;
     private UserDetailModel userDetailModel;
 
@@ -41,6 +42,13 @@ public class RegistrationAndDocuments extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration_documents);
+        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         sesstionManager = new SesstionManager(RegistrationAndDocuments.this);
         if (getIntent().hasExtra("isSkip")) {
             isSkip = getIntent().getBooleanExtra("isSkip", false);

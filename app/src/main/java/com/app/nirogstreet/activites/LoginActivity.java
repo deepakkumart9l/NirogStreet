@@ -243,6 +243,7 @@ public class LoginActivity extends AppCompatActivity {
                                         sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
                                         Intent intent1 = new Intent(LoginActivity.this, Dr_Profile.class);
                                         startActivity(intent1);
+                                        finish();
                                     }
                                 }
 

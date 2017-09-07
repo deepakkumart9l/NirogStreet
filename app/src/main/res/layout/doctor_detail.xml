@@ -73,7 +73,6 @@
                     android:src="@color/textcolorgray"
                     mk:border_color="@color/textcolorgray"
                     mk:border_width="1dp" />
-
                 <TextView
                     android:id="@+id/nameTv"
                     android:layout_width="match_parent"
@@ -265,7 +264,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/about"
-                            android:textSize="13sp" />
+                            android:layout_marginTop="10dp"
+                            android:textSize="14sp" />
                     </RelativeLayout>
 
                     <View
@@ -463,7 +463,8 @@
                                 android:text="Inclusive of taxes"
                                 android:textColor="@color/black"
 
-                               android:visibility="gone" android:textSize="16sp" />
+                                android:textSize="16sp"
+                                android:visibility="gone" />
                         </LinearLayout>
 
 
@@ -478,7 +479,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="right"
-                                android:text="4000"
+                                android:text=""
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -522,6 +523,90 @@
 
                     <LinearLayout
                         android:id="@+id/experinceLay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/textcolorgray" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+                        >
+
+                        <TextView
+                            android:id="@+id/AwardSectionTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add a Award"
+                            android:textColor="@color/cardbluebackground"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/AwardEdit"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:padding="5dp"
+
+                            android:src="@drawable/edit"
+
+                            />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/awardLay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/textcolorgray" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+                        >
+
+                        <TextView
+                            android:id="@+id/MemberShipSectionTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add a Membership"
+                            android:textColor="@color/cardbluebackground"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/MemberShipEdit"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:padding="5dp"
+
+                            android:src="@drawable/edit"
+
+                            />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/memberLay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

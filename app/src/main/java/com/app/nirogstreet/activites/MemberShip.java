@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
-import com.app.nirogstreet.model.ExperinceModel;
+import com.app.nirogstreet.model.MemberShipModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -22,15 +22,14 @@ import com.app.nirogstreet.uttil.TypeFaceMethods;
 import java.util.ArrayList;
 
 /**
- * Created by Preeti on 31-08-2017.
+ * Created by Preeti on 07-09-2017.
  */
-
-public class Experience extends Activity {
+public class MemberShip extends Activity {
     CircularProgressBar circularProgressBar;
     TextView addQualificationTextView, addTextView;
+    MemberShipAdapter memberShipAdapter;
     SesstionManager sesstionManager;
     TextView titileText, skipTextView;
-    ExperienceAdapter experienceAdapter;
     ImageView backImageView;
     boolean isSkip = false;
     private UserDetailModel userDetailModel;
@@ -40,7 +39,7 @@ public class Experience extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.exerience_list);
+        setContentView(R.layout.member_list);
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
@@ -53,10 +52,10 @@ public class Experience extends Activity {
         });
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerview.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(Experience.this);
+        linearLayoutManager = new LinearLayoutManager(MemberShip.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(linearLayoutManager);
-        sesstionManager = new SesstionManager(Experience.this);
+        sesstionManager = new SesstionManager(MemberShip.this);
         if (getIntent().hasExtra("isSkip")) {
             isSkip = getIntent().getBooleanExtra("isSkip", false);
         }
@@ -70,21 +69,21 @@ public class Experience extends Activity {
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Experience.this, Award.class);
-                intent.putExtra("isSkip", true);
+                Intent intent = new Intent(MemberShip.this, Dr_Profile.class);
+                intent.putExtra("isSkip", false);
                 startActivity(intent);
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, Experience.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, MemberShip.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, Experience.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, MemberShip.this);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Experience.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, MemberShip.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Experience.this, AddOrEditExperience.class);
+                Intent intent = new Intent(MemberShip.this, AddOrEditMemberShip.class);
                 startActivity(intent);
             }
         });
@@ -95,42 +94,41 @@ public class Experience extends Activity {
     protected void onResume() {
         super.onResume();
         if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0) {
-            experienceAdapter = new ExperienceAdapter(Experience.this, userDetailModel.getExperinceModels(), userDetailModel);
-            recyclerview.setAdapter(experienceAdapter);
+            memberShipAdapter = new MemberShipAdapter(MemberShip.this, userDetailModel.getMemberShipModels(), userDetailModel);
+            recyclerview.setAdapter(memberShipAdapter);
         }
     }
 
-    public class ExperienceAdapter extends RecyclerView.Adapter<ExperienceAdapter.MyHolderView> {
+    public class MemberShipAdapter extends RecyclerView.Adapter<MemberShipAdapter.MyHolderView> {
         Context context;
         UserDetailModel userDetailModel;
-        ArrayList<ExperinceModel> experinceModels;
+        ArrayList<MemberShipModel> memberShipModels;
 
-        public ExperienceAdapter(Context context, ArrayList<ExperinceModel> qualificationModels, UserDetailModel userDetailModel) {
+        public MemberShipAdapter(Context context, ArrayList<MemberShipModel> memberShipModels, UserDetailModel userDetailModel) {
             this.context = context;
-            this.experinceModels = qualificationModels;
+            this.memberShipModels = memberShipModels;
             this.userDetailModel = userDetailModel;
         }
 
         @Override
-        public ExperienceAdapter.MyHolderView onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MemberShipAdapter.MyHolderView onCreateViewHolder(ViewGroup parent, int viewType) {
             RecyclerView.ViewHolder viewHolder = null;
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.qualification_item, parent, false);
             return new MyHolderView(v);
         }
 
         @Override
-        public void onBindViewHolder(ExperienceAdapter.MyHolderView holder, final int position) {
-            ExperinceModel experinceModel = experinceModels.get(position);
+        public void onBindViewHolder(MemberShipAdapter.MyHolderView holder, final int position) {
+            MemberShipModel awardsModel = memberShipModels.get(position);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
             TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
-            holder.clgNameTv.setText(experinceModel.getOrganizationName());
-            holder.degreeNameTv.setText(experinceModel.getAddress());
-            holder.passinYearTv.setText(experinceModel.getStart_time() + " - " + experinceModel.getEnd_time());
+            holder.clgNameTv.setText(awardsModel.getMembership());
+            holder.degreeNameTv.setVisibility(View.GONE);
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, AddOrEditExperience.class);
+                    Intent intent = new Intent(context, AddOrEditMemberShip.class);
                     intent.putExtra("userModel", userDetailModel);
                     intent.putExtra("pos", position);
                     startActivity(intent);
@@ -140,7 +138,7 @@ public class Experience extends Activity {
 
         @Override
         public int getItemCount() {
-            return experinceModels.size();
+            return memberShipModels.size();
         }
 
         public class MyHolderView extends RecyclerView.ViewHolder {

@@ -22,37 +22,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
-import com.app.nirogstreet.model.QualificationModel;
-import com.app.nirogstreet.model.RegistrationAndDocumenModel;
+import com.app.nirogstreet.model.MemberShipModel;
 import com.app.nirogstreet.model.UserDetailModel;
-import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
 import java.util.Calendar;
 
 /**
- * Created by Preeti on 28-08-2017.
+ * Created by Preeti on 07-09-2017.
  */
-
-public class EditRegistrationAndDocuments extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class AddOrEditMemberShip extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+    EditText yearEditText;
     public static int year;
-    static boolean isVisible = true;
-    EditText yearEditText, clgEt, degree_name, sepcialization;
-    private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
-    int REQUEST_CODE = 4;
     ImageView backImageView;
+    int position = -1;
 
+    static boolean isVisible = true;
     TextView title_side_left, saveTv;
+
     private UserDetailModel userDetailModel;
-    private int position = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_registration);
+        setContentView(R.layout.edit_membership);
+        title_side_left = (TextView) findViewById(R.id.title_side_left);
+        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, AddOrEditMemberShip.this);
+
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        yearEditText = (EditText) findViewById(R.id.year);
+        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, AddOrEditMemberShip.this);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,49 +62,12 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                 finish();
             }
         });
-        title_side_left = (TextView) findViewById(R.id.title_side_left);
-        yearEditText = (EditText) findViewById(R.id.year);
-        degree_name = (EditText) findViewById(R.id.degree_name);
-        clgEt = (EditText) findViewById(R.id.clgEt);
-        sepcialization = (EditText) findViewById(R.id.sepcialization);
-        saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, EditRegistrationAndDocuments.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(degree_name, EditRegistrationAndDocuments.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(clgEt, EditRegistrationAndDocuments.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, EditRegistrationAndDocuments.this);
-
-        yearEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(yearEditText.getWindowToken(), 0);
-                show();
-            }
-        });
-        saveTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkUtill.isNetworkAvailable(EditRegistrationAndDocuments.this)) {
-                    if (validate()) {
-
-                    }
-
-                } else {
-                    NetworkUtill.showNoInternetDialog(EditRegistrationAndDocuments.this);
-                }
-            }
-        });
         yearEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+              /*  InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(yearEditText.getWindowToken(), 0);
-                show();
+                show();*/
                 return false;
             }
         });
@@ -110,17 +75,17 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
             position = getIntent().getIntExtra("pos", -1);
 
         }
-        if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0 && position != -1)
+        if (userDetailModel != null && userDetailModel.getMemberShipModels() != null && userDetailModel.getMemberShipModels().size() > 0 && position != -1)
 
         {
 
-            RegistrationAndDocumenModel registrationAndDocumenModel = userDetailModel.getRegistrationAndDocumenModels().get(position);
+            MemberShipModel memberShipModel = userDetailModel.getMemberShipModels().get(position);
 
-            degree_name.setText(registrationAndDocumenModel.getCouncil_registration_number());
-            clgEt.setText(registrationAndDocumenModel.getCouncil_name());
-            yearEditText.setText(registrationAndDocumenModel.getCouncil_year());
+            yearEditText.setText(memberShipModel.getMembership());
+
+
         } else {
-            title_side_left.setText("Add Registartion & Documentaion");
+            title_side_left.setText("Add Membership");
         }
     }
 
@@ -146,44 +111,11 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
             isVisible = false;
             newFragment.show(fm, "date");
         }
+
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-    }
-
-    public void showDateDialog() {
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        EditQualificationDetailOrAddQualificationsDetails.TimePickerFragment newFragment = new EditQualificationDetailOrAddQualificationsDetails.TimePickerFragment(this);
-
-        newFragment.show(fm, "date");
-
-    }
-
-    @SuppressLint("ValidFragment")
-    public static class TimePickerFragment extends DialogFragment {
-
-
-        private DatePickerDialog.OnDateSetListener listener;
-
-        public TimePickerFragment(DatePickerDialog.OnDateSetListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of TimePickerDialog and return it
-            return new DatePickerDialog(getActivity(), listener, year, 0,
-                    0);
-        }
-
 
     }
 
@@ -228,8 +160,8 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                     })
                     .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            EditRegistrationAndDocuments.MonthYearPickerDialog.this.getDialog().cancel();
-                            EditRegistrationAndDocuments.isVisible = true;
+                            MonthYearPickerDialog.this.getDialog().cancel();
+                            isVisible = true;
 
                         }
                     });
@@ -238,17 +170,10 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     }
 
     public boolean validate() {
-        if (clgEt.getText().toString().length() == 0) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Enter Council Registration Number.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (degree_name.getText().toString().length() == 0) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Enter Council name.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
 
         if (yearEditText.getText().toString().length() == 0) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Select Year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditMemberShip.this, "Select Year.", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

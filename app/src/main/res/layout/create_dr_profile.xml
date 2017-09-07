@@ -77,15 +77,36 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/pro"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                <RelativeLayout
+                    android:id="@+id/relative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="40dp"
-                    android:src="@color/textcolorgray"
-                    mk:border_color="@color/textcolorgray"
-                    mk:border_width="1dp" />
+                    android:layout_marginTop="40dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/pro"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="5dp"
+                        android:src="@color/textcolorgray"
+                        mk:border_color="@color/textcolorgray"
+                        mk:border_width="1dp" />
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginLeft="40dp"
+                        android:id="@+id/edtImage"
+                        android:layout_marginTop="40dp"
+                        android:padding="10dp"
+                        android:background="@drawable/circle"
+                        android:src="@drawable/edit" />
+                </RelativeLayout>
+
 
 
             </RelativeLayout>
@@ -312,8 +333,8 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="About You"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="4"
+
+                    android:inputType="textMultiLine"
 
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
