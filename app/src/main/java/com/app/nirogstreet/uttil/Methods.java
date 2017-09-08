@@ -1,6 +1,13 @@
 package com.app.nirogstreet.uttil;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.widget.EditText;
+
+import com.app.nirogstreet.activites.SearchLocationCity;
 
 /**
  * Created by Preeti on 23-08-2017.
@@ -13,14 +20,19 @@ public class Methods {
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
     }
-public static boolean validWebOrBlog(String str)
-{
-    if(URLUtil.isValidUrl(str))
-        return true;
-    return false;
+
+    public static boolean validWebOrBlog(String str) {
+        if (URLUtil.isValidUrl(str))
+            return true;
+        return false;
 
 
-}
+    }
+    public static void showSoftKeyboard(View view, Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        view.requestFocus();
+        inputMethodManager.showSoftInput(view, 0);
+    }
     public static boolean isValidPhoneNumber(String phone) {
         if (phone.length() < 10 || phone.length() > 15) {
             return false;
@@ -32,5 +44,12 @@ public static boolean validWebOrBlog(String str)
         if (s.length() < 5)
             return false;
         return true;
+    }
+    public static void hideKeyboardOfView(View view, Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void showSoftKeyboard(EditText autoCompleteTextView, SearchLocationCity searchLocationCity) {
     }
 }

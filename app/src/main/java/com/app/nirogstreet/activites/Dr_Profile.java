@@ -54,7 +54,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Dr_Profile extends AppCompatActivity {
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
     CircularProgressBar circularProgressBar;
-    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit;
+    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit,clinicAddressEdit;
     String authToken, userId, email, mobile, userName;
     private SesstionManager sesstionManager;
     UserDetailAsyncTask userDetailAsyncTask;
@@ -69,6 +69,7 @@ public class Dr_Profile extends AppCompatActivity {
         MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
         awardLay = (LinearLayout) findViewById(R.id.awardLay);
         AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
+        clinicAddressEdit=(ImageView)findViewById(R.id.clinicAddressEdit);
         AwardSectionTv = (TextView) findViewById(R.id.AwardSectionTv);
         MemberShipSectionTv = (TextView) findViewById(R.id.MemberShipSectionTv);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -293,6 +294,15 @@ public class Dr_Profile extends AppCompatActivity {
                                         startActivity(intent);
                                     }
                                 });
+                                clinicAddressEdit.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(Dr_Profile.this, AddOrEditClinicDetail.class);
+                                        intent.putExtra("userModel", userDetailModel);
+                                        startActivity(intent);
+                                    }
+                                });
+
                             }
 
                         }
@@ -351,6 +361,7 @@ public class Dr_Profile extends AppCompatActivity {
         if (userDetailModel != null) {
             if (userDetailModel.getMemberShipModels() == null || userDetailModel.getMemberShipModels().size() == 0) {
                 MemberShipSectionTv.setText("Add a Membership");
+                MemberShipEdit.setImageResource(R.drawable.add);
             } else {
                 memberLay.removeAllViews();
                 MemberShipSectionTv.setText("Membership");
@@ -389,6 +400,8 @@ public class Dr_Profile extends AppCompatActivity {
         if (userDetailModel != null) {
             if (userDetailModel.getQualificationModels() == null || userDetailModel.getQualificationModels().size() == 0) {
                 QualificationSectionTv.setText("Add a Qualification");
+                QualificationSectionEdit.setImageResource(R.drawable.add);
+
             } else {
                 qualifictionLinearLayout.removeAllViews();
                 QualificationSectionTv.setText("Qualification");
@@ -429,6 +442,8 @@ public class Dr_Profile extends AppCompatActivity {
         if (userDetailModel != null) {
             if (userDetailModel.getAwardsModels() == null || userDetailModel.getAwardsModels().size() == 0) {
                 AwardSectionTv.setText("Add a Award");
+                AwardEdit.setImageResource(R.drawable.add);
+
             } else {
                 awardLay.removeAllViews();
                 AwardSectionTv.setText("Award");
@@ -492,6 +507,8 @@ public class Dr_Profile extends AppCompatActivity {
     private void updateClinicInfo() {
         if (userDetailModel.getClinicDetailModels() == null || userDetailModel.getClinicDetailModels().size() == 0) {
             clinicAddressHeading.setText("Add a Clinic");
+            clinicAddressEdit .setImageResource(R.drawable.add);
+
         } else {
             clinicLay.removeAllViews();
             clinicAddressHeading.setText("Clinical Address");
@@ -548,6 +565,7 @@ public class Dr_Profile extends AppCompatActivity {
         if (userDetailModel != null) {
             if (userDetailModel.getRegistrationAndDocumenModels() == null || userDetailModel.getRegistrationAndDocumenModels().size() == 0) {
                 RegistrationSectionHeadingTv.setText("Add a registration & documents");
+                RegistrationSectionEdit.setImageResource(R.drawable.add);
             } else {
                 regisrtaionLay.removeAllViews();
                 RegistrationSectionHeadingTv.setText("Registration & Documents");

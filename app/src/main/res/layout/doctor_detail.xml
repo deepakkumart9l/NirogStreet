@@ -121,13 +121,17 @@
 
                         <ImageView
                             android:id="@+id/imgPublic_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="20dp"
+                            android:layout_marginTop="3dp"
+                            android:src="@drawable/specilization"
+
+                            android:layout_height="20dp" />
 
                         <TextView
                             android:id="@+id/QualificationTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@+id/imgPublic_icon"
                             android:textColor="@color/black" />
@@ -148,8 +152,10 @@
 
                         <ImageView
                             android:id="@+id/mail_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="20dp"
+                            android:paddingLeft="4dp"
+                            android:src="@drawable/work_experience"
+                            android:layout_height="20dp" />
 
                         <TextView
                             android:id="@+id/yearOfExperienceTv"
@@ -168,8 +174,9 @@
 
                         <ImageView
                             android:id="@+id/birthday_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="20dp"
+                            android:src="@drawable/birthday"
+                            android:layout_height="20dp" />
 
                         <TextView
                             android:id="@+id/yearOfBirthTv"
@@ -189,8 +196,10 @@
 
                         <ImageView
                             android:id="@+id/webSite_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="20dp"
+                            android:padding="2dp"
+                            android:src="@drawable/web"
+                            android:layout_height="20dp" />
 
                         <TextView
                             android:id="@+id/WebTv"
@@ -210,8 +219,10 @@
 
                         <ImageView
                             android:id="@+id/phone_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="20dp"
+                            android:padding="3dp"
+                            android:src="@drawable/phione"
+                            android:layout_height="20dp" />
 
                         <TextView
                             android:id="@+id/phoneTv"
@@ -231,8 +242,10 @@
 
                         <ImageView
                             android:id="@+id/Email_icon"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="20dp"
+                            android:padding="3dp"
+                            android:src="@drawable/mailid"
+                            android:layout_height="20dp" />
 
                         <TextView
                             android:id="@+id/emailTv"
