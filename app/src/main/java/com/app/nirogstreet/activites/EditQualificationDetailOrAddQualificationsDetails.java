@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,22 +25,28 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.QualificationModel;
+import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.PathUtil;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -66,6 +73,12 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     static boolean isVisible = true;
     int position = -1;
     ImageView backImageView;
+    String docpath = null;
+    LinearLayout updateDocLinearLayout;
+    RelativeLayout EditDocRelativeLayout;
+    private static final int RESULT_CODE = 1;
+
+    TextView docNameTv, uploadDoctv, add;
     EditText yearEditText, clgEt, degree_name, sepcialization;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     int REQUEST_CODE = 4;
@@ -73,6 +86,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
 
     TextView title_side_left, saveTv;
+    private ArrayList<SpecializationModel> multipleSelectedItemModels;
 
     public void checkPermissionForDoc() {
         if (
@@ -106,7 +120,25 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
-        backImageView=(ImageView)findViewById(R.id.back);
+        updateDocLinearLayout = (LinearLayout) findViewById(R.id.uploadDoc);
+        EditDocRelativeLayout = (RelativeLayout) findViewById(R.id.EditDoc);
+        docNameTv = (TextView) findViewById(R.id.docNameTv);
+        uploadDoctv = (TextView) findViewById(R.id.uploadDoctv);
+        add = (TextView) findViewById(R.id.add);
+        updateDocLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermissionForDoc();
+            }
+        });
+        EditDocRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermissionForDoc();
+
+            }
+        });
+        backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +150,12 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         degree_name = (EditText) findViewById(R.id.degree_name);
         clgEt = (EditText) findViewById(R.id.clgEt);
         sepcialization = (EditText) findViewById(R.id.sepcialization);
+
         saveTv = (TextView) findViewById(R.id.saveTv);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(uploadDoctv, EditQualificationDetailOrAddQualificationsDetails.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(docNameTv, EditQualificationDetailOrAddQualificationsDetails.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(add, EditQualificationDetailOrAddQualificationsDetails.this);
+
         TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, EditQualificationDetailOrAddQualificationsDetails.this);
         TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, EditQualificationDetailOrAddQualificationsDetails.this);
 
@@ -174,9 +211,39 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             degree_name.setText(qualificationModel.getDegreeName());
             clgEt.setText(qualificationModel.getClgName());
             yearEditText.setText(qualificationModel.getPassingYear());
-        }
-        else {
+            if (qualificationModel.getUpladedDoc() != null) {
+                EditDocRelativeLayout.setVisibility(View.VISIBLE);
+                updateDocLinearLayout.setVisibility(View.GONE);
+                docNameTv.setText(qualificationModel.getUpladedDoc());
+            } else {
+                EditDocRelativeLayout.setVisibility(View.GONE);
+                updateDocLinearLayout.setVisibility(View.VISIBLE);
+            }
+            title_side_left.setText("Edit Qualification");
+            sepcialization.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, Multi_Select_Search_specialization.class);
+                  if(multipleSelectedItemModels!=null&&multipleSelectedItemModels.size()>0)
+                      intent.putExtra("list",multipleSelectedItemModels );
+
+                    else if(userDetailModel.getSpecializationModels()!=null&&userDetailModel.getSpecializationModels().size()>0)
+                    intent.putExtra("list",userDetailModel.getSpecializationModels() );
+
+                    startActivityForResult(intent, RESULT_CODE);
+                }
+            });
+        } else {
             title_side_left.setText("Add Qualification");
+            EditDocRelativeLayout.setVisibility(View.GONE);
+            sepcialization.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, Multi_Select_Search_specialization.class);
+                    startActivityForResult(intent, RESULT_CODE);
+
+                }
+            });
         }
 
     }
@@ -195,6 +262,53 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             }
         }
         return languageCSV;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                Uri data1 = data.getData();
+                // String pathe = data1.getPath();
+                // path = getRealPathFromURI_API19(getActivity(), data1);
+                try {
+                    String path = PathUtil.getPath(EditQualificationDetailOrAddQualificationsDetails.this, data1);
+
+                    if (path != null) {
+                        if (path.contains(".")) {
+                            String extension = path.substring(path.lastIndexOf("."));
+
+                            if (extension.equalsIgnoreCase(".doc") || extension.equalsIgnoreCase(".pdf") || extension.equalsIgnoreCase(".docx") || extension.equalsIgnoreCase(".xlsx") || extension.equalsIgnoreCase(".xls") || extension.equalsIgnoreCase(".ppt") || extension.equalsIgnoreCase(".PPTX")) {
+                                docpath = path;
+                                updateDocLinearLayout.setVisibility(View.GONE);
+                                EditDocRelativeLayout.setVisibility(View.VISIBLE);
+                                File f = new File("" + data1);
+                                docNameTv.setText(f.getName());
+
+
+                            } else {
+                                Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Not Supported", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Not Supported", Toast.LENGTH_LONG).show();
+                    }
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+        if (requestCode == RESULT_CODE) {
+            if (data != null) {
+                String s = data.getStringExtra("friendsCsv");
+                sepcialization.setText(s);
+                System.out.print(s);
+                multipleSelectedItemModels = (ArrayList<SpecializationModel>) data.getSerializableExtra("list");
+            }
+        }
     }
 
     public void show() {

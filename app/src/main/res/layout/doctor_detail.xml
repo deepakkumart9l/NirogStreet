@@ -153,7 +153,7 @@
                         <ImageView
                             android:id="@+id/mail_icon"
                             android:layout_width="20dp"
-                            android:paddingLeft="4dp"
+                            android:paddingLeft="2dp"
                             android:src="@drawable/work_experience"
                             android:layout_height="20dp" />
 

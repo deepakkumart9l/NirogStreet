@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -50,13 +50,14 @@
                 android:layout_toRightOf="@+id/back"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="18dp"
+
                 android:paddingRight="@dimen/padding_10"
                 android:paddingTop="@dimen/padding_10"
                 android:text="Edit Qualification"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
 
         </RelativeLayout>
@@ -72,9 +73,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
             android:layout_margin="20dp"
-            android:layout_height="match_parent">
+            android:orientation="vertical">
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/clg_lay"
                 android:layout_width="match_parent"
@@ -115,6 +117,7 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/sepcialization_la"
                 android:layout_width="match_parent"
@@ -140,6 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:passwordToggleTint="#000">
+
                 <EditText
                     android:id="@+id/year"
                     android:layout_width="fill_parent"
@@ -152,8 +156,70 @@
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
-        </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
+            <TextView
+                android:id="@+id/add"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:text="Add media"
+                android:textColor="@color/textcolorgray" />
+
+            <LinearLayout
+                android:id="@+id/uploadDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rectangle_draw"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/mail_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:paddingLeft="2dp"
+                    android:src="@drawable/edit" />
+
+                <TextView
+                    android:id="@+id/uploadDoctv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="Upload your document" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/EditDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rectangle_draw"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:paddingLeft="2dp"
+                    android:src="@drawable/edit" />
+
+                <TextView
+                    android:id="@+id/docNameTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:text="Upload your document" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="2dp"
+                    android:src="@drawable/edit" />
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>
@@ -183,7 +249,6 @@
 
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"
-        app:cpb_colors="@array/gplus_colors"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
@@ -191,6 +256,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/cir"
         android:padding="8dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:cpb_colors="@array/gplus_colors" />
 
 </RelativeLayout>

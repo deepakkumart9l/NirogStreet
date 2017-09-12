@@ -21,6 +21,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -54,7 +55,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Dr_Profile extends AppCompatActivity {
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
     CircularProgressBar circularProgressBar;
-    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit,clinicAddressEdit;
+    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit, clinicAddressEdit;
     String authToken, userId, email, mobile, userName;
     private SesstionManager sesstionManager;
     UserDetailAsyncTask userDetailAsyncTask;
@@ -69,7 +70,7 @@ public class Dr_Profile extends AppCompatActivity {
         MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
         awardLay = (LinearLayout) findViewById(R.id.awardLay);
         AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
-        clinicAddressEdit=(ImageView)findViewById(R.id.clinicAddressEdit);
+        clinicAddressEdit = (ImageView) findViewById(R.id.clinicAddressEdit);
         AwardSectionTv = (TextView) findViewById(R.id.AwardSectionTv);
         MemberShipSectionTv = (TextView) findViewById(R.id.MemberShipSectionTv);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -239,6 +240,7 @@ public class Dr_Profile extends AppCompatActivity {
                                 }
                             } else {
                                 userDetailModel = UserDetailPaser.userDetailParser(dataJsonObject);
+                                ApplicationSingleton.setUserDetailModel(userDetailModel);
                                 updateContactInfo();
                                 updateQualification();
                                 updateRegistrationAndDocument();
@@ -316,6 +318,13 @@ public class Dr_Profile extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ApplicationSingleton.getUserDetailModel() != null) {
+            userDetailModel = ApplicationSingleton.getUserDetailModel();
+        }
+    }
 
     private void updateExperience() {
         if (userDetailModel != null) {
@@ -507,7 +516,7 @@ public class Dr_Profile extends AppCompatActivity {
     private void updateClinicInfo() {
         if (userDetailModel.getClinicDetailModels() == null || userDetailModel.getClinicDetailModels().size() == 0) {
             clinicAddressHeading.setText("Add a Clinic");
-            clinicAddressEdit .setImageResource(R.drawable.add);
+            clinicAddressEdit.setImageResource(R.drawable.add);
 
         } else {
             clinicLay.removeAllViews();

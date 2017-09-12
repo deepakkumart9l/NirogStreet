@@ -218,13 +218,13 @@ public class UserDetailPaser {
                     for (int i = 0; i < specilizationJsonArray.length(); i++) {
                         String specilizationId = null, specilizationName = null;
                         JSONObject speilizationJsonObject = specilizationJsonArray.getJSONObject(i);
-                        if (speilizationJsonObject.has("id") && !speilizationJsonObject.isNull("specialities")) {
+                        if (speilizationJsonObject.has("id") && !speilizationJsonObject.isNull("id")) {
                             specilizationId = speilizationJsonObject.getString("id");
                         }
                         if (speilizationJsonObject.has("name") && !speilizationJsonObject.isNull("name")) {
                             specilizationName = speilizationJsonObject.getString("name");
                         }
-                        specializationModels.add(new SpecializationModel(specilizationName, specilizationId));
+                        specializationModels.add(new SpecializationModel(specilizationName, specilizationId,true));
 
                     }
                 }

@@ -31,6 +31,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
+import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -62,7 +63,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Multi_Select_Search_specialization extends Activity
 
 {
-    private RecyclerView recyclerView, recyclerViewsearchData;
+    private RecyclerView  recyclerViewsearchData;
     ImageView imageViewSearch;
     ImageLoader imageLoader;
     private static final int RESULT_CODE = 1;
@@ -73,10 +74,9 @@ public class Multi_Select_Search_specialization extends Activity
     SesstionManager sessionManager;
     ArrayList<SpecializationModel> searchModels = new ArrayList<>();
 
-    private SelectedItemAdapter adapter;
     CircularProgressBar circularProgressBar;
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    TextView textViewDone;
+   // CollapsingToolbarLayout collapsingToolbarLayout;
+    TextView textViewDone,specilization;
     private String text = "";
     private SearchAsync searchAsync;
     private String query = "";
@@ -91,31 +91,29 @@ public class Multi_Select_Search_specialization extends Activity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+        specilization=(TextView)findViewById(R.id.specilization);
+
         sessionManager = new SesstionManager(Multi_Select_Search_specialization.this);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+      //  collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         Intent intent = getIntent();
         if (intent.hasExtra("list")) {
             list = (ArrayList<SpecializationModel>) intent.getSerializableExtra("list");
-            collapsingToolbarLayout.setVisibility(View.VISIBLE);
+           // collapsingToolbarLayout.setVisibility(View.VISIBLE);
 
         } else {
             list = new ArrayList<>();
 
         }
         imageLoader = new ImageLoader(Multi_Select_Search_specialization.this);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
         searchET = (EditText) findViewById(R.id.searchET);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        backImageView = (ImageView) findViewById(R.id.back);
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        TypeFaceMethods.setRegularTypeFaceEditText(searchET,Multi_Select_Search_specialization.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(specilization,Multi_Select_Search_specialization.this);
+
+        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone,Multi_Select_Search_specialization.this);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,43 +136,11 @@ public class Multi_Select_Search_specialization extends Activity
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewsearchData.setLayoutManager(layoutManager);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(Multi_Select_Search_specialization.this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
 
 
-        adapter = new SelectedItemAdapter(this, list);
-        recyclerViewsearchData.setAdapter(adapter);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                int action = e.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_MOVE:
-                        rv.getParent().requestDisallowInterceptTouchEvent(true);
-                        collapsingToolbarLayout.requestDisallowInterceptTouchEvent(true);
-                        break;
-                }
-                return false;
-            }
 
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
-            }
 
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-        backImageView = (ImageView) findViewById(R.id.back);
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
        /* imageViewSearch = (ImageView) findViewById(R.id.searchButton);
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,6 +294,7 @@ public class Multi_Select_Search_specialization extends Activity
 
     }
 
+/*
     public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapter.MyHolderView> {
         Context context;
         ArrayList<SpecializationModel> multipleSelectedItemModels;
@@ -353,11 +320,6 @@ public class Multi_Select_Search_specialization extends Activity
                     delete(position);
                 }
             });
-            ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
-            if (recyclerView.getHeight() > 200)
-                params.height = 250;
-            recyclerView.setLayoutParams(params);
-            holder.textViewName.setText(multipleSelectedItemModel.getSpecializationName());
 
         }
 
@@ -383,10 +345,11 @@ public class Multi_Select_Search_specialization extends Activity
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, multipleSelectedItemModels.size());
             if (multipleSelectedItemModels.size() == 0) {
-                collapsingToolbarLayout.setVisibility(View.GONE);
+               // collapsingToolbarLayout.setVisibility(View.GONE);
             }
         }
     }
+*/
 
 /*
     public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapter.MyHolderView> {
@@ -491,7 +454,7 @@ public class Multi_Select_Search_specialization extends Activity
         protected Void doInBackground(Void... params) {
             try {
 
-                String url = AppUrl.AppBaseUrl + "user/user-list";
+                String url = AppUrl.AppBaseUrl + "user/services";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -508,12 +471,8 @@ public class Multi_Select_Search_specialization extends Activity
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
 
                 pairs.add(new BasicNameValuePair("searchkey", strTobeSearch));
-                pairs.add(new BasicNameValuePair("userID", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
-                if (list != null && list.size() > 0) {
-                    for (int i = 0; i < list.size(); i++) {
-                        pairs.add(new BasicNameValuePair("selectedUsers", list.get(i).getId()));
-                    }
-                }
+                pairs.add(new BasicNameValuePair("type","1"));
+
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
 
@@ -537,17 +496,17 @@ public class Multi_Select_Search_specialization extends Activity
                     recyclerViewsearchData.setVisibility(View.VISIBLE);
                     String nextUri = null, authToken = null, userName = null, profileUrl = null, sepcializationName = null;
                     JSONObject jsonObject;
-                    if (jo.has("responce") && !jo.isNull("responce"))
+                    if (jo.has("data") && !jo.isNull("data"))
 
                     {
-                        jsonObject = jo.getJSONObject("responce");
-                        if (jsonObject.has("userdetail") && !jsonObject.isNull("userdetail")) {
-                            JSONArray jsonArray = jsonObject.getJSONArray("userdetail");
+                        jsonObject = jo.getJSONObject("data");
+                        if (jsonObject.has("specialities") && !jsonObject.isNull("specialities")) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("specialities");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 String fname = "", lname = "", slug = "", profile_pic = "", department = "", id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                if (jsonObject1.has("fname") && !jsonObject1.isNull("fname")) {
-                                    fname = jsonObject1.getString("fname");
+                                if (jsonObject1.has("name") && !jsonObject1.isNull("name")) {
+                                    fname = jsonObject1.getString("name");
                                 }
                                 if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
                                     id = jsonObject1.getString("id");
@@ -571,17 +530,18 @@ public class Multi_Select_Search_specialization extends Activity
                                     } else
                                         username = fname;
                                 }
-                                searchModels.add(new SpecializationModel(sepcializationName, id));
+                                searchModels.add(new SpecializationModel(fname, id,false));
                             }
                         }
 
 
                         if (searchModels != null && searchModels.size() > 0) {
                             if (list != null && list.size() > 0) {
-                                for (int j = 0; j < searchModels.size(); j++) {
-                                    for (int k = 0; k < list.size(); k++) {
+                                for (int k = 0; k < list.size(); k++) {
+
+                                    for (int j = 0; j < searchModels.size(); j++) {
                                         if (list.get(k).getId().equalsIgnoreCase(searchModels.get(j).getId())) {
-                                            searchModels.remove(j);
+                                            searchModels.get(j).setSelected(true);
                                         }
                                     }
                                 }
@@ -775,69 +735,38 @@ public class Multi_Select_Search_specialization extends Activity
         }
 
         @Override
-        public void onBindViewHolder(SearchAdapterMultiSelect.MyHolderView holder, final int position) {
+        public void onBindViewHolder(final SearchAdapterMultiSelect.MyHolderView holder, final int position) {
             final SpecializationModel multipleSelectedItemModel = multipleSelectedItemModels.get(position);
-            holder.textViewName.setOnClickListener(new View.OnClickListener() {
+            if (multipleSelectedItemModel.isSelected()) {
+                holder.textViewInvite.setVisibility(View.VISIBLE);
+
+            } else {
+                holder.textViewInvite.setVisibility(View.GONE);
+
+            }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        searchET.setText("");
-                        delete(position);
-                        if (list.size() != 0) {
-                            adapter.notifyItemInserted(list.size() - 1);
-                            list.add(list.size() - 1, multipleSelectedItemModel);
-                            collapsingToolbarLayout.setVisibility(View.VISIBLE);
-                            //notifyItemInserted(0);
+                   // done.setVisibility(View.VISIBLE);
+                    if (multipleSelectedItemModel.isSelected()) {
+                        multipleSelectedItemModels.get(position).setSelected(false);
+                        holder.textViewInvite.setVisibility(View.GONE);
+                        if (list.size() > 0)
+                            removeFromSelected(multipleSelectedItemModel);
+                        //done.setText("Invite ("+selected.size()+")");
 
-                            adapter.notifyItemRangeChanged(list.size() - 1, list.size());
-                            // recyclerView.scrollToPosition(list.size());
-                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() + 1);
+                    } else {
+                        multipleSelectedItemModels.get(position).setSelected(true);
+                        list.add(multipleSelectedItemModels.get(position));
+                       // done.setText("Invite ("+selected.size()+")");
 
-                        } else {
-                            adapter.notifyItemInserted(0);
-                            list.add(0, multipleSelectedItemModel);
-                            collapsingToolbarLayout.setVisibility(View.VISIBLE);
-                            //notifyItemInserted(0);
+                        holder.textViewInvite.setVisibility(View.VISIBLE);
 
-                            adapter.notifyItemRangeChanged(0, list.size());
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+
                 }
             });
-            holder.relativeLayoutview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        searchET.setText("");
-
-                        delete(position);
-                        if (list.size() != 0) {
-                            adapter.notifyItemInserted(list.size() - 1);
-                            list.add(list.size() - 1, multipleSelectedItemModel);
-                            collapsingToolbarLayout.setVisibility(View.VISIBLE);
-                            //notifyItemInserted(0);
-
-                            adapter.notifyItemRangeChanged(list.size() - 1, list.size());
-                            // recyclerView.scrollToPosition(list.size());
-                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() + 1);
-
-                        } else {
-                            adapter.notifyItemInserted(0);
-                            list.add(0, multipleSelectedItemModel);
-                            collapsingToolbarLayout.setVisibility(View.VISIBLE);
-                            //notifyItemInserted(0);
-
-                            adapter.notifyItemRangeChanged(0, list.size());
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName,context);
             holder.textViewName.setText(multipleSelectedItemModel.getSpecializationName());
         }
 
@@ -848,16 +777,14 @@ public class Multi_Select_Search_specialization extends Activity
 
         public class MyHolderView extends RecyclerView.ViewHolder {
             TextView textViewName, textViewDepartment;
-            ImageView imageViewPic;
+            ImageView imageViewPic,textViewInvite;
             RelativeLayout relativeLayoutview;
 
             public MyHolderView(View itemView) {
                 super(itemView);
                 relativeLayoutview = (RelativeLayout) itemView.findViewById(R.id.view);
-                textViewName = (TextView) itemView.findViewById(R.id.text);
-                textViewDepartment = (TextView) itemView.findViewById(R.id.department);
-                imageViewPic = (ImageView) itemView.findViewById(R.id.imagePic);
-
+                textViewName = (TextView) itemView.findViewById(R.id.name);
+                textViewInvite = (ImageView) itemView.findViewById(R.id.invite);
             }
         }
 
@@ -871,7 +798,15 @@ public class Multi_Select_Search_specialization extends Activity
         }
 
     }
-
+    public void removeFromSelected(SpecializationModel inviteModel) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equals(inviteModel.getId())) {
+                list.remove(i);
+                break;
+            }
+        }
+    }
+/*
     public class UserSevicesAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String fname, lname, email, password, mobile, otp, title, category, city, gender, yearOfExperince, dob, website, about;
@@ -888,6 +823,7 @@ public class Multi_Select_Search_specialization extends Activity
             }
         }
 
+*/
 /*
         public UserSevicesAsyncTask(String fname, String email, String mobile, String title, String category, String city, String gender, String yearOfExperince, String dob, String website, String about) {
             this.email = email;
@@ -903,7 +839,8 @@ public class Multi_Select_Search_specialization extends Activity
             this.mobile = mobile;
             this.category = category;
         }
-*/
+*//*
+
 
         @Override
         protected void onPreExecute() {
@@ -1004,6 +941,7 @@ public class Multi_Select_Search_specialization extends Activity
 
         }
     }
+*/
 
 }
 

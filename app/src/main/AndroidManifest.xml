@@ -21,6 +21,8 @@
     <uses-permission-sdk-23 android:name="android.permission.RECEIVE_SMS" />
 
     <application
+        android:name=".uttil.ApplicationSingleton"
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,6 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activites.Multi_Select_Search_specialization"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.CreateDrProfile"
             android:screenOrientation="portrait" />
