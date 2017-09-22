@@ -54,6 +54,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -316,13 +317,28 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         isVisible = true;
+        DateFormat format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+
         String dateStr = (new StringBuilder()
 
                 // Month is 0 based, just add 1
 
                 .append(dayOfMonth).append("-").append(month + 1).append("-")
                 .append(year)).toString();
-        editTextDob.setText(dateStr);
+        try {
+            Date date1 = format.parse(dateStr);
+            if (Methods.isPastDay(date1)) {
+                editTextDob.setText(dateStr);
+
+            } else {
+                Toast.makeText(CreateDrProfile.this, "Not a valid date", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("ValidFragment")
@@ -695,7 +711,12 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                                     Toast.makeText(CreateDrProfile.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-
+                                    if (isSkip) {
+                                        Intent intent = new Intent(CreateDrProfile.this, EditQualificationDetailOrAddQualificationsDetails.class);
+                                        intent.putExtra("isSkip", true);
+                                        startActivity(intent);
+                                        finish();
+                                    }
                                 }
 
                             }

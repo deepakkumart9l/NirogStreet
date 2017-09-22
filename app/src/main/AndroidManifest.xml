@@ -35,8 +35,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.Multi_Select_Search_specialization"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.Multi_Select_Search_specialization"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.CreateDrProfile"
             android:screenOrientation="portrait" />
@@ -76,6 +77,8 @@
         <activity
             android:name=".activites.AddOrEditClinicDetail"
             android:screenOrientation="portrait" />
+        <activity android:name=".activites.SpecilizationAndService"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.SearchLocationCity"
             android:screenOrientation="portrait" />
@@ -87,6 +90,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.SingleSelectQualifications"
             android:screenOrientation="portrait" />
 
         <service android:name=".notifications.MyFirebaseMessagingService">
@@ -105,12 +111,14 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBs5DG6WdN3rDaCLj6aI6SumK6arLW4Kk0" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9a465f2491e3e6e8f1c1a61ada1352a4d31f8d5f" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.app.nirogstreet.fileprovider"

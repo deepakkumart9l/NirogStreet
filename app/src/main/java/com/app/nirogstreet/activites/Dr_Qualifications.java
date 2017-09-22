@@ -154,8 +154,8 @@ public class Dr_Qualifications extends AppCompatActivity {
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
             TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
-            holder.clgNameTv.setText(qualificationModel.getClgName());
-            holder.degreeNameTv.setText(qualificationModel.getDegreeName());
+            holder.clgNameTv.setText(qualificationModel.getDegreeName());
+            holder.degreeNameTv.setText(qualificationModel.getClgName());
             holder.passinYearTv.setText(qualificationModel.getPassingYear());
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override

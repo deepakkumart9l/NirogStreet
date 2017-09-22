@@ -9,6 +9,9 @@ import android.widget.EditText;
 
 import com.app.nirogstreet.activites.SearchLocationCity;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by Preeti on 23-08-2017.
  */
@@ -28,6 +31,16 @@ public class Methods {
 
 
     }
+    public static boolean isPastDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return (date.before(calendar.getTime())) ? true : false;
+    }
+
     public static void showSoftKeyboard(View view, Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         view.requestFocus();

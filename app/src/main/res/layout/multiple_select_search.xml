@@ -186,14 +186,16 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<TextView
-    android:layout_width="match_parent"
-    android:background="#e7e7e7"
-    android:padding="10dp"
-    android:id="@+id/specilization"
-    android:text="Select your Specilization"
-    android:textColor="@color/black"
-    android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/specilization"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#e7e7e7"
+                android:padding="10dp"
+                android:text="Select your Specilization"
+                android:textColor="@color/black" />
+
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
@@ -217,6 +219,21 @@
                 android:padding="8dp"
                 android:visibility="gone"
                 app:cpb_colors="@array/gplus_colors" />
+
+            <TextView
+                android:id="@+id/addQualification"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_weight="1"
+                android:background="#e82351"
+                android:gravity="center"
+                android:visibility="gone"
+                android:maxHeight="50dp"
+                android:text="+ Add"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#fff" />
+
         </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>

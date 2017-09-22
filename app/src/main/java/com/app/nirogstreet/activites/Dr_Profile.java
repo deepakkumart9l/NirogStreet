@@ -55,10 +55,13 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Dr_Profile extends AppCompatActivity {
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
     CircularProgressBar circularProgressBar;
-    ImageView backImageView, editInfo, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit, clinicAddressEdit;
+    TextView specilizationTv;
+    ImageView backImageView, editInfo, SpecilizationsevicesEdit, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit, clinicAddressEdit;
     String authToken, userId, email, mobile, userName;
     private SesstionManager sesstionManager;
     UserDetailAsyncTask userDetailAsyncTask;
+    TextView SpecilizationsevicesTextView, sevicesTextView, sevicesCsvTextView, spcilizationCsv;
+
     LinearLayout qualifictionLinearLayout, regisrtaionLay, experinceLay, clinicLay, awardLay, memberLay;
     UserDetailModel userDetailModel;
 
@@ -67,6 +70,12 @@ public class Dr_Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_detail);
         editInfo = (ImageView) findViewById(R.id.editInfo);
+        specilizationTv = (TextView) findViewById(R.id.specilizationTv);
+        sevicesTextView = (TextView) findViewById(R.id.sevices);
+        spcilizationCsv = (TextView) findViewById(R.id.spcilizationCsv);
+        sevicesCsvTextView = (TextView) findViewById(R.id.sevicesCsv);
+        SpecilizationsevicesTextView = (TextView) findViewById(R.id.Specilizationsevices);
+        SpecilizationsevicesEdit = (ImageView) findViewById(R.id.SpecilizationsevicesEdit);
         MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
         awardLay = (LinearLayout) findViewById(R.id.awardLay);
         AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
@@ -110,6 +119,10 @@ public class Dr_Profile extends AppCompatActivity {
         allTaxes = (TextView) findViewById(R.id.allTaxes);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         TypeFaceMethods.setRegularTypeFaceForTextView(emailTv, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesTextView, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesCsvTextView, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(spcilizationCsv, Dr_Profile.this);
+
         TypeFaceMethods.setRegularTypeFaceForTextView(phoneTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(WebTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(yearOfBirthTv, Dr_Profile.this);
@@ -120,11 +133,13 @@ public class Dr_Profile extends AppCompatActivity {
         TypeFaceMethods.setRegularTypeBoldFaceTextView(fee, Dr_Profile.this);
 
         TypeFaceMethods.setRegularTypeBoldFaceTextView(ExperienceSectionTv, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(specilizationTv, Dr_Profile.this);
 
         TypeFaceMethods.setRegularTypeBoldFaceTextView(sepcilizationDetailTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeBoldFaceTextView(QualificationSectionTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeBoldFaceTextView(AwardSectionTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeBoldFaceTextView(MemberShipSectionTv, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecilizationsevicesTextView, Dr_Profile.this);
 
         TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecializationSectionHeadingTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(consultationFeesHeading, Dr_Profile.this);
@@ -247,7 +262,16 @@ public class Dr_Profile extends AppCompatActivity {
                                 updateExperience();
                                 updateClinicInfo();
                                 updateAwards();
+                                updateSpecilizationAndService();
                                 updateMemberShip();
+                                SpecilizationsevicesEdit.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(Dr_Profile.this, SpecilizationAndService.class);
+                                        intent.putExtra("userModel", userDetailModel);
+                                        startActivity(intent);
+                                    }
+                                });
                                 editInfo.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -318,6 +342,7 @@ public class Dr_Profile extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -326,13 +351,26 @@ public class Dr_Profile extends AppCompatActivity {
         }
     }
 
+    private void updateSpecilizationAndService() {
+        if (userDetailModel != null) {
+            if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
+                spcilizationCsv.setText(getSelectedNameCsv());
+            } else {
+                spcilizationCsv.setVisibility(View.GONE);
+                specilizationTv.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private void updateExperience() {
         if (userDetailModel != null) {
             if (userDetailModel.getExperinceModels() == null || userDetailModel.getExperinceModels().size() == 0) {
                 ExperienceSectionTv.setText("Add a Experience");
+                ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
             } else {
                 experinceLay.removeAllViews();
                 ExperienceSectionTv.setText("Experience");
+                ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -374,6 +412,7 @@ public class Dr_Profile extends AppCompatActivity {
             } else {
                 memberLay.removeAllViews();
                 MemberShipSectionTv.setText("Membership");
+                MemberShipEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -414,6 +453,8 @@ public class Dr_Profile extends AppCompatActivity {
             } else {
                 qualifictionLinearLayout.removeAllViews();
                 QualificationSectionTv.setText("Qualification");
+                QualificationSectionEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
+
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -430,9 +471,9 @@ public class Dr_Profile extends AppCompatActivity {
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
                         year.setText(userDetailModel.getQualificationModels().get(i).getPassingYear());
-                        degreename.setText(userDetailModel.getQualificationModels().get(i).getDegreeName());
+                        degreename.setText(userDetailModel.getQualificationModels().get(i).getClgName());
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        textView.setText(userDetailModel.getQualificationModels().get(i).getClgName());
+                        textView.setText(userDetailModel.getQualificationModels().get(i).getDegreeName());
                         v.setLayoutParams(params);
 
                         qualifictionLinearLayout.addView(v);
@@ -456,6 +497,7 @@ public class Dr_Profile extends AppCompatActivity {
             } else {
                 awardLay.removeAllViews();
                 AwardSectionTv.setText("Award");
+                AwardEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -521,6 +563,7 @@ public class Dr_Profile extends AppCompatActivity {
         } else {
             clinicLay.removeAllViews();
             clinicAddressHeading.setText("Clinical Address");
+            clinicAddressEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -578,6 +621,7 @@ public class Dr_Profile extends AppCompatActivity {
             } else {
                 regisrtaionLay.removeAllViews();
                 RegistrationSectionHeadingTv.setText("Registration & Documents");
+                RegistrationSectionEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,

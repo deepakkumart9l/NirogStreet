@@ -1,12 +1,15 @@
 package com.app.nirogstreet.activites;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -51,6 +54,8 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class RegisterActivity extends AppCompatActivity {
     SendOtpAsyncTask sendOtpAsyncTask;
     CheckBox checkbox;
+    private int STORAGE_PERMISSION_CODE_VIDEO = 2;
+
     EditText firstNameEt, lastNameEt, phoneEt, emailEt, confirmpassEt, setPass;
     ImageView backImageView;
     TextView registerHeader, registerAs, AllreadyhaveAccount, signIn, sentTv;
@@ -74,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         confirmpassEt = (EditText) findViewById(R.id.confirmpassEt);
         emailEt = (EditText) findViewById(R.id.emailEt);
         setPass = (EditText) findViewById(R.id.passEt);
-
+        checkPermissionGeneral();
         TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(registerHeader, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(sentTv, RegisterActivity.this);
@@ -109,19 +114,41 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         sentTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(RegisterActivity.this)) {
                     if (validation()) {
+                        if(checkWriteExternalPermission()){
                         sendOtpAsyncTask = new SendOtpAsyncTask(phoneEt.getText().toString(), setPass.getText().toString(), lastNameEt.getText().toString(), firstNameEt.getText().toString(), emailEt.getText().toString());
                         sendOtpAsyncTask.execute();
+                    }else {
+                            checkPermissionGeneral();
+                        }
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(RegisterActivity.this);
                 }
             }
         });
+    }
+    private boolean checkWriteExternalPermission()
+    {
+
+        String permission = "android.permission.READ_SMS";
+        int res = checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+    public void checkPermissionGeneral() {
+        if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+            Log.e("", " Permission Already given ");
+        } else {
+            Log.e("", "Current app does not have READ_PHONE_STATE permission");
+            requestPermissions(new String[]{Manifest.permission.READ_SMS,
+                    Manifest.permission.READ_SMS}, STORAGE_PERMISSION_CODE_VIDEO);
+        }
     }
 
     public class SendOtpAsyncTask extends AsyncTask<Void, Void, Void> {

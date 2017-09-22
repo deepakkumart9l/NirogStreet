@@ -130,7 +130,7 @@ public class UserDetailPaser {
 
                     }
                 }
-                if (message.has("qualifications") && !message.isNull("qualifications")) {
+                /*if (message.has("qualifications") && !message.isNull("qualifications")) {
                     JSONArray qualificationJsonArray = message.getJSONArray("qualifications");
                     for (int i = 0; i < qualificationJsonArray.length(); i++) {
 
@@ -185,8 +185,9 @@ public class UserDetailPaser {
                         qualificationModels.add(new QualificationModel(clgName, QualificationId, userId, course_name, type, university, created_on, updated_on, updated_by, status, degreeName, passingYear, upladedDoc));
                     }
 
-                }
-                if (message.has("registrations") && !message.isNull("registrations")) {
+                }*/
+                qualificationModels=QualificationParser.qualificationParser(message);
+              /*  if (message.has("registrations") && !message.isNull("registrations")) {
                     JSONArray registraionJsonArray = message.getJSONArray("registrations");
                     for (int i = 0; i < registraionJsonArray.length(); i++) {
                         String reg_board = null;
@@ -213,7 +214,10 @@ public class UserDetailPaser {
                         registrationAndDocumenModels.add(new RegistrationAndDocumenModel(council_registration_number, council_name, council_year, registrationId, reg_board));
                     }
                 }
-                if (message.has("specialities") && !message.isNull("specialities")) {
+              */
+                registrationAndDocumenModels=RegistrationParser.registrationParser(message);
+
+              /*  if (message.has("specialities") && !message.isNull("specialities")) {
                     JSONArray specilizationJsonArray = message.getJSONArray("specialities");
                     for (int i = 0; i < specilizationJsonArray.length(); i++) {
                         String specilizationId = null, specilizationName = null;
@@ -227,8 +231,9 @@ public class UserDetailPaser {
                         specializationModels.add(new SpecializationModel(specilizationName, specilizationId,true));
 
                     }
-                }
-                if (message.has("experiences") && !message.isNull("experiences")) {
+                }*/
+                specializationModels=SpecialitiesParser.specilities(message);
+              /*  if (message.has("experiences") && !message.isNull("experiences")) {
 
                     JSONArray experiencesJsonObject = message.getJSONArray("experiences");
                     for (int i = 0; i < experiencesJsonObject.length(); i++) {
@@ -255,7 +260,8 @@ public class UserDetailPaser {
                         }
                         experinceModels.add(new ExperinceModel(experiencesid, address, end_time, start_time, organizationName));
                     }
-                }
+                }*/
+                experinceModels=ExpericenceParser.experienceParser(message);
                 ArrayList<AwardsModel> awardsModels = new ArrayList<>();
                 awardsModels.add(new AwardsModel("1", "2012", "nope"));
                 awardsModels.add(new AwardsModel("1", "2012", "nope"));

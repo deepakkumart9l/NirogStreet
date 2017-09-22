@@ -35,18 +35,18 @@ public class IncomingSms extends BroadcastReceiver {
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
 
                     String senderNum = phoneNumber;
-                    String check = currentMessage.getDisplayMessageBody().split(":")[0];
+                    if( currentMessage.getDisplayMessageBody().contains("NirogStreet")) {
 
-                    String message = currentMessage.getDisplayMessageBody().split(":")[1];
+                        String message = currentMessage.getDisplayMessageBody().split(" ")[1];
 
-                    message = message.substring(0, message.length());
-                    Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
+                        message = message.substring(0, message.length());
+                        Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
 
-                    Intent myIntent = new Intent("otp");
-                    myIntent.putExtra("message",message);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(myIntent);
-                    // Show Alert
-
+                        Intent myIntent = new Intent("otp");
+                        myIntent.putExtra("message", message);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(myIntent);
+                        // Show Alert
+                    }
                 } // end for loop
             } // bundle is null
 

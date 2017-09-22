@@ -122,14 +122,14 @@ public class OtpActivity extends AppCompatActivity {
         editTextOtpFour = (EditText) findViewById(R.id.otpEtFour);
         editPhone = (EditText) findViewById(R.id.editPhone);
         if (otp != null) {
-            char arr[] = new char[4];
+          /*  char arr[] = new char[4];
             for (int i = 0; i < otp.length(); i++) {
                 arr[i] = otp.charAt(i);
             }
             editTextOtpOne.setText(String.valueOf(arr[0]));
             editTextOtpTwo.setText(String.valueOf(arr[1]));
             editTextOtpThree.setText(String.valueOf(arr[2]));
-            editTextOtpFour.setText(String.valueOf(arr[3]));
+            editTextOtpFour.setText(String.valueOf(arr[3]));*/
         }
 
         editPhone.setEnabled(false);
