@@ -125,7 +125,7 @@
 
                 app:ms_arrowColor="@color/buttonBackground"
                 app:ms_baseColor="@color/textcolorgray"
-                app:ms_floatingLabelColor="@color/buttonBackground"
+                app:ms_floatingLabelColor="@color/textcolorgray"
                 app:ms_hintColor="@color/textcolorgray" />
 
             <android.support.design.widget.TextInputLayout
@@ -211,7 +211,7 @@
                 android:drawableTint="@color/textcolorgray"
                 app:ms_arrowColor="@color/buttonBackground"
                 app:ms_baseColor="@color/textcolorgray"
-                app:ms_floatingLabelColor="@color/buttonBackground"
+                app:ms_floatingLabelColor="@color/textcolorgray"
                 app:ms_hintColor="@color/textcolorgray" />
 
             <android.support.design.widget.TextInputLayout

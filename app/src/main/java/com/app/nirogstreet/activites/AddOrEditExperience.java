@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,14 +17,46 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.ExperinceModel;
+import com.app.nirogstreet.model.QualificationModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.parser.ExpericenceParser;
+import com.app.nirogstreet.parser.QualificationParser;
+import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import javax.net.ssl.SSLContext;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.conn.scheme.Scheme;
+import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
+import cz.msebera.android.httpclient.entity.mime.content.FileBody;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import cz.msebera.android.httpclient.util.EntityUtils;
 
 /**
  * Created by Preeti on 30-08-2017.
@@ -34,11 +68,15 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
     ImageView backImageView;
     private SesstionManager sesstionManager;
     UserDetailModel userDetailModel;
-    int position=-1;
+    int position = -1;
     boolean isFromDate = false;
+    ImageView deleteImageView;
     EditText fromEt, toEt, cityEt, clinicOrhospital;
     TextView title_side_left, saveTv;
-
+    AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask;
+    DeleteQualificationAsynctask deleteQualificationAsynctask;
+    CircularProgressBar circularProgressBar;
+    private String authToken, userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +85,13 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.add_edit_experience);
+        deleteImageView=(ImageView)findViewById(R.id.delete);
+        sesstionManager = new SesstionManager(AddOrEditExperience.this);
+        if (sesstionManager.isUserLoggedIn()) {
+            authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
+            userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
+        }
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,18 +144,54 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
 
         {
 
-            ExperinceModel experinceModel = userDetailModel.getExperinceModels().get(position);
+            final ExperinceModel experinceModel = userDetailModel.getExperinceModels().get(position);
 
             clinicOrhospital.setText(experinceModel.getOrganizationName());
             fromEt.setText(experinceModel.getStart_time());
             toEt.setText(experinceModel.getEnd_time());
             cityEt.setText(experinceModel.getAddress());
+            saveTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
+                        addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), experinceModel.getId());
+                        addOrUpdateQualificationAsynctask.execute();
+                    } else {
+                        NetworkUtill.showNoInternetDialog(AddOrEditExperience.this);
+                    }
+                }
+            });
+            deleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)){
+                        deleteQualificationAsynctask=new DeleteQualificationAsynctask(experinceModel.getId());
+                        deleteQualificationAsynctask.execute();
+                    }
+                }
+            });
 
-        }
-        else {
-            title_side_left.setText("Add Qualification");
+        } else {
+            title_side_left.setText("Add Experience");
+            deleteImageView.setVisibility(View.GONE);
+            saveTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
+                        addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), "");
+                        addOrUpdateQualificationAsynctask.execute();
+                    } else {
+                        NetworkUtill.showNoInternetDialog(AddOrEditExperience.this);
+                    }
+                }
+            });
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -176,6 +257,276 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
         newFragment.show(fm, "date");
 
 
+    }
+
+    public class AddOrUpdateQualificationAsynctask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String startTime, endTime, city, qrganisation_name, year, id;
+        CircularProgressBar bar;
+
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public AddOrUpdateQualificationAsynctask(String startTime, String endTime, String city, String organisation_name, String id) {
+
+            this.startTime = startTime;
+            this.id = id;
+            this.endTime = endTime;
+            this.qrganisation_name = organisation_name;
+            this.city = city;
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/experiences";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("Experience[start_time]", startTime));
+                pairs.add(new BasicNameValuePair("Experience[end_time]", endTime));
+                pairs.add(new BasicNameValuePair("Experience[address]", city));
+                pairs.add(new BasicNameValuePair("Experience[org_name]", qrganisation_name));
+                if (position != -1)
+                    pairs.add(new BasicNameValuePair("Experience[id]", id));
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(AddOrEditExperience.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("experiences") && !dataJsonObject.isNull("experiences")) {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<ExperinceModel> experinceModels = ExpericenceParser.experienceParser(dataJsonObject);
+
+                                    userDetailModel.setExperinceModels(experinceModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsExperinceUpdated(true);
+                                }
+                                if (dataJsonObject.has("status_message") && !dataJsonObject.isNull("status_message")) {
+                                    Toast.makeText(AddOrEditExperience.this, dataJsonObject.getString("status_message"), Toast.LENGTH_SHORT).show();
+
+                                }
+                                finish();
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    public boolean validate() {
+        if (fromEt.getText().toString().length() == 0) {
+            Toast.makeText(AddOrEditExperience.this, "Enter start year.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (toEt.getText().toString().length() == 0) {
+            Toast.makeText(AddOrEditExperience.this, "Enter end year.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (cityEt.getText().toString().length() == 0) {
+            Toast.makeText(AddOrEditExperience.this, "Enter address.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (clinicOrhospital.getText().toString().length() == 0) {
+            Toast.makeText(AddOrEditExperience.this, "Select Hospital or Clinic", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+    public class DeleteQualificationAsynctask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String university, year, qualification, id;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public DeleteQualificationAsynctask(String id) {
+
+            this.id = id;
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/delete-experience";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("Experience[id]", id));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(AddOrEditExperience.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<ExperinceModel> experinceModels = ExpericenceParser.experienceParser(dataJsonObject);
+
+                                    userDetailModel.setExperinceModels(experinceModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsExperinceUpdated(true);
+                                }else {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<ExperinceModel> experinceModels = null;
+
+                                    userDetailModel.setExperinceModels(experinceModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsExperinceUpdated(true);
+                                }
+
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    Toast.makeText(AddOrEditExperience.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                }
+                                finish();
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
 
 }

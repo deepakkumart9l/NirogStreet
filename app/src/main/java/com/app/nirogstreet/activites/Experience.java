@@ -16,6 +16,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.ExperinceModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -94,9 +95,19 @@ public class Experience extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (ApplicationSingleton.isExperinceUpdated()) {
+            userDetailModel = ApplicationSingleton.getUserDetailModel();
+        }
         if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0) {
             experienceAdapter = new ExperienceAdapter(Experience.this, userDetailModel.getExperinceModels(), userDetailModel);
             recyclerview.setAdapter(experienceAdapter);
+        }else {
+            if (experienceAdapter != null) {
+                experienceAdapter.notifyItemRemoved(0);
+                experienceAdapter.notifyItemRangeChanged(0, 0);
+                recyclerview.setVisibility(View.GONE);
+
+            }
         }
     }
 

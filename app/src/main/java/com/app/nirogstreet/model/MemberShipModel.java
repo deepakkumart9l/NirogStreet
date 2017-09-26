@@ -9,6 +9,16 @@ import java.io.Serializable;
 public class MemberShipModel implements Serializable{
     String id;
 
+    public String getDoctor_id() {
+        return doctor_id;
+    }
+
+    public void setDoctor_id(String doctor_id) {
+        this.doctor_id = doctor_id;
+    }
+
+    String doctor_id;
+
     public String getMembership() {
         return membership;
     }
@@ -27,8 +37,9 @@ public class MemberShipModel implements Serializable{
 
     String membership;
 
-    public MemberShipModel(String id, String membership) {
+    public MemberShipModel(String id, String membership,String doctor_id) {
         this.id = id;
         this.membership = membership;
+        this.doctor_id=doctor_id;
     }
 }

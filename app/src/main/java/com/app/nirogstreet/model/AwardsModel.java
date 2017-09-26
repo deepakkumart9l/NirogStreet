@@ -31,14 +31,34 @@ public class AwardsModel implements Serializable{
         this.year = year;
     }
 
+    public String getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(String createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    String createdOn;
+    String userId;
     String id;
     String awardName;
     String year;
 
 
-    public AwardsModel(String id, String year, String awardName) {
+    public AwardsModel(String id, String year, String awardName,String createdOn,String userId) {
         this.id = id;
         this.year = year;
+        this.createdOn=createdOn;
+        this.userId=userId;
         this.awardName = awardName;
     }
 

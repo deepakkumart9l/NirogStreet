@@ -22,6 +22,15 @@ public class UserDetailModel implements Serializable {
         return specializationModels;
     }
 
+    public ArrayList<SpecializationModel> getServicesModels() {
+        return servicesModels;
+    }
+
+    public void setServicesModels(ArrayList<SpecializationModel> servicesModels) {
+        this.servicesModels = servicesModels;
+    }
+
+    private ArrayList<SpecializationModel> servicesModels=new ArrayList<>();
     public void setSpecializationModels(ArrayList<SpecializationModel> specializationModels) {
         this.specializationModels = specializationModels;
     }
@@ -188,9 +197,11 @@ public class UserDetailModel implements Serializable {
     String about;
     String title;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels) {
+    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels,ArrayList<SpecializationModel> servicesModels)
+    {
         this.name = name;
         this.specializationModels = specializationModels;
+        this.servicesModels=servicesModels;
         this.memberShipModels = memberShipModels;
         this.clinicDetailModels = clinicDetailModels;
         this.registrationAndDocumenModels = registrationAndDocumenModels;

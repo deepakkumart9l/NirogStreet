@@ -15,6 +15,25 @@ public class RegistrationAndDocumenModel implements Serializable {
         this.council_registration_number = council_registration_number;
     }
 
+
+    public String getCouncilType() {
+        return councilType;
+    }
+
+    public void setCouncilType(String councilType) {
+        this.councilType = councilType;
+    }
+
+    private String councilType;
+    public String getUploadedDoc() {
+        return uploadedDoc;
+    }
+
+    public void setUploadedDoc(String uploadedDoc) {
+        this.uploadedDoc = uploadedDoc;
+    }
+
+    String uploadedDoc;
     public String getCouncil_year() {
         return council_year;
     }
@@ -53,10 +72,12 @@ public class RegistrationAndDocumenModel implements Serializable {
     String council_year;
     String id;
 
-    public RegistrationAndDocumenModel(String council_registration_number, String council_name, String council_year, String id,String reg_board) {
+    public RegistrationAndDocumenModel(String council_registration_number, String council_name, String council_year, String id,String reg_board,String uploadedDoc,String councilType) {
         this.council_registration_number = council_registration_number;
         this.council_name = council_name;
         this.reg_board=reg_board;
+        this.uploadedDoc=uploadedDoc;
+        this.councilType=councilType;
         this.council_year = council_year;
         this.id = id;
     }

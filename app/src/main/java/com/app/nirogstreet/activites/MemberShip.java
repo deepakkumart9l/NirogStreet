@@ -16,6 +16,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.MemberShipModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -93,10 +94,19 @@ public class MemberShip extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0) {
+        if (ApplicationSingleton.isMemberShipUpdated()) {
+            userDetailModel = ApplicationSingleton.getUserDetailModel();
+        }
+        if (userDetailModel != null && userDetailModel.getMemberShipModels() != null && userDetailModel.getMemberShipModels().size() > 0) {
             memberShipAdapter = new MemberShipAdapter(MemberShip.this, userDetailModel.getMemberShipModels(), userDetailModel);
             recyclerview.setAdapter(memberShipAdapter);
-        }
+        }else {
+            if (memberShipAdapter != null) {
+                memberShipAdapter.notifyItemRemoved(0);
+                memberShipAdapter.notifyItemRangeChanged(0, 0);
+                recyclerview.setVisibility(View.GONE);
+
+            }}
     }
 
     public class MemberShipAdapter extends RecyclerView.Adapter<MemberShipAdapter.MyHolderView> {

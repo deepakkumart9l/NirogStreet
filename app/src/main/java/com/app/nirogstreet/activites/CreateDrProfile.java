@@ -41,6 +41,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
@@ -709,12 +710,69 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                 }
                             } else {
 
+                                if(dataJsonObject.has("userDetails")&&!dataJsonObject.isNull("userDetails"))
+                                {
+                                    JSONObject userJsonObject = dataJsonObject.getJSONObject("userDetails");
+                                    if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                                        ApplicationSingleton.getUserDetailModel() .setName(userJsonObject.getString("name")) ;
+                                    }
+                                    if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                                        ApplicationSingleton.getUserDetailModel() .setExperience(userJsonObject.getString("experience")); ;
+
+                                    }
+                                    if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                                        ApplicationSingleton.getUserDetailModel() .setGender( userJsonObject.getString("gender")); ;
+
+                                    }
+                                    if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                                        ApplicationSingleton.getUserDetailModel() .setEmail( userJsonObject.getString("email")); ;
+
+                                    }
+                                    if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                                        ApplicationSingleton.getUserDetailModel() .setMobile(userJsonObject.getString("mobile")); ;
+
+                                    }
+                                    if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                                        ApplicationSingleton.getUserDetailModel() .setProfile_pic(userJsonObject.getString("profile_pic")); ;
+
+                                    }
+                                    if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                                        ApplicationSingleton.getUserDetailModel() .setCategory(userJsonObject.getString("category")); ;
+
+                                    }
+                                    if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                                        ApplicationSingleton.getUserDetailModel() .setDob( userJsonObject.getString("dob")); ;
+
+                                    }
+                                    if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                                        ApplicationSingleton.getUserDetailModel() .setWebSite(userJsonObject.getString("website")); ;
+
+                                    }
+                                    if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                                        ApplicationSingleton.getUserDetailModel() .setAbout(userJsonObject.getString("aboutus")); ;
+
+                                    }
+                                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                                        ApplicationSingleton.getUserDetailModel() .setTitle( userJsonObject.getString("Title")); ;
+
+                                    }
+                                    if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                                        ApplicationSingleton.getUserDetailModel() .setTitle( userJsonObject.getString("city")); ;
+
+                                    }
+
+                                }
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                                     Toast.makeText(CreateDrProfile.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                     if (isSkip) {
                                         Intent intent = new Intent(CreateDrProfile.this, EditQualificationDetailOrAddQualificationsDetails.class);
                                         intent.putExtra("isSkip", true);
                                         startActivity(intent);
+                                        finish();
+                                    }
+                                    else {
+                                        ApplicationSingleton.setIsContactInfoUpdated(true);
+
                                         finish();
                                     }
                                 }

@@ -17,6 +17,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.RegistrationAndDocumenModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -93,9 +94,20 @@ public class RegistrationAndDocuments extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (ApplicationSingleton.isRegistrationUpdated()) {
+            userDetailModel = ApplicationSingleton.getUserDetailModel();
+        }
         if (userDetailModel != null && userDetailModel.getRegistrationAndDocumenModels() != null && userDetailModel.getRegistrationAndDocumenModels().size() > 0) {
             registrationAdapter = new RegistrationAdapter(RegistrationAndDocuments.this, userDetailModel.getRegistrationAndDocumenModels(), userDetailModel);
             recyclerview.setAdapter(registrationAdapter);
+        }
+        else {
+            if (registrationAdapter != null) {
+                registrationAdapter.notifyItemRemoved(0);
+                registrationAdapter.notifyItemRangeChanged(0, 0);
+                recyclerview.setVisibility(View.GONE);
+
+            }
         }
     }
 

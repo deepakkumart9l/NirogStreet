@@ -23,6 +23,7 @@ import com.app.nirogstreet.model.QualificationModel;
 import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -75,7 +76,7 @@ public class Dr_Qualifications extends AppCompatActivity {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.qualifications);
-        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +85,7 @@ public class Dr_Qualifications extends AppCompatActivity {
         });
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerview.setHasFixedSize(true);
-        linearLayoutManager=new LinearLayoutManager(Dr_Qualifications.this);
+        linearLayoutManager = new LinearLayoutManager(Dr_Qualifications.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(linearLayoutManager);
         sesstionManager = new SesstionManager(Dr_Qualifications.this);
@@ -125,11 +126,24 @@ public class Dr_Qualifications extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0) {
-            qualificationAdapter=new QualificationAdapter(Dr_Qualifications.this,userDetailModel.getQualificationModels(),userDetailModel);
-            recyclerview.setAdapter(qualificationAdapter);
+        if (ApplicationSingleton.isQualificationUpdated()) {
+            userDetailModel = ApplicationSingleton.getUserDetailModel();
         }
+        if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0) {
+            qualificationAdapter = new QualificationAdapter(Dr_Qualifications.this, userDetailModel.getQualificationModels(), userDetailModel);
+            recyclerview.setAdapter(qualificationAdapter);
+            recyclerview.setVisibility(View.VISIBLE);
+        } else {
+            if (qualificationAdapter != null) {
+                qualificationAdapter.notifyItemRemoved(0);
+                qualificationAdapter.notifyItemRangeChanged(0, 0);
+                recyclerview.setVisibility(View.GONE);
+
+            }
+        }
+
     }
+
     public class QualificationAdapter extends RecyclerView.Adapter<QualificationAdapter.MyHolderView> {
         Context context;
         UserDetailModel userDetailModel;
@@ -160,9 +174,9 @@ public class Dr_Qualifications extends AppCompatActivity {
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(context, EditQualificationDetailOrAddQualificationsDetails.class);
-                    intent.putExtra("userModel",userDetailModel);
-                    intent.putExtra("pos",position);
+                    Intent intent = new Intent(context, EditQualificationDetailOrAddQualificationsDetails.class);
+                    intent.putExtra("userModel", userDetailModel);
+                    intent.putExtra("pos", position);
                     startActivity(intent);
                 }
             });

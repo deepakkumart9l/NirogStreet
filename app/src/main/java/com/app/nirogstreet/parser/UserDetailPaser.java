@@ -69,6 +69,7 @@ public class UserDetailPaser {
                     }
 
                 }
+                ArrayList<SpecializationModel> serviceModels = new ArrayList<>();
                 ArrayList<ExperinceModel> experinceModels = new ArrayList<>();
                 ArrayList<SpecializationModel> specializationModels = new ArrayList<>();
                 ArrayList<QualificationModel> qualificationModels = new ArrayList<>();
@@ -130,144 +131,20 @@ public class UserDetailPaser {
 
                     }
                 }
-                /*if (message.has("qualifications") && !message.isNull("qualifications")) {
-                    JSONArray qualificationJsonArray = message.getJSONArray("qualifications");
-                    for (int i = 0; i < qualificationJsonArray.length(); i++) {
 
-                        String clgName = null;
-                        String QualificationId = null;
-                        String userId = null, course_name = null, type = null, university = null, created_on = null, updated_on = null, updated_by = null, status = null;
+                serviceModels = ServicesParser.serviceParser(message);
+                qualificationModels = QualificationParser.qualificationParser(message);
+                registrationAndDocumenModels = RegistrationParser.registrationParser(message);
 
 
-                        String degreeName = null;
-                        String passingYear = null;
-                        String upladedDoc = null;
-                        JSONObject qualificationJsonObject = qualificationJsonArray.getJSONObject(i);
-                        if (qualificationJsonObject.has("id") && !qualificationJsonObject.isNull("id")) {
-                            QualificationId = qualificationJsonObject.getString("id");
-                        }
-                        if (qualificationJsonObject.has("user_id") && !qualificationJsonObject.isNull("user_id")) {
-                            userId = qualificationJsonObject.getString("user_id");
-                        }
-                        if (qualificationJsonObject.has("degree") && !qualificationJsonObject.isNull("degree")) {
-                            degreeName = qualificationJsonObject.getString("degree");
-                        }
-                        if (qualificationJsonObject.has("course_name") && !qualificationJsonObject.isNull("course_name")) {
-                            course_name = qualificationJsonObject.getString("course_name");
-                        }
-                        if (qualificationJsonObject.has("type") && !qualificationJsonObject.isNull("type")) {
-                            type = qualificationJsonObject.getString("type");
-                        }
-                        if (qualificationJsonObject.has("college") && !qualificationJsonObject.isNull("college")) {
-                            clgName = qualificationJsonObject.getString("college");
-                        }
-                        if (qualificationJsonObject.has("university") && !qualificationJsonObject.isNull("university")) {
-                            university = qualificationJsonObject.getString("university");
-                        }
-                        if (qualificationJsonObject.has("year") && !qualificationJsonObject.isNull("year")) {
-                            passingYear = qualificationJsonObject.getString("year");
-                        }
-                        if (qualificationJsonObject.has("edu_file") && !qualificationJsonObject.isNull("edu_file")) {
-                            upladedDoc = qualificationJsonObject.getString("edu_file");
-                        }
-                        if (qualificationJsonObject.has("createdOn") && !qualificationJsonObject.isNull("createdOn")) {
-                            created_on = qualificationJsonObject.getString("createdOn");
-                        }
-                        if (qualificationJsonObject.has("updatedOn") && !qualificationJsonObject.isNull("updatedOn")) {
-                            updated_on = qualificationJsonObject.getString("updatedOn");
-                        }
-                        if (qualificationJsonObject.has("updated_by") && !qualificationJsonObject.isNull("updated_by")) {
-                            updated_by = qualificationJsonObject.getString("updated_by");
-                        }
-                        if (qualificationJsonObject.has("status") && !qualificationJsonObject.isNull("status")) {
-                            status = qualificationJsonObject.getString("status");
-                        }
-                        qualificationModels.add(new QualificationModel(clgName, QualificationId, userId, course_name, type, university, created_on, updated_on, updated_by, status, degreeName, passingYear, upladedDoc));
-                    }
+                specializationModels = SpecialitiesParser.specilities(message);
 
-                }*/
-                qualificationModels=QualificationParser.qualificationParser(message);
-              /*  if (message.has("registrations") && !message.isNull("registrations")) {
-                    JSONArray registraionJsonArray = message.getJSONArray("registrations");
-                    for (int i = 0; i < registraionJsonArray.length(); i++) {
-                        String reg_board = null;
-                        String council_registration_number = null;
-                        String council_name = null;
-                        String council_year = null;
-                        String registrationId = null;
-                        JSONObject registraionJsonObject = registraionJsonArray.getJSONObject(i);
-                        if (registraionJsonObject.has("id") && !registraionJsonObject.isNull("id")) {
-                            registrationId = registraionJsonObject.getString("id");
-                        }
-                        if (registraionJsonObject.has("council") && !registraionJsonObject.isNull("council")) {
-                            council_name = registraionJsonObject.getString("council");
-                        }
-                        if (registraionJsonObject.has("registration_number") && !registraionJsonObject.isNull("registration_number")) {
-                            council_registration_number = registraionJsonObject.getString("registration_number");
-                        }
-                        if (registraionJsonObject.has("year") && !registraionJsonObject.isNull("year")) {
-                            council_year = registraionJsonObject.getString("year");
-                        }
-                        if (registraionJsonObject.has("reg_board") && !registraionJsonObject.isNull("reg_board")) {
-                            reg_board = registraionJsonObject.getString("reg_board");
-                        }
-                        registrationAndDocumenModels.add(new RegistrationAndDocumenModel(council_registration_number, council_name, council_year, registrationId, reg_board));
-                    }
-                }
-              */
-                registrationAndDocumenModels=RegistrationParser.registrationParser(message);
-
-              /*  if (message.has("specialities") && !message.isNull("specialities")) {
-                    JSONArray specilizationJsonArray = message.getJSONArray("specialities");
-                    for (int i = 0; i < specilizationJsonArray.length(); i++) {
-                        String specilizationId = null, specilizationName = null;
-                        JSONObject speilizationJsonObject = specilizationJsonArray.getJSONObject(i);
-                        if (speilizationJsonObject.has("id") && !speilizationJsonObject.isNull("id")) {
-                            specilizationId = speilizationJsonObject.getString("id");
-                        }
-                        if (speilizationJsonObject.has("name") && !speilizationJsonObject.isNull("name")) {
-                            specilizationName = speilizationJsonObject.getString("name");
-                        }
-                        specializationModels.add(new SpecializationModel(specilizationName, specilizationId,true));
-
-                    }
-                }*/
-                specializationModels=SpecialitiesParser.specilities(message);
-              /*  if (message.has("experiences") && !message.isNull("experiences")) {
-
-                    JSONArray experiencesJsonObject = message.getJSONArray("experiences");
-                    for (int i = 0; i < experiencesJsonObject.length(); i++) {
-                        String start_time = null;
-                        String end_time = null;
-                        String address = null;
-                        String experiencesid = null;
-                        String organizationName = null;
-                        JSONObject jsonObject = experiencesJsonObject.getJSONObject(i);
-                        if (jsonObject.has("id") && !jsonObject.isNull("id")) {
-                            experiencesid = jsonObject.getString("id");
-                        }
-                        if (jsonObject.has("organizationName") && !jsonObject.isNull("organizationName")) {
-                            organizationName = jsonObject.getString("organizationName");
-                        }
-                        if (jsonObject.has("start_time") && !jsonObject.isNull("start_time")) {
-                            start_time = jsonObject.getString("start_time");
-                        }
-                        if (jsonObject.has("end_time") && !jsonObject.isNull("end_time")) {
-                            end_time = jsonObject.getString("end_time");
-                        }
-                        if (jsonObject.has("address") && !jsonObject.isNull("address")) {
-                            address = jsonObject.getString("address");
-                        }
-                        experinceModels.add(new ExperinceModel(experiencesid, address, end_time, start_time, organizationName));
-                    }
-                }*/
-                experinceModels=ExpericenceParser.experienceParser(message);
+                experinceModels = ExpericenceParser.experienceParser(message);
                 ArrayList<AwardsModel> awardsModels = new ArrayList<>();
-                awardsModels.add(new AwardsModel("1", "2012", "nope"));
-                awardsModels.add(new AwardsModel("1", "2012", "nope"));
+                awardsModels = AwardsParser.awardsParser(message);
                 ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
-                memberShipModels.add(new MemberShipModel("1", "user"));
-                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels);
+                memberShipModels = MemberShipParser.memberShipParser(message);
+                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels);
 
             }
         } catch (Exception e) {

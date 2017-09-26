@@ -2,17 +2,25 @@ package com.app.nirogstreet.activites;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +55,28 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Preeti on 22-08-2017.
  */
 
-public class Dr_Profile extends AppCompatActivity {
+public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
+    final Uri imageUri = Uri.parse("http://i.imgur.com/VIlcLfg.jpg");
+
+    private boolean mIsTheTitleVisible = false;
+    private boolean mIsTheTitleContainerVisible = true;
+    ImageView backimg;
+    private AppBarLayout appbar;
+    private CollapsingToolbarLayout collapsing;
+    private ImageView coverImage;
+    private FrameLayout framelayoutTitle;
+    private RelativeLayout linearlayoutTitle;
+    private TextView textviewTitle;
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
     CircularProgressBar circularProgressBar;
     TextView specilizationTv;
@@ -61,15 +85,90 @@ public class Dr_Profile extends AppCompatActivity {
     private SesstionManager sesstionManager;
     UserDetailAsyncTask userDetailAsyncTask;
     TextView SpecilizationsevicesTextView, sevicesTextView, sevicesCsvTextView, spcilizationCsv;
-
+    CircleImageView circleImageView;
     LinearLayout qualifictionLinearLayout, regisrtaionLay, experinceLay, clinicLay, awardLay, memberLay;
     UserDetailModel userDetailModel;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private Toolbar toolbar;
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if (!mIsTheTitleVisible) {
+                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+                backimg.setVisibility(View.VISIBLE);
+
+                textviewTitle.setText(nameTv.getText().toString());
+
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if (mIsTheTitleContainerVisible) {
+                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+
+            }
+
+        } else {
+
+            if (!mIsTheTitleContainerVisible) {
+                textviewTitle.setText(nameTv.getText().toString());
+                backimg.setVisibility(View.VISIBLE);
+                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_detail);
+        findViews();
+
+        toolbar.setTitle("");
+        appbar.addOnOffsetChangedListener(this);
+
+        setSupportActionBar(toolbar);
+        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+
+        backimg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitle("demo");
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.black));
+        collapsingToolbarLayout.setTitle("My App Title");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
         editInfo = (ImageView) findViewById(R.id.editInfo);
+        circleImageView = (CircleImageView) findViewById(R.id.pro);
         specilizationTv = (TextView) findViewById(R.id.specilizationTv);
         sevicesTextView = (TextView) findViewById(R.id.sevices);
         spcilizationCsv = (TextView) findViewById(R.id.spcilizationCsv);
@@ -169,6 +268,26 @@ public class Dr_Profile extends AppCompatActivity {
             NetworkUtill.showNoInternetDialog(Dr_Profile.this);
         }
 
+    }
+
+    private void findViews() {
+        appbar = (AppBarLayout) findViewById(R.id.appbar_layout);
+        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
+        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
+        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
+        linearlayoutTitle = (RelativeLayout) findViewById(R.id.linearlayout_title);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        textviewTitle = (TextView) findViewById(R.id.textview_title);
+        backimg = (ImageView) findViewById(R.id.backimg);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
     }
 
     public class UserDetailAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -346,8 +465,34 @@ public class Dr_Profile extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if (ApplicationSingleton.getUserDetailModel() != null) {
             userDetailModel = ApplicationSingleton.getUserDetailModel();
+        }
+        if (ApplicationSingleton.isContactInfoUpdated()) {
+            updateContactInfo();
+        }
+        if(ApplicationSingleton.isAwardUpdated())
+        {
+            updateAwards();
+            ApplicationSingleton.setIsAwardUpdated(false);
+        }
+        if (ApplicationSingleton.isExperinceUpdated()) {
+            updateExperience();
+            ApplicationSingleton.setIsExperinceUpdated(false);
+        }
+        if (ApplicationSingleton.isServicesAndSpecializationUpdated()) {
+
+            updateSpecilizationAndService();
+            ApplicationSingleton.setServicesAndSpecializationUpdated(false);
+        }
+        if (ApplicationSingleton.isQualificationUpdated()) {
+            updateQualification();
+            ApplicationSingleton.setIsQualificationUpdated(false);
+        }
+        if (ApplicationSingleton.isRegistrationUpdated()) {
+            updateRegistrationAndDocument();
+            ApplicationSingleton.setRegistrationUpdated(false);
         }
     }
 
@@ -359,6 +504,21 @@ public class Dr_Profile extends AppCompatActivity {
                 spcilizationCsv.setVisibility(View.GONE);
                 specilizationTv.setVisibility(View.GONE);
             }
+            if (userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() != 0) {
+                sevicesCsvTextView.setText(getSelectedServicesCsv());
+                QualificationTv.setText(getSelectedNameCsv());
+
+            } else {
+                sevicesCsvTextView.setVisibility(View.GONE);
+                sevicesTextView.setVisibility(View.GONE);
+            }
+            if (userDetailModel.getSpecializationModels() == null && userDetailModel.getServicesModels() == null) {
+                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
+            } else {
+                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
+                SpecilizationsevicesTextView.setText("Service & Specialization");
+
+            }
         }
     }
 
@@ -367,6 +527,8 @@ public class Dr_Profile extends AppCompatActivity {
             if (userDetailModel.getExperinceModels() == null || userDetailModel.getExperinceModels().size() == 0) {
                 ExperienceSectionTv.setText("Add a Experience");
                 ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
+                experinceLay.removeAllViews();
+
             } else {
                 experinceLay.removeAllViews();
                 ExperienceSectionTv.setText("Experience");
@@ -408,6 +570,8 @@ public class Dr_Profile extends AppCompatActivity {
         if (userDetailModel != null) {
             if (userDetailModel.getMemberShipModels() == null || userDetailModel.getMemberShipModels().size() == 0) {
                 MemberShipSectionTv.setText("Add a Membership");
+                memberLay.removeAllViews();
+
                 MemberShipEdit.setImageResource(R.drawable.add);
             } else {
                 memberLay.removeAllViews();
@@ -447,6 +611,8 @@ public class Dr_Profile extends AppCompatActivity {
     private void updateQualification() {
         if (userDetailModel != null) {
             if (userDetailModel.getQualificationModels() == null || userDetailModel.getQualificationModels().size() == 0) {
+                qualifictionLinearLayout.removeAllViews();
+
                 QualificationSectionTv.setText("Add a Qualification");
                 QualificationSectionEdit.setImageResource(R.drawable.add);
 
@@ -493,6 +659,8 @@ public class Dr_Profile extends AppCompatActivity {
             if (userDetailModel.getAwardsModels() == null || userDetailModel.getAwardsModels().size() == 0) {
                 AwardSectionTv.setText("Add a Award");
                 AwardEdit.setImageResource(R.drawable.add);
+                awardLay.removeAllViews();
+
 
             } else {
                 awardLay.removeAllViews();
@@ -552,6 +720,10 @@ public class Dr_Profile extends AppCompatActivity {
             if (userDetailModel != null && userDetailModel.getSpecializationModels() != null) {
                 QualificationTv.setText(getSelectedNameCsv());
             }
+            if (userDetailModel.getProfile_pic() != null) {
+                ImageLoader imageLoader = new ImageLoader(Dr_Profile.this);
+                imageLoader.DisplayImage(Dr_Profile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
+            }
         }
     }
 
@@ -559,6 +731,8 @@ public class Dr_Profile extends AppCompatActivity {
         if (userDetailModel.getClinicDetailModels() == null || userDetailModel.getClinicDetailModels().size() == 0) {
             clinicAddressHeading.setText("Add a Clinic");
             clinicAddressEdit.setImageResource(R.drawable.add);
+            clinicLay.removeAllViews();
+
 
         } else {
             clinicLay.removeAllViews();
@@ -596,6 +770,21 @@ public class Dr_Profile extends AppCompatActivity {
         }
     }
 
+    public String getSelectedServicesCsv() {
+        String languageCSV = "";
+
+        if (userDetailModel != null && userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() > 0) {
+            for (int i = 0; i < userDetailModel.getServicesModels().size(); i++) {
+                String language = userDetailModel.getServicesModels().get(i).getSpecializationName();
+                if (language != null && !language.trim().isEmpty()
+                        && languageCSV != null && !languageCSV.trim().isEmpty())
+                    languageCSV = languageCSV + ", ";
+                languageCSV = languageCSV + language;
+
+            }
+        }
+        return languageCSV;
+    }
 
     public String getSelectedNameCsv() {
         String languageCSV = "";
@@ -618,6 +807,8 @@ public class Dr_Profile extends AppCompatActivity {
             if (userDetailModel.getRegistrationAndDocumenModels() == null || userDetailModel.getRegistrationAndDocumenModels().size() == 0) {
                 RegistrationSectionHeadingTv.setText("Add a registration & documents");
                 RegistrationSectionEdit.setImageResource(R.drawable.add);
+                regisrtaionLay.removeAllViews();
+
             } else {
                 regisrtaionLay.removeAllViews();
                 RegistrationSectionHeadingTv.setText("Registration & Documents");

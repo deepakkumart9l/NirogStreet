@@ -16,6 +16,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.AwardsModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -40,10 +41,19 @@ public class Award extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0) {
+        if (ApplicationSingleton.isAwardUpdated()) {
+            userDetailModel = ApplicationSingleton.getUserDetailModel();
+        }
+        if (userDetailModel != null && userDetailModel.getAwardsModels() != null && userDetailModel.getAwardsModels().size() > 0) {
             awardAdapter = new AwardAdapter(Award.this, userDetailModel.getAwardsModels(), userDetailModel);
             recyclerview.setAdapter(awardAdapter);
-        }
+        }else {
+            if (awardAdapter != null) {
+                awardAdapter.notifyItemRemoved(0);
+                awardAdapter.notifyItemRangeChanged(0, 0);
+                recyclerview.setVisibility(View.GONE);
+
+            }}
     }
 
     @Override

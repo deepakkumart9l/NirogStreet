@@ -36,7 +36,9 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.QualificationModel;
 import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.parser.QualificationParser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.PathUtil;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -79,12 +81,15 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     int position = -1;
     ImageView backImageView;
     String docpath = null;
+    boolean isQualificationTouched=false;
     SesstionManager sesstionManager;
+    AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask;
+    DeleteQualificationAsynctask deleteQualificationAsynctask;
 
     LinearLayout updateDocLinearLayout;
     RelativeLayout EditDocRelativeLayout;
     private static final int RESULT_CODE = 1;
-
+    ImageView deleteImageView;
     TextView docNameTv, uploadDoctv, add;
     EditText yearEditText, clgEt, degree_name, sepcialization;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
@@ -128,6 +133,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        deleteImageView = (ImageView) findViewById(R.id.delete);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         updateDocLinearLayout = (LinearLayout) findViewById(R.id.uploadDoc);
         EditDocRelativeLayout = (RelativeLayout) findViewById(R.id.EditDoc);
@@ -188,19 +194,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                 show();
             }
         });
-        saveTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
-                    if (validate()) {
 
-                    }
-
-                } else {
-                    NetworkUtill.showNoInternetDialog(EditQualificationDetailOrAddQualificationsDetails.this);
-                }
-            }
-        });
         yearEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -214,13 +208,25 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             position = getIntent().getIntExtra("pos", -1);
 
         }
+clgEt.setOnTouchListener(new View.OnTouchListener() {
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(!isQualificationTouched) {
+            isQualificationTouched=true;
+            Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, SingleSelectQualifications.class);
+            startActivityForResult(intent, RESULT_CODE);
+        }
+        return false;
+    }
+});
+
         if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0 && position != -1)
 
         {
             if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() > 0) {
                 sepcialization.setText(getSelectedNameCsv());
             }
-            QualificationModel qualificationModel = userDetailModel.getQualificationModels().get(position);
+            final QualificationModel qualificationModel = userDetailModel.getQualificationModels().get(position);
 
             degree_name.setText(qualificationModel.getClgName());
             clgEt.setText(qualificationModel.getDegreeName());
@@ -247,9 +253,43 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                     startActivityForResult(intent, RESULT_CODE);
                 }
             });
+            deleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
+
+
+                        deleteQualificationAsynctask= new DeleteQualificationAsynctask( qualificationModel.getId());
+                        deleteQualificationAsynctask.execute();
+
+
+                    } else {
+                        NetworkUtill.showNoInternetDialog(EditQualificationDetailOrAddQualificationsDetails.this);
+                    }
+                }
+            });
+            saveTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
+                        if (validate()) {
+                            String id = "";
+
+                            id = qualificationModel.getId();
+
+                            AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), clgEt.getText().toString(), id);
+                            addOrUpdateQualificationAsynctask.execute();
+                        }
+
+                    } else {
+                        NetworkUtill.showNoInternetDialog(EditQualificationDetailOrAddQualificationsDetails.this);
+                    }
+                }
+            });
         } else {
             title_side_left.setText("Add Qualification");
             clgEt.setText(" ");
+            deleteImageView.setVisibility(View.GONE);
             EditDocRelativeLayout.setVisibility(View.GONE);
             sepcialization.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -259,14 +299,31 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
                 }
             });
+            saveTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
+                        if (validate()) {
+
+
+                            AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), clgEt.getText().toString(), "");
+                            addOrUpdateQualificationAsynctask.execute();
+                        }
+
+                    } else {
+                        NetworkUtill.showNoInternetDialog(EditQualificationDetailOrAddQualificationsDetails.this);
+                    }
+                }
+            });
         }
-        clgEt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, SingleSelectQualifications.class);
-                startActivityForResult(intent, RESULT_CODE);
-            }
-        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isQualificationTouched=false;
+
     }
 
     public String getSelectedNameCsv() {
@@ -451,7 +508,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             return false;
         }
         if (degree_name.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Enter College name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Enter University name.", Toast.LENGTH_SHORT).show();
             return false;
         }
        /* if (sepcialization.getText().toString().length() == 0) {
@@ -467,7 +524,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
     public class AddOrUpdateQualificationAsynctask extends AsyncTask<Void, Void, Void> {
         String responseBody;
-        String fname, lname, email, password, mobile, otp, title, category, city, gender, yearOfExperince, dob, website, about;
+        String university, year, qualification, id;
         CircularProgressBar bar;
         //PlayServiceHelper regId;
 
@@ -481,19 +538,13 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             }
         }
 
-        public AddOrUpdateQualificationAsynctask(String fname, String email, String mobile, String title, String category, String city, String gender, String yearOfExperince, String dob, String website, String about) {
-            this.email = email;
-            this.title = title;
-            this.yearOfExperince = yearOfExperince;
-            this.about = about;
-            this.gender = gender;
-            this.dob = dob;
-            this.website = website;
-            this.fname = fname;
-            this.city = city;
-            this.lname = lname;
-            this.mobile = mobile;
-            this.category = category;
+        public AddOrUpdateQualificationAsynctask(String university, String year, String qualification, String id) {
+
+            this.university = university;
+            this.id = id;
+            this.qualification = qualification;
+            this.year = year;
+
         }
 
         @Override
@@ -507,7 +558,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         protected Void doInBackground(Void... params) {
             try {
 
-                String url = AppUrl.AppBaseUrl + "user/update-profile";
+                String url = AppUrl.AppBaseUrl + "user/education";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -524,10 +575,15 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                 entityBuilder.addTextBody("Content-Type", "applicaion/json");
                 entityBuilder.addTextBody(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST);
                 entityBuilder.addTextBody("userID", userId);
+                entityBuilder.addTextBody("Qualification[college]", university);
+                entityBuilder.addTextBody("Qualification[year]", year);
+                entityBuilder.addTextBody("Qualification[degree]", qualification);
+                if (position != -1)
+                    entityBuilder.addTextBody("Qualification[id]", id);
                 if (docpath != null && docpath.toString().trim().length() > 0) {
                     File file = new File(docpath);
                     FileBody encFile = new FileBody(file);
-                    entityBuilder.addPart("DoctorProfile[imageFile]", encFile);
+                    entityBuilder.addPart("Qualification[uploadFile]", encFile);
                 }
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
@@ -571,12 +627,20 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                                     }
                                 }
                             } else {
+                                if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
-                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
-                                    Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                    ArrayList<QualificationModel> qualificationModels = QualificationParser.qualificationParser(dataJsonObject);
+
+                                    userDetailModel.setQualificationModels(qualificationModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsQualificationUpdated(true);
+                                }
+                                if (dataJsonObject.has("status_message") && !dataJsonObject.isNull("status_message")) {
+                                    Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, dataJsonObject.getString("status_message"), Toast.LENGTH_SHORT).show();
 
                                 }
-
+                                finish();
                             }
                         }
                     }
@@ -590,4 +654,138 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         }
     }
 
+    public class DeleteQualificationAsynctask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String university, year, qualification, id;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public DeleteQualificationAsynctask(String id) {
+
+            this.id = id;
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/delete-qualification";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("Qualification[id]", id));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<QualificationModel> qualificationModels = QualificationParser.qualificationParser(dataJsonObject);
+
+                                    userDetailModel.setQualificationModels(qualificationModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsQualificationUpdated(true);
+                                }else {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<QualificationModel> qualificationModels = null;
+
+                                    userDetailModel.setQualificationModels(qualificationModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsQualificationUpdated(true);
+                                }
+
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                }
+                                finish();
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(addOrUpdateQualificationAsynctask!=null&&!addOrUpdateQualificationAsynctask.isCancelled())
+            addOrUpdateQualificationAsynctask.cancelAsyncTask();
+        if(deleteQualificationAsynctask!=null&&!deleteQualificationAsynctask.isCancelled())
+            deleteQualificationAsynctask.cancelAsyncTask();
+    }
 }

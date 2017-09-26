@@ -59,6 +59,17 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dp"
+                android:padding="8dp"
+
+                android:src="@drawable/edit"
+                android:visibility="visible" />
 
         </RelativeLayout>
     </RelativeLayout>

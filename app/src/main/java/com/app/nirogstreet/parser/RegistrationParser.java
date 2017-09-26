@@ -22,8 +22,10 @@ public class RegistrationParser {
                     String reg_board = null;
                     String council_registration_number = null;
                     String council_name = null;
+                    String reg_file=null;
                     String council_year = null;
                     String registrationId = null;
+                    String council_Type=null;
                     JSONObject registraionJsonObject = registraionJsonArray.getJSONObject(i);
                     if (registraionJsonObject.has("id") && !registraionJsonObject.isNull("id")) {
                         registrationId = registraionJsonObject.getString("id");
@@ -40,7 +42,15 @@ public class RegistrationParser {
                     if (registraionJsonObject.has("reg_board") && !registraionJsonObject.isNull("reg_board")) {
                         reg_board = registraionJsonObject.getString("reg_board");
                     }
-                    registrationAndDocumenModels.add(new RegistrationAndDocumenModel(council_registration_number, council_name, council_year, registrationId, reg_board));
+                    if(registraionJsonObject.has("council_type")&&!registraionJsonObject.isNull("council_type"))
+                    {
+                        council_Type=registraionJsonObject.getString("council_type");
+                    }
+                    if(registraionJsonObject.has("reg_file")&&!registraionJsonObject.isNull("reg_file"))
+                    {
+                       reg_file=registraionJsonObject.getString("reg_file");
+                    }
+                    registrationAndDocumenModels.add(new RegistrationAndDocumenModel(council_registration_number, council_name, council_year, registrationId, reg_board,reg_file,council_Type));
                 }
             }
 

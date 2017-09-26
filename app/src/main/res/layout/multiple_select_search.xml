@@ -5,97 +5,6 @@
     android:background="#e4edf0"
     android:orientation="vertical">
 
-    <!-- <RelativeLayout
-         android:id="@+id/searchLayout"
-         android:background="@color/cardbluebackground"
-         android:layout_width="match_parent"
-         android:layout_height="?android:attr/actionBarSize"
-         android:gravity="center">
-
-         <ImageView
-             android:id="@+id/back"
-             android:layout_width="35dp"
-             android:layout_height="35dp"
-             android:layout_alignParentLeft="true"
-             android:layout_centerVertical="true"
-             android:layout_marginLeft="7dp"
-             android:padding="8dp"
-
-             android:src="@drawable/back"
-             android:visibility="visible" />
-         &lt;!&ndash;<Button&ndash;&gt;
-         &lt;!&ndash;android:id="@+id/searchButton"&ndash;&gt;
-         &lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;
-         &lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;
-         &lt;!&ndash;android:layout_alignParentRight="true"&ndash;&gt;
-         &lt;!&ndash;android:layout_centerVertical="true"&ndash;&gt;
-         &lt;!&ndash;android:layout_marginRight="15dp"&ndash;&gt;
-         &lt;!&ndash;android:background="@null"&ndash;&gt;
-         &lt;!&ndash;android:text="Search"&ndash;&gt;
-         &lt;!&ndash;android:textColor="@color/white"&ndash;&gt;
-         &lt;!&ndash;android:textSize="16sp"&ndash;&gt;
-         &lt;!&ndash;android:textStyle="normal" />&ndash;&gt;
-
-         <TextView
-             android:id="@+id/searchButton"
-             android:layout_width="wrap_content"
-             android:layout_height="45dp"
-             android:layout_centerVertical="true"
-             android:layout_gravity="center"
-             android:layout_marginLeft="@dimen/actionbar_icon_margin"
-             android:layout_toRightOf="@+id/back"
-             android:gravity="center|left"
-             android:src="@drawable/edit"
-             android:text=""
-             android:textSize="16sp"
-             android:textStyle="bold"
-             android:visibility="visible" />
-
-         <TextView
-             android:id="@+id/done"
-             android:layout_width="45dp"
-             android:layout_height="45dp"
-             android:layout_alignParentRight="true"
-             android:layout_centerVertical="true"
-             android:layout_gravity="center"
-             android:layout_marginRight="@dimen/actionbar_icon_margin"
-             android:gravity="center"
-             android:text="Done"
-             android:textColor="@color/white"
-             android:visibility="visible" />
-
-         <EditText
-             android:id="@+id/searchET1"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_centerVertical="true"
-             android:layout_marginLeft="@dimen/actionbar_icon_margin"
-             android:layout_marginRight="@dimen/actionbar_icon_margin"
-             android:layout_toLeftOf="@id/searchButton"
-             android:layout_toRightOf="@id/back"
-             android:background="@null"
-             android:cursorVisible="true"
-             android:editable="false"
-             android:hint=""
-
-             android:paddingBottom="5dp"
-             android:paddingTop="5dp"
-             android:singleLine="true"
-             android:textColor="@color/black"
-             android:textColorHint="#88ffffff"
-             android:textCursorDrawable="@drawable/cursor_drawable"
-             android:textSize="16sp"
-             android:textStyle="normal"
-             android:visibility="visible" />
-
-     </RelativeLayout>
-
-     <View
-         android:id="@+id/view"
-         android:layout_width="match_parent"
-         android:layout_height="1dp"
-         android:layout_below="@+id/searchLayout"
-         android:background="#e4edf0" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -195,12 +104,30 @@
                 android:text="Select your Specilization"
                 android:textColor="@color/black" />
 
+            <HorizontalScrollView
+                android:id="@+id/horizontal_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/specilization"
+                android:overScrollMode="never"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/horizontal_layout"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/horizontal_scroll"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/specilization"
+                android:layout_below="@+id/horizontal_scroll"
                 android:background="@color/white"
                 android:scrollbars="vertical"
                 android:visibility="gone"
@@ -228,11 +155,11 @@
                 android:layout_weight="1"
                 android:background="#e82351"
                 android:gravity="center"
-                android:visibility="gone"
                 android:maxHeight="50dp"
                 android:text="+ Add"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#fff" />
+                android:textColor="#fff"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
