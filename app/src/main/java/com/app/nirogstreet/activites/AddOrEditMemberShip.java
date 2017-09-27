@@ -40,18 +40,22 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.net.ssl.SSLContext;
 
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.conn.scheme.Scheme;
 import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
 import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 /**
@@ -60,13 +64,14 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class AddOrEditMemberShip extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     EditText yearEditText;
     public static int year;
-    ImageView backImageView;
+    ImageView backImageView, deleteImageView;
     int position = -1;
-CircularProgressBar circularProgressBar;
+    CircularProgressBar circularProgressBar;
     static boolean isVisible = true;
     TextView title_side_left, saveTv;
     private SesstionManager sesstionManager;
     private String authToken, userId;
+    DeleteMemberShipAsynctask deleteMemberShipAsynctask;
     private UserDetailModel userDetailModel;
     AddOrUpdateMembershipAsynctask addOrUpdateMembershipAsynctask;
 
@@ -80,15 +85,15 @@ CircularProgressBar circularProgressBar;
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
             userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         }
-
-        circularProgressBar=(CircularProgressBar)findViewById(R.id.circularProgressBar);
+        deleteImageView = (ImageView) findViewById(R.id.delete);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, AddOrEditMemberShip.this);
 
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
-        saveTv=(TextView)findViewById(R.id.saveTv) ;
+        saveTv = (TextView) findViewById(R.id.saveTv);
         yearEditText = (EditText) findViewById(R.id.year);
         TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, AddOrEditMemberShip.this);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -119,29 +124,38 @@ CircularProgressBar circularProgressBar;
             final MemberShipModel memberShipModel = userDetailModel.getMemberShipModels().get(position);
 
             yearEditText.setText(memberShipModel.getMembership());
-saveTv.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        if(NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this))
-        {
-        addOrUpdateMembershipAsynctask=new    AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(),memberShipModel.getId());
-            addOrUpdateMembershipAsynctask.execute();
-        }else {
-            NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
-        }
-    }
-});
+            saveTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
+                        addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), memberShipModel.getId());
+                        addOrUpdateMembershipAsynctask.execute();
+                    } else {
+                        NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
+                    }
+                }
+            });
+            deleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
+                        deleteMemberShipAsynctask = new DeleteMemberShipAsynctask(memberShipModel.getId());
+                        deleteMemberShipAsynctask.execute();
+                    } else {
+                        NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
+                    }
+                }
+            });
 
         } else {
             title_side_left.setText("Add Membership");
             saveTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this))
-                    {
-                        addOrUpdateMembershipAsynctask=new    AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(),"");
+                    if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
+                        addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), "");
                         addOrUpdateMembershipAsynctask.execute();
-                    }else {
+                    } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
                     }
                 }
@@ -238,6 +252,7 @@ saveTv.setOnClickListener(new View.OnClickListener() {
         }
         return true;
     }
+
     public class AddOrUpdateMembershipAsynctask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String type, awardname, registraionNumber, id, year;
@@ -255,11 +270,9 @@ saveTv.setOnClickListener(new View.OnClickListener() {
             }
         }
 
-        public AddOrUpdateMembershipAsynctask( String year, String id) {
+        public AddOrUpdateMembershipAsynctask(String year, String id) {
 
-            this.type = type;
             this.id = id;
-            this.awardname = awardname;
             this.year = year;
 
         }
@@ -292,7 +305,7 @@ saveTv.setOnClickListener(new View.OnClickListener() {
                 entityBuilder.addTextBody("Content-Type", "applicaion/json");
                 entityBuilder.addTextBody(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST);
                 entityBuilder.addTextBody("userID", userId);
-                entityBuilder.addTextBody("Membership[membership]", awardname);
+                entityBuilder.addTextBody("Membership[membership]", year);
                 if (position != -1)
                     entityBuilder.addTextBody("Membership[id]", id);
 
@@ -351,6 +364,132 @@ saveTv.setOnClickListener(new View.OnClickListener() {
                                 }
                                 if (dataJsonObject.has("status_message") && !dataJsonObject.isNull("status_message")) {
                                     Toast.makeText(AddOrEditMemberShip.this, dataJsonObject.getString("status_message"), Toast.LENGTH_SHORT).show();
+
+                                }
+                                finish();
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    public class DeleteMemberShipAsynctask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String university, year, qualification, id;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public DeleteMemberShipAsynctask(String id) {
+
+            this.id = id;
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/delete-membership";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("Membership[id]", id));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    errorArray = dataJsonObject.getJSONArray("message");
+                                    for (int i = 0; i < errorArray.length(); i++) {
+                                        String error = errorArray.getJSONObject(i).getString("error");
+                                        Toast.makeText(AddOrEditMemberShip.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                if (dataJsonObject.has("membership") && !dataJsonObject.isNull("membership")) {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<MemberShipModel> memberShipModels = MemberShipParser.memberShipParser(dataJsonObject);
+
+                                    userDetailModel.setMemberShipModels(memberShipModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsMemberShipUpdated(true);
+                                } else {
+                                    UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
+
+                                    ArrayList<MemberShipModel> memberShipModels = null;
+
+                                    userDetailModel.setMemberShipModels(memberShipModels);
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
+                                    ApplicationSingleton.setIsMemberShipUpdated(true);
+                                }
+
+                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                    Toast.makeText(AddOrEditMemberShip.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
 
                                 }
                                 finish();

@@ -166,7 +166,7 @@ public class Dr_Qualifications extends AppCompatActivity {
         public void onBindViewHolder(QualificationAdapter.MyHolderView holder, final int position) {
             QualificationModel qualificationModel = qualificationModels.get(position);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(qualificationModel.getDegreeName());
             holder.degreeNameTv.setText(qualificationModel.getClgName());

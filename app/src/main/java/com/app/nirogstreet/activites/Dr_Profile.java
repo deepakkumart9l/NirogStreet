@@ -442,7 +442,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 clinicAddressEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, AddOrEditClinicDetail.class);
+                                        Intent intent = new Intent(Dr_Profile.this, Timings.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }

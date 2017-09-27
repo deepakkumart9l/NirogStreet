@@ -131,7 +131,7 @@ public class Award extends AppCompatActivity{
         public void onBindViewHolder(AwardAdapter.MyHolderView holder, final int position) {
             AwardsModel awardsModel = awardsModels.get(position);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(awardsModel.getAwardName());
             holder.degreeNameTv.setVisibility(View.GONE);

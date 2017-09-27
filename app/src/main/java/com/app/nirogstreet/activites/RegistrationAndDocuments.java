@@ -134,7 +134,7 @@ public class RegistrationAndDocuments extends Activity {
         public void onBindViewHolder(RegistrationAdapter.MyHolderView holder, final int position) {
             RegistrationAndDocumenModel qualificationModel = qualificationModels.get(position);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(qualificationModel.getCouncil_registration_number());
             holder.degreeNameTv.setText(qualificationModel.getCouncil_name());

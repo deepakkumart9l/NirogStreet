@@ -21,7 +21,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="7dp"
+                android:layout_marginLeft="12dp"
                 android:padding="8dp"
 
                 android:src="@drawable/back"
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="45dp"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
@@ -47,9 +47,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/back"
                 android:paddingBottom="@dimen/padding_10"
-                android:paddingLeft="18dp"
+                android:layout_marginLeft="45dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="@dimen/padding_10"
                 android:paddingTop="@dimen/padding_10"
                 android:text="Edit Clinical Details"
@@ -58,6 +58,17 @@
                 android:textStyle="bold"
                 android:visibility="visible" />
 
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:padding="8dp"
+
+                android:src="@drawable/edit"
+                android:visibility="visible" />
 
         </RelativeLayout>
     </RelativeLayout>

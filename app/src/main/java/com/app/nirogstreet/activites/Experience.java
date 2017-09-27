@@ -133,7 +133,7 @@ public class Experience extends Activity {
         public void onBindViewHolder(ExperienceAdapter.MyHolderView holder, final int position) {
             ExperinceModel experinceModel = experinceModels.get(position);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(experinceModel.getOrganizationName());
             holder.degreeNameTv.setText(experinceModel.getAddress());

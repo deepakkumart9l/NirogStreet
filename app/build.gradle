@@ -62,13 +62,12 @@ dependencies {
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.google.api-client:google-api-client-gson:+'
     compile 'com.google.android:flexbox:0.2.5'
+    compile 'joda-time:joda-time:2.9.4'
 
     testCompile 'junit:junit:4.12'
     compile project(path: ':library')
-
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
     apply plugin: 'com.google.gms.google-services'
-
 }

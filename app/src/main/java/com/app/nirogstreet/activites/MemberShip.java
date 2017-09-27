@@ -131,7 +131,7 @@ public class MemberShip extends Activity {
         public void onBindViewHolder(MemberShipAdapter.MyHolderView holder, final int position) {
             MemberShipModel awardsModel = memberShipModels.get(position);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(awardsModel.getMembership());
             holder.degreeNameTv.setVisibility(View.GONE);

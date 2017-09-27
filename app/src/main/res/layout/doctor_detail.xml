@@ -154,7 +154,8 @@
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:padding="6dp"
+                                android:layout_marginRight="-5dp"
                                 android:src="@drawable/edit" />
                         </RelativeLayout>
 
@@ -319,8 +320,10 @@
                                 android:id="@+id/QualificationSectionEdit"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
+                                android:layout_marginRight="-5dp"
+
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:padding="6dp"
 
                                 android:src="@drawable/add"
 
@@ -361,7 +364,8 @@
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:layout_marginRight="-5dp"
+                                android:padding="6dp"
 
                                 android:src="@drawable/add"
 
@@ -417,8 +421,11 @@
 
                             <ImageView
                                 android:id="@+id/SpecializationectionEdit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_marginRight="-5dp"
+                                android:padding="6dp"
+
                                 android:layout_alignParentRight="true"
                                 android:layout_below="@+id/SpecializationSectionHeadingTv"
                                 android:textSize="14sp" />
@@ -461,7 +468,9 @@
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:padding="6dp"
+                                android:layout_marginRight="-5dp"
+
 
                                 android:src="@drawable/add"
 
@@ -502,7 +511,9 @@
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
 
-                                android:padding="5dp"
+                                android:padding="6dp"
+                                android:layout_marginRight="-5dp"
+
                                 android:src="@drawable/add"
                                 android:textSize="14sp" />
                         </RelativeLayout>
@@ -600,7 +611,9 @@
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:padding="6dp"
+                                android:layout_marginRight="-5dp"
+
 
                                 android:src="@drawable/add"
 
@@ -642,7 +655,9 @@
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:padding="6dp"
+                                android:layout_marginRight="-5dp"
+
 
                                 android:src="@drawable/add"
 
@@ -684,7 +699,9 @@
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="5dp"
+                                android:padding="6dp"
+                                android:layout_marginRight="-5dp"
+
 
                                 android:src="@drawable/add"
 
@@ -731,10 +748,10 @@
                 <ImageView
                     android:id="@+id/backimg"
                     android:layout_marginTop="8dp"
-                    android:layout_width="40dp"
-                    android:padding="10dp"
+                    android:layout_width="35dp"
+                    android:padding="8dp"
                     android:visibility="visible"
-                    android:layout_height="40dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/back" />
 
                 <TextView
@@ -742,6 +759,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@android:color/white"

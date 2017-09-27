@@ -21,7 +21,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="7dp"
+                android:layout_marginLeft="12dp"
                 android:padding="8dp"
 
                 android:src="@drawable/back"
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="45dp"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
