@@ -128,8 +128,11 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
-                        addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), memberShipModel.getId());
-                        addOrUpdateMembershipAsynctask.execute();
+                        if(validate()) {
+
+                            addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), memberShipModel.getId());
+                            addOrUpdateMembershipAsynctask.execute();
+                        }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
                     }
@@ -153,8 +156,10 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
-                        addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), "");
-                        addOrUpdateMembershipAsynctask.execute();
+                        if(validate()) {
+                            addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), "");
+                            addOrUpdateMembershipAsynctask.execute();
+                        }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
                     }
@@ -247,7 +252,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
 
 
         if (yearEditText.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditMemberShip.this, "Select Year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditMemberShip.this, R.string.membership, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

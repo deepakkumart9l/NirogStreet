@@ -4,18 +4,22 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +68,8 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class AddOrEditExperience extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static boolean isVisible = true;
+    public static int year;
+
 
     ImageView backImageView;
     private SesstionManager sesstionManager;
@@ -85,7 +91,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.add_edit_experience);
-        deleteImageView=(ImageView)findViewById(R.id.delete);
+        deleteImageView = (ImageView) findViewById(R.id.delete);
         sesstionManager = new SesstionManager(AddOrEditExperience.this);
         if (sesstionManager.isUserLoggedIn()) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -111,7 +117,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             public boolean onTouch(View v, MotionEvent event) {
                 isFromDate = true;
                 if (isVisible)
-                    showDateDialog();
+                    show();
                 isVisible = false;
 
                 return false;
@@ -122,7 +128,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             public boolean onTouch(View v, MotionEvent event) {
                 isFromDate = false;
                 if (isVisible)
-                    showDateDialog();
+                    show();
                 isVisible = false;
                 return false;
             }
@@ -154,8 +160,11 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
-                        addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), experinceModel.getId());
-                        addOrUpdateQualificationAsynctask.execute();
+                        if (validate()) {
+
+                            addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), experinceModel.getId());
+                            addOrUpdateQualificationAsynctask.execute();
+                        }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditExperience.this);
                     }
@@ -164,8 +173,8 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             deleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)){
-                        deleteQualificationAsynctask=new DeleteQualificationAsynctask(experinceModel.getId());
+                    if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
+                        deleteQualificationAsynctask = new DeleteQualificationAsynctask(experinceModel.getId());
                         deleteQualificationAsynctask.execute();
                     }
                 }
@@ -178,8 +187,10 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
-                        addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), "");
-                        addOrUpdateQualificationAsynctask.execute();
+                        if (validate()) {
+                            addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), "");
+                            addOrUpdateQualificationAsynctask.execute();
+                        }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditExperience.this);
                     }
@@ -192,6 +203,84 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    public void show() {
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+
+    /*MonthYearPickerDialog pd = new MonthYearPickerDialog();
+    pd.setListener((View.OnClickListener) this);
+    pd.show(getFragmentManager(), "MonthYearPickerDialog");*/
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        MonthYearPickerDialog newFragment = new MonthYearPickerDialog();
+        newFragment.setListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                System.out.print(year);
+                isVisible = true;
+if(isFromDate)
+    fromEt.setText(year+"");
+                else
+    toEt.setText(year+"");
+
+                // yearEditText.setText(year + "");
+            }
+        });
+        if (isVisible) {
+            isVisible = false;
+            newFragment.show(fm, "date");
+        }
+    }
+
+    @SuppressLint("ValidFragment")
+    static public class MonthYearPickerDialog extends DialogFragment {
+
+        private static final int MAX_YEAR = year;
+        private DatePickerDialog.OnDateSetListener listener;
+
+        public void setListener(DatePickerDialog.OnDateSetListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            Calendar cal = Calendar.getInstance();
+
+            View dialog = inflater.inflate(R.layout.date_picker_dialog, null);
+            // final NumberPicker monthPicker = (NumberPicker) dialog.findViewById(R.id.picker_month);
+            final NumberPicker yearPicker = (NumberPicker) dialog.findViewById(R.id.picker_year);
+
+           /* monthPicker.setMinValue(1);
+            monthPicker.setMaxValue(12);
+            monthPicker.setValue(cal.get(Calendar.MONTH) + 1);*/
+
+            int year = cal.get(Calendar.YEAR);
+            yearPicker.setMinValue(1917);
+            yearPicker.setMaxValue(MAX_YEAR);
+            yearPicker.setValue(year);
+
+            builder.setView(dialog)
+                    // Add action buttons
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            listener.onDateSet(null, yearPicker.getValue(), 0, 0);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MonthYearPickerDialog.this.getDialog().cancel();
+                            isVisible = true;
+
+                        }
+                    });
+            return builder.create();
+        }
     }
 
     @Override
@@ -386,23 +475,24 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
 
     public boolean validate() {
         if (fromEt.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditExperience.this, "Enter start year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditExperience.this, R.string.start_year, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (toEt.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditExperience.this, "Enter end year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditExperience.this, R.string.end_year, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (cityEt.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditExperience.this, "Enter address.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditExperience.this, R.string.address, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (clinicOrhospital.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditExperience.this, "Select Hospital or Clinic", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditExperience.this, R.string.HospitalorClinic, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
+
     public class DeleteQualificationAsynctask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String university, year, qualification, id;
@@ -501,7 +591,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                                     userDetailModel.setExperinceModels(experinceModels);
                                     ApplicationSingleton.setUserDetailModel(userDetailModel);
                                     ApplicationSingleton.setIsExperinceUpdated(true);
-                                }else {
+                                } else {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
                                     ArrayList<ExperinceModel> experinceModels = null;

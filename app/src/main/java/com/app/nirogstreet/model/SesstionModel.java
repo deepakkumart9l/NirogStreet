@@ -25,6 +25,6 @@ public class SesstionModel {
         this.startTime = startTime;
     }
 
-    String startTime;
-    String endTime;
+    String startTime="";
+    String endTime="";
 }

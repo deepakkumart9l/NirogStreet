@@ -504,11 +504,11 @@ clgEt.setOnTouchListener(new View.OnTouchListener() {
 
     public boolean validate() {
         if (clgEt.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Qualification.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, R.string.qualification, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (degree_name.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Enter University name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, R.string.university, Toast.LENGTH_SHORT).show();
             return false;
         }
        /* if (sepcialization.getText().toString().length() == 0) {
@@ -516,7 +516,7 @@ clgEt.setOnTouchListener(new View.OnTouchListener() {
             return false;
         }*/
         if (yearEditText.getText().toString().length() == 0) {
-            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, R.string.year, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

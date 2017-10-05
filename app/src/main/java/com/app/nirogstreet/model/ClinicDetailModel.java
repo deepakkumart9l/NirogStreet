@@ -99,17 +99,17 @@ public class ClinicDetailModel implements Serializable {
     String at_long;
     String consultation_fee;
 
-    public ArrayList<ServicesModel> getServicesModels() {
+    public ArrayList<SpecializationModel> getServicesModels() {
         return servicesModels;
     }
 
-    public void setServicesModels(ArrayList<ServicesModel> servicesModels) {
+    public void setServicesModels(ArrayList<SpecializationModel> servicesModels) {
         this.servicesModels = servicesModels;
     }
 
-    ArrayList<ServicesModel> servicesModels = new ArrayList<>();
+    ArrayList<SpecializationModel> servicesModels = new ArrayList<>();
 
-    public ClinicDetailModel(String id, String name, String mobile, String address, String state, String city, String pincode, String at_lat, String at_long, String consultation_fee, ArrayList<ServicesModel> servicesModels) {
+    public ClinicDetailModel(String id, String name, String mobile, String address, String state, String city, String pincode, String at_lat, String at_long, String consultation_fee, ArrayList<SpecializationModel> servicesModels) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;

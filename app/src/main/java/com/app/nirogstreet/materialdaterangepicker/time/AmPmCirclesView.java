@@ -84,7 +84,9 @@ public class AmPmCirclesView extends View {
         mAmPmSelectedTextColor = res.getColor(R.color.mdtp_white);
         mSelectedAlpha = SELECTED_ALPHA;
         String typefaceFamily = res.getString(R.string.mdtp_sans_serif);
-        Typeface tf = Typeface.create(typefaceFamily, Typeface.NORMAL);
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/ubuntu.regular.ttf");
+
+       // Typeface tf = Typeface.create(typefaceFamily, Typeface.NORMAL);
         mPaint.setTypeface(tf);
         mPaint.setAntiAlias(true);
         mPaint.setTextAlign(Align.CENTER);

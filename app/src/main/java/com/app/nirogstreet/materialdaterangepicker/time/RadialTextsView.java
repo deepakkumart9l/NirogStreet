@@ -94,9 +94,11 @@ public class RadialTextsView extends View {
         int numbersTextColor = res.getColor(R.color.mdtp_numbers_text_color);
         mPaint.setColor(numbersTextColor);
         String typefaceFamily = res.getString(R.string.mdtp_radial_numbers_typeface);
-        mTypefaceLight = Typeface.create(typefaceFamily, Typeface.NORMAL);
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/ubuntu.regular.ttf");
+
+        mTypefaceLight =Typeface.createFromAsset(getContext().getAssets(), "fonts/ubuntu.regular.ttf");
         String typefaceFamilyRegular = res.getString(R.string.mdtp_sans_serif);
-        mTypefaceRegular = Typeface.create(typefaceFamilyRegular, Typeface.NORMAL);
+        mTypefaceRegular = Typeface.createFromAsset(getContext().getAssets(), "fonts/ubuntu.regular.ttf");
         mPaint.setAntiAlias(true);
         mPaint.setTextAlign(Align.CENTER);
 

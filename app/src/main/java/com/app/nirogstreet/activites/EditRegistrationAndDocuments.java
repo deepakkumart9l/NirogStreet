@@ -560,19 +560,19 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
 
     public boolean validate() {
         if (clgEt.getText().toString().length() == 0) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Enter Council Registration Number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, R.string.council, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (degree_name.getText().toString().length() == 0) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Enter Council name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, R.string.council_name, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (type.equalsIgnoreCase("-1")) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Please select Council type.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, R.string.council_type, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (yearEditText.getText().toString().length() == 0) {
-            Toast.makeText(EditRegistrationAndDocuments.this, "Select Year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditRegistrationAndDocuments.this, R.string.year, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

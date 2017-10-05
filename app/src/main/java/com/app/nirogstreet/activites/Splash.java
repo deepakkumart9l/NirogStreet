@@ -70,7 +70,7 @@ public class Splash extends AppCompatActivity {
             public void run() {
 
                 if (sesstionManager.isUserLoggedIn()) {
-                    startActivity(new Intent(getApplicationContext(), Dr_Profile.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 } else {
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));

@@ -382,6 +382,7 @@ public class SingleSelectQualifications extends Activity
                                 searchModels.add(new SpecializationModel(fname, id, false));
                             }
                         } else {
+                            addQualificationTextView.setText("+Add "+"("+searchET.getText().toString()+")");
                             addQualificationTextView.setVisibility(View.VISIBLE);
                         }
 

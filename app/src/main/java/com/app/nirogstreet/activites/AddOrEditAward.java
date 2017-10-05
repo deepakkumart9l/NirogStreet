@@ -524,12 +524,12 @@ public class AddOrEditAward extends AppCompatActivity {
     public boolean validate() {
 
         if (degree_name.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditAward.this, "Enter Award name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditAward.this, R.string.Award_name, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (yearEditText.getText().toString().length() == 0) {
-            Toast.makeText(AddOrEditAward.this, "Select Year.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrEditAward.this, R.string.year, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

@@ -1,4 +1,4 @@
-package com.app.nirogstreet.activites;
+package com.app.nirogstreet.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,23 +8,32 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.AddOrEditClinicDetail;
+import com.app.nirogstreet.activites.Award;
+import com.app.nirogstreet.activites.CreateDrProfile;
+import com.app.nirogstreet.activites.Dr_Profile;
+import com.app.nirogstreet.activites.Dr_Qualifications;
+import com.app.nirogstreet.activites.Experience;
+import com.app.nirogstreet.activites.MemberShip;
+import com.app.nirogstreet.activites.RegistrationAndDocuments;
+import com.app.nirogstreet.activites.SpecilizationAndService;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
@@ -37,7 +46,6 @@ import com.app.nirogstreet.uttil.TypeFaceMethods;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,11 +66,12 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Preeti on 22-08-2017.
+ * Created by Preeti on 05-10-2017.
  */
+public class ProfileFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
 
-public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
-
+    Context context;
+    View view;
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.5f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.5f;
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
@@ -141,114 +150,132 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
     }
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.doctor_detail);
+        context = getActivity();
+
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.statusbarcolor));
+        }
+
+    }
+    private void findViews() {
+        appbar = (AppBarLayout)view. findViewById(R.id.appbar_layout);
+        collapsing = (CollapsingToolbarLayout) view.findViewById(R.id.collapse_toolbar);
+        coverImage = (ImageView)view. findViewById(R.id.imageview_placeholder);
+        framelayoutTitle = (FrameLayout)view. findViewById(R.id.framelayout_title);
+        linearlayoutTitle = (RelativeLayout)view. findViewById(R.id.linearlayout_title);
+        toolbar = (Toolbar)view. findViewById(R.id.toolbar);
+        textviewTitle = (TextView)view. findViewById(R.id.textview_title);
+        backimg = (ImageView)view. findViewById(R.id.backimg);
+    }
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.doctor_detail, container, false);
         findViews();
 
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
 
-        setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
 
-        backimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout)view. findViewById(R.id.collapse_toolbar);
         collapsingToolbarLayout.setTitle("demo");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.black));
         collapsingToolbarLayout.setTitle("My App Title");
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar)view. findViewById(R.id.toolbar);
 
 
-        editInfo = (ImageView) findViewById(R.id.editInfo);
-        circleImageView = (CircleImageView) findViewById(R.id.pro);
-        specilizationTv = (TextView) findViewById(R.id.specilizationTv);
-        sevicesTextView = (TextView) findViewById(R.id.sevices);
-        spcilizationCsv = (TextView) findViewById(R.id.spcilizationCsv);
-        sevicesCsvTextView = (TextView) findViewById(R.id.sevicesCsv);
-        SpecilizationsevicesTextView = (TextView) findViewById(R.id.Specilizationsevices);
-        SpecilizationsevicesEdit = (ImageView) findViewById(R.id.SpecilizationsevicesEdit);
-        MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
-        awardLay = (LinearLayout) findViewById(R.id.awardLay);
-        AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
-        clinicAddressEdit = (ImageView) findViewById(R.id.clinicAddressEdit);
-        AwardSectionTv = (TextView) findViewById(R.id.AwardSectionTv);
-        MemberShipSectionTv = (TextView) findViewById(R.id.MemberShipSectionTv);
-        backImageView = (ImageView) findViewById(R.id.back);
-        memberLay = (LinearLayout) findViewById(R.id.memberLay);
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        ExperinceEdit = (ImageView) findViewById(R.id.ExperinceEdit);
-        RegistrationSectionEdit = (ImageView) findViewById(R.id.RegistrationSectionEdit);
-        QualificationSectionEdit = (ImageView) findViewById(R.id.QualificationSectionEdit);
-        experinceLay = (LinearLayout) findViewById(R.id.experinceLay);
-        qualifictionLinearLayout = (LinearLayout) findViewById(R.id.QualificatonLinearLayout);
-        regisrtaionLay = (LinearLayout) findViewById(R.id.regisrtaionLay);
-        clinicLay = (LinearLayout) findViewById(R.id.clinicLay);
-        clinicAddressHeading = (TextView) findViewById(R.id.clinicAddressHeading);
-        fee = (TextView) findViewById(R.id.fee);
-        nameTv = (TextView) findViewById(R.id.nameTv);
-        ExperienceSectionTv = (TextView) findViewById(R.id.ExperienceSectionTv);
-        placeTv = (TextView) findViewById(R.id.placeTv);
-        emailTv = (TextView) findViewById(R.id.emailTv);
-        phoneTv = (TextView) findViewById(R.id.phoneTv);
-        WebTv = (TextView) findViewById(R.id.WebTv);
-        RegistrationSectionHeadingTv = (TextView) findViewById(R.id.RegistrationSectionHeadingTv);
-        aboutHeading = (TextView) findViewById(R.id.about);
-        aboutDetail = (TextView) findViewById(R.id.about_detail);
+        editInfo = (ImageView)view. findViewById(R.id.editInfo);
+        circleImageView = (CircleImageView)view. findViewById(R.id.pro);
+        specilizationTv = (TextView)view. findViewById(R.id.specilizationTv);
+        sevicesTextView = (TextView)view. findViewById(R.id.sevices);
+        spcilizationCsv = (TextView)view. findViewById(R.id.spcilizationCsv);
+        sevicesCsvTextView = (TextView)view. findViewById(R.id.sevicesCsv);
+        SpecilizationsevicesTextView = (TextView)view. findViewById(R.id.Specilizationsevices);
+        SpecilizationsevicesEdit = (ImageView) view.findViewById(R.id.SpecilizationsevicesEdit);
+        MemberShipEdit = (ImageView)view. findViewById(R.id.MemberShipEdit);
+        awardLay = (LinearLayout)view. findViewById(R.id.awardLay);
+        AwardEdit = (ImageView) view.findViewById(R.id.AwardEdit);
+        clinicAddressEdit = (ImageView)view. findViewById(R.id.clinicAddressEdit);
+        AwardSectionTv = (TextView)view. findViewById(R.id.AwardSectionTv);
+        MemberShipSectionTv = (TextView)view. findViewById(R.id.MemberShipSectionTv);
+        backImageView = (ImageView)view. findViewById(R.id.back);
+        memberLay = (LinearLayout) view.findViewById(R.id.memberLay);
+        ExperinceEdit = (ImageView)view. findViewById(R.id.ExperinceEdit);
+        RegistrationSectionEdit = (ImageView) view.findViewById(R.id.RegistrationSectionEdit);
+        QualificationSectionEdit = (ImageView)view. findViewById(R.id.QualificationSectionEdit);
+        experinceLay = (LinearLayout)view. findViewById(R.id.experinceLay);
+        qualifictionLinearLayout = (LinearLayout)view. findViewById(R.id.QualificatonLinearLayout);
+        regisrtaionLay = (LinearLayout)view. findViewById(R.id.regisrtaionLay);
+        clinicLay = (LinearLayout)view. findViewById(R.id.clinicLay);
+        clinicAddressHeading = (TextView)view. findViewById(R.id.clinicAddressHeading);
+        fee = (TextView)view. findViewById(R.id.fee);
+        nameTv = (TextView)view. findViewById(R.id.nameTv);
+        ExperienceSectionTv = (TextView) view.findViewById(R.id.ExperienceSectionTv);
+        placeTv = (TextView)view. findViewById(R.id.placeTv);
+        emailTv = (TextView) view.findViewById(R.id.emailTv);
+        phoneTv = (TextView)view. findViewById(R.id.phoneTv);
+        WebTv = (TextView)view. findViewById(R.id.WebTv);
+        RegistrationSectionHeadingTv = (TextView)view. findViewById(R.id.RegistrationSectionHeadingTv);
+        aboutHeading = (TextView)view. findViewById(R.id.about);
+        aboutDetail = (TextView) view.findViewById(R.id.about_detail);
         aboutDetail.setLineSpacing(1, 1);
-        yearOfBirthTv = (TextView) findViewById(R.id.yearOfBirthTv);
-        yearOfExperienceTv = (TextView) findViewById(R.id.yearOfExperienceTv);
-        QualificationSectionTv = (TextView) findViewById(R.id.QualificationSectionTv);
-        SpecializationSectionHeadingTv = (TextView) findViewById(R.id.SpecializationSectionHeadingTv);
-        QualificationTv = (TextView) findViewById(R.id.QualificationTv);
-        sepcilizationDetailTv = (TextView) findViewById(R.id.sepcilizationDetailTv);
-        consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
-        allTaxes = (TextView) findViewById(R.id.allTaxes);
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        TypeFaceMethods.setRegularTypeFaceForTextView(emailTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesTextView, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesCsvTextView, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(spcilizationCsv, Dr_Profile.this);
+        yearOfBirthTv = (TextView) view.findViewById(R.id.yearOfBirthTv);
+        yearOfExperienceTv = (TextView) view.findViewById(R.id.yearOfExperienceTv);
+        QualificationSectionTv = (TextView)view. findViewById(R.id.QualificationSectionTv);
+        SpecializationSectionHeadingTv = (TextView)view. findViewById(R.id.SpecializationSectionHeadingTv);
+        QualificationTv = (TextView)view. findViewById(R.id.QualificationTv);
+        sepcilizationDetailTv = (TextView) view.findViewById(R.id.sepcilizationDetailTv);
+        consultationFeesHeading = (TextView)view. findViewById(R.id.consultaionFees);
+        allTaxes = (TextView)view. findViewById(R.id.allTaxes);
+        circularProgressBar = (CircularProgressBar)view. findViewById(R.id.circularProgressBar);
+        TypeFaceMethods.setRegularTypeFaceForTextView(emailTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesTextView, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesCsvTextView,context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(spcilizationCsv, context);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(phoneTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(WebTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(yearOfBirthTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(yearOfExperienceTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(QualificationTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(nameTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(placeTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(fee, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(phoneTv,context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(WebTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(yearOfBirthTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(yearOfExperienceTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(QualificationTv,context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(nameTv, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(placeTv,context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(fee, context);
 
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(ExperienceSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilizationTv, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(ExperienceSectionTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(specilizationTv, context);
 
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(sepcilizationDetailTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(QualificationSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(AwardSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(MemberShipSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecilizationsevicesTextView, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(sepcilizationDetailTv, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(QualificationSectionTv, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(AwardSectionTv, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(MemberShipSectionTv, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecilizationsevicesTextView, context);
 
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecializationSectionHeadingTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(consultationFeesHeading, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(RegistrationSectionHeadingTv, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecializationSectionHeadingTv, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(consultationFeesHeading, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(RegistrationSectionHeadingTv, context);
 
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(aboutHeading, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(clinicAddressHeading, Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(aboutHeading, context);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(clinicAddressHeading, context);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(aboutDetail, Dr_Profile.this);
-        sesstionManager = new SesstionManager(Dr_Profile.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(aboutDetail, context);
+        sesstionManager = new SesstionManager(context);
 
         if (sesstionManager.isUserLoggedIn()) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -261,35 +288,14 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             nameTv.setText(userName);
 
         }
-        if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
+        if (NetworkUtill.isNetworkAvailable(context)) {
             userDetailAsyncTask = new UserDetailAsyncTask();
             userDetailAsyncTask.execute();
         } else {
-            NetworkUtill.showNoInternetDialog(Dr_Profile.this);
+            NetworkUtill.showNoInternetDialog(context);
         }
-
+        return view;
     }
-
-    private void findViews() {
-        appbar = (AppBarLayout) findViewById(R.id.appbar_layout);
-        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
-        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
-        linearlayoutTitle = (RelativeLayout) findViewById(R.id.linearlayout_title);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textviewTitle = (TextView) findViewById(R.id.textview_title);
-        backimg = (ImageView) findViewById(R.id.backimg);
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
-
-        handleAlphaOnTitle(percentage);
-        handleToolbarTitleVisibility(percentage);
-    }
-
     public class UserDetailAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
 
@@ -369,7 +375,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                     errorArray = dataJsonObject.getJSONArray("message");
                                     for (int i = 0; i < errorArray.length(); i++) {
                                         String error = errorArray.getJSONObject(i).getString("error");
-                                        Toast.makeText(Dr_Profile.this, error, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             } else {
@@ -386,7 +392,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 SpecilizationsevicesEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, SpecilizationAndService.class);
+                                        Intent intent = new Intent(context, SpecilizationAndService.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -394,7 +400,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 editInfo.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
+                                        Intent intent = new Intent(context, CreateDrProfile.class);
                                         intent.putExtra("userModel", (Serializable) userDetailModel);
                                         startActivity(intent);
                                     }
@@ -402,7 +408,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 QualificationSectionEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, Dr_Qualifications.class);
+                                        Intent intent = new Intent(context, Dr_Qualifications.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -410,7 +416,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 RegistrationSectionEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, RegistrationAndDocuments.class);
+                                        Intent intent = new Intent(context, RegistrationAndDocuments.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -418,7 +424,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 ExperinceEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, Experience.class);
+                                        Intent intent = new Intent(context, Experience.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -426,7 +432,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 MemberShipEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, MemberShip.class);
+                                        Intent intent = new Intent(context, MemberShip.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -434,7 +440,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 AwardEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, Award.class);
+                                        Intent intent = new Intent(context, Award.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -442,7 +448,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 clinicAddressEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, AddOrEditClinicDetail.class);
+                                        Intent intent = new Intent(context, AddOrEditClinicDetail.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -460,10 +466,8 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
         }
     }
-
-
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         if (ApplicationSingleton.getUserDetailModel() != null) {
@@ -540,20 +544,20 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+                LayoutInflater layoutInflater = (LayoutInflater)context. getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 for (int i = 0; i < userDetailModel.getExperinceModels().size(); i++) {
                     try {
-                        View v = LayoutInflater.from(this).inflate(R.layout.profile_qualification_item, null);
+                        View v = LayoutInflater.from(context).inflate(R.layout.profile_qualification_item, null);
 
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(year, context);
                         year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - " + userDetailModel.getExperinceModels().get(i).getEnd_time());
                         degreename.setVisibility(View.GONE);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
                         textView.setText(userDetailModel.getExperinceModels().get(i).getOrganizationName());
                         v.setLayoutParams(params);
 
@@ -584,18 +588,18 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+                LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 for (int i = 0; i < userDetailModel.getMemberShipModels().size(); i++) {
                     try {
-                        View v = LayoutInflater.from(this).inflate(R.layout.profile_qualification_item, null);
+                        View v = LayoutInflater.from(context).inflate(R.layout.profile_qualification_item, null);
 
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
                         degreename.setVisibility(View.GONE);
                         year.setVisibility(View.GONE);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
                         textView.setText(userDetailModel.getMemberShipModels().get(i).getMembership());
                         v.setLayoutParams(params);
 
@@ -628,20 +632,20 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+                LayoutInflater layoutInflater = (LayoutInflater)context. getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 for (int i = 0; i < userDetailModel.getQualificationModels().size(); i++) {
                     try {
-                        View v = LayoutInflater.from(this).inflate(R.layout.profile_qualification_item, null);
+                        View v = LayoutInflater.from(context).inflate(R.layout.profile_qualification_item, null);
 
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(year, context);
                         year.setText(userDetailModel.getQualificationModels().get(i).getPassingYear());
                         degreename.setText(userDetailModel.getQualificationModels().get(i).getClgName());
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
                         textView.setText(userDetailModel.getQualificationModels().get(i).getDegreeName());
                         v.setLayoutParams(params);
 
@@ -673,20 +677,20 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+                LayoutInflater layoutInflater = (LayoutInflater)context. getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 for (int i = 0; i < userDetailModel.getAwardsModels().size(); i++) {
                     try {
-                        View v = LayoutInflater.from(this).inflate(R.layout.profile_qualification_item, null);
+                        View v = LayoutInflater.from(context).inflate(R.layout.profile_qualification_item, null);
 
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(year, context);
                         year.setText(userDetailModel.getAwardsModels().get(i).getYear());
                         degreename.setVisibility(View.GONE);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView,context);
                         textView.setText(userDetailModel.getAwardsModels().get(i).getAwardName());
                         v.setLayoutParams(params);
 
@@ -724,8 +728,8 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 QualificationTv.setText(getSelectedNameCsv());
             }
             if (userDetailModel.getProfile_pic() != null) {
-                ImageLoader imageLoader = new ImageLoader(Dr_Profile.this);
-                imageLoader.DisplayImage(Dr_Profile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
+                ImageLoader imageLoader = new ImageLoader(context);
+                imageLoader.DisplayImage(context, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
             }
         }
     }
@@ -745,27 +749,27 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
-            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+            LayoutInflater layoutInflater = (LayoutInflater)context. getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
             for (int i = 0; i < userDetailModel.getClinicDetailModels().size(); i++) {
                 try {
-                    View v = LayoutInflater.from(this).inflate(R.layout.clinic_profile_layout, null);
+                    View v = LayoutInflater.from(context).inflate(R.layout.clinic_profile_layout, null);
                     TextView consultaionFeesTv = (TextView) v.findViewById(R.id.consultaionFees);
                     TextView feeTv=(TextView)v.findViewById(R.id.fee);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(feeTv, Dr_Profile.this);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(feeTv, context);
 
-                    TypeFaceMethods.setRegularTypeFaceForTextView(consultaionFeesTv, Dr_Profile.this);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(consultaionFeesTv, context);
                     TextView allTaxesTv = (TextView) v.findViewById(R.id.allTaxes);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(allTaxesTv, Dr_Profile.this);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(allTaxesTv, context);
 
                     TextView textView = (TextView) v.findViewById(R.id.clgName);
                     TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                     TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(year, context);
                     year.setText("Pin Code :" + userDetailModel.getClinicDetailModels().get(i).getPincode());
                     degreename.setText(userDetailModel.getClinicDetailModels().get(i).getAddress() + " " + userDetailModel.getClinicDetailModels().get(i).getCity());
-                    TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
                     textView.setText(userDetailModel.getClinicDetailModels().get(i).getName());
                     feeTv.setText(userDetailModel.getClinicDetailModels().get(i).getConsultation_fee());
                     v.setLayoutParams(params);
@@ -828,20 +832,20 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+                LayoutInflater layoutInflater = (LayoutInflater)context. getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 for (int i = 0; i < userDetailModel.getRegistrationAndDocumenModels().size(); i++) {
                     try {
-                        View v = LayoutInflater.from(this).inflate(R.layout.profile_qualification_item, null);
+                        View v = LayoutInflater.from(context).inflate(R.layout.profile_qualification_item, null);
 
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(year, context);
                         year.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_year());
                         degreename.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_registration_number());
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
+                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, context);
                         textView.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_registration_number());
                         v.setLayoutParams(params);
 
@@ -857,7 +861,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         if (userDetailAsyncTask != null && !userDetailAsyncTask.isCancelled()) {
             userDetailAsyncTask.cancelAsyncTask();

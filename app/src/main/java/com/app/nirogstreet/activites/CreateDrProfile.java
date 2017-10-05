@@ -937,42 +937,42 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
     public boolean validate() {
         if (title.equalsIgnoreCase("-1")) {
-            Toast.makeText(CreateDrProfile.this, "Please select Title.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.seletct_title, Toast.LENGTH_SHORT).show();
             return false;
         }
         int radioButtonID = genderSpinnerRadioGroup.getCheckedRadioButtonId();
         View radioButton = genderSpinnerRadioGroup.findViewById(radioButtonID);
         int idx = genderSpinnerRadioGroup.indexOfChild(radioButton);
         if (idx == -1) {
-            Toast.makeText(CreateDrProfile.this, "Please select Gender.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.select_gender, Toast.LENGTH_SHORT).show();
 
             return false;
         } else {
             gender = idx + 1 + "";
         }
         if (category.equalsIgnoreCase("-1")) {
-            Toast.makeText(CreateDrProfile.this, "Please select Category.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.select_category, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (editTextCity.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, "Please enter City.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.enter_City, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (editTextYearOfExpeicence.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, "Please enter your Experience.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (editTextDob.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, "Please select DOB.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.DOB, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (editTextAbout.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, "Please enter About you.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateDrProfile.this, R.string.About_you, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (editTextWebsite.getText().length() != 0) {
             if (!Methods.validWebOrBlog(editTextWebsite.getText().toString())) {
-                Toast.makeText(CreateDrProfile.this, "Please enter valid website or blog.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateDrProfile.this, R.string.blog, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
