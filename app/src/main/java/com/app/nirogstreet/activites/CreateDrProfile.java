@@ -904,13 +904,13 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         editTextAbout.setText(userDetailModel.getAbout());
                                     }
                                     if (userDetailModel.getTitle() != null && !userDetailModel.getTitle().equalsIgnoreCase("")) {
-                                        if (userDetailModel.getTitle().equalsIgnoreCase("1")) {
-                                            spinnerTitle.setSelection(0);
-                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("2")) {
+                                        if (userDetailModel.getTitle().equalsIgnoreCase("DR/Mr")) {
                                             spinnerTitle.setSelection(1);
+                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("DR/Mrs")) {
+                                            spinnerTitle.setSelection(2);
 
                                         } else {
-                                            spinnerTitle.setSelection(2);
+                                            spinnerTitle.setSelection(3);
                                         }
                                     }
                                     if (userDetailModel.getCity() != null) {

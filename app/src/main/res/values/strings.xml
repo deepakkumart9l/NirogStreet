@@ -4,6 +4,26 @@
 
         <!-- Label for button to confirm chosen date or time [CHAR LIMIT=30] -->
         <string name="mdtp_done_label">Done</string>
+    <string name="seletct_title">Please select Title.</string>
+    <string name="select_gender">Please select Gender.</string>
+    <string name="select_category">Please select Category.</string>
+    <string name="enter_City">Please enter City.</string>
+    <string name="Experience">Please enter your Experience.</string>
+    <string name="DOB">Please select DOB.</string>
+    <string name="About_you">Please enter About you.</string>
+    <string name="blog">Please enter valid website or blog.</string>
+    <string name="qualification">Select Qualification.</string>
+    <string name="university">Enter University name.</string>
+    <string name="year">Select Year.</string>
+    <string name="council">Enter Council Registration Number.</string>
+    <string name="council_name">Enter Council name.</string>
+    <string name="council_type">Please select Council type.</string>
+    <string name="start_year">Enter start year.</string>
+    <string name="end_year">Enter end year.</string>
+    <string name="address">Enter address.</string>
+    <string name="Award_name">Enter Award name.</string>
+    <string name="membership">Enter Membership</string>
+    <string name="HospitalorClinic">Select Hospital or Clinic.</string>
         <string name="mdtp_ok">@android:string/ok</string>
         <string name="mdtp_cancel">@android:string/cancel</string>
         <!--

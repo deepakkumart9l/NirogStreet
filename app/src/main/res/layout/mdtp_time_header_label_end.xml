@@ -19,7 +19,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_gravity="center"
-      android:background="@color/mdtp_accent_color" >
+      android:background="@color/buttonBackground" >
         <View
             android:id="@+id/center_view_end"
             android:layout_width="1dp"

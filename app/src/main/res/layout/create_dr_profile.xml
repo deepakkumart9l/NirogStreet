@@ -123,7 +123,7 @@
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
 
-                app:ms_arrowColor="@color/buttonBackground"
+                app:ms_arrowColor="@color/textcolorgray"
                 app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/textcolorgray"
                 app:ms_hintColor="@color/textcolorgray" />
@@ -209,7 +209,7 @@
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
-                app:ms_arrowColor="@color/buttonBackground"
+                app:ms_arrowColor="@color/textcolorgray"
                 app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/textcolorgray"
                 app:ms_hintColor="@color/textcolorgray" />

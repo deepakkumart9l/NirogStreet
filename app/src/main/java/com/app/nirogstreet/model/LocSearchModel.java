@@ -8,6 +8,15 @@ public class LocSearchModel {
     public String getPincode() {
         return pincode;
     }
+public String countryName;
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
 
     public void setPincode(String pincode) {
         this.pincode = pincode;

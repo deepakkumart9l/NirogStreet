@@ -111,6 +111,7 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                     String address=data.getStringExtra("address");
                     String location = data.getStringExtra("city");
                     String pincodes = null;
+                    String country=null;
                     if(data.getStringExtra("pincode")!=null)
                     {
                         pincodes=data.getStringExtra("pincode");
@@ -122,6 +123,11 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                     }
                     if (data.hasExtra("latitude")) {
                         latitude = data.getStringExtra("latitude");
+                    }
+                    if(data.hasExtra("country")&&data.getStringExtra("country")!=null)
+                    {
+                        country=data.getStringExtra("country");
+                       countryEt.setText(country);
                     }
                     city.setText(location);
                     addressEt.setText(address);

@@ -67,7 +67,7 @@
                 android:layout_marginRight="12dp"
                 android:padding="8dp"
 
-                android:src="@drawable/edit"
+                android:src="@drawable/dlt"
                 android:visibility="visible" />
 
         </RelativeLayout>
@@ -191,7 +191,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:paddingLeft="2dp"
-                    android:src="@drawable/edit" />
+                    android:src="@drawable/attach_active" />
 
                 <TextView
                     android:id="@+id/uploadDoctv"
@@ -214,7 +214,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:paddingLeft="2dp"
-                    android:src="@drawable/edit" />
+                    android:src="@drawable/attach_dactive" />
 
                 <TextView
                     android:id="@+id/docNameTv"

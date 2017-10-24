@@ -10,7 +10,7 @@
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/statusbarcolor</item>
         <item name="colorPrimaryDark">@color/statusbarcolor</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/buttonBackground</item>
         <item name="cpbStyle">@style/CircularProgressBar</item>
         <item name="actionButtonStyle">@style/myActionButtonStyle</item>
     </style>

@@ -49,7 +49,7 @@
                 android:layout_centerVertical="true"
 android:layout_marginRight="12dp"                android:padding="8dp"
 
-                android:src="@drawable/edit"
+                android:src="@drawable/dlt"
                 android:visibility="visible" />
 
 

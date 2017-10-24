@@ -51,7 +51,7 @@
                 android:layout_marginLeft="7dp"
                 android:padding="8dp"
 
-                android:src="@drawable/edit"
+                android:src="@drawable/dlt"
                 android:visibility="visible" />
 
         </RelativeLayout>
@@ -76,15 +76,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profile"
-android:layout_marginRight="3dp"
                 android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
 
-                app:ms_arrowColor="@color/buttonBackground"
+                app:ms_arrowColor="@color/textcolorgray"
                 app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/textcolorgray"
                 app:ms_hintColor="@color/textcolorgray" />
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/degree_la"
                 android:layout_width="match_parent"
@@ -167,6 +168,7 @@ android:layout_marginRight="3dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
+
             <TextView
                 android:id="@+id/add"
                 android:layout_width="match_parent"
@@ -189,7 +191,7 @@ android:layout_marginRight="3dp"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:paddingLeft="2dp"
-                    android:src="@drawable/edit" />
+                    android:src="@drawable/attach_active" />
 
                 <TextView
                     android:id="@+id/uploadDoctv"
@@ -204,16 +206,16 @@ android:layout_marginRight="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
                 android:background="@drawable/rectangle_draw"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:paddingLeft="2dp"
-                    android:src="@drawable/edit" />
+                    android:src="@drawable/attach_dactive" />
 
                 <TextView
                     android:id="@+id/docNameTv"

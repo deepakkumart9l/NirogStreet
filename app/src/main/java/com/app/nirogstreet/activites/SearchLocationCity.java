@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -115,6 +116,12 @@ public class SearchLocationCity extends AppCompatActivity implements
                 finish();
             }
         });
+        ImageView imageView= (ImageView) findViewById(R.id.search);
+        try {
+            DrawableCompat.setTint(imageView.getDrawable(), ContextCompat.getColor(SearchLocationCity.this, R.color.black));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         searchET = (TextView) findViewById(R.id.searchET);
         TypeFaceMethods.setRegularTypeFaceForTextView(searchET, SearchLocationCity.this);
         buildGoogleApiClient();
@@ -414,6 +421,11 @@ public class SearchLocationCity extends AppCompatActivity implements
                                                  {
                                                      locSearchModel.setPincode(adr.getPostalCode());
                                                  }
+                                                    if(adr.getCountryName()!=null)
+                                                    {
+
+                                                        locSearchModel.setCountryName(adr.getCountryName());
+                                                    }
                                                     if (adr.getLocality() != null && adr.getLocality().length() > 0) {
                                                         data.get(position).setmLocality(adr.getLocality());
                                                         locSearchModel.setmLocality(adr.getLocality());
@@ -503,7 +515,7 @@ public class SearchLocationCity extends AppCompatActivity implements
                                                 return_intent.putExtra("pincode", locSearchModel.getPincode());
 
                                             }
-
+return_intent.putExtra("country",locSearchModel.getCountryName());
                                             return_intent.putExtra("longitude", String.valueOf(latLng.longitude));
                                             return_intent.putExtra("latitude", String.valueOf(latLng.latitude));
                                             return_intent.putExtra("address", data.get(position).getFormattedtext());

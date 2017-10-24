@@ -37,6 +37,8 @@
         </activity>
         <activity android:name=".activites.Timings"
             android:screenOrientation="portrait" />
+        <activity android:name=".activites.MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.Multi_Select_Search_specialization"
             android:screenOrientation="portrait" />
