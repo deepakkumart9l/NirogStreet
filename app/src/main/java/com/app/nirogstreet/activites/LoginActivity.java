@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                 username = emailEt.getText().toString();
                 password = setPass.getText().toString();
 
-                if (username == null || username.equals("") || username.trim().isEmpty()) {
+              /*  if (username == null || username.equals("") || username.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Username is Empty", Toast.LENGTH_LONG).show();
                 } else if (password == null || password.equals("") || password.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Password is Empty", Toast.LENGTH_LONG).show();
@@ -107,7 +107,9 @@ public class LoginActivity extends AppCompatActivity {
                         loginAsync.execute();
                     } else
                         NetworkUtill.showNoInternetDialog(LoginActivity.this);
-                }
+                }*/
+              Intent intent=new Intent(LoginActivity.this,PostingActivity.class);
+                startActivity(intent);
 
 
             }

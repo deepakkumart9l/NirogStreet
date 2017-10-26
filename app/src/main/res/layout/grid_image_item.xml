@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!-- <ImageView
+         android:id="@+id/gallaryimages"
+         android:layout_width="match_parent"
+         android:layout_height="120dp"
+         android:scaleType="centerCrop"/>
+ -->
+    <android.support.percent.PercentFrameLayout
+        android:id="@+id/toplayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/gallaryimages"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop"
+            app:layout_aspectRatio="100%"
+            app:layout_widthPercent="100%"
+            tools:background="#efdbed" />
+
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:padding="8dp"
+            android:src="@drawable/cancel" />
+
+    </android.support.percent.PercentFrameLayout>
+
+
+</RelativeLayout>

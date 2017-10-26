@@ -182,9 +182,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="-5dp"
                     android:backgroundTint="@color/cardbluebackground"
+                    android:textColorHighlight="@color/cardbluebackground"
                     android:buttonTint="@color/buttonBackground"
                     android:text="Male"
-                    android:textColorHighlight="@color/cardbluebackground" />
+                     />
 
                 <RadioButton
                     android:id="@+id/female"

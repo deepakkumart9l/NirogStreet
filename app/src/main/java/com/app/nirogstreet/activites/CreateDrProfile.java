@@ -403,7 +403,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                     // Error occurred while creating the File
                 }
                 Uri photoURI = FileProvider.getUriForFile(CreateDrProfile.this,
-                        "empwin.com.app.empwin.fileprovider",
+                        "com.app.nirogstreet.fileprovider",
                         photoFile);
                 Log.e("photoURI", "" + photoURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
