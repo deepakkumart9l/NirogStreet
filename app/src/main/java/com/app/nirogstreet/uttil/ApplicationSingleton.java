@@ -9,10 +9,74 @@ import com.app.nirogstreet.model.UserDetailModel;
  */
 
 public class ApplicationSingleton extends Application {
+    public static boolean isGroupUpdated() {
+        return isGroupUpdated;
+    }
+
+    public static boolean isGroupCreated() {
+        return isGroupCreated;
+    }
+
+    public static void setIsGroupCreated(boolean isGroupCreated) {
+        ApplicationSingleton.isGroupCreated = isGroupCreated;
+    }
+
+    public static boolean isGroupCreated = false;
+
+    public static void setIsGroupUpdated(boolean isGroupUpdated) {
+        ApplicationSingleton.isGroupUpdated = isGroupUpdated;
+    }
+
+    public static boolean isGroupUpdated = false;
+
+    public static boolean isCommented=false;
+
+    public static boolean isEditFeedPostExecuted() {
+        return editFeedPostExecuted;
+    }
+
+    public static void setEditFeedPostExecuted(boolean editFeedPostExecuted) {
+        ApplicationSingleton.editFeedPostExecuted = editFeedPostExecuted;
+    }
+
+    public static boolean editFeedPostExecuted=false;
+
+    public static boolean isProfilePostExecuted() {
+        return isProfilePostExecuted;
+    }
+
+    public static void setIsProfilePostExecuted(boolean isProfilePostExecuted) {
+        ApplicationSingleton.isProfilePostExecuted = isProfilePostExecuted;
+    }
+
+    public static boolean isProfilePostExecuted = false;
+
+    public static int no_of_count = -1;
+    public static int getPost_position() {
+        return post_position;
+    }
+    public static int post_position = -1;
+
+    public static void setPost_position(int post_position) {
+        ApplicationSingleton.post_position = post_position;
+    }
     public static UserDetailModel getUserDetailModel() {
         return userDetailModel;
     }
+    public static boolean isCommented() {
+        return isCommented;
+    }
+    public static int getNo_of_count() {
+        return no_of_count;
+    }
 
+    public static void setNo_of_count(int no_of_count) {
+        ApplicationSingleton.no_of_count = no_of_count;
+    }
+
+    public static void setIsCommented(boolean isCommented) {
+        ApplicationSingleton.isCommented = isCommented;
+    }
     public static void setUserDetailModel(UserDetailModel userDetailModel) {
         ApplicationSingleton.userDetailModel = userDetailModel;
     }
@@ -80,4 +144,17 @@ public class ApplicationSingleton extends Application {
 
     private static boolean isContactInfoUpdated;
     private static UserDetailModel userDetailModel;
+
+
+    public static int getVideoPostion() {
+        return videoPostion;
+    }
+
+    public static void setVideoPostion(int videoPostion) {
+        ApplicationSingleton.videoPostion = videoPostion;
+    }
+
+    public static int videoPostion=0;
+
+
 }

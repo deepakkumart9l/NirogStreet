@@ -17,6 +17,19 @@
     <string name="year">Select Year.</string>
     <string name="council">Enter Council Registration Number.</string>
     <string name="council_name">Enter Council name.</string>
+    <dimen name="tile_letter_font_size">17sp</dimen>
+    <!-- The deafult tile size -->
+    <dimen name="letter_tile_size">32dp</dimen>
+    <array name="letter_tile_colors">
+        <item>#f16364</item>
+        <item>#f58559</item>
+        <item>#f9a43e</item>
+        <item>#e4c62e</item>
+        <item>#67bf74</item>
+        <item>#59a2be</item>
+        <item>#2093cd</item>
+        <item>#ad62a7</item>
+    </array>
     <string name="council_type">Please select Council type.</string>
     <string name="start_year">Enter start year.</string>
     <string name="end_year">Enter end year.</string>

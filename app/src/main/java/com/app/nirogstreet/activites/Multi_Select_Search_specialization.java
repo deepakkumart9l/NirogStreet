@@ -73,13 +73,15 @@ public class Multi_Select_Search_specialization extends Activity
     ImageView imageViewSearch;
     ImageLoader imageLoader;
     private static final int RESULT_CODE = 1;
+    private static final int RESULT_CODE_TAGS = 8;
+
     ImageView backImageView;
     private ArrayList<SpecializationModel> list;
     SearchAdapterMultiSelect searchAdapterMultiSelect;
     EditText searchET;
     SesstionManager sessionManager;
     ArrayList<SpecializationModel> searchModels = new ArrayList<>();
-
+    boolean isTags = false;
     CircularProgressBar circularProgressBar;
     TextView textViewDone, specilization;
     private String text = "";
@@ -110,6 +112,14 @@ public class Multi_Select_Search_specialization extends Activity
                 searchET.setHint("Search Services");
             }
         }
+        if (getIntent().hasExtra("tags")) {
+            isTags = getIntent().getBooleanExtra("tags", false);
+        }
+        if (isTags) {
+            specilization.setText("Select your Tags");
+            searchET.setHint("Search Tags");
+        }
+
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
 
         TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Multi_Select_Search_specialization.this);
@@ -165,11 +175,19 @@ public class Multi_Select_Search_specialization extends Activity
                 if (s.equalsIgnoreCase("")) {
                     Toast.makeText(Multi_Select_Search_specialization.this, specilization.getText().toString(), Toast.LENGTH_SHORT).show();
                 } else {
+                    if (isTags) {
+                        s=getSelectedNameCsvTags();
+                        Intent return_intent = new Intent();
+                        return_intent.putExtra("friendsCsv", s);
+                        return_intent.putExtra("list", (Serializable) list);
+                        setResult(RESULT_CODE, return_intent);
 
-                    Intent return_intent = new Intent();
-                    return_intent.putExtra("friendsCsv", s);
-                    return_intent.putExtra("list", (Serializable) list);
-                    setResult(RESULT_CODE, return_intent);
+                    } else {
+                        Intent return_intent = new Intent();
+                        return_intent.putExtra("friendsCsv", s);
+                        return_intent.putExtra("list", (Serializable) list);
+                        setResult(RESULT_CODE, return_intent);
+                    }
                     finish();
                 }
             }
@@ -340,8 +358,12 @@ public class Multi_Select_Search_specialization extends Activity
         @Override
         protected Void doInBackground(Void... params) {
             try {
-
-                String url = AppUrl.AppBaseUrl + "user/services";
+                String url;
+                if (isTags) {
+                    url = AppUrl.BaseUrl + "feed/tags";
+                } else {
+                    url = AppUrl.AppBaseUrl + "user/services";
+                }
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -391,7 +413,41 @@ public class Multi_Select_Search_specialization extends Activity
 
                     {
                         jsonObject = jo.getJSONObject("data");
-                        if (!isService) {
+                        if (isTags) {
+                            if (jsonObject.has("alltags") && !jsonObject.isNull("alltags")) {
+                                JSONArray jsonArray = jsonObject.getJSONArray("alltags");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    String fname = "", lname = "", slug = "", profile_pic = "", department = "", id = "";
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    if (jsonObject1.has("name") && !jsonObject1.isNull("name")) {
+                                        fname = jsonObject1.getString("name");
+                                    }
+                                    if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
+                                        id = jsonObject1.getString("id");
+                                    }
+                                    if (jsonObject1.has("lname") && !jsonObject1.isNull("lname")) {
+                                        lname = jsonObject1.getString("lname");
+                                    }
+                                    if (jsonObject1.has("slug") && !jsonObject1.isNull("slug")) {
+                                        slug = jsonObject1.getString("slug");
+                                    }
+                                    if (jsonObject1.has("profile_pic") && !jsonObject1.isNull("profile_pic")) {
+                                        profile_pic = jsonObject1.getString("profile_pic");
+                                    }
+                                    if (jsonObject1.has("department") && !jsonObject1.isNull("department")) {
+                                        department = jsonObject1.getString("department");
+                                    }
+                                    String username = null;
+                                    if (!fname.equals("")) {
+                                        if (!lname.equals("")) {
+                                            username = fname + " " + lname;
+                                        } else
+                                            username = fname;
+                                    }
+                                    searchModels.add(new SpecializationModel(fname, id, false));
+                                }
+                            }
+                        } else if (!isService) {
                             if (jsonObject.has("specialities") && !jsonObject.isNull("specialities")) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("specialities");
                                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -523,6 +579,20 @@ public class Multi_Select_Search_specialization extends Activity
                 if (language != null && !language.trim().isEmpty()
                         && languageCSV != null && !languageCSV.trim().isEmpty())
                     languageCSV = languageCSV + ", ";
+                languageCSV = languageCSV + language;
+
+            }
+        }
+        return languageCSV;
+    }
+    public String getSelectedNameCsvTags() {
+        String languageCSV = "";
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                String language = list.get(i).getSpecializationName();
+                if (language != null && !language.trim().isEmpty()
+                        && languageCSV != null && !languageCSV.trim().isEmpty())
+                    languageCSV = "#"+languageCSV + " ";
                 languageCSV = languageCSV + language;
 
             }

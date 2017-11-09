@@ -10,7 +10,10 @@
     <color name="multiple_image_select_primaryDark">#303F9F</color>
     <color name="multiple_image_select_primaryLight">#C8E6C9</color>
     <color name="multiple_image_select_accent">#0e57cc</color>
-
+    <color name="link">#0a80d1</color>
+    <color name="timestamp">#a0a3a7</color>
+    <color name="gray_2nd">#cfcdb9</color>
+<color name="seperator">#eeeff1</color>
     <color name="multiple_image_select_primaryText">#212121</color>
     <color name="multiple_image_select_secondaryText">#727272</color>
     <color name="multiple_image_select_divider">#B6B6B6</color>
@@ -21,6 +24,9 @@
     <color name="teme">#f47900</color>
     <color name="multiple_image_select_buttonText">#f47900</color>
     <color name="black">#000</color>
+    <color name="tabseperator">#f0f1f3</color>
+    <color name="tabbackground">#fafbfd</color>
+    <color name="unselectedtext">#b4b4b4</color>
     <color name="textcolorgray">#b5b5b5</color>
 <color name="cardbluebackground">#24addb</color>
     <color name="multiple_image_select_toolbarPrimaryText">#24addb</color>

@@ -4,9 +4,11 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -14,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,7 +29,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,32 +41,61 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.adapter.AskQuestionForumImagesAdapter;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.helpers.Constants;
 import com.app.nirogstreet.model.Image;
+import com.app.nirogstreet.model.SpecializationModel;
+import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.GridSpacingItemDecoration;
 import com.app.nirogstreet.uttil.ImageProcess;
+import com.app.nirogstreet.uttil.Methods;
+import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.PathUtil;
+import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.conn.scheme.Scheme;
+import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
+import cz.msebera.android.httpclient.entity.mime.content.ContentBody;
+import cz.msebera.android.httpclient.entity.mime.content.FileBody;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -72,6 +107,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     String selectedVideoPath = null;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
+    RelativeLayout linkLay, imagelay;
+    ArrayList<SpecializationModel> servicesMultipleSelectedModels = new ArrayList<>();
+String groupId="";
     String mCurrentPhotoPath;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     CircleImageView circleImageView;
@@ -80,42 +118,101 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     CheckBox enableCheckBox;
     private int REQUEST_CAMERA = 99;
     int REQUEST_CODE = 4;
+    boolean isposting = false;
+    LinkPostAsynctask linkPostAsynctask;
+    SesstionManager sesstionManager;
     int REQUEST_CODE_DOC = 5;
     private HashTagHelper mTextHashTagHelper;
+    CircularProgressBar circularProgressBar;
+    private static final int RESULT_CODE = 8;
 
     private int CAMERA_PERMISSION_CODE = 1;
     private int SELECT_FILE = 999;
     LinearLayoutManager linearLayoutManager;
+    String linkDescription = "", linktitle = "", linkImage = "", linkUrl = "";
+    ImageView linkImageView;
+    PostAsyncTask postAsyncTask;
     String docpath;
     ImageView imageViewSelected;
     private AskQuestionForumImagesAdapter askQuestionForumImagesAdapter;
     private HashTagHelper mEditTextHashTagHelper;
-TextView dr_nameTextView,publicTextView;
+    TextView dr_nameTextView, publicTextView;
     ImageView backImageView;
-EditText title_QuestionEditText,editTextMessage,refernceEditText;
+    TextView textViewpost;
+    TextView descriptionTextView, titleTextView;
+    EditText title_QuestionEditText, editTextMessage, refernceEditText;
+    CheckBox checkBox;
+    private boolean albumupdate=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
-        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView = (ImageView) findViewById(R.id.back);
+        sesstionManager = new SesstionManager(PostingActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        checkBox = (CheckBox) findViewById(R.id.Enable);
+        descriptionTextView = (TextView) findViewById(R.id.description);
+        titleTextView = (TextView) findViewById(R.id.title);
+        linkImageView = (ImageView) findViewById(R.id.linkImage);
+        textViewpost = (TextView) findViewById(R.id.post);
+if(getIntent().hasExtra("groupId"))
+{
+    groupId=getIntent().getStringExtra("groupId");
+}
+        linkLay = (RelativeLayout) findViewById(R.id.linkLay);
+        imagelay = (RelativeLayout) findViewById(R.id.imagelay);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
-        dr_nameTextView=(TextView)findViewById(R.id.dr_name);
-        publicTextView=(TextView)findViewById(R.id.public_) ;
-        title_QuestionEditText=(EditText) findViewById(R.id.title_Question);
-        editTextMessage=(EditText)findViewById(R.id.editTextMessage);
-        refernceEditText=(EditText)findViewById(R.id.refernce) ;
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView,PostingActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView,PostingActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(title_QuestionEditText,PostingActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextMessage,PostingActivity.this);
+        dr_nameTextView = (TextView) findViewById(R.id.dr_name);
+        publicTextView = (TextView) findViewById(R.id.public_);
+        title_QuestionEditText = (EditText) findViewById(R.id.title_Question);
+        editTextMessage = (EditText) findViewById(R.id.editTextMessage);
+        editTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (editTextMessage.getText().toString().length() == 0) {
+                    linkLay.setVisibility(View.GONE);
+                    imagelay.setVisibility(View.VISIBLE);
+                }
+            }
 
-        TypeFaceMethods.setRegularTypeFaceEditText(refernceEditText,PostingActivity.this);
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editTextMessage.getText().toString().contains(" ")) {
+                    String strarr[] = editTextMessage.getText().toString().split(" ");
+                    for (int i = 0; i < strarr.length; i++) {
+                        System.out.print(strarr[i]);
+                        if (Patterns.WEB_URL.matcher(strarr[i]).matches()) {
+                            // Log.e("URL=", "" + Patterns.WEB_URL.matcher(sampleUrl).matches());
+                            if (selectedVideoPath == null && selectedImagePath == null) {
+                                linkPostAsynctask = new LinkPostAsynctask(strarr[i], sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+                                linkPostAsynctask.execute();
+                            }
+                        } else {
+                            linkLay.setVisibility(View.GONE);
+                            imagelay.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        });
+        refernceEditText = (EditText) findViewById(R.id.refernce);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView, PostingActivity.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView, PostingActivity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(title_QuestionEditText, PostingActivity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextMessage, PostingActivity.this);
+
+        TypeFaceMethods.setRegularTypeFaceEditText(refernceEditText, PostingActivity.this);
 
 /*
         Glide.with(PostingActivity.this).load("https://www.google.com/search?q=nature+image+url&hl=en-US&tbm=isch&source=iu&pf=m&ictx=1&fir=L8qB97yhUQFCnM%253A%252CwMEPW2TZnfw3vM%252C_&usg=__tdpx9ET1W2b6i6SjlmIvIkJYDmo%3D&sa=X&ved=0ahUKEwib7eScsovXAhUFtI8KHYIxCyUQ9QEIPjAE#imgrc=BOuufLthHd4NKM:").into(circleImageView);
@@ -128,8 +225,18 @@ EditText title_QuestionEditText,editTextMessage,refernceEditText;
 
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView,PostingActivity.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
+        mEditTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostingActivity.this, Multi_Select_Search_specialization.class);
+                intent.putExtra("list", servicesMultipleSelectedModels);
 
+intent.putExtra("tags",true);
+                startActivityForResult(intent, RESULT_CODE);
+
+            }
+        });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(PostingActivity.this);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
@@ -140,6 +247,53 @@ EditText title_QuestionEditText,editTextMessage,refernceEditText;
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(4), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        textViewpost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Methods.hideKeyboardOfView(editTextMessage, PostingActivity.this);
+                if (validate()) {
+                    String check = "2";
+                    if (checkBox.isChecked()) {
+                        check = "1";
+                    }
+                    if (NetworkUtill.isNetworkAvailable(PostingActivity.this)) {
+                        String refernce = "";
+                        if (refernceEditText.getText().toString().length() == 0) {
+                            refernce = refernceEditText.getText().toString();
+                        }
+
+                        if (selectedVideoPath != null && selectedVideoPath.length() > 0) {
+                            File file = new File(selectedVideoPath);
+                            long length = file.length();
+                            long length1 = length / 1024 * 1024;
+
+                            if (length1 < 31457280) {
+
+                                if (!isposting) {
+                                    isposting = true;
+                                    postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernce);
+                                    postAsyncTask.execute();
+
+                                }
+                            } else {
+                                Toast.makeText(PostingActivity.this, "Sorry! The maximum upload limit is size 30MB.", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            if (!isposting) {
+                                isposting = true;
+                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernce);
+                                postAsyncTask.execute();
+                            }
+                        }
+                    } else {
+                        NetworkUtill.showNoInternetDialog(PostingActivity.this);
+                    }
+                } else {
+                    Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         imageViewSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -362,6 +516,16 @@ EditText title_QuestionEditText,editTextMessage,refernceEditText;
                 }
 
             }
+
+        }
+        if (requestCode == RESULT_CODE) {
+            if (data != null) {
+                String s = data.getStringExtra("friendsCsv");
+                mEditTextView.setText(s);
+                System.out.print(s);
+                servicesMultipleSelectedModels = (ArrayList<SpecializationModel>) data.getSerializableExtra("list");
+
+            }
         }
     }
 
@@ -376,6 +540,325 @@ EditText title_QuestionEditText,editTextMessage,refernceEditText;
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE_DOCUMENT);
         }
+    }
+
+    public class LinkPostAsynctask extends AsyncTask<Void, Void, Void> {
+        String authToken;
+        JSONObject jo;
+        String urlstr, userId;
+        HttpClient client;
+        Context context;
+        private String responseBody;
+
+        public LinkPostAsynctask(String url, String userId, String authToken) {
+            this.urlstr = url;
+            this.authToken = authToken;
+            this.userId = userId;
+        }
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if (jsonObject.has("linkdetail") && !jsonObject.isNull("linkdetail")) {
+                            linkLay.setVisibility(View.VISIBLE);
+                            imagelay.setVisibility(View.GONE);
+                            JSONObject linkDetailJsonObject = jsonObject.getJSONObject("linkdetail");
+                            if (linkDetailJsonObject.has("description") && !linkDetailJsonObject.isNull("description")) {
+                                linkDescription = linkDetailJsonObject.getString("description");
+                                descriptionTextView.setText(linkDescription);
+                                if (linkDescription.length() == 0) {
+                                    linkLay.setVisibility(View.GONE);
+                                    imagelay.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            if (linkDetailJsonObject.has("title") && !linkDetailJsonObject.isNull("title")) {
+                                linktitle = linkDetailJsonObject.getString("title");
+                                titleTextView.setText(linktitle);
+                                if (linktitle.length() == 0) {
+                                    linkLay.setVisibility(View.GONE);
+                                    imagelay.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            if (linkDetailJsonObject.has("images") && !linkDetailJsonObject.isNull("images")) {
+                                linkImage = linkDetailJsonObject.getString("images");
+                                Glide.with(context)
+                                        .load(linkImage) // Uri of the picture
+                                        .centerCrop()
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .crossFade()
+                                        .override(100, 100)
+                                        .into(linkImageView);
+
+                                if (linkImage.length() == 0) {
+                                    linkLay.setVisibility(View.GONE);
+                                    imagelay.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            if (linkDetailJsonObject.has("url") && !linkDetailJsonObject.isNull("url")) {
+                                linkUrl = linkDetailJsonObject.getString("url");
+                            }
+                        }
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+
+
+                String url = AppUrl.BaseUrl + "pagepreview/preview";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("url", urlstr));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils
+                        .toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public class PostAsyncTask extends AsyncTask<Void, Void, Void> {
+        JSONObject jo;
+        String authToken, userId;
+        String isCommented;
+        String question;
+        String messageText;
+        HttpClient client;
+        Context context;
+        private String responseBody;
+        private ProgressDialog pDialog;
+        String refrence;
+        UrlEncodedFormEntity form;
+
+        public PostAsyncTask(String iscommented, String userid, String authToken, String question, String refernce) {
+            this.userId = userid;
+            this.isCommented = iscommented;
+            this.refrence = refernce;
+            this.question = question;
+            this.authToken = authToken;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //  circularProgressBar.setVisibility(View.VISIBLE);
+            pDialog = new ProgressDialog(PostingActivity.this);
+            pDialog.setMessage("Uploading...");
+            pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+           /* String xx = StringEscapeUtils.escapeJava(editTextMessage.getText().toString());
+            messageText = xx.replace("\\", "");*/
+            try {
+                messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
+                Log.e("messageText", "" + messageText);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            final int totalProgressTime = 100;
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    int jumpTime = 0;
+
+                    while (jumpTime < totalProgressTime) {
+                        try {
+                            sleep(4000);
+                            jumpTime += 1;
+                            pDialog.setProgress(jumpTime);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            t.start();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String url = AppUrl.BaseUrl + "feed/post";
+                SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+                entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+                entityBuilder.addTextBody("Content-Type", "applicaion/json");
+                entityBuilder.addTextBody(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST);
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                entityBuilder.addTextBody("userID", userId);
+                Log.e("messageText", "inside" + messageText);
+                entityBuilder.addTextBody("Feed[title]", question);
+                entityBuilder.addTextBody("Feed[refrence]", refrence);
+                entityBuilder.addTextBody("Feed[message]", messageText);
+                entityBuilder.addTextBody("Feed[feed_type]", feedType());
+                entityBuilder.addTextBody("Feed[feed_source]", linkUrl);
+                entityBuilder.addTextBody("Feed[enable_comment]", isCommented);
+                if(!groupId.equalsIgnoreCase(""))
+                {
+                    entityBuilder.addTextBody("groupID", groupId);
+
+                }
+                if (linkLay.isShown()) {
+                    if (linkUrl.contains("youtube") || linkUrl.contains("youtu.be")) {
+                        entityBuilder.addTextBody("Feed[link_type]", "1");
+                    } else {
+                        entityBuilder.addTextBody("Feed[link_type]", "2");
+                    }
+                } else {
+                    entityBuilder.addTextBody("Feed[link_type]", "");
+                }
+                entityBuilder.addTextBody("Feed[url_title]", linktitle);
+                entityBuilder.addTextBody("Feed[url_description]", linkDescription);
+                entityBuilder.addTextBody("Feed[url_image]", linkImage);
+                if (strings != null && strings.size() > 0) {
+                    for (int j = 0; j < strings.size(); j++) {
+                        if (strings.get(j).equalsIgnoreCase("add")) {
+                            strings.remove(j);
+                        }
+
+                    }
+                    for (int i = 0; i < strings.size(); i++) {
+                        if (!strings.get(i).equalsIgnoreCase("add")) {
+                            File file = new File(strings.get(i));
+                            FileBody encFile = new FileBody(file);
+                            entityBuilder.addPart("Feed[imageFile][img][" + i + "]", encFile);
+
+                        }
+                    }
+                } else if (selectedImagePath != null && selectedImagePath.toString().trim().length() > 0) {
+                    File file = new File(selectedImagePath);
+                    FileBody encFile = new FileBody(file);
+                    entityBuilder.addPart("Feed[imageFile][img][]", encFile);
+                } else if (selectedVideoPath != null && selectedVideoPath.toString().trim().length() > 0) {
+                    File file = new File(selectedVideoPath);
+                    file.getAbsolutePath();
+                    ContentBody cbfile = new FileBody(file);
+                    entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                }
+
+                if (docpath != null && docpath.toString().trim().length() > 0) {
+                    File file = new File(docpath);
+                    file.getAbsolutePath();
+                    ContentBody cbfile = new FileBody(file);
+                    entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                }
+
+                httppost.setHeader("Authorization", "Basic " + authToken);
+                HttpEntity entity = entityBuilder.build();
+                httppost.setEntity(entity);
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            isposting = false;
+            pDialog.getProgress();
+            for (int k = pDialog.getProgress(); k <= 100; k++) {
+                pDialog.setProgress(k);
+            }
+            pDialog.dismiss();
+            try {
+                if (jo != null) {
+                    if (jo.has("responce") && !jo.isNull("responce")) {
+                        JSONObject jsonObject = jo.getJSONObject("responce");
+                        if (jsonObject.has("message") && !jsonObject.isNull("message")) {
+                            Toast.makeText(PostingActivity.this, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            albumupdate = true;
+                            SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor1 = sharedPref1.edit();
+                            editor1.putBoolean("imgvidupdate", albumupdate);
+                            editor1.commit();
+
+                            finish();
+
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String feedType() {
+        String type = "0";
+        if (linkLay.isShown()) {
+            type = "3";
+        } else {
+            if (selectedImagePath != null) {
+                type = "2";
+            } else if (selectedVideoPath != null) {
+                type = "5";
+            } else if (docpath != null) {
+                type = "6";
+            } else if (strings.size() > 0) {
+
+                type = "2";
+
+            } else {
+                if (editTextMessage.getText().toString() != null && !editTextMessage.getText().toString().equals("")) {
+                    type = "1";
+                }
+            }
+        }
+        return type;
+
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -611,10 +1094,10 @@ EditText title_QuestionEditText,editTextMessage,refernceEditText;
         boolean check = true;
         List<String> allHashTags = mTextHashTagHelper.getAllHashTags();
         allHashTags.toString();
-    /*    if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && latitude.equalsIgnoreCase("") && longitude.equalsIgnoreCase("") && docpath == null && strings.size() == 0) {
+        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0) {
             Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
             check = false;
-        }*/
+        }
         return check;
     }
 }

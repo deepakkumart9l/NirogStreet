@@ -8,6 +8,16 @@ import java.util.ArrayList;
  */
 
 public class UserDetailModel implements Serializable {
+    String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public ArrayList<ExperinceModel> getExperinceModels() {
         return experinceModels;
     }
@@ -197,9 +207,10 @@ public class UserDetailModel implements Serializable {
     String about;
     String title;
 
-    public UserDetailModel(String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels,ArrayList<SpecializationModel> servicesModels)
+    public UserDetailModel(String userId,String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels,ArrayList<SpecializationModel> servicesModels)
     {
         this.name = name;
+        this.userId=userId;
         this.specializationModels = specializationModels;
         this.servicesModels=servicesModels;
         this.memberShipModels = memberShipModels;

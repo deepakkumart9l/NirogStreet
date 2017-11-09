@@ -217,11 +217,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
         allTaxes = (TextView) findViewById(R.id.allTaxes);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        TypeFaceMethods.setRegularTypeFaceForTextView(emailTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(sevicesTextView, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(sevicesCsvTextView, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(spcilizationCsv, Dr_Profile.this);
-
+        TypeFaceMethods.setRegularTypeFaceForTextView(emailTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(phoneTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(WebTv, Dr_Profile.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(yearOfBirthTv, Dr_Profile.this);

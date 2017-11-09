@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e4edf0"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/scroll"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+
+        android:visibility="gone"
+        app:cpb_colors="@array/gplus_colors" />
+
+    <RelativeLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/cardbluebackground"
+        android:gravity="left">
+
+        <include layout="@layout/back_arrow" />
+
+        <!--<Button-->
+        <!--android:id="@+id/searchButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="15dp"-->
+        <!--android:background="@null"-->
+        <!--android:text="Search"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="16sp"-->
+        <!--android:textStyle="normal" />-->
+
+        <TextView
+            android:id="@+id/searchButton"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/actionbar_icon_margin"
+            android:layout_toRightOf="@+id/back"
+            android:gravity="center|left"
+            android:paddingLeft="10dp"
+            android:src="@drawable/search"
+            android:text="Likes"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/searchET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/actionbar_icon_margin"
+            android:layout_marginRight="@dimen/actionbar_icon_margin"
+            android:layout_toLeftOf="@id/searchButton"
+            android:layout_toRightOf="@id/back"
+            android:background="@null"
+            android:cursorVisible="true"
+            android:hint=""
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:textColor="#fff"
+            android:textColorHint="#88ffffff"
+            android:textCursorDrawable="@drawable/cursor_drawable"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/searchLayout"
+        android:background="#e4edf0" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_marginTop="1dp"
+        android:scrollbars="vertical" />
+</RelativeLayout>

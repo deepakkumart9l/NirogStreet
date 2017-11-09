@@ -22,6 +22,7 @@ import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -96,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                 username = emailEt.getText().toString();
                 password = setPass.getText().toString();
 
-              /*  if (username == null || username.equals("") || username.trim().isEmpty()) {
+                if (username == null || username.equals("") || username.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Username is Empty", Toast.LENGTH_LONG).show();
                 } else if (password == null || password.equals("") || password.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Password is Empty", Toast.LENGTH_LONG).show();
@@ -107,10 +108,10 @@ public class LoginActivity extends AppCompatActivity {
                         loginAsync.execute();
                     } else
                         NetworkUtill.showNoInternetDialog(LoginActivity.this);
-                }*/
-              Intent intent=new Intent(LoginActivity.this,PostingActivity.class);
+                }
+        /*      Intent intent=new Intent(LoginActivity.this,PostingActivity.class);
                 startActivity(intent);
-
+*/
 
             }
         });
@@ -243,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
                                             createdOn = userJsonObject.getString("createdOn");
                                         }
                                         sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
-                                        Intent intent1 = new Intent(LoginActivity.this, Dr_Profile.class);
+                                        Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent1);
                                         finish();
                                     }

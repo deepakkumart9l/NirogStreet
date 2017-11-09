@@ -28,11 +28,13 @@ public class UserDetailPaser {
             if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                 JSONObject message = dataJsonObject.getJSONObject("message");
                 String category = "", gender = "", experience = "", profile_pic = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-
                 if (message.has("userDetail") && !message.isNull("userDetail")) {
                     JSONObject userJsonObject = message.getJSONObject("userDetail");
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                        name = userJsonObject.getString("name");
+                        id = userJsonObject.getString("name");
+                    }
+                    if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
+                        name = userJsonObject.getString("id");
                     }
                     if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
                         experience = userJsonObject.getString("experience");
@@ -89,7 +91,7 @@ public class UserDetailPaser {
                 awardsModels = AwardsParser.awardsParser(message);
                 ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
                 memberShipModels = MemberShipParser.memberShipParser(message);
-                userDetailModel = new UserDetailModel(name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels);
+                userDetailModel = new UserDetailModel(id,name, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels);
 
             }
         } catch (Exception e) {

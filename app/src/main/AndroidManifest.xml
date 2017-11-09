@@ -35,10 +35,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.Timings"
+        <activity
+            android:name=".activites.FullScreenImage"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.MainActivity"
+        <activity android:name=".activites.CommunitySearchActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.AlbumGallary"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activites.CreateCommunity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.CommunitiesDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.Timings"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activites.VideoPlay_Activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activites.Multi_Select_Search"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Multi_Select_Search_specialization"
             android:screenOrientation="portrait" />
@@ -49,7 +68,22 @@
             android:name=".activites.OtpActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activites.SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activites.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.NotificationListing"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.LikesDisplayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.CommentsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.CommentsRepilesActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Dr_Profile"
@@ -81,34 +115,37 @@
         <activity
             android:name=".activites.AddOrEditClinicDetail"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.SpecilizationAndService"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.SpecilizationAndService"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.SearchLocationCity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Award"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.HelperActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.HelperActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.AlbumSelectActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/MultipleImageSelectTheme"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/MultipleImageSelectTheme">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.PostingActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.PostingActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.ImageSelectActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/MultipleImageSelectTheme"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/MultipleImageSelectTheme">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity

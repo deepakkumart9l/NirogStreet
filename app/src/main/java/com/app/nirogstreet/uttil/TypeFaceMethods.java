@@ -26,7 +26,7 @@ public class TypeFaceMethods {
     }
     public static void setRegularTypeBoldFaceTextView(TextView textView, Context context)
     {
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/ubuntu.bold.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/ubuntu.medium.ttf");
         textView.setTypeface(tf);
 
     }
