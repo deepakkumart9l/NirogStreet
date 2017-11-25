@@ -744,7 +744,7 @@ intent.putExtra("tags",true);
                 entityBuilder.addTextBody("Feed[enable_comment]", isCommented);
                 if(!groupId.equalsIgnoreCase(""))
                 {
-                    entityBuilder.addTextBody("groupID", groupId);
+                    entityBuilder.addTextBody("Feed[community_id]", groupId);
 
                 }
                 if (linkLay.isShown()) {

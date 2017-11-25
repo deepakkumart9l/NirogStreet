@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/header"
@@ -64,9 +66,43 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/header"
         android:scrollbars="vertical"
         android:visibility="visible"
 
         />
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/circularProgressBar"
+        app:cpb_colors="@array/gplus_colors"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/sendOtp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#e82351"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
 
-</LinearLayout>
+
+        <TextView
+            android:id="@+id/sentTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Save"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#fff" />
+    </LinearLayout>
+
+</RelativeLayout>

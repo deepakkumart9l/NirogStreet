@@ -1,6 +1,5 @@
 package com.app.nirogstreet.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -44,7 +43,6 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Preeti on 01-11-2017.
@@ -86,7 +84,7 @@ public class GroupListingAdapter extends
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final GroupModel groupModel = groupModels.get(position);
-        if (groupModel.getCreatedByUser().getUserId().equalsIgnoreCase(userId)) {
+        if (groupModel.getCreatedByUser()!=null&&groupModel.getCreatedByUser().getUserId().equalsIgnoreCase(userId)) {
             holder.joinTextView.setVisibility(View.GONE);
         } else {
             holder.joinTextView.setVisibility(View.VISIBLE);
@@ -95,7 +93,7 @@ public class GroupListingAdapter extends
         holder.joinTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupModel.getGroupId(), userId, authToken, 2,position);
+                AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupModel.getGroupId(), userId, authToken, 1,position);
                 acceptDeclineJoinAsyncTask.execute();
             }
         });
@@ -108,7 +106,7 @@ public class GroupListingAdapter extends
                 holder.linearLayoutbuttons.setVisibility(View.GONE);
             }
         }
-        if (groupModel.getGroupBanner() != null) {
+        if (groupModel.getGroupBanner() != null&&!groupModel.getGroupBanner().contains("banner-default")&&!groupModel.getGroupBanner().contains("tempimages")) {
             Glide.with(context)
                     .load(groupModel.getGroupBanner()) // Uri of the picture
                     .centerCrop()

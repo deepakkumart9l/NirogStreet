@@ -26,9 +26,10 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.fragments.About_Fragment;
 import com.app.nirogstreet.model.MultipleSelectedItemModel;
-import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -60,9 +61,10 @@ import fisk.chipcloud.ChipCloudConfig;
 import fisk.chipcloud.ChipDeletedListener;
 
 /**
- * Created by Preeti on 08-11-2017.
+ * Created by Preeti on 24-11-2017.
  */
-public class Multi_Select_Search extends Activity
+
+public class Multiple_select_invite_search extends Activity
 
 {
     private RecyclerView recyclerViewsearchData;
@@ -73,10 +75,10 @@ public class Multi_Select_Search extends Activity
     private static final int RESULT_CODE = 1;
     private static final int RESULT_CODE_TAGS = 8;
     int page = 1;
-
+String groupId="";
     ImageView backImageView;
     private ArrayList<MultipleSelectedItemModel> list;
-    SearchAdapterMultiSelect searchAdapterMultiSelect;
+  SearchAdapterMultiSelect searchAdapterMultiSelect;
     EditText searchET;
     SesstionManager sessionManager;
     ArrayList<MultipleSelectedItemModel> searchModels = new ArrayList<>();
@@ -86,6 +88,7 @@ public class Multi_Select_Search extends Activity
     private String text = "";
     LinearLayoutManager linearLayoutManager;
     private SearchAsync searchAsync;
+    InviteAyncTask inviteAyncTask;
     private String query = "";
     ChipCloud horizontalChipCloud;
     LinearLayout horizontalScroll;
@@ -105,15 +108,18 @@ public class Multi_Select_Search extends Activity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(getResources().getColor(R.color.statusbarcolor));
         }
+        if(getIntent().hasExtra("groupId")) {
+            groupId =getIntent().getStringExtra("groupId");
+        }
         specilization = (TextView) findViewById(R.id.specilization);
         searchET = (EditText) findViewById(R.id.searchET);
 
-        specilization.setText("Select People");
+        specilization.setText("Invite Peoples");
         searchET.setHint("Search People");
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Multi_Select_Search.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Multiple_select_invite_search.this);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
         ChipCloudConfig deleteableConfig = new ChipCloudConfig()
@@ -135,7 +141,7 @@ public class Multi_Select_Search extends Activity
             }
         });
 
-        sessionManager = new SesstionManager(Multi_Select_Search.this);
+        sessionManager = new SesstionManager(Multiple_select_invite_search.this);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         Intent intent = getIntent();
         if (intent.hasExtra("list")) {
@@ -151,34 +157,29 @@ public class Multi_Select_Search extends Activity
         }
         totalFeeds = new ArrayList<>();
 
-        imageLoader = new ImageLoader(Multi_Select_Search.this);
+        imageLoader = new ImageLoader(Multiple_select_invite_search.this);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        TypeFaceMethods.setRegularTypeFaceEditText(searchET, Multi_Select_Search.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, Multi_Select_Search.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(searchET, Multiple_select_invite_search.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, Multiple_select_invite_search.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, Multi_Select_Search.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, Multiple_select_invite_search.this);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = getSelectedNameCsv();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchET.getWindowToken(), 0);
-
-
-                Intent return_intent = new Intent();
-                return_intent.putExtra("friendsCsv", s);
-                return_intent.putExtra("list", (Serializable) list);
-                setResult(RESULT_CODE, return_intent);
-
-                finish();
-
+if(NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this))
+{
+    inviteAyncTask=new InviteAyncTask("");
+    inviteAyncTask.execute();
+}else {
+    NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
+}
             }
         });
 
 
-        linearLayoutManager = new LinearLayoutManager(Multi_Select_Search.this);
+        linearLayoutManager = new LinearLayoutManager(Multiple_select_invite_search.this);
         recyclerViewsearchData.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewsearchData.setLayoutManager(linearLayoutManager);
@@ -202,9 +203,9 @@ public class Multi_Select_Search extends Activity
                 totalFeeds = new ArrayList<>();
 
                 // setVisibilty(0);
-                if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
+                if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
                     if (searchET.getText().toString().length() == 0) {
-searchAdapterMultiSelect=null;
+                        searchAdapterMultiSelect=null;
                         searchAsync = new SearchAsync("");
                         searchAsync.execute();
                     } else {
@@ -214,7 +215,7 @@ searchAdapterMultiSelect=null;
                         searchAsync.execute();
                     }
                 } else {
-                    NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
+                    NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
                 }
 
 
@@ -259,29 +260,29 @@ searchAdapterMultiSelect=null;
                                     @Override
                                     public void run() {
                                         // Whatever you want to do
-                                        (Multi_Select_Search.this).runOnUiThread(new Runnable() {
+                                        (Multiple_select_invite_search.this).runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
                                                 totalFeeds = new ArrayList<>();
 
                                                 if (searchET.getText().toString().length() == 0) {
-                                                    if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
+                                                    if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
                                                         searchAdapterMultiSelect=null;
 
                                                         searchAsync = new SearchAsync("");
 
                                                         searchAsync.execute();
                                                     } else {
-                                                        NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
+                                                        NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
                                                     }
                                                 } else {
-                                                    if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
+                                                    if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
                                                         searchAdapterMultiSelect=null;
 
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
                                                         searchAsync.execute();
                                                     } else {
-                                                        NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
+                                                        NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
                                                     }
 
                                                 }
@@ -294,7 +295,7 @@ searchAdapterMultiSelect=null;
                 }
         );
 
-        if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
+        if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
                 searchAsync.execute();
@@ -303,12 +304,108 @@ searchAdapterMultiSelect=null;
                 searchAsync.execute();
             }
         } else {
-            NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
+            NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
         }
 
 
     }
 
+    public class InviteAyncTask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String email, password;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public InviteAyncTask(String str) {
+
+        }
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+            //  bar = (ProgressBar) findViewById(R.id.progressBar);
+            //   bar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = AppUrl.BaseUrl + "group/invite-members";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                String credentials = email + ":" + password;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
+                if (list != null && list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        pairs.add(new BasicNameValuePair("invited_to[]", list.get(i).getUserId()));
+                    }
+                }
+                pairs.add(new BasicNameValuePair("status","0"));
+                pairs.add(new BasicNameValuePair("groupID",groupId));
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            circularProgressBar.setVisibility(View.GONE);
+            searchModels = new ArrayList<>();
+            try {
+                if (jo != null) {
+if(jo.has("response")&&!jo.isNull("response"))
+{
+    JSONObject jsonObject=jo.getJSONObject("response");
+    if(jsonObject.has("message")&&!jsonObject.isNull("message"))
+    {
+        JSONObject jsonObject1=jsonObject.getJSONObject("message");
+        if(jsonObject1.has("message")&&!jsonObject1.isNull("message"))
+        {
+            Toast.makeText(Multiple_select_invite_search.this, jsonObject1.getString("message"), Toast.LENGTH_SHORT).show();
+            ApplicationSingleton.setIsGroupUpdated(true);
+            finish();
+        }
+    }
+}
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 
     public class SearchAsync extends AsyncTask<Void, Void, Void> {
         String responseBody;
@@ -342,7 +439,7 @@ searchAdapterMultiSelect=null;
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                String url = AppUrl.BaseUrl + "feed/search-users";
+                String url = AppUrl.BaseUrl + "group/invite-user-list";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -365,6 +462,7 @@ searchAdapterMultiSelect=null;
                         pairs.add(new BasicNameValuePair("selectedUsers", list.get(i).getUserId()));
                     }
                 }
+                pairs.add(new BasicNameValuePair("groupID",groupId));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
 
@@ -388,15 +486,15 @@ searchAdapterMultiSelect=null;
                     recyclerViewsearchData.setVisibility(View.VISIBLE);
                     String nextUri = null, authToken = null, userName = null, profileUrl = null, sepcializationName = null;
                     JSONObject jsonObject;
-                    if (jo.has("response") && !jo.isNull("response"))
+                    if (jo.has("responce") && !jo.isNull("responce"))
 
                     {
-                        jsonObject = jo.getJSONObject("response");
+                        jsonObject = jo.getJSONObject("responce");
                         if (jo.has("totalpage") && !jo.isNull("totalpage")) {
                             totalPageCount = jo.getInt("totalpage");
                         }
-                        if (jsonObject.has("users") && !jsonObject.isNull("users")) {
-                            JSONArray jsonArray = jsonObject.getJSONArray("users");
+                        if (jsonObject.has("userdetail") && !jsonObject.isNull("userdetail")) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("userdetail");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 String fname = "", lname = "", slug = "", profile_pic = "", department = "", id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
@@ -445,7 +543,7 @@ searchAdapterMultiSelect=null;
                             isLoading = false;
                             if (searchAdapterMultiSelect == null && totalFeeds.size() > 0) {
 
-                                searchAdapterMultiSelect = new SearchAdapterMultiSelect(Multi_Select_Search.this, totalFeeds);
+                                searchAdapterMultiSelect = new SearchAdapterMultiSelect(Multiple_select_invite_search.this, totalFeeds);
                                 recyclerViewsearchData.setAdapter(searchAdapterMultiSelect);
                                 recyclerViewsearchData.addOnScrollListener(new RecyclerView.OnScrollListener() {
                                     @Override
@@ -537,7 +635,7 @@ searchAdapterMultiSelect=null;
         public SearchAdapterMultiSelect.MyHolderView onCreateViewHolder(ViewGroup parent, int viewType) {
             RecyclerView.ViewHolder viewHolder = null;
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_selected, parent, false);
-            return new MyHolderView(v);
+            return new SearchAdapterMultiSelect.MyHolderView(v);
         }
 
         @Override
@@ -557,14 +655,17 @@ searchAdapterMultiSelect=null;
                     if (multipleSelectedItemModel.isSelected()) {
                         multipleSelectedItemModels.get(position).setSelected(false);
                         holder.textViewInvite.setVisibility(View.GONE);
-
                         if (list.size() > 0)
                             removeFromSelected(multipleSelectedItemModel);
+                        textViewDone.setText("Selected ("+list.size()+")");
+
                         horizontalChipCloud.delchip(position, multipleSelectedItemModel.getUserName());
 
                     } else {
                         multipleSelectedItemModels.get(position).setSelected(true);
                         list.add(multipleSelectedItemModels.get(position));
+                        textViewDone.setText("Selected ("+list.size()+")");
+
                         horizontalChipCloud.addChip(multipleSelectedItemModel.getUserName());
                         holder.textViewInvite.setVisibility(View.VISIBLE);
 
@@ -633,5 +734,6 @@ searchAdapterMultiSelect=null;
     }
 
 }
+
 
 

@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -112,6 +113,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
     TextView skipTextView;
+    boolean isImageClicked = false;
+
     public static boolean isVisible = true;
     String selectedImagePath = null;
     String authToken, userId, email, mobile, userName;
@@ -190,7 +193,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         TypeFaceMethods.setRegularTypeFaceEditText(editTextAbout, CreateDrProfile.this);
         TypeFaceMethods.setRegularTypeFaceEditText(editTextContactNumber, CreateDrProfile.this);
 
-        checkPermissionGeneral();
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.pro);
         sesstionManager = new SesstionManager(CreateDrProfile.this);
@@ -199,7 +201,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
             userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
             email = sesstionManager.getUserDetails().get(SesstionManager.KEY_EMAIL);
-            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " "+sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
             mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
             editTextemail.setText(email);
             editTextName.setText(userName);
@@ -266,6 +268,76 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         } else {
             NetworkUtill.showNoInternetDialog(CreateDrProfile.this);
         }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.print(requestCode);
+        if (requestCode == 1) {
+            selectImage();
+        }
+    }
+    private void selectImage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateDrProfile.this);
+
+
+        if (selectedImagePath == null)
+
+        {
+            final CharSequence[] items = {"Take Photo", "Choose from Library",
+                    "Cancel"};
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+                        takePicture();
+                        isImageClicked = true;
+                    } else if (items[item].equals("Choose from Library")) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, SELECT_FILE);
+                        isImageClicked = true;
+
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+
+                    }
+                }
+            });
+        } else {
+
+            final CharSequence[] items = {"Take Photo", "Choose from Library",
+                    "Remove", "Cancel"};
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+                        takePicture();
+                        isImageClicked = true;
+
+                    } else if (items[item].equals("Choose from Library")) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, SELECT_FILE);
+                        isImageClicked = true;
+
+                    } else if (items[item].equals("Remove")) {
+                        dialog.dismiss();
+                        selectedImagePath = null;
+                        Glide.with(CreateDrProfile.this)
+                                .load(R.drawable.default_image)
+                                .into(circleImageView);
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }
+        builder.show();
     }
 
     private void dispatchTakePictureIntent() {
@@ -363,9 +435,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current time as the default values for the picker
             final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            int year = 1980;
+            int month = 1;
+            int day = 1;
 
             // Create a new instance of TimePickerDialog and return it
             return new DatePickerDialog(getActivity(), listener, year, month,
@@ -468,28 +540,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         return Uri.parse(path);
     }
 
-    private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
-                "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateDrProfile.this);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    takePicture();
-                } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, SELECT_FILE);
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
 
 
     private void initSpinnerScrollingCategory() {
@@ -960,6 +1010,10 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         }
         if (editTextYearOfExpeicence.getText().toString().length() == 0) {
             Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
+            Toast.makeText(CreateDrProfile.this, "Experience cannot be greater than 100", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (editTextDob.getText().toString().length() == 0) {

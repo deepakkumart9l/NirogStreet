@@ -101,7 +101,9 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Qualification"
-                    android:inputType="text|textNoSuggestions"
+                    android:focusable="false"
+
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -122,7 +124,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="University"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

@@ -154,9 +154,18 @@
         <activity
             android:name=".activites.RegisterActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activites.Multiple_select_invite_search"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.SingleSelectQualifications"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activites.UpdateCommunity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activites.AllClinicListing"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activites.AllClinicSearch"/>
 
         <service android:name=".notifications.MyFirebaseMessagingService">
             <intent-filter>
@@ -190,7 +199,11 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
-        </provider>
+        </provider><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -34,7 +34,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/roundimg"
             android:gravity="center|left"
             android:orientation="vertical"
@@ -99,7 +98,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:textColor="@color/textcolorgray" />
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:letterSpacing="0.02"
+android:textSize="12sp"                android:textColor="@color/textcolorgray" />
 
             <TextView
                 android:id="@+id/groupMembers"

@@ -86,4 +86,7 @@ dependencies {
         transitive = true;
     }
     apply plugin: 'com.google.gms.google-services'
+/*
+    compile 'com.google.android.gms:play-services-appindexing:10.0.1'
+*/
 }

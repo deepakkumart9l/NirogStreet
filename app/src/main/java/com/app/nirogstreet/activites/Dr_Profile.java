@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.model.ClinicDetailModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
@@ -441,7 +442,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 clinicAddressEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, AddOrEditClinicDetail.class);
+                                        Intent intent = new Intent(Dr_Profile.this, AllClinicListing.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -470,6 +471,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         }
         if (ApplicationSingleton.isContactInfoUpdated()) {
             updateContactInfo();
+        }
+        if (ApplicationSingleton.isClinicUpdated()) {
+            updateClinicInfo();
+            ApplicationSingleton.setIsClinicUpdated(false);
         }
         if (ApplicationSingleton.isMemberShipUpdated()) {
             updateMemberShip();
@@ -750,13 +755,16 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 try {
                     View v = LayoutInflater.from(this).inflate(R.layout.clinic_profile_layout, null);
                     TextView consultaionFeesTv = (TextView) v.findViewById(R.id.consultaionFees);
-                    TextView feeTv=(TextView)v.findViewById(R.id.fee);
+                    TextView feeTv = (TextView) v.findViewById(R.id.fee);
                     TypeFaceMethods.setRegularTypeFaceForTextView(feeTv, Dr_Profile.this);
 
                     TypeFaceMethods.setRegularTypeFaceForTextView(consultaionFeesTv, Dr_Profile.this);
                     TextView allTaxesTv = (TextView) v.findViewById(R.id.allTaxes);
                     TypeFaceMethods.setRegularTypeFaceForTextView(allTaxesTv, Dr_Profile.this);
-
+                    TextView serviceTv = (TextView) v.findViewById(R.id.service);
+                    serviceTv.setText(getSelectedClinicService(userDetailModel.getClinicDetailModels().get(i)));
+                    TypeFaceMethods.setRegularTypeFaceForTextView(serviceTv, Dr_Profile.this);
+                    serviceTv.setText(getSelectedServicesCsv());
                     TextView textView = (TextView) v.findViewById(R.id.clgName);
                     TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                     TextView year = (TextView) v.findViewById(R.id.year_of_passing);
@@ -778,6 +786,23 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
             }
         }
+    }
+
+    public String getSelectedClinicService(ClinicDetailModel clinicDetailModel) {
+        String languageCSV = "";
+
+        if (clinicDetailModel != null && clinicDetailModel.getServicesModels() != null && clinicDetailModel.getServicesModels().size() > 0) {
+            for (int i = 0; i < clinicDetailModel.getServicesModels().size(); i++) {
+                String language = clinicDetailModel.getServicesModels().get(i).getSpecializationName();
+                if (language != null && !language.trim().isEmpty()
+                        && languageCSV != null && !languageCSV.trim().isEmpty())
+                    languageCSV = languageCSV + ", ";
+                languageCSV = languageCSV + language;
+
+            }
+        }
+        return languageCSV;
+
     }
 
     public String getSelectedServicesCsv() {

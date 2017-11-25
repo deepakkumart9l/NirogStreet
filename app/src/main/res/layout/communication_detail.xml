@@ -21,12 +21,12 @@
 
             <ImageView
                 android:id="@+id/back"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="7dp"
-                android:padding="8dp"
+                android:layout_marginLeft="9dp"
+                android:padding="6dp"
 
                 android:src="@drawable/back"
                 android:visibility="visible" />
@@ -46,14 +46,19 @@
                 android:id="@+id/textTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
+                android:layout_gravity="left|center_vertical"
                 android:layout_toRightOf="@+id/pro"
-                android:text=""
+                android:layout_marginTop="3dp"
                 android:textColor="@color/white"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textStyle="normal" />
-
+<ImageView
+    android:layout_width="30dp"
+    android:layout_alignParentRight="true"
+    android:src="@drawable/more_dots"
+    android:id="@+id/more"
+    android:layout_marginRight="10dp"
+    android:layout_height="30dp" />
         </RelativeLayout>
     </LinearLayout>
 

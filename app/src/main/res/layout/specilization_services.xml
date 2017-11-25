@@ -93,6 +93,8 @@
                     android:hint="Services"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
+                    android:focusable="false"
+
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
@@ -114,6 +116,8 @@
                     android:hint="Specialization"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
+                    android:focusable="false"
+
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>

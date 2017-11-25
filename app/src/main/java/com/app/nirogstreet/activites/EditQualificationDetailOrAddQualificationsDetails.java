@@ -481,7 +481,7 @@ clgEt.setOnTouchListener(new View.OnTouchListener() {
             int year = cal.get(Calendar.YEAR);
             yearPicker.setMinValue(1917);
             yearPicker.setMaxValue(MAX_YEAR);
-            yearPicker.setValue(year);
+            yearPicker.setValue(1980);
 
             builder.setView(dialog)
                     // Add action buttons

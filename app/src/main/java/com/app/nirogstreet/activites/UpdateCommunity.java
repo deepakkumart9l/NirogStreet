@@ -24,13 +24,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
-import com.app.nirogstreet.model.Image;
 import com.app.nirogstreet.model.MultipleSelectedItemModel;
+import com.app.nirogstreet.model.UserList;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageProcess;
@@ -40,6 +41,7 @@ import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -57,6 +59,7 @@ import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.conn.scheme.Scheme;
 import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
@@ -64,14 +67,15 @@ import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
 import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 import cz.msebera.android.httpclient.entity.mime.content.FileBody;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import de.hdodenhof.circleimageview.CircleImageView;
 import fr.ganfra.materialspinner.MaterialSpinner;
 
 /**
- * Created by Preeti on 08-11-2017.
+ * Created by Preeti on 24-11-2017.
  */
-
-public class CreateCommunity extends Activity {
+public class UpdateCommunity extends Activity {
     EditText community_nameEditText, add_peopleEditText, noteEditText, descriptionEditText;
     private int SELECT_FILE = 999;
     private int REQUEST_CAMERA = 99;
@@ -90,7 +94,7 @@ public class CreateCommunity extends Activity {
     ImageView imgCover;
     String selectedImagePath, selectedVideoPath;
     SesstionManager sesstionManager;
-
+    String groupId = "";
     TextView addTextView, add_imageTextView;
     String authToken, userId;
     ImageView backImageView;
@@ -98,10 +102,17 @@ public class CreateCommunity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sesstionManager = new SesstionManager(CreateCommunity.this);
+        sesstionManager = new SesstionManager(UpdateCommunity.this);
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         setContentView(R.layout.create_conunites);
+        backImageView = (ImageView) findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         imgCover = (ImageView) findViewById(R.id.imgView);
         community_nameEditText = (EditText) findViewById(R.id.community_name);
@@ -110,14 +121,15 @@ public class CreateCommunity extends Activity {
         addTextView = (TextView) findViewById(R.id.add);
         spinnerCategory = (MaterialSpinner) findViewById(R.id.titleLay);
         create = (TextView) findViewById(R.id.create);
-        TypeFaceMethods.setRegularTypeFaceForTextView(create, CreateCommunity.this);
+        create.setText("Update");
+        TypeFaceMethods.setRegularTypeFaceForTextView(create, UpdateCommunity.this);
         descriptionEditText = (EditText) findViewById(R.id.description);
         add_imageTextView = (TextView) findViewById(R.id.add_image);
         add_peopleEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(CreateCommunity.this, Multi_Select_Search.class);
+                Intent intent = new Intent(UpdateCommunity.this, Multi_Select_Search.class);
                 if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
                     intent.putExtra("list", multipleSelectedItemModels);
                 }
@@ -129,24 +141,29 @@ public class CreateCommunity extends Activity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtill.isNetworkAvailable(CreateCommunity.this)) {
+                if (NetworkUtill.isNetworkAvailable(UpdateCommunity.this)) {
                     if (isValidated()) {
                         createGroupAsyncTask = new CreateGroupAsyncTask(userId, authToken);
                         createGroupAsyncTask.execute();
                     } else {
-                        NetworkUtill.showNoInternetDialog(CreateCommunity.this);
+                        NetworkUtill.showNoInternetDialog(UpdateCommunity.this);
                     }
                 }
             }
         });
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(add_imageTextView, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addTextView, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(community_nameEditText, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(noteEditText, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(descriptionEditText, CreateCommunity.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(add_imageTextView, UpdateCommunity.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(addTextView, UpdateCommunity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(community_nameEditText, UpdateCommunity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(noteEditText, UpdateCommunity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(descriptionEditText, UpdateCommunity.this);
+        if (getIntent().hasExtra("groupId")) {
+            groupId = getIntent().getStringExtra("groupId");
+        }
 
-        TypeFaceMethods.setRegularTypeFaceEditText(add_peopleEditText, CreateCommunity.this);
+
+
+        TypeFaceMethods.setRegularTypeFaceEditText(add_peopleEditText, UpdateCommunity.this);
         imgCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,6 +171,13 @@ public class CreateCommunity extends Activity {
             }
         });
         initSpinnerScrollingCategory();
+        if (!groupId.equalsIgnoreCase(""))
+            if (NetworkUtill.isNetworkAvailable(UpdateCommunity.this)) {
+                GetCommunityDetailAsyncTask getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
+                getCommunityDetailAsyncTask.execute();
+            } else {
+                NetworkUtill.showNoInternetDialog(UpdateCommunity.this);
+            }
     }
 
     @Override
@@ -165,9 +189,9 @@ public class CreateCommunity extends Activity {
     }
 
     public void checkPermission() {
-        if (ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(UpdateCommunity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(UpdateCommunity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(UpdateCommunity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
             selectImage();
         } else {
@@ -193,7 +217,7 @@ public class CreateCommunity extends Activity {
 
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = new ImageProcess(CreateCommunity.this).getOutputMediaFile("");
+        photoFile = new ImageProcess(UpdateCommunity.this).getOutputMediaFile("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Log.e("hello", "hi");
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -205,7 +229,7 @@ public class CreateCommunity extends Activity {
                     Log.e("ex", "" + ex);
                     // Error occurred while creating the File
                 }
-                Uri photoURI = FileProvider.getUriForFile(CreateCommunity.this,
+                Uri photoURI = FileProvider.getUriForFile(UpdateCommunity.this,
                         "com.app.nirogstreet.fileprovider",
                         photoFile);
                 Log.e("photoURI", "" + photoURI);
@@ -220,11 +244,11 @@ public class CreateCommunity extends Activity {
     private void dispatchTakePictureIntent() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = new ImageProcess(CreateCommunity.this).getOutputMediaFile("");
+        photoFile = new ImageProcess(UpdateCommunity.this).getOutputMediaFile("");
         if (intent.resolveActivity(getPackageManager()) != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                Uri contentUri = FileProvider.getUriForFile(CreateCommunity.this, "com.app.nirogstreet.fileprovider", photoFile);
+                Uri contentUri = FileProvider.getUriForFile(UpdateCommunity.this, "com.app.nirogstreet.fileprovider", photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
 
             } else {
@@ -264,7 +288,7 @@ public class CreateCommunity extends Activity {
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateCommunity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(UpdateCommunity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
@@ -315,7 +339,7 @@ public class CreateCommunity extends Activity {
             if (requestCode == SELECT_FILE) {
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImageUri = data.getData();
-                    selectedImagePath = getPath(selectedImageUri, CreateCommunity.this);
+                    selectedImagePath = getPath(selectedImageUri, UpdateCommunity.this);
                     imgCover.setImageBitmap(BitmapFactory
                             .decodeFile(selectedImagePath));
 
@@ -341,12 +365,12 @@ public class CreateCommunity extends Activity {
                         Bitmap blurred = blurRenderScript(bitmap, 25);//second parametre is radius
                         imagecoverback.setImageBitmap(blurred);*/
                         Uri uri = Uri.fromFile(photoFile);
-                        ImageProcess obj = new ImageProcess(CreateCommunity.this);
+                        ImageProcess obj = new ImageProcess(UpdateCommunity.this);
                         selectedImagePath = obj.getPath(uri);
                        /* imgCover.setImageBitmap(BitmapFactory
                                 .decodeFile(selectedImagePath));*/
                         File fff = new File(selectedImagePath);
-                        Glide.with(CreateCommunity.this)
+                        Glide.with(UpdateCommunity.this)
                                 .load(fff) // Uri of the picture
                                 .centerCrop()
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -410,7 +434,7 @@ public class CreateCommunity extends Activity {
             try {
 
 
-                String url = AppUrl.BaseUrl + "group/create";
+                String url = AppUrl.BaseUrl + "group/update";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -431,7 +455,7 @@ public class CreateCommunity extends Activity {
                 entityBuilder.addTextBody("Community[name]", groupName);
                 entityBuilder.addTextBody("Community[invite_note]", noteText);
                 entityBuilder.addTextBody("Community[description]", messageText);
-
+                entityBuilder.addTextBody("groupID", groupId);
                 if (selectedImagePath != null && selectedImagePath.toString().trim().length() > 0) {
                     File file = new File(selectedImagePath);
                     FileBody encFile = new FileBody(file);
@@ -466,7 +490,7 @@ public class CreateCommunity extends Activity {
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
-                            ApplicationSingleton.setIsGroupCreated(true);
+                            ApplicationSingleton.setIsGroupUpdated(true);
 
                             finish();
 
@@ -476,6 +500,202 @@ public class CreateCommunity extends Activity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class GetCommunityDetailAsyncTask extends AsyncTask<Void, Void, Void> {
+        JSONObject jo;
+        String groupId;
+
+
+        private String responseBody;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public GetCommunityDetailAsyncTask(String groupId) {
+            this.groupId = groupId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
+                            String name = null, invite_note = null, description = null, banner = null, privacy = null, created_profile = null, createdBy_id = null, createdBy_name = null;
+                            JSONObject groupDetailJsonObject = jsonObject.getJSONObject("groupDetail");
+                            if (groupDetailJsonObject.has("name") && !groupDetailJsonObject.isNull("name")) {
+                                name = groupDetailJsonObject.getString("name");
+                                community_nameEditText.setText(name);
+                            }
+                            if (groupDetailJsonObject.has("invite_note") && !groupDetailJsonObject.isNull("invite_note")) {
+                                invite_note = groupDetailJsonObject.getString("invite_note");
+                                noteEditText.setText(invite_note);
+                            }
+                            if (groupDetailJsonObject.has("description") && !groupDetailJsonObject.isNull("description")) {
+                                description = groupDetailJsonObject.getString("description");
+                                descriptionEditText.setText(description);
+                            }
+                            if (groupDetailJsonObject.has("banner") && !groupDetailJsonObject.isNull("banner")) {
+                                banner = groupDetailJsonObject.getString("banner");
+                                Glide.with(UpdateCommunity.this)
+                                        .load(banner) // Uri of the picture
+                                        .centerCrop()
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .crossFade()
+                                        .override(100, 100)
+                                        .into(imgCover);
+                            }
+
+                            if (groupDetailJsonObject.has("privacy") && !groupDetailJsonObject.isNull("privacy")) {
+                                privacy = groupDetailJsonObject.getString("privacy");
+                                if (privacy.equalsIgnoreCase("1")) {
+                                    spinnerCategory.setSelection(2);
+                                } else {
+                                    spinnerCategory.setSelection(1);
+
+                                }
+                            }
+                            if (name != null && banner != null && !banner.contains("tempimages")) {
+                                CommunitiesDetails.setNameAndCoverPic(name, banner);
+                            }
+                            if (groupDetailJsonObject.has("created_by") && !groupDetailJsonObject.isNull("created_by")) {
+                                JSONObject created_ByObject = groupDetailJsonObject.getJSONObject("created_by");
+                                if (created_ByObject.has("id") && !created_ByObject.isNull("id")) {
+                                    createdBy_id = created_ByObject.getString("id");
+                                }
+                                if (created_ByObject.has("name") && !created_ByObject.isNull("name")) {
+                                    createdBy_name = created_ByObject.getString("name");
+                                }
+                                if (created_ByObject.has("profile_pic") && !created_ByObject.isNull("profile_pic")) {
+                                    created_profile = created_ByObject.getString("profile_pic");
+                                }
+
+                            }
+                            ArrayList<UserList> userDetailModels = new ArrayList<>();
+                            if (groupDetailJsonObject.has("members") && !groupDetailJsonObject.isNull("members")) {
+                                JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
+                                if (jsonArray != null && jsonArray.length() > 0) {
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        String userId = null, userName = null, profile_pic = null;
+                                        JSONObject object = jsonArray.getJSONObject(i);
+                                        if (object.has("user_id") && !object.isNull("user_id")) {
+                                            JSONObject userDetail = object.getJSONObject("user_id");
+                                            if (userDetail.has("id") && !userDetail.isNull("id")) {
+                                                userId = userDetail.getString("id");
+
+                                            }
+                                            if (userDetail.has("name") && !userDetail.isNull("name")) {
+                                                userName = userDetail.getString("name");
+
+                                            }
+                                            if (userDetail.has("profile_pic") && !userDetail.isNull("profile_pic")) {
+                                                profile_pic = userDetail.getString("profile_pic");
+                                            }
+                                            multipleSelectedItemModels.add(new MultipleSelectedItemModel(userId, userName, "", profile_pic));
+                                        }
+                                    }
+
+                                    if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
+                                        add_peopleEditText.setText(getSelectedNameCsv());
+                                    }
+                                 /*   LinearLayout llGallery = (LinearLayout) view.findViewById(R.id.llGallery);
+
+                                    if (userDetailModels.size() > 0)
+                                        for (int i = 0; i < userDetailModels.size() + 1; i++) {
+                                            View view = ((CommunitiesDetails) context).getLayoutInflater().inflate(R.layout.member_item_communities, null, false);
+                                            if (i == 4)
+                                                break;
+                                            TextView nameTv = (TextView) view.findViewById(R.id.adminname);
+                                            TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                            if (i == 3) {
+                                                nameTv.setText("View More");
+                                            } else {
+
+                                                nameTv.setText(userDetailModels.get(i).getName());
+                                                TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                                CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
+                                                Glide.with(context)
+                                                        .load(userDetailModels.get(i).getProfile_pic()) // Uri of the picture
+                                                        .centerCrop()
+                                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                        .crossFade()
+                                                        .override(100, 100)
+                                                        .into(imageView);
+                                            }
+                                            llGallery.addView(view);
+                                        }
+
+                                }*/
+
+                                }
+                                if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                                    CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    });
+                                } else {
+                                    if (userDetailModels != null && userDetailModels.size() > 0)
+                                        for (int i = 0; i < userDetailModels.size(); i++) {
+                                            if (userDetailModels.get(i).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+
+                                                break;
+                                            }
+                                        }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+
+
+                String url = AppUrl.BaseUrl + "group/detail";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("groupID", groupId));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -501,7 +721,7 @@ public class CreateCommunity extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateCommunity.this);
+                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, UpdateCommunity.this);
 
                 return v;
             }
@@ -510,7 +730,7 @@ public class CreateCommunity extends Activity {
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateCommunity.this);
+                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, UpdateCommunity.this);
 
                 return v;
             }
@@ -527,17 +747,33 @@ public class CreateCommunity extends Activity {
     private boolean isValidated() {
         if (add_peopleEditText.getText().toString() == null ||
                 add_peopleEditText.getText().toString().equals("")) {
-            Toast.makeText(CreateCommunity.this, "Please select group member", Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateCommunity.this, "Please select group member", Toast.LENGTH_LONG).show();
             return false;
         } else if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
-            Toast.makeText(CreateCommunity.this, "Please enter Group Name!", Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateCommunity.this, "Please enter Group Name!", Toast.LENGTH_LONG).show();
 
             return false;
         } else if (group.toString() == null || group.toString().equals("")) {
-            Toast.makeText(CreateCommunity.this, "Please select privacy type", Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateCommunity.this, "Please select privacy type", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
     }
 
+    public String getSelectedNameCsv() {
+        String languageCSV = "";
+        if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
+            for (int i = 0; i < multipleSelectedItemModels.size(); i++) {
+                String language = multipleSelectedItemModels.get(i).getUserName();
+                if (language != null && !language.trim().isEmpty()
+                        && languageCSV != null && !languageCSV.trim().isEmpty())
+                    languageCSV = languageCSV + ", ";
+                languageCSV = languageCSV + language;
+
+            }
+        }
+        return languageCSV;
+    }
+
 }
+

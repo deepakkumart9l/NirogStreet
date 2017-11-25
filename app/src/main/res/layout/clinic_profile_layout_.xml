@@ -2,65 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="10dp"
-    >
+    android:padding="10dp"
+    android:paddingTop="10dp">
 
     <TextView
-        android:id="@+id/clgName"
-        android:layout_width="match_parent"
+        android:id="@+id/clinic_Name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:inputType="textCapWords|textCapSentences"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="40dp"
 
-        android:textSize="16sp"
         android:textColor="@color/black"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="0dp" />
+        android:textSize="16sp" />
 
+    <ImageView
+        android:id="@+id/edit_Icon"
+        android:layout_width="30dp"
+
+        android:layout_marginRight="5dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="11dp"
+        android:paddingLeft="11dp"
+        android:src="@drawable/edit" />
 
 
     <TextView
-        android:id="@+id/degree_name"
-        android:textSize="15sp"
-        android:layout_marginTop="2dp"
-        android:inputType="textCapWords|textCapSentences"
 
+        android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:text=""
-        android:layout_below="@+id/clgName"
-        android:layout_marginRight="0dp" />
+        android:layout_below="@+id/clinic_Name"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="15sp" />
 
     <TextView
-
-        android:id="@+id/year_of_passing"
+        android:id="@+id/services_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:layout_marginTop="2dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/degree_name"
-        android:layout_marginRight="40dp" />
+        android:layout_below="@id/address" />
 
-    <TextView
-
-        android:id="@+id/service"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/year_of_passing"
-        android:layout_marginRight="40dp" />    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/service"
-        android:visibility="visible"
-        android:layout_marginTop="15dp">
+        android:id="@+id/lay"
+        android:layout_below="@+id/services_txt"
+        android:layout_marginTop="15dp"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -106,5 +99,11 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lay"
+        android:background="@color/textcolorgray" />
 
 </RelativeLayout>

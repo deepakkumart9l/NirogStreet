@@ -12,7 +12,24 @@ public class ApplicationSingleton extends Application {
     public static boolean isGroupUpdated() {
         return isGroupUpdated;
     }
+    public static boolean isClinicUpdated() {
+        return isClinicUpdated;
+    }
+    public  static  boolean isListingFinish=false;
 
+    public static boolean isListingFinish() {
+        return isListingFinish;
+    }
+
+    public static void setIsListingFinish(boolean isListingFinish) {
+        ApplicationSingleton.isListingFinish = isListingFinish;
+    }
+
+    public static void setIsClinicUpdated(boolean isClinicUpdated) {
+        ApplicationSingleton.isClinicUpdated = isClinicUpdated;
+    }
+
+    public static boolean isClinicUpdated;
     public static boolean isGroupCreated() {
         return isGroupCreated;
     }

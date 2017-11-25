@@ -19,6 +19,7 @@ package com.app.nirogstreet.materialdaterangepicker.time;
 import android.animation.ObjectAnimator;
 import android.app.ActionBar.LayoutParams;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -296,9 +297,12 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
         mInKbMode = false;
     }
 
+    Context context;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity();
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_HOUR_OF_DAY)
                 && savedInstanceState.containsKey(KEY_MINUTE)
                 && savedInstanceState.containsKey(KEY_IS_24_HOUR_VIEW)) {
@@ -324,7 +328,7 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
         KeyboardListener keyboardListener = new KeyboardListener();
         view.findViewById(R.id.time_picker_dialog).setOnKeyListener(keyboardListener);
         textView = (TextView) view.findViewById(R.id.test);
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/ubuntu.regular.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/ubuntu.regular.ttf");
         textView.setTypeface(tf);
         Resources res = getResources();
         mHourPickerDescription = res.getString(R.string.mdtp_hour_picker_description);
@@ -354,41 +358,41 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
         tabHost.addTab(endDatePage);
 
         mHourView = (TextView) view.findViewById(R.id.hours);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mHourView, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mHourView, getActivity());
         mHourView.setOnKeyListener(keyboardListener);
         mHourViewEnd = (TextView) view.findViewById(R.id.hours_end);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mHourViewEnd, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mHourViewEnd, getActivity());
 
         mHourViewEnd.setOnKeyListener(keyboardListener);
         mHourSpaceView = (TextView) view.findViewById(R.id.hour_space);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mHourSpaceView, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mHourSpaceView, getActivity());
 
         mHourSpaceViewEnd = (TextView) view.findViewById(R.id.hour_space_end);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mHourSpaceViewEnd, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mHourSpaceViewEnd, getActivity());
 
         mMinuteSpaceView = (TextView) view.findViewById(R.id.minutes_space);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteSpaceView, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteSpaceView, getActivity());
 
         mMinuteSpaceViewEnd = (TextView) view.findViewById(R.id.minutes_space_end);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteSpaceViewEnd, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteSpaceViewEnd, getActivity());
 
         mMinuteView = (TextView) view.findViewById(R.id.minutes);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteView, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteView, getActivity());
 
         mMinuteView.setOnKeyListener(keyboardListener);
         mMinuteViewEnd = (TextView) view.findViewById(R.id.minutes_end);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteViewEnd, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mMinuteViewEnd, getActivity());
 
         mMinuteViewEnd.setOnKeyListener(keyboardListener);
         mAmPmTextView = (TextView) view.findViewById(R.id.ampm_label);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mAmPmTextView, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mAmPmTextView, getActivity());
 
         mAmPmTextView.setOnKeyListener(keyboardListener);
         mAmPmTextViewEnd = (TextView) view.findViewById(R.id.ampm_label_end);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mAmPmTextViewEnd, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mAmPmTextViewEnd, getActivity());
 
         mAmPmTextViewEnd.setOnKeyListener(keyboardListener);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mAmPmTextViewEnd, getContext());
+        TypeFaceMethods.setRegularTypeFaceForTextView(mAmPmTextViewEnd, getActivity());
 
         String[] amPmTexts = new DateFormatSymbols().getAmPmStrings();
         mAmText = amPmTexts[0];
@@ -424,6 +428,7 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
         setCurrentItemShowing(currentItemShowing, false, true, true);
         setCurrentItemShowing(currentItemShowingEnd, false, true, true);
         mTimePicker.invalidate();
+
         mTimePickerEnd.invalidate();
 
         mHourView.setOnClickListener(new OnClickListener() {
@@ -478,42 +483,70 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
                             stratTime = mTimePicker.getHours() + ":" + mTimePicker.getMinutes();
 
                         }
+
+
                         if (mTimePickerEnd.getIsCurrentlyAmOrPm() == 0)
 
                             endTime = mTimePickerEnd.getHours() + ":" + mTimePickerEnd.getMinutes();
                         else
                             endTime = mTimePickerEnd.getHours() + ":" + mTimePickerEnd.getMinutes();
+                        try {
+                            if(isTimeBetweenTwoTime("0:01:00","5:59:00",endTime+":00")) {
+                                textView.setText("End time is Invalid.");
+                                textView.setVisibility(View.VISIBLE);
+                            }else
+                            if (validTime(stratTime, endTime)) {
+                                textView.setText("");
+                                textView.setVisibility(View.GONE);
 
-                        if (validTime(stratTime, endTime)) {
-                            textView.setText("");
-                            textView.setVisibility(View.GONE);
+                                if (ifPreviousSesstionSelected) {
+                                    if (!isOverlapping(previousSesstionStartTime, previousSesstionEndTime, stratTime, endTime)) {
+                                        mCallback.onTimeSet(mTimePicker,
+                                                mTimePicker.getHours(), mTimePicker.getMinutes(), mTimePickerEnd.getHours(), mTimePickerEnd.getMinutes(), textView, mTimePicker.getIsCurrentlyAmOrPm(), mTimePickerEnd.getIsCurrentlyAmOrPm()
+                                        );
+                                        dismiss();
 
-                            if (ifPreviousSesstionSelected) {
-                                if (!isOverlapping(previousSesstionStartTime, previousSesstionEndTime, stratTime, endTime)) {
+                                    } else {
+                                        textView.setVisibility(View.VISIBLE);
+                                        textView.setText("Sesstion time overlap");
+
+                                    }
+                                } else {
                                     mCallback.onTimeSet(mTimePicker,
                                             mTimePicker.getHours(), mTimePicker.getMinutes(), mTimePickerEnd.getHours(), mTimePickerEnd.getMinutes(), textView, mTimePicker.getIsCurrentlyAmOrPm(), mTimePickerEnd.getIsCurrentlyAmOrPm()
                                     );
+
                                     dismiss();
 
-                                } else {
-                                    textView.setVisibility(View.VISIBLE);
-                                    textView.setText("Sesstion time overlap");
-
                                 }
-                            } else {
-                                mCallback.onTimeSet(mTimePicker,
-                                        mTimePicker.getHours(), mTimePicker.getMinutes(), mTimePickerEnd.getHours(), mTimePickerEnd.getMinutes(), textView, mTimePicker.getIsCurrentlyAmOrPm(), mTimePickerEnd.getIsCurrentlyAmOrPm()
-                                );
-
-                                dismiss();
-
                             }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
                     }
                     if (tabHost.getCurrentTab() != 1) {
-                        tabHost.setCurrentTab(1);
-                        tryVibrate();
-                        mOkButton.setText("Ok");
+                        String stratTime;
+                        String endTime;
+                        if (mTimePicker.getIsCurrentlyAmOrPm() == 0)
+                            stratTime = mTimePicker.getHours() + ":" + mTimePicker.getMinutes();
+                        else {
+                            stratTime = mTimePicker.getHours() + ":" + mTimePicker.getMinutes();
+
+                        }
+                        try {
+                            if(isTimeBetweenTwoTime("1:01:00","5:59:00",stratTime+":00")) {
+                                textView.setText("Start time is Invalid.");
+                                textView.setVisibility(View.VISIBLE);
+                            }else {
+                                textView.setVisibility(View.GONE);
+
+                                tabHost.setCurrentTab(1);
+                                tryVibrate();
+                                mOkButton.setText("Ok");
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
@@ -1460,11 +1493,18 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
             Date date2 = sdf.parse(endTime);
             String strt1, end1;
             if (isfirst) {
-                strt1 = "5:59:00";
-                end1 = "15:00:00";
+                strt1 = "0:01:00";
+                end1 = "5:59:00";
+            /*if(   !isTimeBetweenTwoTime(strt1,end1,strtrTime))
+            {
+                textView.setText("Not a valid time");
+
+                return false;
+            }*/
+
             } else {
-                strt1 = "14:59:00";
-                end1 = "23:30:00";
+                strt1 = "0:01:00";
+                end1 = "5:59:00";
             }
             // if(isValidSesstion(strt1,end1,strtrTime,endTime)) {
             if (date1.after(date2)) {
@@ -1489,39 +1529,41 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
                 textView.setText("Not a valid time");
                 return false;
             }
-            if (!isTimeBetweenTwoTime(strt1, end1, strtrTime + ":00") || !isTimeBetweenTwoTime(strt1, end1, endTime + ":00")) {
+            //according to time slot
+           /* if (!isTimeBetweenTwoTime(strt1, end1, strtrTime + ":00") || !isTimeBetweenTwoTime(strt1, end1, endTime + ":00")) {
                 textView.setVisibility(View.VISIBLE);
 
                 textView.setText("Not a session time");
                 return false;
-            }
+            }*/
             // }
-        } catch (Exception e) {try {
-            String string1 = "20:11:13";
-            Date time1 = new SimpleDateFormat("HH:mm:ss").parse(string1);
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.setTime(time1);
+        } catch (Exception e) {
+            try {
+                String string1 = "20:11:13";
+                Date time1 = new SimpleDateFormat("HH:mm:ss").parse(string1);
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(time1);
 
-            String string2 = "14:49:00";
-            Date time2 = new SimpleDateFormat("HH:mm:ss").parse(string2);
-            Calendar calendar2 = Calendar.getInstance();
-            calendar2.setTime(time2);
-            calendar2.add(Calendar.DATE, 1);
+                String string2 = "14:49:00";
+                Date time2 = new SimpleDateFormat("HH:mm:ss").parse(string2);
+                Calendar calendar2 = Calendar.getInstance();
+                calendar2.setTime(time2);
+                calendar2.add(Calendar.DATE, 1);
 
-            String someRandomTime = "01:00:00";
-            Date d = new SimpleDateFormat("HH:mm:ss").parse(someRandomTime);
-            Calendar calendar3 = Calendar.getInstance();
-            calendar3.setTime(d);
-            calendar3.add(Calendar.DATE, 1);
+                String someRandomTime = "01:00:00";
+                Date d = new SimpleDateFormat("HH:mm:ss").parse(someRandomTime);
+                Calendar calendar3 = Calendar.getInstance();
+                calendar3.setTime(d);
+                calendar3.add(Calendar.DATE, 1);
 
-            Date x = calendar3.getTime();
-            if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
-                //checkes whether the current time is between 14:49:00 and 20:11:13.
-                System.out.println(true);
+                Date x = calendar3.getTime();
+                if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
+                    //checkes whether the current time is between 14:49:00 and 20:11:13.
+                    System.out.println(true);
+                }
+            } catch (ParseException ex) {
+                ex.printStackTrace();
             }
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
             e.printStackTrace();
         }
         return true;
@@ -1591,7 +1633,7 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
             calendar2.setTime(time2);
             calendar2.add(Calendar.DATE, 1);
 
-            String someRandomTime =currentTime ;
+            String someRandomTime = currentTime;
             Date d = new SimpleDateFormat("HH:mm:ss").parse(someRandomTime);
             Calendar calendar3 = Calendar.getInstance();
             calendar3.setTime(d);
@@ -1625,6 +1667,18 @@ public class TimePickerDialog extends DialogFragment implements OnValueSelectedL
         }
         return false;
     }
+   /* public  boolean isBeteewn()
+    {
+        if (startTime.isAfter(endTime)) {
+            if (targetTime.isBefore(endTime) || targetTime.isAfter(startTime)) {
+                System.out.println("Yes! night shift.");
+            } else {
+                System.out.println("Not! night shift.");
+            }
+        }
+    }
+*/
+
 
     public String amPmFromat(String str) {
         SimpleDateFormat _24HourSDF = new SimpleDateFormat("HH:mm");

@@ -1,10 +1,12 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Preeti on 27-09-2017.
  */
 
-public class TimingsModel {
+public class TimingsModel  implements Serializable{
     public TimingsModel(String day, SesstionModel sesstionModel1, SesstionModel sesstionModel2) {
         this.day = day;
         this.sesstionModel1 = sesstionModel1;

@@ -146,7 +146,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Name"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -233,7 +233,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="City"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -259,8 +259,7 @@
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Year of Experience"
                     android:inputType="number|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
+android:maxLength="3"                    android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
 
             </android.support.design.widget.TextInputLayout>
@@ -309,7 +308,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Website Or Blog (If Any)"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -335,7 +334,7 @@
                     android:drawableTint="@color/textcolorgray"
                     android:hint="About You"
 
-                    android:inputType="textMultiLine"
+                    android:inputType="textCapWords|textCapSentences|textMultiLine"
 
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -385,7 +384,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Email Address"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

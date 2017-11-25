@@ -219,6 +219,7 @@
                                 android:id="@+id/WebTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:inputType="textCapWords|textCapSentences"
 
                                 android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@+id/webSite_icon"
@@ -265,6 +266,7 @@
                                 android:id="@+id/emailTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:inputType="textCapWords|textCapSentences"
 
                                 android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@+id/Email_icon"

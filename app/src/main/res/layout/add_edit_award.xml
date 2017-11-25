@@ -85,7 +85,7 @@ android:layout_marginRight="12dp"                android:padding="8dp"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Council Registration Number"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

@@ -14,9 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.uttil.CustomPagerAdapter;
 import com.app.nirogstreet.uttil.CustomPagerCommunitiesAdapter;
+import com.app.nirogstreet.uttil.ImageLoader;
+import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.nirogstreet.R.id.tab;
 
@@ -28,12 +35,30 @@ public class CommunitiesDetails extends AppCompatActivity {
     CustomPagerCommunitiesAdapter customPagerCommunitiesAdapter;
     TabLayout tabLayout;
     ViewPager viewPager;
+    static TextView textTab;
     String groupId;
+public static    ImageView moreImageView;
+  static   LetterTileProvider mLetterTileProvider;
+   public static CircleImageView circleImageView;
+    ImageView backImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.communication_detail);
+        textTab=(TextView)findViewById(R.id.textTab);
+        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mLetterTileProvider = new LetterTileProvider(CommunitiesDetails.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(textTab,CommunitiesDetails.this);
+
+        circleImageView=(CircleImageView)findViewById(R.id.pro);
+        moreImageView=(ImageView)findViewById(R.id.more);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager.setOffscreenPageLimit(2);
@@ -110,5 +135,30 @@ public class CommunitiesDetails extends AppCompatActivity {
         });
 
 
+    }
+    public static void setNameAndCoverPic(String name, String url)
+    {
+        textTab.setText(name);
+
+    }
+    // ImageLoader imageLoader=new ImageLoader(CommunitiesDetails.this);
+
+    private static void setBanner(String url)
+    {
+        if (url != null&&!url.contains("banner-default")&&!url.contains("tempimages")) {
+           /* Glide.with(CommunitiesDetails.this)
+                    .load(url) // Uri of the picture
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .crossFade()
+                    .override(100, 100)
+                    .into(circleImageView);*/
+
+
+            // imageLoader1.getInstance().displayImage(groupModel.getGroupBanner(),  holder.groupIconImageView, defaultOptions);
+        } else {
+            circleImageView.setImageBitmap(mLetterTileProvider.getLetterTile(url));
+
+        }
     }
 }

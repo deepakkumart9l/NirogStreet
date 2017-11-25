@@ -12,6 +12,24 @@ public class ClinicDetailModel implements Serializable {
         return id;
     }
 
+    public String getClinic_docID() {
+        return clinic_docID;
+    }
+
+    public void setClinic_docID(String clinic_docID) {
+        this.clinic_docID = clinic_docID;
+    }
+
+    public String clinic_docID;
+    public String getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
+    }
+
+    private String created_by;
     public void setId(String id) {
         this.id = id;
     }
@@ -109,18 +127,30 @@ public class ClinicDetailModel implements Serializable {
 
     ArrayList<SpecializationModel> servicesModels = new ArrayList<>();
 
-    public ClinicDetailModel(String id, String name, String mobile, String address, String state, String city, String pincode, String at_lat, String at_long, String consultation_fee, ArrayList<SpecializationModel> servicesModels) {
+    public ArrayList<TimingsModel> getTimingsModels() {
+        return timingsModels;
+    }
+
+    public void setTimingsModels(ArrayList<TimingsModel> timingsModels) {
+        this.timingsModels = timingsModels;
+    }
+
+    ArrayList<TimingsModel> timingsModels=new ArrayList<>();
+    public ClinicDetailModel(String id, String name, String mobile, String address, String state, String city, String pincode, String at_lat, String at_long, String consultation_fee, ArrayList<SpecializationModel> servicesModels,ArrayList<TimingsModel>timingsModels,String created_by,String clinic_docID) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
         this.address = address;
+        this.timingsModels=timingsModels;
         this.state = state;
         this.city = city;
         this.servicesModels = servicesModels;
         this.pincode = pincode;
         this.at_lat = at_lat;
         this.at_long = at_long;
+        this.clinic_docID=clinic_docID;
         this.consultation_fee = consultation_fee;
+        this.created_by=created_by;
     }
 
 

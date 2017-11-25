@@ -68,7 +68,7 @@
                 android:padding="8dp"
 
                 android:src="@drawable/dlt"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -160,8 +160,8 @@
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Country"
-                    android:inputType="number|textNoSuggestions"
+                    android:hint="State"
+                    android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -247,7 +247,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Save"
+            android:text="Procced"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#fff" />
     </LinearLayout>

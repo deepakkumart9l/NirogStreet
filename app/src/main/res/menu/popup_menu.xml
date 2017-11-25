@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/invite"
+        android:title="Invite"
+
+        android:orderInCategory="50"/>
+
+    <item
+        android:id="@+id/edit"
+        android:title="Edit"
+
+        android:orderInCategory="50"
+        />
+    <item
+        android:id="@+id/leave"
+        android:title="Leave"
+
+        android:orderInCategory="50"
+        />
+</menu>
