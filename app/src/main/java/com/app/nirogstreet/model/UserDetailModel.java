@@ -206,7 +206,10 @@ public class UserDetailModel implements Serializable {
     ArrayList<ClinicDetailModel> clinicDetailModels = new ArrayList<>();
     String about;
     String title;
+public UserDetailModel()
+{
 
+}
     public UserDetailModel(String userId,String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels,ArrayList<SpecializationModel> servicesModels)
     {
         this.name = name;

@@ -19,13 +19,15 @@
 
     <ImageView
         android:id="@+id/edit_Icon"
-        android:layout_width="30dp"
 
-        android:layout_marginRight="5dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_marginRight="-5dp"
+        android:layout_height="35dp"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="4dp"
         android:paddingBottom="11dp"
         android:paddingLeft="11dp"
+        android:paddingTop="11dp"
         android:src="@drawable/edit" />
 
 

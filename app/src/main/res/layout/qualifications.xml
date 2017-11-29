@@ -38,7 +38,7 @@
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Education &amp; Specialization"
+                android:text="Qualification"
                 android:textColor="@color/white"
 
                 android:textSize="16sp" />
@@ -92,7 +92,7 @@
             android:background="#e82351"
 
             android:gravity="center"
-            android:text="Skip"
+            android:text="Proced"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#fff" />
 

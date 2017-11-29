@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -125,6 +126,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
     UserDetailAsyncTask userDetailAsyncTask;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
+
     UserDetailModel userDetailModel;
     private int CAMERA_PERMISSION_CODE = 1;
 
@@ -165,7 +167,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         spinnerTitle = (MaterialSpinner) findViewById(R.id.titleLay);
 
         if (isSkip) {
-            skipTextView.setVisibility(View.VISIBLE);
+            skipTextView.setVisibility(View.GONE);
         } else {
             skipTextView.setVisibility(View.GONE);
 
@@ -591,8 +593,17 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         spinnerTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != -1)
+                if (position != -1) {
                     title = position + 1 + "";
+                    if (position==0)
+                    {
+                        maleRadioButton.setChecked(true);
+                    }
+                    else {
+                        femaleRadioButton.setChecked(true);
+
+                    }
+                }
                 else
                     title = "-1";
             }
@@ -761,7 +772,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                             } else {
 
                                 if(dataJsonObject.has("userDetails")&&!dataJsonObject.isNull("userDetails"))
-                                {
+                                { UserDetailModel userDetailModel=new UserDetailModel();
+                                    ApplicationSingleton.setUserDetailModel(userDetailModel);
                                     JSONObject userJsonObject = dataJsonObject.getJSONObject("userDetails");
                                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                                         ApplicationSingleton.getUserDetailModel() .setName(userJsonObject.getString("name")) ;

@@ -681,6 +681,8 @@ public class UpdateCommunity extends Activity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
+                pairs.add(new BasicNameValuePair("userID",userId));
+
                 httppost.setHeader("Authorization", "Basic " + authToken);
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

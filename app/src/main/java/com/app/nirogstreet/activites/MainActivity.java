@@ -1,6 +1,8 @@
 package com.app.nirogstreet.activites;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +16,33 @@ import android.widget.TextView;
 
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.adapter.LikesAdapter;
+import com.app.nirogstreet.model.LikesModel;
+import com.app.nirogstreet.parser.LikeParser;
+import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.CustomPagerAdapter;
+import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.crashlytics.android.Crashlytics;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.SSLContext;
+
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.conn.scheme.Scheme;
+import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import cz.msebera.android.httpclient.util.EntityUtils;
 import io.fabric.sdk.android.Fabric;
 
 
@@ -25,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     public static ViewPager viewPager;
     FrameLayout notiframe;
-
+    LinearLayout linearLayoutHeader;
     FrameLayout frameLayoutview_alert_red_circle;
 
     ImageView searchImageView, notifictaionImageView;
@@ -33,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomPagerAdapter customPagerAdapter;
     ImageView searchgroupImageView;
+    ImageView logout;
+    SesstionManager sesstionManager;
+    LogoutAsyncTask logoutAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +69,28 @@ public class MainActivity extends AppCompatActivity {
         frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
         textViewTab = (TextView) findViewById(R.id.textTab);
+        logout = (ImageView) findViewById(R.id.logout);
+        sesstionManager = new SesstionManager(MainActivity.this);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
+                    logoutAsyncTask = new LogoutAsyncTask("");
+                    logoutAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(MainActivity.this);
+                }
+            }
+        });
         searchgroupImageView = (ImageView) findViewById(R.id.searchgroup);
         searchgroupImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,CommunitySearchActivity.class);
+                Intent intent = new Intent(MainActivity.this, CommunitySearchActivity.class);
                 startActivity(intent);
             }
         });
+        linearLayoutHeader = (LinearLayout) findViewById(R.id.actionbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         createTextView = (TextView) findViewById(R.id.create);
         TypeFaceMethods.setRegularTypeFaceForTextView(createTextView, MainActivity.this);
@@ -71,13 +113,14 @@ public class MainActivity extends AppCompatActivity {
                         searchImageView.setVisibility(View.VISIBLE);
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.VISIBLE);
-
+                        logout.setVisibility(View.GONE);
                         setTabText("Home");
                         break;
                     case 1:
                         searchImageView.setVisibility(View.GONE);
                         createTextView.setVisibility(View.VISIBLE);
                         notiframe.setVisibility(View.GONE);
+                        logout.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.VISIBLE);
 
                         setTabText("Community");
@@ -86,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.GONE);
-
+                        logout.setVisibility(View.VISIBLE);
                         searchImageView.setVisibility(View.GONE);
                         setTabText("You");
                         break;
@@ -181,9 +224,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void setTabsVisibility(boolean displayTabs) {
         if (displayTabs) {
+            linearLayoutHeader.setVisibility(View.VISIBLE);
             tabLayout.setVisibility(View.VISIBLE);
 
         } else {
+            linearLayoutHeader.setVisibility(View.GONE);
+
             tabLayout.setVisibility(View.GONE);
         }
     }
@@ -197,6 +243,69 @@ public class MainActivity extends AppCompatActivity {
 
     public static int selectedFragment() {
         return viewPager.getCurrentItem();
+    }
+
+    public class LogoutAsyncTask extends AsyncTask<Void, Void, Void> {
+        JSONObject jo;
+        String feedId;
+
+
+        private String responseBody;
+        HttpClient client;
+        Context context;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public LogoutAsyncTask(String feedId) {
+            this.feedId = feedId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (jo != null) {
+
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String url = AppUrl.AppBaseUrl + "user/logout";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID)));
+                httppost.setHeader("Authorization", "Basic " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
     }
 
 }

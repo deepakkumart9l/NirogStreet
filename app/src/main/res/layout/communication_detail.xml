@@ -38,7 +38,7 @@
                 android:layout_margin="0dp"
                 android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/back"
-                android:src="@color/textcolorgray"
+                android:src="@drawable/default_"
                 mk:border_color="@color/textcolorgray"
                 mk:border_width="1dp" />
 
@@ -48,17 +48,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
                 android:layout_toRightOf="@+id/pro"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="normal" />
 <ImageView
     android:layout_width="30dp"
     android:layout_alignParentRight="true"
-    android:src="@drawable/more_dots"
+    android:src="@drawable/more"
     android:id="@+id/more"
+    android:layout_marginTop="5dp"
     android:layout_marginRight="10dp"
-    android:layout_height="30dp" />
+    android:layout_height="23dp" />
         </RelativeLayout>
     </LinearLayout>
 

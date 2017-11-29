@@ -92,7 +92,7 @@
             android:background="#e82351"
 
             android:gravity="center"
-            android:text="Skip"
+            android:text="Proced"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#fff" />
 

@@ -52,7 +52,7 @@
                 android:paddingLeft="18dp"
                 android:paddingRight="@dimen/padding_10"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Register"
+                android:text="OTP Varification"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"

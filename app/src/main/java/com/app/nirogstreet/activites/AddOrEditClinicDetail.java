@@ -85,6 +85,13 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                     if(clinicDetailModel!=null&&clinicDetailModel.getId()!=null)
                     {
                         id=clinicDetailModel.getId();
+                    }
+                    if(clinicDetailModel!=null&&clinicDetailModel.getCreated_by()!=null)
+                    {
+                       created_by=clinicDetailModel.getCreated_by();
+                    }
+                    if(clinicDetailModel!=null&&clinicDetailModel.getTimingsModels()!=null)
+                    {
                         timingsModels=clinicDetailModel.getTimingsModels();
                     }
                     ClinicDetailModel clinicDetailModel = new ClinicDetailModel(id, clinicName.getText().toString(), "", addressEt.getText().toString(), countryEt.getText().toString(), city.getText().toString(), pincode.getText().toString(), latitude, longitude, feeEt.getText().toString(), multipleSelectedItemModels, timingsModels, created_by, clinic_docID);
@@ -361,7 +368,9 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                     String s = data.getStringExtra("friendsCsv");
                     Services_nameEt.setText(s);
                     System.out.print(s);
+
                     servicesMultipleSelectedModels = (ArrayList<SpecializationModel>) data.getSerializableExtra("list");
+                    multipleSelectedItemModels=servicesMultipleSelectedModels;
                 }
             }
 

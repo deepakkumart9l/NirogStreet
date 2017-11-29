@@ -36,25 +36,42 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activites.ForgotPassword"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.ShareOnFriendsTimeline"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.MultipleSelectGroup"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activites.FullScreenImage"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.CommunitySearchActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.CommunitySearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.PostDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.AlbumGallary"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.CreateCommunity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.CreateCommunity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.CommunitiesDetails"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Timings"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.VideoPlay_Activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activites.Multi_Select_Search"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.VideoPlay_Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.Multi_Select_Search"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.MainActivity"
             android:screenOrientation="portrait" />
@@ -154,18 +171,19 @@
         <activity
             android:name=".activites.RegisterActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.Multiple_select_invite_search"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.Multiple_select_invite_search"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.SingleSelectQualifications"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".activites.UpdateCommunity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activites.AllClinicListing"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".activites.AllClinicSearch"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.UpdateCommunity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.AllClinicListing"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activites.AllClinicSearch" />
 
         <service android:name=".notifications.MyFirebaseMessagingService">
             <intent-filter>

@@ -482,6 +482,8 @@ public class Multi_Select_Search_specialization extends Activity
                                 }
                             } else {
                                 addQualificationTextView.setVisibility(View.VISIBLE);
+                                    addQualificationTextView.setText("+Add "+"("+searchET.getText().toString()+")");
+                                    addQualificationTextView.setVisibility(View.VISIBLE);
 
                             }
                         } else {
@@ -520,6 +522,8 @@ public class Multi_Select_Search_specialization extends Activity
                             } else {
 
                                 addQualificationTextView.setVisibility(View.VISIBLE);
+                                    addQualificationTextView.setText("+Add "+"("+searchET.getText().toString()+")");
+                                    addQualificationTextView.setVisibility(View.VISIBLE);
 
                             }
                         }
@@ -645,6 +649,7 @@ public class Multi_Select_Search_specialization extends Activity
                         holder.textViewInvite.setVisibility(View.VISIBLE);
 
                     }
+                    textViewDone.setText("Done("+list.size()+")");
 
                 }
             });

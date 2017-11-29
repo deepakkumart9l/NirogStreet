@@ -24,6 +24,7 @@ import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
 import java.util.ArrayList;
@@ -76,11 +77,18 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(myViewHolder.myActivitiesTextView, context);
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(myViewHolder.aboutTextView, context);
                 try {
-                    myViewHolder.nameTv.setText(userDetailModel.getName());
+                    SesstionManager sesstionManager=new SesstionManager(context);
+                    String name=sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)+" "+sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+                    if(name!=null)
+                    myViewHolder.nameTv.setText(name);
+                    if(userDetailModel.getEmail()!=null)
                     myViewHolder.emailTv.setText(userDetailModel.getEmail());
+                    if(userDetailModel.getMobile()!=null)
                     myViewHolder.phoneTv.setText(userDetailModel.getMobile());
+                    if(userDetailModel.getDob()!=null)
                     myViewHolder.yearOfBirthTv.setText(userDetailModel.getDob());
-                    myViewHolder.yearOfExperienceTv.setText(userDetailModel.getExperience());
+                    if(userDetailModel.getExperience()!=null)
+                    myViewHolder.yearOfExperienceTv.setText(userDetailModel.getExperience()+" years experince");
                     if (userDetailModel != null && userDetailModel.getSpecializationModels() != null) {
                         myViewHolder.QualificationTv.setText(getSelectedNameCsv(userDetailModel));
                     }

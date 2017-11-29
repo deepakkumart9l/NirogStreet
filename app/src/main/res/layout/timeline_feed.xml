@@ -49,6 +49,10 @@
             app:cpb_colors="@array/gplus_colors" />
 
 
-
+        <FrameLayout
+            android:id="@+id/customViewContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

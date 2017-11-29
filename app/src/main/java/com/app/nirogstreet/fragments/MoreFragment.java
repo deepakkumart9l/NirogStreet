@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
@@ -29,6 +30,7 @@ import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.MemberShip;
 import com.app.nirogstreet.activites.RegistrationAndDocuments;
 import com.app.nirogstreet.activites.SpecilizationAndService;
+import com.app.nirogstreet.activites.Timings;
 import com.app.nirogstreet.adapter.MoreAdapter;
 import com.app.nirogstreet.adapter.TimelineAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
@@ -73,6 +75,8 @@ public class MoreFragment extends Fragment {
     private UserDetailModel userDetailModel;
     RecyclerView recyclerView;
     int totalPageCount;
+    FrameLayout customViewContainer;
+    UserDetailAsyncTask userDetailAsyncTask;
     private boolean isLoading = false;
 
     int page = 1;
@@ -89,10 +93,9 @@ public class MoreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-      if( ApplicationSingleton.isContactInfoUpdated())
-      {
-          updateContactInfo();
-      }
+        if (ApplicationSingleton.isContactInfoUpdated()) {
+            updateContactInfo();
+        }
     }
 
     @Override
@@ -109,12 +112,23 @@ public class MoreFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(userDetailAsyncTask!=null&&!userDetailAsyncTask.isCancelled())
+        {
+            userDetailAsyncTask.cancelAsyncTask();
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.more, container, false);
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
         session = new SesstionManager(context);
+        customViewContainer = (FrameLayout) view.findViewById(R.id.customViewContainer);
+
         if (session.isUserLoggedIn()) {
             HashMap<String, String> userDetail = session.getUserDetails();
             authToken = userDetail.get(SesstionManager.AUTH_TOKEN);
@@ -133,7 +147,7 @@ public class MoreFragment extends Fragment {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ((MainActivity) context).setTabText("Timeline");
+                ((MainActivity) context).setTabText("You");
                 totalFeeds = new ArrayList<>();
                 feedsAdapter = null;
                 page = 1;
@@ -168,14 +182,22 @@ public class MoreFragment extends Fragment {
         } else {
             NetworkUtill.showNoInternetDialog(context);
         }
-        totalFeeds=new ArrayList<>();
+        totalFeeds = new ArrayList<>();
         totalFeeds.add(new FeedModel());
         totalFeeds.add(new FeedModel());
-        feedsAdapter=new MoreAdapter(totalFeeds,context);
+        feedsAdapter = new MoreAdapter(totalFeeds, context);
         recyclerView.setAdapter(feedsAdapter);
 
+        if (NetworkUtill.isNetworkAvailable(context))
 
+        {
+            userDetailAsyncTask = new UserDetailAsyncTask();
+            userDetailAsyncTask.execute();
+        } else {
+            NetworkUtill.showNoInternetDialog(context);
+        }
         return view;
+
     }
 
     public class UserDetailAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -279,7 +301,8 @@ public class MoreFragment extends Fragment {
         }
     }
 
-    private void updateContactInfo() {feedsAdapter.notifyDataSetChanged();
+    private void updateContactInfo() {
+        feedsAdapter.notifyDataSetChanged();
     }
 
 

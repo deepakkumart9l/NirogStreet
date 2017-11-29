@@ -75,6 +75,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final CommentsModel rowItem = commentsModels.get(position);
+
         if (rowItem.getFname() != null) {
             if (rowItem.getLname() != null)
                 holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());

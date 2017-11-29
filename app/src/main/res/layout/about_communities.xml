@@ -44,7 +44,7 @@ android:id="@+id/AdminImage"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="40dp"
-            android:src="@color/textcolorgray"
+            android:src="@drawable/user"
             android:visibility="visible" />
 
         <TextView
@@ -85,7 +85,7 @@ android:id="@+id/AdminImage"
 
             <LinearLayout
                 android:id="@+id/llGallery"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp"

@@ -66,6 +66,9 @@ public class RegistrationAndDocuments extends Activity {
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+Intent intent=new Intent(RegistrationAndDocuments.this,AllClinicListing.class);
+                intent.putExtra("isSkip",true);
+                startActivity(intent);
 
             }
         });

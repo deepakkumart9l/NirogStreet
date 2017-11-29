@@ -109,7 +109,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     RecyclerView recyclerView;
     RelativeLayout linkLay, imagelay;
     ArrayList<SpecializationModel> servicesMultipleSelectedModels = new ArrayList<>();
-String groupId="";
+    String groupId = "";
     String mCurrentPhotoPath;
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     CircleImageView circleImageView;
@@ -142,7 +142,7 @@ String groupId="";
     TextView descriptionTextView, titleTextView;
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
     CheckBox checkBox;
-    private boolean albumupdate=false;
+    private boolean albumupdate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,10 +161,9 @@ String groupId="";
         titleTextView = (TextView) findViewById(R.id.title);
         linkImageView = (ImageView) findViewById(R.id.linkImage);
         textViewpost = (TextView) findViewById(R.id.post);
-if(getIntent().hasExtra("groupId"))
-{
-    groupId=getIntent().getStringExtra("groupId");
-}
+        if (getIntent().hasExtra("groupId")) {
+            groupId = getIntent().getStringExtra("groupId");
+        }
         linkLay = (RelativeLayout) findViewById(R.id.linkLay);
         imagelay = (RelativeLayout) findViewById(R.id.imagelay);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
@@ -232,7 +231,7 @@ if(getIntent().hasExtra("groupId"))
                 Intent intent = new Intent(PostingActivity.this, Multi_Select_Search_specialization.class);
                 intent.putExtra("list", servicesMultipleSelectedModels);
 
-intent.putExtra("tags",true);
+                intent.putExtra("tags", true);
                 startActivityForResult(intent, RESULT_CODE);
 
             }
@@ -593,7 +592,7 @@ intent.putExtra("tags",true);
                             }
                             if (linkDetailJsonObject.has("images") && !linkDetailJsonObject.isNull("images")) {
                                 linkImage = linkDetailJsonObject.getString("images");
-                                Glide.with(context)
+                                Glide.with(PostingActivity.this)
                                         .load(linkImage) // Uri of the picture
                                         .centerCrop()
                                         .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -742,8 +741,7 @@ intent.putExtra("tags",true);
                 entityBuilder.addTextBody("Feed[feed_type]", feedType());
                 entityBuilder.addTextBody("Feed[feed_source]", linkUrl);
                 entityBuilder.addTextBody("Feed[enable_comment]", isCommented);
-                if(!groupId.equalsIgnoreCase(""))
-                {
+                if (!groupId.equalsIgnoreCase("")) {
                     entityBuilder.addTextBody("Feed[community_id]", groupId);
 
                 }
@@ -824,7 +822,7 @@ intent.putExtra("tags",true);
                             SharedPreferences.Editor editor1 = sharedPref1.edit();
                             editor1.putBoolean("imgvidupdate", albumupdate);
                             editor1.commit();
-
+                     ApplicationSingleton.setIsProfilePostExecuted(true);
                             finish();
 
                         }
@@ -1094,7 +1092,7 @@ intent.putExtra("tags",true);
         boolean check = true;
         List<String> allHashTags = mTextHashTagHelper.getAllHashTags();
         allHashTags.toString();
-        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0) {
+        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0&&title_QuestionEditText.getText().length()==0) {
             Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
             check = false;
         }

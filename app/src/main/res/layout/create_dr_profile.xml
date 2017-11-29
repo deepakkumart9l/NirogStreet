@@ -92,7 +92,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerInParent="true"
                         android:layout_margin="5dp"
-                        android:src="@color/textcolorgray"
+                        android:src="@drawable/user"
                         mk:border_color="@color/textcolorgray"
                         mk:border_width="1dp" />
 

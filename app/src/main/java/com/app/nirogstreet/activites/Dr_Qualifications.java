@@ -102,7 +102,7 @@ public class Dr_Qualifications extends AppCompatActivity {
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Dr_Qualifications.this, RegistrationAndDocuments.class);
+                Intent intent = new Intent(Dr_Qualifications.this, SpecilizationAndService.class);
                 intent.putExtra("isSkip", true);
                 startActivity(intent);
             }

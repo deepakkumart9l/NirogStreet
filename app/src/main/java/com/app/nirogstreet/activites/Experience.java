@@ -137,6 +137,11 @@ public class Experience extends Activity {
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(experinceModel.getOrganizationName());
             holder.degreeNameTv.setText(experinceModel.getAddress());
+            if(experinceModel.getEnd_time()==null)
+            {
+                holder.passinYearTv.setText(experinceModel.getStart_time() + " - " +"Currently Working" );
+
+            }else
             holder.passinYearTv.setText(experinceModel.getStart_time() + " - " + experinceModel.getEnd_time());
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override

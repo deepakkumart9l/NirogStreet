@@ -56,12 +56,14 @@ public class GroupListingAdapter extends
     private LetterTileProvider mLetterTileProvider;
 
     Context context;
+    boolean showJoin;
     HashMap<String, String> userDetails;
     SesstionManager sessionManager;
 
 
-    public GroupListingAdapter(ArrayList<GroupModel> groupModels, Context context, boolean hide, String userId) {
+    public GroupListingAdapter(ArrayList<GroupModel> groupModels, Context context, boolean hide, String userId,boolean showJoin) {
         this.groupModels = groupModels;
+        this.showJoin=showJoin;
         this.context = context;
         this.ishHide = hide;
 
@@ -84,7 +86,7 @@ public class GroupListingAdapter extends
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final GroupModel groupModel = groupModels.get(position);
-        if (groupModel.getCreatedByUser()!=null&&groupModel.getCreatedByUser().getUserId().equalsIgnoreCase(userId)) {
+        if (!showJoin) {
             holder.joinTextView.setVisibility(View.GONE);
         } else {
             holder.joinTextView.setVisibility(View.VISIBLE);
@@ -184,7 +186,6 @@ public class GroupListingAdapter extends
         int status1;
         HttpClient client;
         int pos;
-        Context context;
         private String responseBody;
 
         public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status,int pos) {
@@ -241,7 +242,7 @@ public class GroupListingAdapter extends
             try {
 
 
-                String url = AppUrl.BaseUrl + "group/accept-decline";
+                String url = AppUrl.BaseUrl + "group/invite";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -252,7 +253,7 @@ public class GroupListingAdapter extends
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("invited_to", userId));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);

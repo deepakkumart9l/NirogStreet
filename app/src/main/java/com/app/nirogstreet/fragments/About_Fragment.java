@@ -1,18 +1,21 @@
 package com.app.nirogstreet.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,12 +79,13 @@ public class About_Fragment extends Fragment {
     boolean isMemberOfGroup = false;
     String privacyCheck;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
+    String statusData = "";
     ArrayList<LikesModel> membersModel = new ArrayList<>();
     Context context;
     boolean createdBy = false;
     CircleImageView circleImageView;
     CircularProgressBar circularProgressBar;
-    String groupId, authToken;
+    String groupId, authToken, userId;
     TextView andminTextView;
     GetCommunityDetailAsyncTask getCommunityDetailAsyncTask;
     SesstionManager sesstionManager;
@@ -130,6 +134,7 @@ public class About_Fragment extends Fragment {
         sesstionManager = new SesstionManager(context);
         circleImageView = (CircleImageView) view.findViewById(R.id.AdminImage);
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
+        userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
         TypeFaceMethods.setRegularTypeFaceForTextView(infoTextView, context);
         andminTextView = (TextView) view.findViewById(R.id.adminname);
@@ -260,6 +265,9 @@ public class About_Fragment extends Fragment {
                                 CommunitiesDetails.setNameAndCoverPic(name, "");
 
                             }
+                            if (groupDetailJsonObject.has("statusdata") && !groupDetailJsonObject.isNull("statusdata")) {
+                                statusData = groupDetailJsonObject.getString("statusdata");
+                            }
                             if (groupDetailJsonObject.has("invite_note") && !groupDetailJsonObject.isNull("invite_note")) {
                                 invite_note = groupDetailJsonObject.getString("invite_note");
                             }
@@ -337,7 +345,7 @@ public class About_Fragment extends Fragment {
                                         }
                                     }
                                     LinearLayout llGallery = (LinearLayout) view.findViewById(R.id.llGallery);
-
+                                    llGallery.removeAllViews();
                                     if (userDetailModels.size() > 0)
                                         for (int i = 0; i < userDetailModels.size() + 1; i++) {
                                             View view = ((CommunitiesDetails) context).getLayoutInflater().inflate(R.layout.member_item_communities, null, false);
@@ -348,19 +356,23 @@ public class About_Fragment extends Fragment {
                                             if (i == 3) {
                                                 nameTv.setText("View More");
                                             } else {
+                                                try {
+                                                    nameTv.setText(userDetailModels.get(i).getName());
+                                                    TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                                    CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
+                                                    Glide.with(context)
+                                                            .load(userDetailModels.get(i).getProfile_pic()) // Uri of the picture
+                                                            .centerCrop()
+                                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                            .crossFade()
+                                                            .override(100, 100)
+                                                            .into(imageView);
+                                                    llGallery.addView(view);
 
-                                                nameTv.setText(userDetailModels.get(i).getName());
-                                                TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
-                                                CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
-                                                Glide.with(context)
-                                                        .load(userDetailModels.get(i).getProfile_pic()) // Uri of the picture
-                                                        .centerCrop()
-                                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                        .crossFade()
-                                                        .override(100, 100)
-                                                        .into(imageView);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                            llGallery.addView(view);
                                         }
 
                                 }
@@ -427,6 +439,7 @@ public class About_Fragment extends Fragment {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
+                pairs.add(new BasicNameValuePair("userID", userId));
                 httppost.setHeader("Authorization", "Basic " + authToken);
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
@@ -455,11 +468,11 @@ public class About_Fragment extends Fragment {
     }
 
     private void setMoreMenu(int i) {
-        PopupMenu popup = new PopupMenu(context, view);
-
+        PopupMenu popup = new PopupMenu(context, view, Gravity.END);
         switch (i) {
             case 1:
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.getMenu().findItem(R.id.leave).setVisible(false);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -476,12 +489,13 @@ public class About_Fragment extends Fragment {
                                 context.startActivity(intent1);
                                 break;
                             case R.id.leave:
-                                if (NetworkUtill.isNetworkAvailable(context)) {
+                                setDialog();
+                               /* if (NetworkUtill.isNetworkAvailable(context)) {
                                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
                                     acceptDeclineJoinAsyncTask.execute();
                                 } else {
                                     NetworkUtill.showNoInternetDialog(context);
-                                }
+                                }*/
                                 break;
 
                         }
@@ -505,12 +519,14 @@ public class About_Fragment extends Fragment {
                                 context.startActivity(intent1);
                                 break;
                             case R.id.leave:
-                                if (NetworkUtill.isNetworkAvailable(context)) {
+                                setDialog();
+
+                               /* if (NetworkUtill.isNetworkAvailable(context)) {
                                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
                                     acceptDeclineJoinAsyncTask.execute();
                                 } else {
                                     NetworkUtill.showNoInternetDialog(context);
-                                }
+                                }*/
                                 break;
 
                         }
@@ -523,7 +539,7 @@ public class About_Fragment extends Fragment {
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.getMenu().findItem(R.id.edit).setVisible(false);
                 popup.getMenu().findItem(R.id.invite).setVisible(false);
-
+                popup.getMenu().findItem(R.id.leave).setTitle("Join");
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -586,18 +602,33 @@ public class About_Fragment extends Fragment {
                             if (jsonObject.has("message") && !jsonObject.isNull("message")) {
                                 Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                 if (privacyCheck.equalsIgnoreCase("0") && status1 == 1) {
-                                    setMoreMenu(2);
+                                    CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            setMoreMenu(2);
+
+                                        }
+                                    });
                                 }
                                 if (privacyCheck.equalsIgnoreCase("1") && status1 == 2) {
                                     getActivity().finish();
                                 }
                                 if (privacyCheck.equalsIgnoreCase("0") && status1 == 2) {
-                                    setMoreMenu(3);
+                                    CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            setMoreMenu(3);
+
+                                        }
+                                    });
+
+                                }
+                                if (statusData.equalsIgnoreCase("")) {
+                                    statusData = "1";
                                 }
 
-
                             }
-
+                            ApplicationSingleton.setIsGroupUpdated(true);
 
                         }
 
@@ -613,9 +644,13 @@ public class About_Fragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+                String url;
+                if (statusData.equalsIgnoreCase("")) {
+                    url = AppUrl.BaseUrl + "group/invite";
 
-
-                String url = AppUrl.BaseUrl + "group/accept-decline";
+                } else {
+                    url = AppUrl.BaseUrl + "group/accept-decline";
+                }
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -626,7 +661,12 @@ public class About_Fragment extends Fragment {
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", userId));
+                if (statusData.equalsIgnoreCase("")) {
+                    pairs.add(new BasicNameValuePair("invited_to", userId));
+
+                } else {
+                    pairs.add(new BasicNameValuePair("userID", userId));
+                }
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
@@ -649,4 +689,30 @@ public class About_Fragment extends Fragment {
         }
     }
 
+    public void setDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Are you sure you want to leave the community.");// Add the buttons
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
+                    acceptDeclineJoinAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.show();
+// Set other dialog properties
+
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+    }
 }

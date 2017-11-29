@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,7 +72,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class AddOrEditExperience extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static boolean isVisible = true;
     public static int year;
-
+CheckBox checkBox;
 
     ImageView backImageView;
     private SesstionManager sesstionManager;
@@ -91,6 +94,22 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.add_edit_experience);
+        checkBox=(CheckBox)findViewById(R.id.checkbox);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
+        checkBox.setTypeface(tf);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                                                @Override
+                                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                    if (isChecked) {
+                                                        toEt.setVisibility(View.GONE);
+                                                    } else {
+                                                        toEt.setVisibility(View.VISIBLE);
+
+                                                    }
+                                                }
+                                            }
+        );
         deleteImageView = (ImageView) findViewById(R.id.delete);
         sesstionManager = new SesstionManager(AddOrEditExperience.this);
         if (sesstionManager.isUserLoggedIn()) {
@@ -402,9 +421,15 @@ if(isFromDate)
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("Experience[start_time]", startTime));
-                pairs.add(new BasicNameValuePair("Experience[end_time]", endTime));
                 pairs.add(new BasicNameValuePair("Experience[address]", city));
                 pairs.add(new BasicNameValuePair("Experience[org_name]", qrganisation_name));
+                if(checkBox.isChecked()) {
+                    pairs.add(new BasicNameValuePair("Experience[currently_working]","1"));
+                }else
+                {
+                    pairs.add(new BasicNameValuePair("Experience[end_time]", endTime));
+
+                }
                 if (position != -1)
                     pairs.add(new BasicNameValuePair("Experience[id]", id));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
@@ -478,7 +503,7 @@ if(isFromDate)
             Toast.makeText(AddOrEditExperience.this, R.string.start_year, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (toEt.getText().toString().length() == 0) {
+        if (!checkBox.isChecked()&&toEt.getText().toString().length() == 0) {
             Toast.makeText(AddOrEditExperience.this, R.string.end_year, Toast.LENGTH_SHORT).show();
             return false;
         }

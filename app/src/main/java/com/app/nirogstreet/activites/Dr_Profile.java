@@ -1,16 +1,30 @@
 package com.app.nirogstreet.activites;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,16 +46,25 @@ import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageLoader;
+import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -68,8 +91,18 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.5f;
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
     final Uri imageUri = Uri.parse("http://i.imgur.com/VIlcLfg.jpg");
+    String mCurrentPhotoPath;
 
+    private int STORAGE_PERMISSION_CODE_VIDEO = 2;
+    private int CAMERA_PERMISSION_CODE = 1;
     private boolean mIsTheTitleVisible = false;
+    private int REQUEST_CAMERA = 99;
+
+    boolean isImageClicked=false;
+    File photoFile;
+    private int SELECT_FILE = 999;
+
+
     private boolean mIsTheTitleContainerVisible = true;
     ImageView backimg;
     private AppBarLayout appbar;
@@ -91,6 +124,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     UserDetailModel userDetailModel;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
+    private String selectedImagePath=null;
 
     private void handleToolbarTitleVisibility(float percentage) {
         if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
@@ -170,6 +204,14 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
         editInfo = (ImageView) findViewById(R.id.editInfo);
         circleImageView = (CircleImageView) findViewById(R.id.pro);
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
+                intent.putExtra("userModel", (Serializable) userDetailModel);
+                startActivity(intent);
+            }
+        });
         specilizationTv = (TextView) findViewById(R.id.specilizationTv);
         sevicesTextView = (TextView) findViewById(R.id.sevices);
         spcilizationCsv = (TextView) findViewById(R.id.spcilizationCsv);
@@ -254,7 +296,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
             userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
             email = sesstionManager.getUserDetails().get(SesstionManager.KEY_EMAIL);
-            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) +" "+ sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
             mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
             emailTv.setText(email);
             phoneTv.setText(mobile);
@@ -280,7 +322,191 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         textviewTitle = (TextView) findViewById(R.id.textview_title);
         backimg = (ImageView) findViewById(R.id.backimg);
     }
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.e("", " Permission Already given ");
+            selectImage();
+        } else {
+            Log.e("", "Current app does not have READ_PHONE_STATE permission");
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
+        }
+    }
+    private void selectImage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Dr_Profile.this);
 
+
+        if (selectedImagePath == null)
+
+        {
+            final CharSequence[] items = {"Take Photo", "Choose from Library",
+                    "Cancel"};
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+                        takePicture();
+                        isImageClicked = true;
+                    } else if (items[item].equals("Choose from Library")) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, SELECT_FILE);
+                        isImageClicked = true;
+
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+
+                    }
+                }
+            });
+        } else {
+
+            final CharSequence[] items = {"Take Photo", "Choose from Library",
+                    "Remove", "Cancel"};
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+                        takePicture();
+                        isImageClicked = true;
+
+                    } else if (items[item].equals("Choose from Library")) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, SELECT_FILE);
+                        isImageClicked = true;
+
+                    } else if (items[item].equals("Remove")) {
+                        dialog.dismiss();
+                        selectedImagePath = null;
+                        Glide.with(Dr_Profile.this)
+                                .load(R.drawable.default_image)
+                                .into(circleImageView);
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }
+        builder.show();
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+
+        return image;
+    }
+
+    private void takePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = new ImageProcess(Dr_Profile.this).getOutputMediaFile("");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    Log.e("ex", "" + ex);
+                    // Error occurred while creating the File
+                }
+                Uri photoURI = FileProvider.getUriForFile(Dr_Profile.this,
+                        "com.app.nirogstreet.fileprovider",
+                        photoFile);
+                Log.e("photoURI", "" + photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA);
+            }
+        } else {
+            dispatchTakePictureIntent();
+        }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = new ImageProcess(Dr_Profile.this).getOutputMediaFile("");
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                Log.e("ex", "" + ex);
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA);
+            }
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CAMERA) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = Uri.fromFile(photoFile);
+
+                try {
+                    ImageProcess obj = new ImageProcess(Dr_Profile.this);
+                    mCurrentPhotoPath = obj.getPath(uri);
+                    selectedImagePath = mCurrentPhotoPath;
+                    File fff = new File(selectedImagePath);
+                    Glide.with(Dr_Profile.this)
+                            .load(fff) // Uri of the picture
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .crossFade()
+                            .override(100, 100)
+                            .into(circleImageView);
+                } catch (Exception e) {
+
+                }
+            }
+        }
+        if (requestCode == SELECT_FILE && data != null && data.getData() != null) {
+            try {
+                final Uri imageUri = data.getData();
+
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                circleImageView.setImageBitmap(selectedImage);
+                Uri selectedImagePath1 = getImageUri(Dr_Profile.this, selectedImage);
+                selectedImagePath = getPath(selectedImagePath1, Dr_Profile.this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public String getPath(Uri uri, Activity activity) {
+        String[] projection = {MediaStore.MediaColumns.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
@@ -555,6 +781,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+                        if(userDetailModel.getExperinceModels().get(i).getEnd_time()==null)
+                        {
+                            year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - Currently Working" );
+
+                        }else
                         year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - " + userDetailModel.getExperinceModels().get(i).getEnd_time());
                         degreename.setVisibility(View.GONE);
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
@@ -764,7 +995,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                     TextView serviceTv = (TextView) v.findViewById(R.id.service);
                     serviceTv.setText(getSelectedClinicService(userDetailModel.getClinicDetailModels().get(i)));
                     TypeFaceMethods.setRegularTypeFaceForTextView(serviceTv, Dr_Profile.this);
-                    serviceTv.setText(getSelectedServicesCsv());
+                    serviceTv.setText(getSelectedClinicService(userDetailModel.getClinicDetailModels().get(i)));
                     TextView textView = (TextView) v.findViewById(R.id.clgName);
                     TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                     TextView year = (TextView) v.findViewById(R.id.year_of_passing);

@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     CircularProgressBar circularProgressBar;
     TextView loginHeader, loginTv, registerHere;
     SesstionManager sesstionManager;
+    TextView forgot;
 
 
     @Override
@@ -63,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login);
         sesstionManager = new SesstionManager(LoginActivity.this);
         emailEt = (EditText) findViewById(R.id.emailEt);
+        forgot=(TextView)findViewById(R.id.forgot) ;
+        TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
         setPass = (EditText) findViewById(R.id.passEt);
         loginHeader = (TextView) findViewById(R.id.title_side);
         loginTv = (TextView) findViewById(R.id.loginTv);
@@ -79,6 +82,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(LoginActivity.this,ForgotPassword.class);
                 startActivity(intent);
             }
         });

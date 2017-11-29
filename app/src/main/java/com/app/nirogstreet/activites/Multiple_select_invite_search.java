@@ -362,7 +362,7 @@ if(NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this))
                         pairs.add(new BasicNameValuePair("invited_to[]", list.get(i).getUserId()));
                     }
                 }
-                pairs.add(new BasicNameValuePair("status","0"));
+                pairs.add(new BasicNameValuePair("status","1"));
                 pairs.add(new BasicNameValuePair("groupID",groupId));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

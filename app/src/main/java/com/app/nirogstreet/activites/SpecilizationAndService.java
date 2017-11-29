@@ -50,6 +50,7 @@ public class SpecilizationAndService extends Activity {
     ImageView backImageView;
     EditText Services_name, sepcialization;
     UserDetailModel userDetailModel;
+    boolean isSkip=false;
     boolean isServices = false;
     private static final int RESULT_CODE = 1;
     private String authToken, userId;
@@ -71,6 +72,10 @@ public class SpecilizationAndService extends Activity {
         if (sesstionManager.isUserLoggedIn()) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
             userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
+        }
+        if(getIntent().hasExtra("isSkip"))
+        {
+            isSkip=getIntent().getBooleanExtra("isSkip",false);
         }
         title_side = (TextView) findViewById(R.id.title_side);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
@@ -325,6 +330,12 @@ public class SpecilizationAndService extends Activity {
                                 }
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
                                 ApplicationSingleton.setServicesAndSpecializationUpdated(true);
+                                if(isSkip)
+                                {
+                                    Intent intent=new Intent(SpecilizationAndService.this,RegistrationAndDocuments.class);
+                                    intent.putExtra("isSkip",true);
+                                    startActivity(intent);
+                                }else
                                 finish();
                             } else {
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {

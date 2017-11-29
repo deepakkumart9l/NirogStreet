@@ -85,6 +85,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="From"
+                    android:focusable="false"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -106,6 +107,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="To"
+                    android:focusable="false"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -169,7 +171,19 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/buttonBackground"
+                    android:text="Currently working here."
+                    android:textColor="@color/textcolorgray"
+                    android:visibility="visible" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

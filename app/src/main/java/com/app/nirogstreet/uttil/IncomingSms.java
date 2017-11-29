@@ -37,7 +37,7 @@ public class IncomingSms extends BroadcastReceiver {
                     String senderNum = phoneNumber;
                     if( currentMessage.getDisplayMessageBody().contains("NirogStreet")) {
 
-                        String message = currentMessage.getDisplayMessageBody().split(" ")[1];
+                        String message = currentMessage.getDisplayMessageBody().split(" ")[0];
 
                         message = message.substring(0, message.length());
                         Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);

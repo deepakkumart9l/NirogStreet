@@ -73,7 +73,7 @@
 
                         android:text="Join"
                         android:textColor="@color/buttonBackground"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:visibility="gone" />
                 </RelativeLayout>
 

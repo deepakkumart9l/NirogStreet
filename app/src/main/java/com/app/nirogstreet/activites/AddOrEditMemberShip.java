@@ -486,7 +486,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                                 } else {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
-                                    ArrayList<MemberShipModel> memberShipModels = null;
+                                    ArrayList<MemberShipModel> memberShipModels = MemberShipParser.memberShipParser(dataJsonObject);;
 
                                     userDetailModel.setMemberShipModels(memberShipModels);
                                     ApplicationSingleton.setUserDetailModel(userDetailModel);

@@ -406,6 +406,7 @@ public class OtpActivity extends AppCompatActivity {
                                         Intent intent = new Intent(OtpActivity.this, CreateDrProfile.class);
                                         intent.putExtra("isSkip",true);
                                         startActivity(intent);
+                                        finish();
                                     }
                                 }
 

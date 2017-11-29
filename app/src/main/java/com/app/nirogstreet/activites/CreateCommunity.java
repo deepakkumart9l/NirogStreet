@@ -102,6 +102,13 @@ public class CreateCommunity extends Activity {
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         setContentView(R.layout.create_conunites);
+        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         imgCover = (ImageView) findViewById(R.id.imgView);
         community_nameEditText = (EditText) findViewById(R.id.community_name);
@@ -484,7 +491,7 @@ public class CreateCommunity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != -1)
-                    group = position + 1 + "";
+                    group = position  + "";
                 else
                     group = "-1";
 

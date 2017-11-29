@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.MainActivity;
@@ -58,7 +59,7 @@ public class TimeLineFragment extends Fragment {
     RecyclerView recyclerView;
     int totalPageCount;
     private boolean isLoading = false;
-
+FrameLayout customViewContainer;
     int page = 1;
     CircularProgressBar circularProgressBar;
     TimelineAdapter feedsAdapter;
@@ -97,7 +98,6 @@ public class TimeLineFragment extends Fragment {
             SharedPreferences sharedPref = getActivity().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             postsuccess = sharedPref.getBoolean("imgvidupdate", false);
-            if (MainActivity.selectedFragment() == 1)
                 if (ApplicationSingleton.isProfilePostExecuted() || ApplicationSingleton.isEditFeedPostExecuted()) {
                     totalFeeds = new ArrayList<>();
                     feedsAdapter = null;
@@ -136,6 +136,8 @@ public class TimeLineFragment extends Fragment {
         view = inflater.inflate(R.layout.timeline_feed, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setNestedScrollingEnabled(true);
+        customViewContainer = (FrameLayout) view.findViewById(R.id.customViewContainer);
+
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         swipeLayout.setColorScheme(R.color.gplus_color_1,
                 R.color.gplus_color_2,
@@ -184,7 +186,7 @@ public class TimeLineFragment extends Fragment {
         }
         totalFeeds = new ArrayList<>();
 
-        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),"");
+        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),"",customViewContainer);
         recyclerView.setAdapter(feedsAdapter);
 
         return view;
@@ -278,7 +280,7 @@ public class TimeLineFragment extends Fragment {
                 if (feedsAdapter == null && totalFeeds.size() > 0) {
                     // appBarLayout.setExpanded(true);
 
-                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),"");
+                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),"",customViewContainer);
                     recyclerView.setAdapter(feedsAdapter);
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

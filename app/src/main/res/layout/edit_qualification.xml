@@ -176,7 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:text="Add media"
+                android:text="Add certificate/transcript"
                 android:textColor="@color/textcolorgray" />
 
             <LinearLayout

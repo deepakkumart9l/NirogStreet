@@ -123,18 +123,14 @@ public class MemberShip extends Activity {
         @Override
         public MemberShipAdapter.MyHolderView onCreateViewHolder(ViewGroup parent, int viewType) {
             RecyclerView.ViewHolder viewHolder = null;
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.qualification_item, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_item, parent, false);
             return new MyHolderView(v);
         }
 
         @Override
         public void onBindViewHolder(MemberShipAdapter.MyHolderView holder, final int position) {
             MemberShipModel awardsModel = memberShipModels.get(position);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
             holder.clgNameTv.setText(awardsModel.getMembership());
-            holder.degreeNameTv.setVisibility(View.GONE);
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -158,8 +154,7 @@ public class MemberShip extends Activity {
             public MyHolderView(View itemView) {
                 super(itemView);
                 clgNameTv = (TextView) itemView.findViewById(R.id.clgName);
-                degreeNameTv = (TextView) itemView.findViewById(R.id.degree_name);
-                passinYearTv = (TextView) itemView.findViewById(R.id.year_of_passing);
+
                 editImageView = (ImageView) itemView.findViewById(R.id.edit_Icon);
             }
         }

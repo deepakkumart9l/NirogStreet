@@ -40,8 +40,8 @@ public class CommentsParser {
                                             userIdSubComment = userDetail.getString("id");
 
                                         }
-                                        if (userDetail.has("fname") && !userDetail.isNull("fname")) {
-                                            fnameSubComment = userDetail.getString("fname");
+                                        if (userDetail.has("name") && !userDetail.isNull("name")) {
+                                            fnameSubComment = userDetail.getString("name");
 
                                         }
                                         if (userDetail.has("lname") && !userDetail.isNull("lname")) {
@@ -67,8 +67,8 @@ public class CommentsParser {
 
                             }
                         }
-                        if (jsonObjectComment.has("totalLike") && !jsonObjectComment.isNull("totalLike")) {
-                            totalLikes = jsonObjectComment.getInt("totalLike");
+                        if (jsonObjectComment.has("total_like") && !jsonObjectComment.isNull("total_like")) {
+                            totalLikes = jsonObjectComment.getInt("total_like");
                         }
                         if (jsonObjectComment.has("user_hasLiked") && !jsonObjectComment.isNull("user_hasLiked")) {
                             int userLike = jsonObjectComment.getInt("user_hasLiked");

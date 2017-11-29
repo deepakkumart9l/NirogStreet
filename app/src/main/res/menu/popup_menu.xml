@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/invite"
-        android:title="Invite"
+        android:title="Invite People"
 
         android:orderInCategory="50"/>
 
