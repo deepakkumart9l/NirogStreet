@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.ClinicDetailModel;
+import com.app.nirogstreet.model.Image;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
@@ -98,11 +99,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private boolean mIsTheTitleVisible = false;
     private int REQUEST_CAMERA = 99;
 
-    boolean isImageClicked=false;
+    boolean isImageClicked = false;
     File photoFile;
     private int SELECT_FILE = 999;
 
-
+    ImageView edtImage;
     private boolean mIsTheTitleContainerVisible = true;
     ImageView backimg;
     private AppBarLayout appbar;
@@ -115,7 +116,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     CircularProgressBar circularProgressBar;
     TextView specilizationTv;
     ImageView backImageView, editInfo, SpecilizationsevicesEdit, QualificationSectionEdit, RegistrationSectionEdit, ExperinceEdit, MemberShipEdit, AwardEdit, clinicAddressEdit;
-    String authToken, userId, email, mobile, userName;
+    String authToken, userId, email, mobile, userName, UserId = "";
     private SesstionManager sesstionManager;
     UserDetailAsyncTask userDetailAsyncTask;
     TextView SpecilizationsevicesTextView, sevicesTextView, sevicesCsvTextView, spcilizationCsv;
@@ -124,7 +125,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     UserDetailModel userDetailModel;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
-    private String selectedImagePath=null;
+    private String selectedImagePath = null;
 
     private void handleToolbarTitleVisibility(float percentage) {
         if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
@@ -200,6 +201,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.black));
         collapsingToolbarLayout.setTitle("My App Title");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        edtImage = (ImageView) findViewById(R.id.edtImage);
 
 
         editInfo = (ImageView) findViewById(R.id.editInfo);
@@ -218,6 +220,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         sevicesCsvTextView = (TextView) findViewById(R.id.sevicesCsv);
         SpecilizationsevicesTextView = (TextView) findViewById(R.id.Specilizationsevices);
         SpecilizationsevicesEdit = (ImageView) findViewById(R.id.SpecilizationsevicesEdit);
+
         MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
         awardLay = (LinearLayout) findViewById(R.id.awardLay);
         AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
@@ -236,6 +239,22 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         RegistrationSectionEdit = (ImageView) findViewById(R.id.RegistrationSectionEdit);
         QualificationSectionEdit = (ImageView) findViewById(R.id.QualificationSectionEdit);
         experinceLay = (LinearLayout) findViewById(R.id.experinceLay);
+        if (getIntent().hasExtra("UserId")) {
+            UserId = getIntent().getStringExtra("UserId");
+        }
+        if (!UserId.equalsIgnoreCase("")) {
+            if (!UserId.equalsIgnoreCase(userId)) {
+                edtImage.setVisibility(View.GONE);
+                editInfo.setVisibility(View.GONE);
+                clinicAddressEdit.setVisibility(View.GONE);
+                ExperinceEdit.setVisibility(View.GONE);
+                RegistrationSectionEdit.setVisibility(View.GONE);
+                QualificationSectionEdit.setVisibility(View.GONE);
+                AwardEdit.setVisibility(View.GONE);
+                MemberShipEdit.setVisibility(View.GONE);
+                SpecilizationsevicesEdit.setVisibility(View.GONE);
+            }
+        }
         qualifictionLinearLayout = (LinearLayout) findViewById(R.id.QualificatonLinearLayout);
         regisrtaionLay = (LinearLayout) findViewById(R.id.regisrtaionLay);
         clinicLay = (LinearLayout) findViewById(R.id.clinicLay);
@@ -292,15 +311,16 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         TypeFaceMethods.setRegularTypeFaceForTextView(aboutDetail, Dr_Profile.this);
         sesstionManager = new SesstionManager(Dr_Profile.this);
 
-        if (sesstionManager.isUserLoggedIn()) {
+        if (sesstionManager.isUserLoggedIn() && UserId.equalsIgnoreCase("")) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
             userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
             email = sesstionManager.getUserDetails().get(SesstionManager.KEY_EMAIL);
-            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) +" "+ sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
             mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
             emailTv.setText(email);
             phoneTv.setText(mobile);
             nameTv.setText(userName);
+
 
         }
         if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
@@ -322,6 +342,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         textviewTitle = (TextView) findViewById(R.id.textview_title);
         backimg = (ImageView) findViewById(R.id.backimg);
     }
+
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
@@ -334,6 +355,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
         }
     }
+
     private void selectImage() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Dr_Profile.this);
 
@@ -396,6 +418,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         }
         builder.show();
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -455,6 +478,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -493,6 +517,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
         }
     }
+
     public String getPath(Uri uri, Activity activity) {
         String[] projection = {MediaStore.MediaColumns.DATA};
         Cursor cursor = managedQuery(uri, projection, null, null, null);
@@ -507,6 +532,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
@@ -556,8 +582,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                if (!UserId.equalsIgnoreCase("")) {
+                    pairs.add(new BasicNameValuePair("userID", UserId));
 
-                pairs.add(new BasicNameValuePair("userID", userId));
+                } else
+                    pairs.add(new BasicNameValuePair("userID", userId));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 httppost.setHeader("Authorization", "Basic " + authToken);
@@ -756,6 +785,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
     private void updateExperience() {
+
         if (userDetailModel != null) {
             if (userDetailModel.getExperinceModels() == null || userDetailModel.getExperinceModels().size() == 0) {
                 ExperienceSectionTv.setText("Add a Experience");
@@ -781,12 +811,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
-                        if(userDetailModel.getExperinceModels().get(i).getEnd_time()==null)
-                        {
-                            year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - Currently Working" );
+                        if (userDetailModel.getExperinceModels().get(i).getEnd_time() == null) {
+                            year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - Currently Working");
 
-                        }else
-                        year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - " + userDetailModel.getExperinceModels().get(i).getEnd_time());
+                        } else
+                            year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - " + userDetailModel.getExperinceModels().get(i).getEnd_time());
                         degreename.setVisibility(View.GONE);
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getExperinceModels().get(i).getOrganizationName());
@@ -801,10 +830,14 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 }
             }
         }
+        if (!UserId.equalsIgnoreCase("") ) {
+            ExperienceSectionTv.setText("Experience");
 
+        }
     }
 
     private void updateMemberShip() {
+
         if (userDetailModel != null) {
             if (userDetailModel.getMemberShipModels() == null || userDetailModel.getMemberShipModels().size() == 0) {
                 MemberShipSectionTv.setText("Add a Membership");
@@ -843,10 +876,15 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 }
             }
         }
+        if (!UserId.equalsIgnoreCase("") ) {
+            MemberShipSectionTv.setText("Membership");
+
+        }
 
     }
 
     private void updateQualification() {
+
         if (userDetailModel != null) {
             if (userDetailModel.getQualificationModels() == null || userDetailModel.getQualificationModels().size() == 0) {
                 qualifictionLinearLayout.removeAllViews();
@@ -889,10 +927,14 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 }
             }
         }
+        if (!UserId.equalsIgnoreCase("")) {
+            QualificationSectionTv.setText("Qualification");
 
+        }
     }
 
     private void updateAwards() {
+
         if (userDetailModel != null) {
             if (userDetailModel.getAwardsModels() == null || userDetailModel.getAwardsModels().size() == 0) {
                 AwardSectionTv.setText("Add a Award");
@@ -934,6 +976,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 }
             }
         }
+        if (!UserId.equalsIgnoreCase("") ) {
+            AwardSectionTv.setText("Award");
+
+        }
 
     }
 
@@ -942,6 +988,12 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         if (userDetailModel != null) {
             if (userDetailModel.getExperience() != null && !userDetailModel.getExperience().equalsIgnoreCase("")) {
                 yearOfExperienceTv.setText(userDetailModel.getExperience() + " " + "years experience");
+            }
+            if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
+                nameTv.setText(userDetailModel.getName());
+            }
+            if (userDetailModel.getEmail() != null && !userDetailModel.getEmail().equalsIgnoreCase("")) {
+                emailTv.setText(userDetailModel.getEmail());
             }
             if (userDetailModel.getCity() != null && !userDetailModel.getCity().equalsIgnoreCase("")) {
                 placeTv.setText(userDetailModel.getCity());
@@ -958,6 +1010,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             if (userDetailModel != null && userDetailModel.getSpecializationModels() != null) {
                 QualificationTv.setText(getSelectedNameCsv());
             }
+
             if (userDetailModel.getProfile_pic() != null) {
                 ImageLoader imageLoader = new ImageLoader(Dr_Profile.this);
                 imageLoader.DisplayImage(Dr_Profile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
@@ -966,6 +1019,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
     private void updateClinicInfo() {
+
         if (userDetailModel.getClinicDetailModels() == null || userDetailModel.getClinicDetailModels().size() == 0) {
             clinicAddressHeading.setText("Add a Clinic");
             clinicAddressEdit.setImageResource(R.drawable.add);
@@ -1016,6 +1070,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 fee.setText("Rs " + userDetailModel.getClinicDetailModels().get(0).getConsultation_fee());
 
             }
+        }
+        if (!UserId.equalsIgnoreCase("") ) {
+            clinicAddressHeading.setText("Clinic");
+
         }
     }
 
@@ -1069,6 +1127,8 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
     public void updateRegistrationAndDocument() {
+
+
         if (userDetailModel != null) {
             if (userDetailModel.getRegistrationAndDocumenModels() == null || userDetailModel.getRegistrationAndDocumenModels().size() == 0) {
                 RegistrationSectionHeadingTv.setText("Add a registration & documents");
@@ -1108,6 +1168,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
                 }
             }
+        }
+        if (!UserId.equalsIgnoreCase("") ) {
+            RegistrationSectionHeadingTv.setText("Registration & documents");
+
         }
     }
 

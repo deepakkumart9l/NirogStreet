@@ -142,7 +142,7 @@
                         android:id="@+id/QualificationTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_marginRight="30dp"
                         android:layout_marginTop="3dp"
                         android:layout_toRightOf="@+id/imgPublic_icon"
@@ -166,7 +166,7 @@
                         android:id="@+id/yearOfExperienceTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_toRightOf="@+id/mail_icon"
                         android:textColor="@color/black" />
 
@@ -187,7 +187,7 @@
                         android:id="@+id/yearOfBirthTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_toRightOf="@+id/birthday_icon"
 
                         android:textColor="@color/black" />
@@ -211,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_toRightOf="@+id/webSite_icon"
                         android:textColor="@color/black" />
 
@@ -233,7 +233,7 @@
                         android:id="@+id/phoneTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_toRightOf="@+id/phone_icon"
 
                         android:textColor="@color/black" />
@@ -243,6 +243,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
                     android:layout_marginTop="8dp">
 
                     <ImageView
@@ -257,7 +258,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_toRightOf="@+id/Email_icon"
                         android:textColor="@color/black" />
 

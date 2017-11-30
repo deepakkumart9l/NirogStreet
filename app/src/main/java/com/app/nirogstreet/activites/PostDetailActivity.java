@@ -106,7 +106,7 @@ public class PostDetailActivity extends Activity {
                         postCommentAsyncTask = new PostCommentAsyncTask(feedId, editText.getText().toString());
                         postCommentAsyncTask.execute();
                     } else {
-                        Toast.makeText(PostDetailActivity.this, "write somting", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PostDetailActivity.this, "write something", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(PostDetailActivity.this);

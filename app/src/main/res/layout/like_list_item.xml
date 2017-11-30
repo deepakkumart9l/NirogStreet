@@ -31,9 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/roundimg"
-            android:gravity="center|left"
+            android:layout_alignParentTop="true"
             android:orientation="vertical"
             android:paddingLeft="10dp">
 
@@ -42,9 +41,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
+                android:layout_marginTop="15dp"
                 android:textColor="@color/black"
                 android:textSize="15dp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </LinearLayout>
     </RelativeLayout>
 

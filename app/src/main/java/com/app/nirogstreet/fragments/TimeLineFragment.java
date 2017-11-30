@@ -59,7 +59,7 @@ public class TimeLineFragment extends Fragment {
     RecyclerView recyclerView;
     int totalPageCount;
     private boolean isLoading = false;
-FrameLayout customViewContainer;
+    FrameLayout customViewContainer;
     int page = 1;
     CircularProgressBar circularProgressBar;
     TimelineAdapter feedsAdapter;
@@ -93,26 +93,45 @@ FrameLayout customViewContainer;
        /* ((MainActivity) context).setTabText("Timeline");*/
         try {
 
+            if (ApplicationSingleton.getPostSelectedPostion() != -1) {
+                if (ApplicationSingleton.getNoOfComment() != -1) {
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getNoOfComment() + "");
+                    feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostSelectedPostion());
+                    ApplicationSingleton.setNoOfComment(-1);
+                }
+                if (ApplicationSingleton.getTotalLike() != -1) {
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getTotalLike() + "");
+
+                    if (ApplicationSingleton.isCurruntUserLiked())
+                        totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(1);
+                    else
+                        totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(0);
+                    feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostSelectedPostion());
+
+                }
+                ApplicationSingleton.setPostSelectedPostion(-1);
+
+            }
             boolean postsuccess = false;
 
             SharedPreferences sharedPref = getActivity().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             postsuccess = sharedPref.getBoolean("imgvidupdate", false);
-                if (ApplicationSingleton.isProfilePostExecuted() || ApplicationSingleton.isEditFeedPostExecuted()) {
-                    totalFeeds = new ArrayList<>();
-                    feedsAdapter = null;
-                    page = 1;
-                    editor.clear();
-                    editor.commit();
-                    if (NetworkUtill.isNetworkAvailable(context)) {
-                        String url = AppUrl.BaseUrl + "feed/home";
-                        userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                        userFeedsAsyncTask.execute();
-                    } else {
-                        NetworkUtill.showNoInternetDialog(context);
-                    }
-                    ApplicationSingleton.setIsProfilePostExecuted(false);
+            if (ApplicationSingleton.isProfilePostExecuted() || ApplicationSingleton.isEditFeedPostExecuted()) {
+                totalFeeds = new ArrayList<>();
+                feedsAdapter = null;
+                page = 1;
+                editor.clear();
+                editor.commit();
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    String url = AppUrl.BaseUrl + "feed/home";
+                    userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
+                    userFeedsAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
                 }
+                ApplicationSingleton.setIsProfilePostExecuted(false);
+            }
 
             if (feedsAdapter != null && totalFeeds != null && totalFeeds.size() > 0 && ApplicationSingleton.getPost_position() != -1) {
 
@@ -186,7 +205,7 @@ FrameLayout customViewContainer;
         }
         totalFeeds = new ArrayList<>();
 
-        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),"",customViewContainer);
+        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer);
         recyclerView.setAdapter(feedsAdapter);
 
         return view;
@@ -280,7 +299,7 @@ FrameLayout customViewContainer;
                 if (feedsAdapter == null && totalFeeds.size() > 0) {
                     // appBarLayout.setExpanded(true);
 
-                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),"",customViewContainer);
+                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer);
                     recyclerView.setAdapter(feedsAdapter);
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

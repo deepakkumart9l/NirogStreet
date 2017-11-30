@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.uttil.ImageLoader;
+import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -67,7 +68,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
                 .crossFade()
                 .override(100, 100)
                 .into(holder.imageView);
-
+        TypeFaceMethods.setRegularTypeFaceForTextView(holder.name,context);
     }
 
 

@@ -91,7 +91,7 @@
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Add People:"
+                    android:hint="Add Member:"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -155,7 +155,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Description"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="5"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

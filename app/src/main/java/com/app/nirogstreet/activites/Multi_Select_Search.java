@@ -204,11 +204,11 @@ public class Multi_Select_Search extends Activity
                 // setVisibilty(0);
                 if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
                     if (searchET.getText().toString().length() == 0) {
-searchAdapterMultiSelect=null;
+                        searchAdapterMultiSelect = null;
                         searchAsync = new SearchAsync("");
                         searchAsync.execute();
                     } else {
-                        searchAdapterMultiSelect=null;
+                        searchAdapterMultiSelect = null;
 
                         searchAsync = new SearchAsync(searchET.getText().toString());
                         searchAsync.execute();
@@ -266,7 +266,7 @@ searchAdapterMultiSelect=null;
 
                                                 if (searchET.getText().toString().length() == 0) {
                                                     if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
-                                                        searchAdapterMultiSelect=null;
+                                                        searchAdapterMultiSelect = null;
 
                                                         searchAsync = new SearchAsync("");
 
@@ -276,7 +276,7 @@ searchAdapterMultiSelect=null;
                                                     }
                                                 } else {
                                                     if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
-                                                        searchAdapterMultiSelect=null;
+                                                        searchAdapterMultiSelect = null;
 
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
                                                         searchAsync.execute();
@@ -569,7 +569,7 @@ searchAdapterMultiSelect=null;
                         holder.textViewInvite.setVisibility(View.VISIBLE);
 
                     }
-
+                    textViewDone.setText("Done(" + list.size() + ")");
                 }
             });
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);

@@ -217,12 +217,10 @@ public class LoginActivity extends AppCompatActivity {
                             status = dataJsonObject.getBoolean("status");
                             if (!status) {
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
-                                    errorArray = dataJsonObject.getJSONArray("message");
-                                    for (int i = 0; i < errorArray.length(); i++) {
-                                        String error = errorArray.getJSONObject(i).getString("error");
-                                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
+
+                                        Toast.makeText(LoginActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                     }
-                                }
+
                             } else {
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                                     JSONObject message = dataJsonObject.getJSONObject("message");

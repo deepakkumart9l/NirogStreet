@@ -168,6 +168,7 @@
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="30dp"
                                 android:layout_marginTop="3dp"
+                                android:text=""
                                 android:layout_toRightOf="@+id/imgPublic_icon"
                                 android:textColor="@color/black" />
 

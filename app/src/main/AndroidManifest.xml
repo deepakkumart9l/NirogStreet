@@ -35,6 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activites.MemberListing"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.ForgotPassword"
             android:screenOrientation="portrait" />

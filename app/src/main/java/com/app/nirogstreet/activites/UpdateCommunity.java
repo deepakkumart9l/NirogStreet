@@ -706,7 +706,7 @@ public class UpdateCommunity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != -1)
-                    group = position + 1 + "";
+                    group = position  + "";
                 else
                     group = "-1";
 

@@ -31,10 +31,10 @@ public class UserDetailPaser {
                 if (message.has("userDetail") && !message.isNull("userDetail")) {
                     JSONObject userJsonObject = message.getJSONObject("userDetail");
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                        id = userJsonObject.getString("name");
+                        name = userJsonObject.getString("name");
                     }
                     if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
-                        name = userJsonObject.getString("id");
+                        id = userJsonObject.getString("id");
                     }
                     if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
                         experience = userJsonObject.getString("experience");

@@ -26,6 +26,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -79,6 +80,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 try {
                     SesstionManager sesstionManager=new SesstionManager(context);
                     String name=sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)+" "+sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+                  if(userDetailModel.getProfile_pic()!=null)
+                  {
+                       Glide.with(context).load(userDetailModel.getProfile_pic()).into(myViewHolder.circleImageView);
+
+                  }
                     if(name!=null)
                     myViewHolder.nameTv.setText(name);
                     if(userDetailModel.getEmail()!=null)
@@ -215,7 +221,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             yearOfExperienceTv = (TextView) itemView.findViewById(R.id.yearOfExperienceTv);
             WebTv = (TextView) itemView.findViewById(R.id.WebTv);
             aboutTextView = (TextView) itemView.findViewById(R.id.about);
-            circleImageView = (CircleImageView) itemView.findViewById(R.id.pro);
+            circleImageView = (CircleImageView) itemView.findViewById(R.id.profilePic);
         }
     }
 

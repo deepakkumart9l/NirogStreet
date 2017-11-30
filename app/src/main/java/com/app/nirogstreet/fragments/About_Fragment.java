@@ -32,7 +32,9 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.CommentsActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.activites.CreateCommunity;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.MemberListing;
 import com.app.nirogstreet.activites.Multiple_select_invite_search;
 import com.app.nirogstreet.activites.UpdateCommunity;
 import com.app.nirogstreet.adapter.CommentsRecyclerAdapter;
@@ -219,7 +221,7 @@ public class About_Fragment extends Fragment {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, "view more", true);
+                        makeTextViewResizable(tv, 3, "view All", true);
                     }
 
                 }
@@ -304,6 +306,18 @@ public class About_Fragment extends Fragment {
                                 JSONObject created_ByObject = groupDetailJsonObject.getJSONObject("created_by");
                                 if (created_ByObject.has("id") && !created_ByObject.isNull("id")) {
                                     createdBy_id = created_ByObject.getString("id");
+                                    final String finalCreatedBy_id = createdBy_id;
+                                    final String finalCreatedBy_id1 = createdBy_id;
+                                    andminTextView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            Intent intent = new Intent(context, Dr_Profile.class);
+                                            if (!finalCreatedBy_id1.equalsIgnoreCase(userId))
+                                                intent.putExtra("UserId", finalCreatedBy_id);
+                                            context.startActivity(intent);
+                                        }
+                                    });
                                 }
                                 if (created_ByObject.has("name") && !created_ByObject.isNull("name")) {
                                     createdBy_name = created_ByObject.getString("name");
@@ -321,7 +335,7 @@ public class About_Fragment extends Fragment {
                                 }
 
                             }
-                            ArrayList<UserList> userDetailModels = new ArrayList<>();
+                            final ArrayList<UserList> userDetailModels = new ArrayList<>();
                             if (groupDetailJsonObject.has("members") && !groupDetailJsonObject.isNull("members")) {
                                 JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
                                 if (jsonArray != null && jsonArray.length() > 0) {
@@ -349,17 +363,57 @@ public class About_Fragment extends Fragment {
                                     if (userDetailModels.size() > 0)
                                         for (int i = 0; i < userDetailModels.size() + 1; i++) {
                                             View view = ((CommunitiesDetails) context).getLayoutInflater().inflate(R.layout.member_item_communities, null, false);
-                                            if (i == 4)
+                                            if (i == 3)
                                                 break;
                                             TextView nameTv = (TextView) view.findViewById(R.id.adminname);
                                             TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
-                                            if (i == 3) {
+                                            if (i == 2) {
                                                 nameTv.setText("View More");
+                                                CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
+                                                view.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent intent = new Intent(context, MemberListing.class);
+                                                        intent.putExtra("userList", userDetailModels);
+                                                        context.startActivity(intent);
+                                                    }
+                                                });
+                                                nameTv.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent intent = new Intent(context, MemberListing.class);
+                                                        intent.putExtra("userList", userDetailModels);
+                                                        context.startActivity(intent);
+                                                    }
+                                                });
+                                                llGallery.addView(view);
+
                                             } else {
                                                 try {
                                                     nameTv.setText(userDetailModels.get(i).getName());
                                                     TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                                    final int finalI = i;
+                                                    nameTv.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            Intent intent = new Intent(context, Dr_Profile.class);
+                                                            if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
+
+                                                                intent.putExtra("UserId", userDetailModels.get(finalI).getId());
+                                                            context.startActivity(intent);
+                                                        }
+                                                    });
                                                     CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
+                                                    imageView.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            Intent intent = new Intent(context, Dr_Profile.class);
+                                                            if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
+
+                                                                intent.putExtra("UserId", userDetailModels.get(finalI).getId());
+                                                            context.startActivity(intent);
+                                                        }
+                                                    });
                                                     Glide.with(context)
                                                             .load(userDetailModels.get(i).getProfile_pic()) // Uri of the picture
                                                             .centerCrop()
@@ -618,6 +672,7 @@ public class About_Fragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             setMoreMenu(3);
+                                            getActivity().finish();
 
                                         }
                                     });

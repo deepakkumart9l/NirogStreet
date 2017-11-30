@@ -1,12 +1,15 @@
 package com.app.nirogstreet.activites;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -74,12 +77,7 @@ public class MainActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
-                    logoutAsyncTask = new LogoutAsyncTask("");
-                    logoutAsyncTask.execute();
-                } else {
-                    NetworkUtill.showNoInternetDialog(MainActivity.this);
-                }
+              setDialog();
             }
         });
         searchgroupImageView = (ImageView) findViewById(R.id.searchgroup);
@@ -167,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabOneTimeline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);
-        oneImgTimeline.setImageResource(R.drawable.home);
+        oneImgTimeline.setImageResource(R.drawable.home_);
         tabLayout.getTabAt(0).setCustomView(tabLinearLayoutTimeline);
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImg = (ImageView) tabLinearLayout.findViewById(R.id.icon);
-        oneImg.setImageResource(R.drawable.home);
+        oneImg.setImageResource(R.drawable.comm);
         tabLayout.getTabAt(1).setCustomView(tabLinearLayout);
 
         LinearLayout tabtwo = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
@@ -188,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabtwoText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView TwoImg = (ImageView) tabtwo.findViewById(R.id.icon);
-        TwoImg.setImageResource(R.drawable.home);
+        TwoImg.setImageResource(R.drawable.youlay);
         tabLayout.getTabAt(2).setCustomView(tabtwo);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -244,6 +242,33 @@ public class MainActivity extends AppCompatActivity {
     public static int selectedFragment() {
         return viewPager.getCurrentItem();
     }
+    public void setDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Are you sure you want to leave the community.");// Add the buttons
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
+                    logoutAsyncTask = new LogoutAsyncTask("");
+                    logoutAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(MainActivity.this);
+                  NetworkUtill.showNoInternetDialog(MainActivity.this);
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.show();
+// Set other dialog properties
+
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+    }
 
     public class LogoutAsyncTask extends AsyncTask<Void, Void, Void> {
         JSONObject jo;
@@ -268,10 +293,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (jo != null) {
+            try {
+                if (jo != null) {
+                    if (jo.has("status") && !jo.isNull("status")) {
+                        boolean status = jo.getBoolean("status");
+                        if(status)
+                        {
+                            sesstionManager.logoutUser();
 
+                            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
-
         }
 
         @Override
@@ -288,8 +327,7 @@ public class MainActivity extends AppCompatActivity {
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID)));
-                httppost.setHeader("Authorization", "Basic " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+                httppost.setHeader("authorization", "Nirogstreet " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

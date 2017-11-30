@@ -75,7 +75,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     FrameLayout customViewContainer;
     private WebChromeClient.CustomViewCallback customViewCallback;
 
-    private  String authToken, userId;
+    private String authToken, userId;
     private View mCustomView;
 
     WebView webView;
@@ -96,16 +96,16 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Context context;
     Activity activity;
     SesstionManager sesstionManager;
-    String groupId="";
+    String groupId = "";
 
 
-    public PostDetailAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity,String groupId,FrameLayout customViewContainer) {
+    public PostDetailAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity, String groupId, FrameLayout customViewContainer) {
         this.feedModels = feedModels;
         this.context = context;
         this.activity = activity;
-        this.groupId=groupId;
-        this.customViewContainer=customViewContainer;
-        sesstionManager=new SesstionManager(context);
+        this.groupId = groupId;
+        this.customViewContainer = customViewContainer;
+        sesstionManager = new SesstionManager(context);
         HashMap<String, String> userDetails = sesstionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
@@ -143,7 +143,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, PostingActivity.class);
-                        if(!groupId.equalsIgnoreCase("")) {
+                        if (!groupId.equalsIgnoreCase("")) {
                             intent.putExtra("groupId", groupId);
                         }
                         context.startActivity(intent);
@@ -473,39 +473,37 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
                     viewHolder.statusTextView.setText(feedModel.getMessage());
                     viewHolder.statusTextView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     viewHolder.statusTextView.setVisibility(View.GONE);
 
                 }
-                if(feedModel.getTotal_likes()!=null)
-                {
-                    viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes()+" Likes");
+                if (feedModel.getTotal_likes() != null) {
+                    ApplicationSingleton.setTotalLike(Integer.parseInt(feedModel.getTotal_likes()));
+                    viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Likes");
                 }
-                if(feedModel.getTotal_comments()!=null)
-                {
-                    viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments()+" Comments");
+                if (feedModel.getTotal_comments() != null) {
+                    viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comments");
                 }
-                UserDetailModel userDetailModel=feedModel.getUserDetailModel_creator();
-                if(userDetailModel!=null&&userDetailModel.getName()!=null)
-                {
-                    viewHolder.nameTextView.setText("By "+userDetailModel.getName());
+                UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
+                if (userDetailModel != null && userDetailModel.getName() != null) {
+                    viewHolder.nameTextView.setText("By " + userDetailModel.getName());
                 }
-                if(feedModel.getCreated()!=null)
-                {
+                if (feedModel.getCreated() != null) {
                     viewHolder.timeStampTextView.setText(feedModel.getCreated());
                 }
-                if(feedModel.getUser_has_liked()==1)
-                {
+                if (feedModel.getUser_has_liked() == 1) {
+                    ApplicationSingleton.setCurruntUserLiked(true);
                     viewHolder.feedlikeimg.setSelected(true);
-                }else {
+                } else {
                     viewHolder.feedlikeimg.setSelected(false);
+                    ApplicationSingleton.setCurruntUserLiked(true);
+
 
                 }
                 if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                     viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                     viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     viewHolder.QuestionTextView.setVisibility(View.GONE);
 
                 }
@@ -545,18 +543,32 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     public void onClick(View v) {
                         positionat = position;
                         if (NetworkUtill.isNetworkAvailable(context)) {
-                           LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
+                            LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
                             likePostAsynctask.execute();
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
                         }
                     }
                 });
+                try {
+                    if (feedModel.getTotal_comments() != null)
+                        ApplicationSingleton.setNoOfComment(Integer.parseInt(feedModel.getTotal_comments()));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
+                    viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
+
+                } else {
+                    viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
+
+                }
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(context, PostDetailActivity.class);
-                        intent.putExtra("feedId",feedModel.getFeed_id());
+                        Intent intent = new Intent(context, PostDetailActivity.class);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
                         context.startActivity(intent);
 
                     }
@@ -577,7 +589,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         ApplicationSingleton.setPost_position(position);
 
                         context.startActivity(intent);
-               */     }
+               */
+                    }
                 });
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
@@ -616,6 +629,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postAn = (TextView) itemView.findViewById(R.id.post_an);
         }
     }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
 
@@ -623,17 +637,24 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             MyViewHolder viewHolder = (MyViewHolder) holder;
 
             if (payloads.get(0) instanceof String) {
-                viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0))+" Likes");
-                if (!viewHolder.feedlikeimg.isSelected())
+
+                viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
+                ApplicationSingleton.setTotalLike(Integer.parseInt(payloads.get(0) + ""));
+                if (!viewHolder.feedlikeimg.isSelected()) {
                     viewHolder.feedlikeimg.setSelected(true);
-                else
+                    ApplicationSingleton.setCurruntUserLiked(true);
+                } else {
                     viewHolder.feedlikeimg.setSelected(false);
-            }
-            else if (payloads.get(0) instanceof Integer) {
+                    ApplicationSingleton.setCurruntUserLiked(false);
+
+                }
+            } else if (payloads.get(0) instanceof Integer) {
                 int i = Integer.parseInt(feedModels.get(position).getTotal_comments());
-                i=i+1;
-                feedModels.get(position).setTotal_comments(i+"");
-                viewHolder.noOfCommentTextView.setText(i  + " Comments");
+                i = i + 1;
+                ApplicationSingleton.setNoOfComment(i);
+
+                feedModels.get(position).setTotal_comments(i + "");
+                viewHolder.noOfCommentTextView.setText(i + " Comments");
             }
         } else {
             super.onBindViewHolder(holder, position, payloads);
@@ -663,7 +684,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            webView=(WebView)itemView.findViewById(R.id.webview);
+            webView = (WebView) itemView.findViewById(R.id.webview);
             QuestionTextView = (TextView) itemView.findViewById(R.id.Question);
             playicon = (ImageView) itemView.findViewById(R.id.playicon);
             youHaveWishedTextView = (TextView) itemView.findViewById(R.id.youHaveWished);
@@ -722,6 +743,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         }
     }
+
     public class LikePostAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -808,6 +830,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super.onPreExecute();
         }
     }
+
     class myWebChromeClient extends WebChromeClient {
         private Bitmap mDefaultVideoPoster;
         private View mVideoProgressView;
@@ -877,6 +900,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mCustomView = null;
         }
     }
+
     public void sharePopup(LinearLayout view, final FeedModel feedModel) {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
@@ -891,7 +915,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                         if (NetworkUtill.isNetworkAvailable(context)) {
-                           SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                            SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
                             sharePublicAsyncTask.execute();
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
@@ -921,6 +945,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         popup.show();//showing popup menu
     }
+
     public class SharePublicAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;

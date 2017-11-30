@@ -66,7 +66,7 @@
                         android:id="@+id/dr_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="24dp"
                         android:text="Dr. Saini"
                         android:textColor="@color/black" />
 
@@ -74,6 +74,8 @@
                         android:layout_width="70dp"
                         android:layout_height="27dp"
                         android:layout_marginTop="5dp"
+                        android:visibility="gone"
+
                         android:background="@drawable/oval"
                         android:padding="6dp">
 
@@ -82,7 +84,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-
                             android:text="Public" />
 
                         <TextView
@@ -119,6 +120,8 @@
                             android:id="@+id/title_Question"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
+                            android:inputType="textCapWords|textCapSentences"
+
                             android:background="@color/white"
                             android:gravity="center|left"
                             android:hint="Title/Question:"
@@ -146,6 +149,8 @@
                             android:hint="Description"
                             android:padding="10dp"
                             android:textColor="#000"
+                            android:inputType="textCapWords|textCapSentences"
+
                             android:textColorHint="@color/textcolorgray"
                             android:textCursorDrawable="@drawable/color_cursor"
                             android:textSize="15sp" />
@@ -191,6 +196,8 @@
                             android:hint="Refrence (Optional)"
                             android:padding="10dp"
                             android:textColor="#000"
+                            android:inputType="textCapWords|textCapSentences"
+
                             android:textColorHint="@color/textcolorgray"
                             android:textCursorDrawable="@drawable/color_cursor"
                             android:textSize="15sp" />

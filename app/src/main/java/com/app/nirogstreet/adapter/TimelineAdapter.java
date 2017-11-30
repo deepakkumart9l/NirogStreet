@@ -554,6 +554,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ApplicationSingleton.setPostSelectedPostion(position);
                             Intent intent = new Intent(context, PostDetailActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
                             context.startActivity(intent);

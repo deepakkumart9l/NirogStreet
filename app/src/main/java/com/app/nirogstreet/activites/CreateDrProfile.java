@@ -331,7 +331,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                         dialog.dismiss();
                         selectedImagePath = null;
                         Glide.with(CreateDrProfile.this)
-                                .load(R.drawable.default_image)
+                                .load(R.drawable.user)
                                 .into(circleImageView);
                     } else if (items[item].equals("Cancel")) {
                         dialog.dismiss();

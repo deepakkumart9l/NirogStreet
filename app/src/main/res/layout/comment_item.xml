@@ -18,7 +18,7 @@
             android:id="@+id/profileImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@color/textcolorgray"
+            android:src="@drawable/user"
             android:visibility="visible" />
 
 
@@ -157,7 +157,7 @@
                 android:id="@+id/subcommentimg"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
-                android:src="@color/textcolorgray"
+                android:src="@drawable/user"
                 android:visibility="visible" />
 
             <TextView

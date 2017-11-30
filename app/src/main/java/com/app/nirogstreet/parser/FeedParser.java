@@ -255,7 +255,6 @@ public class FeedParser {
                 if (jo.has("status") && !jo.isNull("status")) {
                     boolean statusboolean = jo.getBoolean("status");
                     if (statusboolean) {
-                        if (page == 1)
 
                             if (jo.has("feeds") && !jo.isNull("feeds")) {
                                 JSONArray jsonArray = jo.getJSONArray("feeds");

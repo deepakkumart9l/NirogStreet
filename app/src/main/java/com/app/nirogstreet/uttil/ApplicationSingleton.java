@@ -37,6 +37,42 @@ public class ApplicationSingleton extends Application {
         ApplicationSingleton.postPosition = postPosition;
     }
 
+    public static int getPostSelectedPostion() {
+        return PostSelectedPostion;
+    }
+
+    public static int getTotalLike() {
+        return totalLike;
+    }
+
+    public static void setTotalLike(int totalLike) {
+        ApplicationSingleton.totalLike = totalLike;
+    }
+
+    public static boolean isCurruntUserLiked() {
+        return curruntUserLiked;
+    }
+
+    public static void setCurruntUserLiked(boolean curruntUserLiked) {
+        ApplicationSingleton.curruntUserLiked = curruntUserLiked;
+    }
+
+    public static boolean curruntUserLiked=false;
+    public static int totalLike=-1;
+    public static int getNoOfComment() {
+        return noOfComment;
+    }
+
+    public static void setNoOfComment(int noOfComment) {
+        ApplicationSingleton.noOfComment = noOfComment;
+    }
+
+    public static int noOfComment=-1;
+    public static void setPostSelectedPostion(int postSelectedPostion) {
+        PostSelectedPostion = postSelectedPostion;
+    }
+
+    public static int PostSelectedPostion=-1;
     public static int postPosition = -1;
 
     public static boolean isListingFinish() {

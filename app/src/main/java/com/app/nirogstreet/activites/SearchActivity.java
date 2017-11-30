@@ -215,7 +215,7 @@ public class SearchActivity extends AppCompatActivity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
 
-                pairs.add(new BasicNameValuePair("searchkey", strTobeSearch));
+                pairs.add(new BasicNameValuePair("searchKey", strTobeSearch));
                 pairs.add(new BasicNameValuePair("userID", userId));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

@@ -121,7 +121,7 @@
                             android:backgroundTint="@color/textcolorgray"
                             android:hint="Enter your email - id"
 
-                            android:inputType="text|textCapSentences"
+                            android:inputType="text|textNoSuggestions"
 
 
                             android:singleLine="true"
@@ -152,6 +152,16 @@
                             android:textColorHint="@color/textcolorgray" />
                     </android.support.design.widget.TextInputLayout>
 
+                    <TextView
+                        android:id="@+id/forgot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/registerHere"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="right"
+
+                        android:text="Forgot Password "
+                        android:textColor="@color/cardbluebackground" />
 
                 </LinearLayout>
 
@@ -165,18 +175,9 @@
                 android:layout_marginBottom="5dp"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:text="Here to Register "
+                android:text="Click Here to Register "
                 android:textColor="@color/cardbluebackground" />
 
-            <TextView
-                android:id="@+id/forgot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/registerHere"
-                android:layout_marginBottom="20dp"
-                android:gravity="center_horizontal"
-                android:text="Forgot Password "
-                android:textColor="@color/cardbluebackground" />
 
         </RelativeLayout>
 

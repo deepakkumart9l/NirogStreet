@@ -110,7 +110,7 @@ public class MultipleSelectGroup extends Activity
         specilization = (TextView) findViewById(R.id.specilization);
         searchET = (EditText) findViewById(R.id.searchET);
 
-        specilization.setText("Select Group");
+        specilization.setText("Select Groups");
         searchET.setHint("Search Group");
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
@@ -164,16 +164,19 @@ public class MultipleSelectGroup extends Activity
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = getSelectedNameCsv();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchET.getWindowToken(), 0);
+                if(list.size()!=0) {
+                    String s = getSelectedNameCsv();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchET.getWindowToken(), 0);
 
 
-                Intent return_intent = new Intent();
-                return_intent.putExtra("friendsCsv", s);
-                return_intent.putExtra("list", (Serializable) list);
-                setResult(RESULT_CODE, return_intent);
-
+                    Intent return_intent = new Intent();
+                    return_intent.putExtra("friendsCsv", s);
+                    return_intent.putExtra("list", (Serializable) list);
+                    setResult(RESULT_CODE, return_intent);
+                }else {
+                    Toast.makeText(MultipleSelectGroup.this,"Select Group.",Toast.LENGTH_LONG).show();
+                }
                 finish();
 
             }

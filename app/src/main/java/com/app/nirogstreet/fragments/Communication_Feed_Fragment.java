@@ -101,7 +101,25 @@ FrameLayout customViewContainer;
         super.onResume();
        /* ((MainActivity) context).setTabText("Timeline");*/
         try {
+            if (ApplicationSingleton.getPostSelectedPostion() != -1) {
+                if (ApplicationSingleton.getNoOfComment() != -1) {
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getNoOfComment() + "");
+                    feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostSelectedPostion());
+                    ApplicationSingleton.setNoOfComment(-1);
+                }
+                if (ApplicationSingleton.getTotalLike() != -1) {
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getTotalLike() + "");
 
+                    if (ApplicationSingleton.isCurruntUserLiked())
+                        totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(1);
+                    else
+                        totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(0);
+                    feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostSelectedPostion());
+
+                }
+                ApplicationSingleton.setPostSelectedPostion(-1);
+
+            }
             boolean postsuccess = false;
 
             SharedPreferences sharedPref = getActivity().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);

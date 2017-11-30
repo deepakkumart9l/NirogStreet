@@ -48,27 +48,27 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  */
 
 public class ForgotPassword
-    extends AppCompatActivity
+        extends AppCompatActivity
 
-    {
-        EditText emailEt;
-        String username, password;
-        ImageView backImageView;
-        LoginAsync loginAsync;
-        CircularProgressBar circularProgressBar;
-        TextView loginHeader, loginTv, registerHere;
-        SesstionManager sesstionManager;
+{
+    EditText emailEt;
+    String username, password;
+    ImageView backImageView;
+    LoginAsync loginAsync;
+    CircularProgressBar circularProgressBar;
+    TextView loginHeader, loginTv, registerHere;
+    SesstionManager sesstionManager;
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.forgot_pass);
-          emailEt = (EditText) findViewById(R.id.emailEt);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.forgot_pass);
+        emailEt = (EditText) findViewById(R.id.emailEt);
         loginHeader = (TextView) findViewById(R.id.title_side);
         loginTv = (TextView) findViewById(R.id.loginTv);
         backImageView = (ImageView) findViewById(R.id.back);
-            backImageView.setVisibility(View.VISIBLE);
+        backImageView.setVisibility(View.VISIBLE);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         registerHere = (TextView) findViewById(R.id.registerHere);
         TypeFaceMethods.setRegularTypeFaceEditText(emailEt, ForgotPassword.this);
@@ -99,13 +99,13 @@ public class ForgotPassword
 
                 if (username == null || username.equals("") || username.trim().isEmpty()) {
                     Toast.makeText(ForgotPassword.this, "Username is Empty", Toast.LENGTH_LONG).show();
-                }  else {
-if(Methods.isValidEmailAddress(username))
-                    if (NetworkUtill.isNetworkAvailable(ForgotPassword.this)) {
-                        loginAsync = new LoginAsync();
-                        loginAsync.execute();
-                    } else
-                        NetworkUtill.showNoInternetDialog(ForgotPassword.this);
+                } else {
+                    if (Methods.isValidEmailAddress(username))
+                        if (NetworkUtill.isNetworkAvailable(ForgotPassword.this)) {
+                            loginAsync = new LoginAsync();
+                            loginAsync.execute();
+                        } else
+                            NetworkUtill.showNoInternetDialog(ForgotPassword.this);
                 }
         /*      Intent intent=new Intent(LoginActivity.this,PostingActivity.class);
                 startActivity(intent);
@@ -121,115 +121,111 @@ if(Methods.isValidEmailAddress(username))
         });
     }
 
-        public class LoginAsync extends AsyncTask<Void, Void, Void> {
-            String responseBody;
-            String email, password;
-            CircularProgressBar bar;
-            //PlayServiceHelper regId;
+    public class LoginAsync extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String email, password;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
 
-            JSONObject jo;
-            HttpClient client;
+        JSONObject jo;
+        HttpClient client;
 
-            public void cancelAsyncTask() {
-                if (client != null && !isCancelled()) {
-                    cancel(true);
-                    client = null;
-                }
-            }
-
-            @Override
-            protected void onPreExecute() {
-                circularProgressBar.setVisibility(View.VISIBLE);
-                email = emailEt.getText().toString();
-                //  bar = (ProgressBar) findViewById(R.id.progressBar);
-                //   bar.setVisibility(View.VISIBLE);
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-
-                    String url = AppUrl.AppBaseUrl + "user/login";
-                    SSLSocketFactory sf = new SSLSocketFactory(
-                            SSLContext.getDefault(),
-                            SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-                    Scheme sch = new Scheme("https", 443, sf);
-                    client = new DefaultHttpClient();
-
-                    client.getConnectionManager().getSchemeRegistry().register(sch);
-                    HttpPost httppost = new HttpPost(url);
-                    HttpResponse response;
-
-                    String credentials = email.toString().trim() + ":" + password;
-
-                    List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                    pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                    pairs.add(new BasicNameValuePair("device_token", refreshedToken));
-                    pairs.add(new BasicNameValuePair("type", "android"));
-                    String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                    httppost.setHeader("Authorization", "Basic " + base64EncodedCredentials);
-                    httppost.setEntity(new UrlEncodedFormEntity(pairs));
-                    response = client.execute(httppost);
-                    responseBody = EntityUtils.toString(response.getEntity());
-                    jo = new JSONObject(responseBody);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-         /*   Intent intent=new Intent(LoginActivity.this,OtpActivity.class);
-            startActivity(intent);*/
-                circularProgressBar.setVisibility(View.GONE);
-
-                circularProgressBar.setVisibility(View.GONE);
-                try {
-                    if (jo != null) {
-                        JSONArray errorArray;
-                        JSONObject dataJsonObject;
-                        boolean status = false;
-                        String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
-                        if (jo.has("data") && !jo.isNull("data")) {
-                            dataJsonObject = jo.getJSONObject("data");
-
-                            if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
-
-                            {
-                                status = dataJsonObject.getBoolean("status");
-                                if (!status) {
-                                    if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
-                                        errorArray = dataJsonObject.getJSONArray("message");
-                                        for (int i = 0; i < errorArray.length(); i++) {
-                                            String error = errorArray.getJSONObject(i).getString("error");
-                                            Toast.makeText(ForgotPassword.this, error, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                } else {
-                                    if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
-                                        JSONObject message = dataJsonObject.getJSONObject("message");
-
-
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
             }
         }
 
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+            email = emailEt.getText().toString();
+            //  bar = (ProgressBar) findViewById(R.id.progressBar);
+            //   bar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/forgot-password";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                String credentials = email.toString().trim() + ":" + password;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                pairs.add(new BasicNameValuePair("email", email.toString().trim()));
+                String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+         /*   Intent intent=new Intent(LoginActivity.this,OtpActivity.class);
+            startActivity(intent);*/
+            circularProgressBar.setVisibility(View.GONE);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONArray dataJsonObject;
+                    int status = -1;
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONArray("data");
+
+                        if (dataJsonObject.getJSONObject(0).has("result") && !dataJsonObject.getJSONObject(0).isNull("result"))
+
+                        {
+                            status = dataJsonObject.getJSONObject(0).getInt("result");
+                            if (status!=1) {
+
+                                Toast.makeText(ForgotPassword.this, "Invalid Email", Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                if (dataJsonObject.getJSONObject(0).has("message") && !dataJsonObject.getJSONObject(0).isNull("message")) {
+                                    Toast.makeText(ForgotPassword.this, dataJsonObject.getJSONObject(0).getString("message"), Toast.LENGTH_LONG).show();
+                                    ;
+
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
     }
+
+}
 
 

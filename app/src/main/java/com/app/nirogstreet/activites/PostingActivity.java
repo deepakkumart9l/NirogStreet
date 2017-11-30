@@ -137,7 +137,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     private AskQuestionForumImagesAdapter askQuestionForumImagesAdapter;
     private HashTagHelper mEditTextHashTagHelper;
     TextView dr_nameTextView, publicTextView;
-    ImageView backImageView;
+    ImageView backImageView,cancelImageView;
     TextView textViewpost;
     TextView descriptionTextView, titleTextView;
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
@@ -149,6 +149,13 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
         backImageView = (ImageView) findViewById(R.id.back);
+        cancelImageView=(ImageView)findViewById(R.id.cancel) ;
+        cancelImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linkLay.setVisibility(View.GONE);
+            }
+        });
         sesstionManager = new SesstionManager(PostingActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +176,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
+        dr_nameTextView.setText(sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
         publicTextView = (TextView) findViewById(R.id.public_);
         title_QuestionEditText = (EditText) findViewById(R.id.title_Question);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
@@ -822,7 +830,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                             SharedPreferences.Editor editor1 = sharedPref1.edit();
                             editor1.putBoolean("imgvidupdate", albumupdate);
                             editor1.commit();
-                     ApplicationSingleton.setIsProfilePostExecuted(true);
+                            ApplicationSingleton.setIsProfilePostExecuted(true);
                             finish();
 
                         }
@@ -1092,7 +1100,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         boolean check = true;
         List<String> allHashTags = mTextHashTagHelper.getAllHashTags();
         allHashTags.toString();
-        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0&&title_QuestionEditText.getText().length()==0) {
+        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0 && title_QuestionEditText.getText().length() == 0) {
             Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
             check = false;
         }

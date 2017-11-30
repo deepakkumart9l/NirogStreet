@@ -17,6 +17,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Preeti on 28-10-2017.
  */
@@ -35,14 +37,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
+        CircleImageView imageView;
         TextView txtTitle, department;
 
         public ViewHolder(View itemView) {
             super(itemView);
             txtTitle = (TextView) itemView.findViewById(R.id.name);
             department = (TextView) itemView.findViewById(R.id.depart);
-            imageView = (ImageView) itemView.findViewById(R.id.img);
+            imageView = (CircleImageView) itemView.findViewById(R.id.img);
         }
     }
 
@@ -61,6 +63,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.department.setText(rowItem.getDeprtment());
         //ImageLoader imageLoader=new ImageLoader(context);
         String imgUrl = rowItem.getProfileimage();
+        if(imgUrl!=null)
         Glide.with(context)
                 .load(imgUrl) // Uri of the picture
                 .centerCrop()
