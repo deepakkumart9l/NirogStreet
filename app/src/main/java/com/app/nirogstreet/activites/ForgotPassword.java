@@ -200,7 +200,7 @@ public class ForgotPassword
 
                         {
                             status = dataJsonObject.getJSONObject(0).getInt("result");
-                            if (status!=1) {
+                            if (status != 1) {
 
                                 Toast.makeText(ForgotPassword.this, "Invalid Email", Toast.LENGTH_SHORT).show();
 
@@ -210,7 +210,8 @@ public class ForgotPassword
                                     Toast.makeText(ForgotPassword.this, dataJsonObject.getJSONObject(0).getString("message"), Toast.LENGTH_LONG).show();
                                     ;
 
-
+                                    Intent intent = new Intent(ForgotPassword.this, LoginActivity.class);
+                                    startActivity(intent);
                                 }
 
                             }

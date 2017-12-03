@@ -19,6 +19,6 @@
 
         android:layout_marginTop="3dp"
         android:gravity="center"
-        android:textColor="@color/textcolorgray"
+        android:textColor="@drawable/text_sel_icon"
         android:textSize="10sp" />
 </LinearLayout>

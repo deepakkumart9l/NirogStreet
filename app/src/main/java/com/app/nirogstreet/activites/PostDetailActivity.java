@@ -9,11 +9,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +65,7 @@ public class PostDetailActivity extends Activity {
     SesstionManager sessionManager;
     PostDetailAsyncTask postDetailAsyncTask;
     private FrameLayout customViewContainer;
+
     GetCommentsAsynctask getCommentsAsynctask;
     String userId, authToken;
     CircularProgressBar circularProgressBar;
@@ -73,7 +78,8 @@ public class PostDetailActivity extends Activity {
 
     private PostDetailAdapter feedsAdapter;
     RecyclerView commentsrecyclerview;
-    private ImageView sendImageView, backImageView;
+    private ImageView  backImageView;
+    TextView sendImageView;
     private EditText editText;
     private PostCommentAsyncTask postCommentAsyncTask;
 
@@ -88,7 +94,9 @@ public class PostDetailActivity extends Activity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
         //  collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        sendImageView = (ImageView) findViewById(R.id.commentTV);
+        sendImageView = (TextView) findViewById(R.id.commentTV);
+        sendImageView.setEnabled(false);
+        sendImageView.setClickable(false);
         backImageView = (ImageView) findViewById(R.id.back);
         noContentTextView = (TextView) findViewById(R.id.noContent);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -98,11 +106,36 @@ public class PostDetailActivity extends Activity {
             }
         });
         editText = (EditText) findViewById(R.id.etMessageBox);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(s.length()==0) {
+                    sendImageView.setEnabled(false);
+
+                    sendImageView.setClickable(false);
+                }
+                else {
+                    sendImageView.setClickable(true);
+                    sendImageView.setEnabled(true);
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         sendImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
-                    if (editText.getText() != null) {
+                    if (editText.getText() != null&&editText.getText().length()>0) {
                         postCommentAsyncTask = new PostCommentAsyncTask(feedId, editText.getText().toString());
                         postCommentAsyncTask.execute();
                     } else {
@@ -220,7 +253,7 @@ public class PostDetailActivity extends Activity {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 ArrayList<FeedModel> feedModels = new ArrayList<>();
                                 feedModels.addAll(FeedParser.singlePostFeed(jsonArray.getJSONObject(0)));
-                                feedsAdapter = new PostDetailAdapter(PostDetailActivity.this, feedModels, PostDetailActivity.this, "", customViewContainer);
+                                feedsAdapter = new PostDetailAdapter(PostDetailActivity.this, feedModels, PostDetailActivity.this, "", customViewContainer,circularProgressBar);
                                 recyclerView.setAdapter(feedsAdapter);
                                 if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
                                     getCommentsAsynctask = new GetCommentsAsynctask(feedId);

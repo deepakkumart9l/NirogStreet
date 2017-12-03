@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.SearchActivity;
 import com.app.nirogstreet.model.SearchModel;
+import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -25,13 +27,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     Context context;
-
+    SesstionManager sesstionManager;
     ArrayList<SearchModel> rowItems;
 
 
     public SearchAdapter(Context context, ArrayList<SearchModel> items) {
         this.context = context;
         this.rowItems = items;
+        sesstionManager = new SesstionManager(context);
     }
 
 
@@ -58,28 +61,37 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        SearchModel rowItem = rowItems.get(position);
+        final SearchModel rowItem = rowItems.get(position);
         holder.txtTitle.setText(rowItem.getFname().trim() + " " + rowItem.getLname());
         holder.department.setText(rowItem.getDeprtment());
         //ImageLoader imageLoader=new ImageLoader(context);
         String imgUrl = rowItem.getProfileimage();
-        if(imgUrl!=null)
-        Glide.with(context)
-                .load(imgUrl) // Uri of the picture
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .crossFade()
-                .override(100, 100)
-                .into(holder.imageView);
-
+        if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
+            Glide.with(context)
+                    .load(imgUrl) .placeholder(R.drawable.user)// Uri of the picture
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .crossFade()
+                    .override(100, 100)
+                    .into(holder.imageView);
+        else {
+            Glide.with(context)
+                    .load(R.drawable.user) // Uri of the picture
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .crossFade()
+                    .override(100, 100)
+                    .into(holder.imageView);
+        }
         // imageLoader.DisplayImage(context,imgUrl,holder.imageView,null,150,150,R.drawable.profile_default);
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              /*  Intent resultIntent = new Intent(context, ProfileActivity.class);
-                SearchModel likesModel = rowItems.get(position);
-                resultIntent.putExtra("userId", likesModel.getId());
-                context.    startActivity(resultIntent);*/
+                Intent intent = new Intent(context, Dr_Profile.class);
+                if (!rowItem.getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+
+                    intent.putExtra("UserId", rowItem.getId());
+                context.startActivity(intent);
             }
         });
     }

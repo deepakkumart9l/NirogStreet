@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Message;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,12 +30,15 @@ import android.widget.VideoView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AlbumGallary;
 import com.app.nirogstreet.activites.CommentsActivity;
+import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.AppUrl;
@@ -45,6 +49,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -97,12 +102,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Activity activity;
     SesstionManager sesstionManager;
     String groupId = "";
+CircularProgressBar circularProgressBar;
 
-
-    public PostDetailAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity, String groupId, FrameLayout customViewContainer) {
+    public PostDetailAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity, String groupId, FrameLayout customViewContainer,CircularProgressBar circularProgressBar) {
         this.feedModels = feedModels;
         this.context = context;
         this.activity = activity;
+        this.circularProgressBar=circularProgressBar;
         this.groupId = groupId;
         this.customViewContainer = customViewContainer;
         sesstionManager = new SesstionManager(context);
@@ -177,6 +183,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                                 viewHolder.anniversaryLinearLayout.setVisibility(View.GONE);
                                 viewHolder.anniverasaryLayoutImage.setVisibility(View.GONE);
+                                viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                                viewHolder.left_view.setVisibility(View.GONE);
+                                viewHolder.right_view.setVisibility(View.GONE);
+                                viewHolder.bottom_view.setVisibility(View.GONE);
                                 viewHolder.videoView.setVisibility(View.GONE);
                                 viewHolder.playicon.setVisibility(View.VISIBLE);
                                 Glide.with(context)
@@ -230,7 +240,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
                                 viewHolder.playicon.setVisibility(View.GONE);
                                 viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-
+                                viewHolder.link_title_des_lay.setVisibility(View.VISIBLE);
+                                viewHolder.left_view.setVisibility(View.VISIBLE);
+                                viewHolder.right_view.setVisibility(View.VISIBLE);
+                                viewHolder.bottom_view.setVisibility(View.VISIBLE);
                                 viewHolder.videoView.setVisibility(View.GONE);
                                 viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                                 viewHolder.linkImageView.setVisibility(View.VISIBLE);
@@ -272,6 +285,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         context.startActivity(i);
                                     }
                                 });
+
+
+                                Picasso.with(context)
+                                        .load(feedModel.getUrl_image())
+                                        .placeholder(R.drawable.default_)
+                                        .error(R.drawable.default_)
+                                        .into(viewHolder.linkImageView);
                                 break;
                         }
                         break;
@@ -281,6 +301,11 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                         viewHolder.linkImageView.setVisibility(View.GONE);
                         viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                        viewHolder.left_view.setVisibility(View.GONE);
+                        viewHolder.right_view.setVisibility(View.GONE);
+                        viewHolder.bottom_view.setVisibility(View.GONE);
+
                         viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                         viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
                         viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -292,9 +317,11 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             viewHolder.feedImageView.setVisibility(View.VISIBLE);
                             Glide.with(context)
                                     .load(feedModel.getFeed_source())
-                                    .asGif()
+                                    .asGif().placeholder(R.drawable.default_)
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                     .into(viewHolder.feedImageView);
+
+
                             viewHolder.feedImageView.setVisibility(View.VISIBLE);
                             viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -320,32 +347,30 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     }
                                     viewHolder.two_or_moreLinearLayout.setVisibility(View.VISIBLE);
                                     viewHolder.feedImageView.setVisibility(View.GONE);
-                                    Glide.with(context)
-                                            .load(strings.get(0)) // Uri of the picture
-                                            .centerCrop()
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .crossFade()
-                                            .override(100, 100)
+
+
+                                    Picasso.with(context)
+                                            .load(strings.get(1))
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_)
                                             .into(viewHolder.imageFirstImageView);
-                                    Glide.with(context)
-                                            .load(strings.get(1)) // Uri of the picture
-                                            .centerCrop()
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .crossFade()
-                                            .override(100, 100)
+                                    Picasso.with(context)
+                                            .load(strings.get(0))
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_)
                                             .into(viewHolder.imageSecImageView);
 
                                 } else {
                                     String singleImageUrl = strings.get(0);
                                     viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
 
-                                    Glide.with(context)
-                                            .load(singleImageUrl) // Uri of the picture
-                                            .centerCrop()
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .crossFade()
-                                            .override(100, 100)
+
+                                    Picasso.with(context)
+                                            .load(singleImageUrl)
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_)
                                             .into(viewHolder.feedImageView);
+
 
                                 }
 
@@ -370,6 +395,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 });
                             } else {
                                 viewHolder.feedImageView.setVisibility(View.VISIBLE);
+
+
+                                Picasso.with(context)
+                                        .load(feedModel.getFeedSourceArrayList().get(0))
+                                        .placeholder(R.drawable.default_)
+                                        .error(R.drawable.default_).into(viewHolder.feedImageView);
+
                                 viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -388,6 +420,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.linkImageView.setVisibility(View.GONE);
                         viewHolder.linkTitleTextView.setVisibility(View.GONE);
                         viewHolder.feedImageView.setVisibility(View.VISIBLE);
+                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                        viewHolder.left_view.setVisibility(View.GONE);
+                        viewHolder.right_view.setVisibility(View.GONE);
+                        viewHolder.bottom_view.setVisibility(View.GONE);
                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                         viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
@@ -418,6 +454,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.linkImageView.setVisibility(View.GONE);
                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                         viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                        viewHolder.left_view.setVisibility(View.GONE);
+                        viewHolder.right_view.setVisibility(View.GONE);
+                        viewHolder.bottom_view.setVisibility(View.GONE);
                         viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                         viewHolder.feedImageView.setVisibility(View.GONE);
                         viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -458,6 +498,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.docTypeLayout.setVisibility(View.VISIBLE);
                         viewHolder.videoView.setVisibility(View.GONE);
                         viewHolder.linkImageView.setVisibility(View.GONE);
+                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                        viewHolder.left_view.setVisibility(View.GONE);
+                        viewHolder.right_view.setVisibility(View.GONE);
+                        viewHolder.bottom_view.setVisibility(View.GONE);
                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                         viewHolder.docTypeLayout.setVisibility(View.GONE
                         );
@@ -477,17 +521,44 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     viewHolder.statusTextView.setVisibility(View.GONE);
 
                 }
+
                 if (feedModel.getTotal_likes() != null) {
                     ApplicationSingleton.setTotalLike(Integer.parseInt(feedModel.getTotal_likes()));
-                    viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Likes");
+
+                    if (feedModel.getTotal_likes().equalsIgnoreCase("0") || feedModel.getTotal_likes().equalsIgnoreCase("1"))
+                        viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Like");
+                    else
+                        viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Like");
+
                 }
                 if (feedModel.getTotal_comments() != null) {
-                    viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comments");
+                    if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
+
+                        viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comment");
+                    else
+                        viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comments");
+
                 }
-                UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
+                final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
                 if (userDetailModel != null && userDetailModel.getName() != null) {
-                    viewHolder.nameTextView.setText("By " + userDetailModel.getName());
+                    viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                 }
+                if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
+                    Picasso.with(context)
+                            .load(userDetailModel.getProfile_pic())
+                            .placeholder(R.drawable.user)
+                            .error(R.drawable.user)
+                            .into(viewHolder.linkImageView);
+                }
+                viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, Dr_Profile.class);
+                        if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                            intent.putExtra("UserId", userDetailModel.getUserId());
+                        context.startActivity(intent);
+                    }
+                });
                 if (feedModel.getCreated() != null) {
                     viewHolder.timeStampTextView.setText(feedModel.getCreated());
                 }
@@ -533,9 +604,16 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.noOfLikeTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, LikesDisplayActivity.class);
+                    /*    Intent intent = new Intent(context, LikesDisplayActivity.class);
                         intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);
+                        context.startActivity(intent);*/
+                        positionat = position;
+                        if (NetworkUtill.isNetworkAvailable(context)) {
+                            LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
+                            likePostAsynctask.execute();
+                        } else {
+                            NetworkUtill.showNoInternetDialog(context);
+                        }
                     }
                 });
                 viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
@@ -553,8 +631,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 try {
                     if (feedModel.getTotal_comments() != null)
                         ApplicationSingleton.setNoOfComment(Integer.parseInt(feedModel.getTotal_comments()));
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
@@ -592,6 +669,61 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                */
                     }
                 });
+
+                TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.txtTextView, context);
+                if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
+                    if (feedModel.getParent_feed() != null) {
+                        if (feedModel.getFeed_type().equalsIgnoreCase("5"))
+                            viewHolder.txtTextView.setText("shared a video");
+                        if (feedModel.getFeed_type().equalsIgnoreCase("1"))
+                            viewHolder.txtTextView.setText("shared an post");
+                        if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                            viewHolder.txtTextView.setText("shared a link");
+
+                        } else {
+                            if (feedModel.getFeed_type().equalsIgnoreCase("2"))
+                                viewHolder.txtTextView.setText("shared an image");
+                        }
+                        if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                            viewHolder.txtTextView.setText("shared a document");
+
+                        }
+                    } else {
+                        if (feedModel.getFeed_type().equalsIgnoreCase("5"))
+                            viewHolder.txtTextView.setText("posted a video");
+                        if (feedModel.getFeed_type().equalsIgnoreCase("1"))
+                            viewHolder.txtTextView.setText("posted a status");
+                        if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                            viewHolder.txtTextView.setText("posted a link");
+
+                        } else {
+                            if (feedModel.getFeed_type().equalsIgnoreCase("2"))
+                                viewHolder.txtTextView.setText("posted a image");
+                        }
+                        if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                            viewHolder.txtTextView.setText("posted a document");
+
+                        }
+                    }
+                } else {
+                    if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            viewHolder.txtTextView.setText("posted in a " + Html.fromHtml("<b>" + feedModel.getCommunity_name() + "</b>", Html.FROM_HTML_MODE_LEGACY));
+
+                        } else {
+                            viewHolder.txtTextView.setText("posted in a " + Html.fromHtml("<b>" + feedModel.getCommunity_name() + "</b>"));
+                        }
+                        viewHolder.txtTextView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, CommunitiesDetails.class);
+                                intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                context.startActivity(intent);
+                            }
+                        });
+
+                    }
+                }
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
                 TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.timeStampTextView, context);
@@ -637,8 +769,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             MyViewHolder viewHolder = (MyViewHolder) holder;
 
             if (payloads.get(0) instanceof String) {
-
-                viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
+                if (String.valueOf(payloads.get(0)).equalsIgnoreCase("0") || String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
+                    viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Like");
+                else
+                    viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
                 ApplicationSingleton.setTotalLike(Integer.parseInt(payloads.get(0) + ""));
                 if (!viewHolder.feedlikeimg.isSelected()) {
                     viewHolder.feedlikeimg.setSelected(true);
@@ -649,12 +783,21 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
             } else if (payloads.get(0) instanceof Integer) {
-                int i = Integer.parseInt(feedModels.get(position).getTotal_comments());
+                int i;
+                if (feedModels.get(position).getTotal_comments() != null) {
+                    i = Integer.parseInt(feedModels.get(position).getTotal_comments());
+                } else {
+                    i = 0;
+                }
                 i = i + 1;
                 ApplicationSingleton.setNoOfComment(i);
 
                 feedModels.get(position).setTotal_comments(i + "");
-                viewHolder.noOfCommentTextView.setText(i + " Comments");
+                if (feedModels.get(position).getTotal_comments().equalsIgnoreCase("0") || feedModels.get(position).getTotal_comments().equalsIgnoreCase("1"))
+                    viewHolder.noOfCommentTextView.setText(i + " Comment");
+                else
+                    viewHolder.noOfCommentTextView.setText(i + " Comments");
+
             }
         } else {
             super.onBindViewHolder(holder, position, payloads);
@@ -676,7 +819,11 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RelativeLayout profileSectionLinearLayout, basicAnnouncemetLinearLayout, sayCongratsRelativeLayout, anniversaryLinearLayout, hetrogenousAnnouncementLinearLayout;
         Button buttondownload;
         VideoView videoView;
+        TextView txtTextView;
+
         WebView webView;
+        View left_view, right_view, bottom_view;
+        LinearLayout link_title_des_lay;
 
         View basicAnnouncemet_view;
         LinearLayout moreLinearLayout, two_or_moreLinearLayout;
@@ -684,6 +831,12 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            left_view = (View) itemView.findViewById(R.id.left_view);
+            bottom_view = (View) itemView.findViewById(R.id.bottom_view);
+            right_view = (View) itemView.findViewById(R.id.right_view);
+            txtTextView = (TextView) itemView.findViewById(R.id.txt);
+
+            link_title_des_lay = (LinearLayout) itemView.findViewById(R.id.link_title_des_lay);
             webView = (WebView) itemView.findViewById(R.id.webview);
             QuestionTextView = (TextView) itemView.findViewById(R.id.Question);
             playicon = (ImageView) itemView.findViewById(R.id.playicon);
@@ -771,6 +924,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
                     if (jo.has("responce") && !jo.isNull("responce")) {
@@ -828,6 +982,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
         }
     }
 

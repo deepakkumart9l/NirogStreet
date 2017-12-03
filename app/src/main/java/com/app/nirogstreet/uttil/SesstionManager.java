@@ -28,7 +28,7 @@ public class SesstionManager {
     public static final String KEY_FNAME = "fname";
 
     public static final String KEY_EMAIL = "email";
-    public static final String KEY_LANGUAGE = "language";
+    public static final String KEY_POFILE_PIC = "profile";
     public static final String KEY_LNAME = "lname";
     public static final String USER_ID = "user_Id";
 
@@ -90,6 +90,13 @@ public class SesstionManager {
         user.put(USER_ID,pref.getString(USER_ID,null));
         return user;
     }
+    public HashMap<String, String> getProfile() {
+
+        HashMap<String, String> user = new HashMap<String, String>();
+
+        user.put(KEY_POFILE_PIC, pref1.getString(KEY_POFILE_PIC, null));
+      return user;
+    }
 
     public void logoutUser() {
 
@@ -107,10 +114,10 @@ public class SesstionManager {
 
 
 
-    public void updateLanguage(String language) {
+    public void updateProfile(String language) {
 
         languageLogOut();
-        editor1.putString(KEY_LANGUAGE, language);
+        editor1.putString(KEY_POFILE_PIC, language);
         editor1.commit();
     }
 

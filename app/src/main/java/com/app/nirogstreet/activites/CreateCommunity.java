@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -170,7 +171,14 @@ public class CreateCommunity extends Activity {
             createGroupAsyncTask.cancelAsyncTask();
         }
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.print(requestCode);
+        if (requestCode == 1) {
+            selectImage();
+        }
+    }
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
@@ -323,9 +331,15 @@ public class CreateCommunity extends Activity {
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImageUri = data.getData();
                     selectedImagePath = getPath(selectedImageUri, CreateCommunity.this);
-                    imgCover.setImageBitmap(BitmapFactory
-                            .decodeFile(selectedImagePath));
-
+                    File fff = new File(selectedImagePath);
+                    Glide.with(CreateCommunity.this)
+                            .load(fff) // Uri of the picture
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .crossFade()
+                            .override(100, 100)
+                            .into(imgCover);
 
                        /* imgCover.setImageBitmap(BitmapFactory
                                 .decodeFile(selectedImagePath));*/

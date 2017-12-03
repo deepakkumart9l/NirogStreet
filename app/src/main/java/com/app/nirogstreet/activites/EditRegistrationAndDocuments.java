@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -186,7 +187,14 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
         }
         initSpinnerScrollingCategory();
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.print(requestCode);
+        if (requestCode == 3) {
+            openFile();
+        }
+    }
     private void initSpinnerScrollingCategory() {
         spinnerCouncilType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -317,6 +325,8 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
 
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         MonthYearPickerDialog newFragment = new MonthYearPickerDialog();
+        newFragment.setCancelable(false);
+
         newFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

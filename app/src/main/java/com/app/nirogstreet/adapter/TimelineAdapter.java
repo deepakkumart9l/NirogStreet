@@ -1,16 +1,20 @@
 package com.app.nirogstreet.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +35,8 @@ import android.widget.VideoView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AlbumGallary;
 import com.app.nirogstreet.activites.CommentsActivity;
+import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
@@ -38,6 +44,7 @@ import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.ShareOnFriendsTimeline;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.FeedParser;
@@ -49,6 +56,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -76,6 +84,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     int positionat;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     FrameLayout customViewContainer;
     private WebChromeClient.CustomViewCallback customViewCallback;
 
@@ -100,14 +114,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Context context;
     Activity activity;
     SesstionManager sesstionManager;
+    CircularProgressBar circularProgressBar;
     String groupId = "";
 
 
-    public TimelineAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity, String groupId, FrameLayout customViewContainer) {
+    public TimelineAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity, String groupId, FrameLayout customViewContainer,CircularProgressBar circularProgressBar) {
         this.feedModels = feedModels;
         this.context = context;
         this.activity = activity;
         this.groupId = groupId;
+        this.circularProgressBar=circularProgressBar;
         this.customViewContainer = customViewContainer;
         sesstionManager = new SesstionManager(context);
         HashMap<String, String> userDetails = sesstionManager.getUserDetails();
@@ -141,7 +157,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (holder.getItemViewType()) {
             case TYPE_HEADER:
                 HeaderView myViewHolder = (HeaderView) holder;
-              //   Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
+                if (sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC) != null) {
+                    String url;
+                    url = sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC);
+                    Picasso.with(context)
+                            .load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC))
+                            .placeholder(R.drawable.user)
+                            .error(R.drawable.user)
+                            .into(myViewHolder.circleImageView);
+                }
+                //   Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
                 TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
 
                 myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +196,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         case FEED_TYPE_YOUTUBEVIDEO_LINK:
                             switch (link_type) {
                                 case LINK_TYPE_YOUTUBE_VIDEO:
+                                    viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                                    viewHolder.left_view.setVisibility(View.GONE);
+                                    viewHolder.right_view.setVisibility(View.GONE);
+                                    viewHolder.bottom_view.setVisibility(View.GONE);
                                     viewHolder.playicon.setVisibility(View.GONE);
                                     viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
                                     viewHolder.linkImageView.setVisibility(View.GONE);
@@ -191,6 +220,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             .crossFade()
                                             .override(100, 100)
                                             .into(viewHolder.feedImageView);
+
 
                                     String videoUrl[];
                                     String frameVideo = null;
@@ -235,7 +265,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
                                     viewHolder.playicon.setVisibility(View.GONE);
                                     viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-
+                                    viewHolder.link_title_des_lay.setVisibility(View.VISIBLE);
+                                    viewHolder.left_view.setVisibility(View.VISIBLE);
+                                    viewHolder.right_view.setVisibility(View.VISIBLE);
+                                    viewHolder.bottom_view.setVisibility(View.VISIBLE);
                                     viewHolder.videoView.setVisibility(View.GONE);
                                     viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                                     viewHolder.linkImageView.setVisibility(View.VISIBLE);
@@ -268,6 +301,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         }
                                     });
                                     viewHolder.linkDescriptiontextView.setText(feedModel.getUrl_description());
+
+                                    Picasso.with(context)
+                                            .load(feedModel.getUrl_image())
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_)
+                                            .into(viewHolder.linkImageView);
                                     viewHolder.linkImageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -286,6 +325,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.linkImageView.setVisibility(View.GONE);
                             viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.bottom_view.setVisibility(View.GONE);
+
                             viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                             viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
                             viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -297,9 +341,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 viewHolder.feedImageView.setVisibility(View.VISIBLE);
                                 Glide.with(context)
                                         .load(feedModel.getFeed_source())
-                                        .asGif()
+                                        .asGif().placeholder(R.drawable.default_)
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .into(viewHolder.feedImageView);
+
+
                                 viewHolder.feedImageView.setVisibility(View.VISIBLE);
                                 viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -325,32 +371,30 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         }
                                         viewHolder.two_or_moreLinearLayout.setVisibility(View.VISIBLE);
                                         viewHolder.feedImageView.setVisibility(View.GONE);
-                                        Glide.with(context)
-                                                .load(strings.get(0)) // Uri of the picture
-                                                .centerCrop()
-                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                .crossFade()
-                                                .override(100, 100)
+
+
+                                        Picasso.with(context)
+                                                .load(strings.get(1))
+                                                .placeholder(R.drawable.default_)
+                                                .error(R.drawable.default_)
                                                 .into(viewHolder.imageFirstImageView);
-                                        Glide.with(context)
-                                                .load(strings.get(1)) // Uri of the picture
-                                                .centerCrop()
-                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                .crossFade()
-                                                .override(100, 100)
+                                        Picasso.with(context)
+                                                .load(strings.get(0))
+                                                .placeholder(R.drawable.default_)
+                                                .error(R.drawable.default_)
                                                 .into(viewHolder.imageSecImageView);
 
                                     } else {
                                         String singleImageUrl = strings.get(0);
                                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
 
-                                        Glide.with(context)
-                                                .load(singleImageUrl) // Uri of the picture
-                                                .centerCrop()
-                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                .crossFade()
-                                                .override(100, 100)
+
+                                        Picasso.with(context)
+                                                .load(singleImageUrl)
+                                                .placeholder(R.drawable.default_)
+                                                .error(R.drawable.default_)
                                                 .into(viewHolder.feedImageView);
+
 
                                     }
 
@@ -375,6 +419,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     });
                                 } else {
                                     viewHolder.feedImageView.setVisibility(View.VISIBLE);
+
+
+                                    Picasso.with(context)
+                                            .load(feedModel.getFeedSourceArrayList().get(0))
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_).into(viewHolder.feedImageView);
+
                                     viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -396,6 +447,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.bottom_view.setVisibility(View.GONE);
                             viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
                             viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                             viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -422,6 +477,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.videoView.setVisibility(View.GONE);
                             viewHolder.linkImageView.setVisibility(View.GONE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.bottom_view.setVisibility(View.GONE);
                             viewHolder.linkTitleTextView.setVisibility(View.GONE);
                             viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                             viewHolder.feedImageView.setVisibility(View.GONE);
@@ -448,6 +507,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             if (feedModel.getDoc_name().contains("\\.")) {
                                                 feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
                                             }
+                                            verifyStoragePermissions(activity);
 
                                             String extntion = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf(".") + 1);
                                             String filename = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("/") + 1);
@@ -456,6 +516,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         }
                                     });
                                 }
+
                             break;
                         case TEXT_ONLY:
                             viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
@@ -463,6 +524,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.docTypeLayout.setVisibility(View.VISIBLE);
                             viewHolder.videoView.setVisibility(View.GONE);
                             viewHolder.linkImageView.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.bottom_view.setVisibility(View.GONE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.docTypeLayout.setVisibility(View.GONE
                             );
@@ -483,15 +548,40 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     }
                     if (feedModel.getTotal_likes() != null) {
-                        viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Likes");
+                        if (feedModel.getTotal_likes().equalsIgnoreCase("0") || feedModel.getTotal_likes().equalsIgnoreCase("1"))
+                            viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Like");
+                        else
+                            viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Like");
+
                     }
                     if (feedModel.getTotal_comments() != null) {
-                        viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comments");
+                        if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
+
+                            viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comment");
+                        else
+                            viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comments");
+
                     }
-                    UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
+                    final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
                     if (userDetailModel != null && userDetailModel.getName() != null) {
-                        viewHolder.nameTextView.setText("By " + userDetailModel.getName());
+                        viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                     }
+                    if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
+                        Picasso.with(context)
+                                .load(userDetailModel.getProfile_pic())
+                                .placeholder(R.drawable.user)
+                                .error(R.drawable.user)
+                                .into(viewHolder.profileImageView);
+                    }
+                    viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, Dr_Profile.class);
+                            if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                intent.putExtra("UserId", userDetailModel.getUserId());
+                            context.startActivity(intent);
+                        }
+                    });
                     if (feedModel.getCreated() != null) {
                         viewHolder.timeStampTextView.setText(feedModel.getCreated());
                     }
@@ -534,9 +624,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.noOfLikeTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(context, LikesDisplayActivity.class);
+                           /* Intent intent = new Intent(context, LikesDisplayActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            context.startActivity(intent);
+                            context.startActivity(intent);*/
+                            positionat = position;
+                            if (NetworkUtill.isNetworkAvailable(context)) {
+                                LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
+                                likePostAsynctask.execute();
+                            } else {
+                                NetworkUtill.showNoInternetDialog(context);
+                            }
                         }
                     });
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
@@ -569,10 +666,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.startActivity(intent);
                         }
                     });
-                    if(feedModel.getEnable_comment().equalsIgnoreCase("1"))
-                    {
+                    if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.GONE);
 
                     }
@@ -586,6 +682,61 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.startActivity(intent);
                         }
                     });
+                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.txtTextView, context);
+                    if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
+                        if (feedModel.getParent_feed() != null) {
+                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
+                                viewHolder.txtTextView.setText("shared a video");
+                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
+                                viewHolder.txtTextView.setText("shared an post");
+                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                viewHolder.txtTextView.setText("shared a link");
+
+                            } else {
+                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
+                                    viewHolder.txtTextView.setText("shared an image");
+                            }
+                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                                viewHolder.txtTextView.setText("shared a document");
+
+                            }
+                        } else {
+                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
+                                viewHolder.txtTextView.setText("posted a video");
+                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
+                                viewHolder.txtTextView.setText("posted a status");
+                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                viewHolder.txtTextView.setText("posted a link");
+
+                            } else {
+                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
+                                    viewHolder.txtTextView.setText("posted a image");
+                            }
+                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                                viewHolder.txtTextView.setText("posted a document");
+
+                            }
+                        }
+                    } else {
+                        if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                                viewHolder.txtTextView.setText("posted in a " + Html.fromHtml("<b>" + feedModel.getCommunity_name() + "</b>", Html.FROM_HTML_MODE_LEGACY));
+
+                            } else {
+                                viewHolder.txtTextView.setText("posted in a " + Html.fromHtml("<b>" + feedModel.getCommunity_name() + "</b>"));
+                            }
+                            viewHolder.txtTextView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(context, CommunitiesDetails.class);
+                                    intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                    context.startActivity(intent);
+                                }
+                            });
+
+                        }
+                    }
+
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
                     TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.timeStampTextView, context);
@@ -634,7 +785,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             MyViewHolder viewHolder = (MyViewHolder) holder;
 
             if (payloads.get(0) instanceof String) {
-                viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
+                if(String.valueOf(payloads.get(0)).equalsIgnoreCase("0")||String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
+                viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Like");
+                else
+                    viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
+
                 if (!viewHolder.feedlikeimg.isSelected())
                     viewHolder.feedlikeimg.setSelected(true);
                 else
@@ -647,6 +802,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView playicon;
+        View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
@@ -660,14 +816,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         RelativeLayout profileSectionLinearLayout, basicAnnouncemetLinearLayout, sayCongratsRelativeLayout, anniversaryLinearLayout, hetrogenousAnnouncementLinearLayout;
         Button buttondownload;
         VideoView videoView;
+        TextView txtTextView;
         WebView webView;
-
+        LinearLayout link_title_des_lay;
         View basicAnnouncemet_view;
         LinearLayout moreLinearLayout, two_or_moreLinearLayout;
         ImageView imageFirstImageView, imageSecImageView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            left_view = (View) itemView.findViewById(R.id.left_view);
+            bottom_view = (View) itemView.findViewById(R.id.bottom_view);
+            right_view = (View) itemView.findViewById(R.id.right_view);
+            txtTextView = (TextView) itemView.findViewById(R.id.txt);
+            link_title_des_lay = (LinearLayout) itemView.findViewById(R.id.link_title_des_lay);
             webView = (WebView) itemView.findViewById(R.id.webview);
             QuestionTextView = (TextView) itemView.findViewById(R.id.Question);
             playicon = (ImageView) itemView.findViewById(R.id.playicon);
@@ -755,6 +917,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
                     if (jo.has("responce") && !jo.isNull("responce")) {
@@ -812,6 +975,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -959,10 +1123,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (jo != null) {
                     if (jo.has("responce") && !jo.isNull("responce")) {
                         FeedModel feedModel = FeedParser.singleFeed(jo.getJSONObject("responce"));
-                        feedModels.add(0, feedModel);
-                        notifyItemInserted(0);
+                        feedModels.add(1, feedModel);
+                        notifyItemInserted(1);
 
-                        notifyItemRangeChanged(0, feedModels.size());
+                        notifyItemRangeChanged(1, feedModels.size());
 
                     }
                 }
@@ -1017,6 +1181,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String url1 = url;
             System.out.print(url1);
             return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+    }
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
         }
     }
 }

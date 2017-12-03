@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -137,7 +138,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     private AskQuestionForumImagesAdapter askQuestionForumImagesAdapter;
     private HashTagHelper mEditTextHashTagHelper;
     TextView dr_nameTextView, publicTextView;
-    ImageView backImageView,cancelImageView;
+    ImageView backImageView, cancelImageView;
     TextView textViewpost;
     TextView descriptionTextView, titleTextView;
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
@@ -149,7 +150,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post);
         backImageView = (ImageView) findViewById(R.id.back);
-        cancelImageView=(ImageView)findViewById(R.id.cancel) ;
+        cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +176,13 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         imagelay = (RelativeLayout) findViewById(R.id.imagelay);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
+
+        if (sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC) != null) {
+            String url;
+            url = sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC);
+            Glide.with(PostingActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
+
+        }
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
         dr_nameTextView.setText(sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
         publicTextView = (TextView) findViewById(R.id.public_);
@@ -232,6 +240,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
+        mEditTextView.setFocusable(false);
         TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,6 +337,15 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             ActivityCompat.requestPermissions(PostingActivity.this, new String[]{Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.print(requestCode);
+        if (requestCode == 1) {
+            openFile();
         }
     }
 
@@ -476,20 +494,21 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         }
         if (requestCode == REQUEST_CAMERA) {
             try {
-                Uri uri = Uri.fromFile(photoFile);
-                selectedVideoPath = null;
-                docpath = null;
-                ImageProcess obj = new ImageProcess(PostingActivity.this);
-                mCurrentPhotoPath = obj.getPath(uri);
-                selectedImagePath = mCurrentPhotoPath;
-                File fff = new File(selectedImagePath);
-                Glide.with(PostingActivity.this)
-                        .load(fff) // Uri of the picture
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .crossFade()
-                        .override(100, 100)
-                        .into(imageViewSelected);
+                    Uri uri = Uri.fromFile(photoFile);
+                    selectedVideoPath = null;
+                    docpath = null;
+                    ImageProcess obj = new ImageProcess(PostingActivity.this);
+                    mCurrentPhotoPath = obj.getPath(uri);
+                    selectedImagePath = mCurrentPhotoPath;
+                    File fff = new File(selectedImagePath);
+                    Glide.with(PostingActivity.this)
+                            .load(fff) // Uri of the picture
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .crossFade()
+                            .override(100, 100)
+                            .into(imageViewSelected);
+
             } catch (Exception e) {
             }
         }
@@ -691,7 +710,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             //  circularProgressBar.setVisibility(View.VISIBLE);
             pDialog = new ProgressDialog(PostingActivity.this);
             pDialog.setMessage("Uploading...");
-            pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            //pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             pDialog.setCancelable(false);
             pDialog.show();
 
@@ -790,7 +809,13 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     ContentBody cbfile = new FileBody(file);
                     entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
                 }
-
+                if (servicesMultipleSelectedModels != null && servicesMultipleSelectedModels.size() > 0) {
+                    for (int i = 0; i < servicesMultipleSelectedModels.size(); i++) {
+                        if (servicesMultipleSelectedModels.get(i).getId() != null && !servicesMultipleSelectedModels.get(i).getId().equalsIgnoreCase(""))
+                            entityBuilder.addTextBody("Tags[id][" + i + "]", servicesMultipleSelectedModels.get(i).getId());
+                        entityBuilder.addTextBody("Tags[name][" + i + "]", servicesMultipleSelectedModels.get(i).getSpecializationName());
+                    }
+                }
                 if (docpath != null && docpath.toString().trim().length() > 0) {
                     File file = new File(docpath);
                     file.getAbsolutePath();

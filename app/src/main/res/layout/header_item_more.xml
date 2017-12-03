@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
 
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#ffffff"
     android:orientation="vertical">
 
@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="320dp"
             android:background="#ffffff"
             android:paddingBottom="10dp"
             android:orientation="vertical">
@@ -62,7 +62,7 @@
                         android:layout_marginTop="10dp"
                         android:text=""
                         android:textColor="#000"
-                        android:textSize="15sp" />
+                        android:textSize="17sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -87,7 +87,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="90dp"
                 android:background="@color/textcolorgray" />
 
             <LinearLayout
@@ -96,7 +96,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -112,7 +112,7 @@
                         android:layout_marginLeft="3dp"
                         android:layout_marginBottom="5dp"
                         android:textColor="@color/cardbluebackground"
-                        android:textSize="15sp" />
+                        android:textSize="17sp" />
 
                     <ImageView
                         android:id="@+id/editInfo"
@@ -179,8 +179,8 @@
 
                     <ImageView
                         android:id="@+id/birthday_icon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:src="@drawable/birthday" />
 
                     <TextView
@@ -243,7 +243,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="0dp"
                     android:layout_marginTop="8dp">
 
                     <ImageView
@@ -264,12 +264,12 @@
 
                 </RelativeLayout>
             </LinearLayout>
-        </LinearLayout>
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f8f8fb"
+            android:background="#f8f9fb"
             android:paddingLeft="15dp">
 
             <TextView
@@ -277,7 +277,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/myActivities"
                 android:paddingBottom="10dp"
-                android:paddingTop="10dp" android:text="My Activities"
+                android:paddingTop="20dp" android:text="My Activities"
                 android:textColor="@color/cardbluebackground"
                 android:textSize="15sp" />
         </LinearLayout>

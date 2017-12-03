@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,11 +46,13 @@ import com.app.nirogstreet.model.UserList;
 import com.app.nirogstreet.parser.CommentsParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,6 +82,8 @@ public class About_Fragment extends Fragment {
     View view;
     TextView infoTextView;
     boolean isMemberOfGroup = false;
+    private LetterTileProvider mLetterTileProvider;
+
     String privacyCheck;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
     String statusData = "";
@@ -134,6 +139,8 @@ public class About_Fragment extends Fragment {
         view = inflater.inflate(R.layout.about_communities, container, false);
         infoTextView = (TextView) view.findViewById(R.id.info);
         sesstionManager = new SesstionManager(context);
+        mLetterTileProvider = new LetterTileProvider(context);
+
         circleImageView = (CircleImageView) view.findViewById(R.id.AdminImage);
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
@@ -221,7 +228,7 @@ public class About_Fragment extends Fragment {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, "view All", true);
+                        makeTextViewResizable(tv, 3, "view more", true);
                     }
 
                 }
@@ -285,14 +292,28 @@ public class About_Fragment extends Fragment {
                             }
                             if (groupDetailJsonObject.has("banner") && !groupDetailJsonObject.isNull("banner")) {
                                 banner = groupDetailJsonObject.getString("banner");
-                                Glide.with(context)
-                                        .load(banner) // Uri of the picture
-                                        .centerCrop()
-                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                        .crossFade()
-                                        .override(100, 100)
-                                        .into(CommunitiesDetails.circleImageView);
+                                if (banner != null && !banner.equalsIgnoreCase("")) {
 
+                                    Picasso.with(context)
+                                            .load(banner)
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_)
+                                            .into(CommunitiesDetails.circleImageView);
+                                    // imageLoader1.getInstance().displayImage(groupModel.getGroupBanner(),  holder.groupIconImageView, defaultOptions);
+                                } else {
+                                    try {
+                                        CommunitiesDetails.circleImageView.setImageBitmap(mLetterTileProvider.getLetterTile(name));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            } else {
+                                try {
+                                    CommunitiesDetails.circleImageView.setImageBitmap(mLetterTileProvider.getLetterTile(name));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             if (groupDetailJsonObject.has("privacy") && !groupDetailJsonObject.isNull("privacy")) {
@@ -325,12 +346,11 @@ public class About_Fragment extends Fragment {
                                 }
                                 if (created_ByObject.has("profile_pic") && !created_ByObject.isNull("profile_pic")) {
                                     created_profile = created_ByObject.getString("profile_pic");
-                                    Glide.with(context)
-                                            .load(created_profile) // Uri of the picture
-                                            .centerCrop()
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .crossFade()
-                                            .override(100, 100)
+
+                                    Picasso.with(context)
+                                            .load(created_profile)
+                                            .placeholder(R.drawable.user)
+                                            .error(R.drawable.user)
                                             .into(circleImageView);
                                 }
 
@@ -358,18 +378,16 @@ public class About_Fragment extends Fragment {
                                             userDetailModels.add(new UserList(userId, userName, profile_pic));
                                         }
                                     }
-                                    LinearLayout llGallery = (LinearLayout) view.findViewById(R.id.llGallery);
-                                    llGallery.removeAllViews();
                                     if (userDetailModels.size() > 0)
                                         for (int i = 0; i < userDetailModels.size() + 1; i++) {
-                                            View view = ((CommunitiesDetails) context).getLayoutInflater().inflate(R.layout.member_item_communities, null, false);
                                             if (i == 3)
                                                 break;
-                                            TextView nameTv = (TextView) view.findViewById(R.id.adminname);
-                                            TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+
                                             if (i == 2) {
-                                                nameTv.setText("View More");
-                                                CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
+                                                TextView nameTv = (TextView) view.findViewById(R.id.memberthreename);
+                                                TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                                nameTv.setText("View All");
+                                                CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memthreeimg);
                                                 view.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
@@ -386,43 +404,101 @@ public class About_Fragment extends Fragment {
                                                         context.startActivity(intent);
                                                     }
                                                 });
-                                                llGallery.addView(view);
 
                                             } else {
                                                 try {
-                                                    nameTv.setText(userDetailModels.get(i).getName());
-                                                    TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
-                                                    final int finalI = i;
-                                                    nameTv.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            Intent intent = new Intent(context, Dr_Profile.class);
-                                                            if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
+                                                    if (i == 0) {
+                                                        TextView nameTv = (TextView) view.findViewById(R.id.memberonename);
 
-                                                                intent.putExtra("UserId", userDetailModels.get(finalI).getId());
-                                                            context.startActivity(intent);
-                                                        }
-                                                    });
-                                                    CircleImageView imageView = (CircleImageView) view.findViewById(R.id.cir);
-                                                    imageView.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            Intent intent = new Intent(context, Dr_Profile.class);
-                                                            if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
+                                                        nameTv.setText(userDetailModels.get(i).getName());
+                                                        TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                                        final int finalI = i;
+                                                        nameTv.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                Intent intent = new Intent(context, Dr_Profile.class);
+                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
 
-                                                                intent.putExtra("UserId", userDetailModels.get(finalI).getId());
-                                                            context.startActivity(intent);
-                                                        }
-                                                    });
-                                                    Glide.with(context)
-                                                            .load(userDetailModels.get(i).getProfile_pic()) // Uri of the picture
-                                                            .centerCrop()
-                                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                            .crossFade()
-                                                            .override(100, 100)
-                                                            .into(imageView);
-                                                    llGallery.addView(view);
+                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
+                                                                context.startActivity(intent);
+                                                            }
+                                                        });
+                                                        CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memoneimg);
+                                                        imageView.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                Intent intent = new Intent(context, Dr_Profile.class);
+                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
 
+                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
+                                                                context.startActivity(intent);
+                                                            }
+                                                        });
+                                                        if (userDetailModels.get(i).getProfile_pic() != null && !userDetailModels.get(i).getProfile_pic().equalsIgnoreCase(""))
+
+
+                                                            Picasso.with(context)
+                                                                    .load(userDetailModels.get(i).getProfile_pic())
+                                                                    .placeholder(R.drawable.user)
+                                                                    .error(R.drawable.user)
+                                                                    .into(imageView);
+
+                                                    }
+                                                    if (i == 1) {
+                                                        TextView nameTv = (TextView) view.findViewById(R.id.membertwoname);
+
+                                                        nameTv.setText(userDetailModels.get(i).getName());
+                                                        TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
+                                                        final int finalI = i;
+                                                        nameTv.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                Intent intent = new Intent(context, Dr_Profile.class);
+                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
+
+                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
+                                                                context.startActivity(intent);
+                                                            }
+                                                        });
+                                                        CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memtwoimg);
+                                                        imageView.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                Intent intent = new Intent(context, Dr_Profile.class);
+                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
+
+                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
+                                                                context.startActivity(intent);
+                                                            }
+                                                        });
+                                                        if (userDetailModels.get(i).getProfile_pic() != null && !userDetailModels.get(i).getProfile_pic().equalsIgnoreCase(""))
+
+                                                            Picasso.with(context)
+                                                                    .load(userDetailModels.get(i).getProfile_pic())
+                                                                    .placeholder(R.drawable.user)
+                                                                    .error(R.drawable.user)
+                                                                    .into(imageView);
+
+                                                    }
+                                                    if (userDetailModels.size() == 1) {
+                                                        CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memtwoimg);
+                                                        TextView nameTv = (TextView) view.findViewById(R.id.membertwoname);
+                                                        imageView.setVisibility(View.GONE);
+                                                        nameTv.setVisibility(View.GONE);
+                                                        TextView nameTv1 = (TextView) view.findViewById(R.id.memberthreename);
+                                                        nameTv1.setVisibility(View.GONE);
+                                                        CircleImageView imageView1 = (CircleImageView) view.findViewById(R.id.memthreeimg);
+                                                        imageView1.setVisibility(View.GONE);
+
+                                                    }
+                                                    if (userDetailModels.size() == 2) {
+
+                                                        TextView nameTv1 = (TextView) view.findViewById(R.id.memberthreename);
+                                                        nameTv1.setVisibility(View.GONE);
+                                                        CircleImageView imageView1 = (CircleImageView) view.findViewById(R.id.memthreeimg);
+                                                        imageView1.setVisibility(View.GONE);
+
+                                                    }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -668,11 +744,12 @@ public class About_Fragment extends Fragment {
                                     getActivity().finish();
                                 }
                                 if (privacyCheck.equalsIgnoreCase("0") && status1 == 2) {
+                                    getActivity().finish();
+
                                     CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             setMoreMenu(3);
-                                            getActivity().finish();
 
                                         }
                                     });
@@ -723,6 +800,10 @@ public class About_Fragment extends Fragment {
                     pairs.add(new BasicNameValuePair("userID", userId));
                 }
                 pairs.add(new BasicNameValuePair("groupID", groupId));
+                if (status1 == 1) {
+                    pairs.add(new BasicNameValuePair("addedType", 1 + ""));
+
+                }
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 

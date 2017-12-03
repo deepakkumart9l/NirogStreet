@@ -64,9 +64,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
-                           android:layout_marginTop="4dp">
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="4dp">
 
                             <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
                                 android:id="@+id/pro"
@@ -80,14 +80,15 @@
                                 mk:border_width="1dp" />
 
                             <ImageView
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:layout_marginLeft="40dp"
                                 android:id="@+id/edtImage"
-                                android:layout_marginTop="40dp"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_marginLeft="32dp"
+
+                                android:layout_marginTop="50dp"
+                                android:background="@drawable/camera"
                                 android:padding="10dp"
-                                android:background="@drawable/circle"
-                                android:src="@drawable/edit" />
+                                 />
                         </RelativeLayout>
 
 
@@ -96,10 +97,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/relative"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="5dp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/white"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -107,10 +108,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/nameTv"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="2dp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/white"
-                            android:textSize="14sp" />
+                            android:textSize="13sp" />
                     </RelativeLayout>
                 </FrameLayout>
 
@@ -165,20 +166,20 @@
                                 android:id="@+id/QualificationTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="7dp"
                                 android:layout_marginRight="30dp"
                                 android:layout_marginTop="3dp"
-                                android:text=""
                                 android:layout_toRightOf="@+id/imgPublic_icon"
-                                android:textColor="@color/black" />
+                                android:text=""
+                                android:textColor="#202020" />
 
                             <ImageView
                                 android:id="@+id/editInfo"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="6dp"
                                 android:layout_marginRight="-5dp"
+                                android:padding="9dp"
                                 android:src="@drawable/edit" />
                         </RelativeLayout>
 
@@ -198,9 +199,9 @@
                                 android:id="@+id/yearOfExperienceTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="7dp"
                                 android:layout_toRightOf="@+id/mail_icon"
-                                android:textColor="@color/black" />
+                                android:textColor="#202020" />
 
                         </RelativeLayout>
 
@@ -211,18 +212,18 @@
 
                             <ImageView
                                 android:id="@+id/birthday_icon"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
                                 android:src="@drawable/birthday" />
 
                             <TextView
                                 android:id="@+id/yearOfBirthTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="7dp"
                                 android:layout_toRightOf="@+id/birthday_icon"
 
-                                android:textColor="@color/black" />
+                                android:textColor="#202020" />
 
                         </RelativeLayout>
 
@@ -242,11 +243,11 @@
                                 android:id="@+id/WebTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:inputType="textCapWords|textCapSentences"
+                                android:layout_marginLeft="7dp"
 
-                                android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@+id/webSite_icon"
-                                android:textColor="@color/black" />
+                                android:inputType="textCapWords|textCapSentences"
+                                android:textColor="#202020" />
 
                         </RelativeLayout>
 
@@ -266,10 +267,10 @@
                                 android:id="@+id/phoneTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="7dp"
                                 android:layout_toRightOf="@+id/phone_icon"
 
-                                android:textColor="@color/black" />
+                                android:textColor="#202020" />
 
                         </RelativeLayout>
 
@@ -289,11 +290,11 @@
                                 android:id="@+id/emailTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:inputType="textCapWords|textCapSentences"
+                                android:layout_marginLeft="7dp"
 
-                                android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@+id/Email_icon"
-                                android:textColor="@color/black" />
+                                android:inputType="textCapWords|textCapSentences"
+                                android:textColor="#202020" />
 
                         </RelativeLayout>
 
@@ -323,13 +324,13 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
                             android:background="@color/textcolorgray" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
 
                             >
 
@@ -339,16 +340,16 @@
                                 android:layout_height="wrap_content"
                                 android:text="Add a Qualification"
                                 android:textColor="@color/cardbluebackground"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <ImageView
                                 android:id="@+id/QualificationSectionEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_marginRight="-5dp"
-
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="6dp"
+
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
 
                                 android:src="@drawable/add"
 
@@ -372,7 +373,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
 
                             >
 
@@ -382,15 +383,15 @@
                                 android:layout_height="wrap_content"
                                 android:text="Add a Services &amp; Specialization"
                                 android:textColor="@color/cardbluebackground"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <ImageView
                                 android:id="@+id/SpecilizationsevicesEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="-5dp"
-                                android:padding="6dp"
+                                android:padding="9dp"
 
                                 android:src="@drawable/add"
 
@@ -403,13 +404,13 @@
                             android:layout_height="wrap_content"
                             android:text="Services"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/sevicesCsv"
                             android:layout_width="match_parent"
-                            android:layout_marginTop="3dp"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp" />
 
                         <TextView
                             android:id="@+id/specilizationTv"
@@ -418,19 +419,19 @@
                             android:layout_marginTop="8dp"
                             android:text="Specialization"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/spcilizationCsv"
                             android:layout_width="match_parent"
-                            android:layout_marginTop="3dp"
+                            android:layout_height="wrap_content"
 
-                            android:layout_height="wrap_content" />
+                            android:layout_marginTop="3dp" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
                             android:background="@color/textcolorgray" />
 
                         <RelativeLayout
@@ -445,17 +446,17 @@
                                 android:layout_height="wrap_content"
                                 android:text="Qualification"
                                 android:textColor="@color/cardbluebackground"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <ImageView
                                 android:id="@+id/SpecializationectionEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_marginRight="-5dp"
-                                android:padding="6dp"
-
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_below="@+id/SpecializationSectionHeadingTv"
+
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -493,11 +494,11 @@
 
                             <ImageView
                                 android:id="@+id/RegistrationSectionEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="6dp"
                                 android:layout_marginRight="-5dp"
+                                android:padding="9dp"
 
 
                                 android:src="@drawable/add"
@@ -531,16 +532,16 @@
                                 android:layout_height="wrap_content"
                                 android:text=" Add a Clinic"
                                 android:textColor="@color/cardbluebackground"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <ImageView
                                 android:id="@+id/clinicAddressEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
 
-                                android:padding="6dp"
                                 android:layout_marginRight="-5dp"
+                                android:padding="9dp"
 
                                 android:src="@drawable/add"
                                 android:textSize="14sp" />
@@ -565,8 +566,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-android:visibility="gone"
-                            android:layout_marginTop="15dp">
+                            android:layout_marginTop="15dp"
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -623,7 +624,7 @@ android:visibility="gone"
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
 
                             >
 
@@ -637,11 +638,11 @@ android:visibility="gone"
 
                             <ImageView
                                 android:id="@+id/ExperinceEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="6dp"
                                 android:layout_marginRight="-5dp"
+                                android:padding="9dp"
 
 
                                 android:src="@drawable/add"
@@ -667,7 +668,7 @@ android:visibility="gone"
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
 
                             >
 
@@ -677,15 +678,15 @@ android:visibility="gone"
                                 android:layout_height="wrap_content"
                                 android:text="Add a Award"
                                 android:textColor="@color/cardbluebackground"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <ImageView
                                 android:id="@+id/AwardEdit"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="6dp"
                                 android:layout_marginRight="-5dp"
+                                android:padding="6dp"
 
 
                                 android:src="@drawable/add"
@@ -711,7 +712,7 @@ android:visibility="gone"
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
 
                             >
 
@@ -721,15 +722,15 @@ android:visibility="gone"
                                 android:layout_height="wrap_content"
                                 android:text="Add a Membership"
                                 android:textColor="@color/cardbluebackground"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <ImageView
                                 android:id="@+id/MemberShipEdit"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="6dp"
                                 android:layout_marginRight="-5dp"
+                                android:padding="9dp"
 
 
                                 android:src="@drawable/add"
@@ -776,13 +777,13 @@ android:visibility="gone"
 
                 <ImageView
                     android:id="@+id/backimg"
-                    android:layout_marginTop="12dp"
                     android:layout_width="35dp"
-                    android:padding="8dp"
-                    android:visibility="gone"
-
                     android:layout_height="35dp"
-                    android:src="@drawable/back" />
+                    android:layout_marginTop="12dp"
+                    android:padding="8dp"
+
+                    android:src="@drawable/back"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/textview_title"

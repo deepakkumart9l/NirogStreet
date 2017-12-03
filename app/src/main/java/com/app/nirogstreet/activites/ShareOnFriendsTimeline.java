@@ -82,7 +82,7 @@ public class ShareOnFriendsTimeline extends Activity {
             @Override
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(ShareOnFriendsTimeline.this)) {
-                    if (multipleSelectedItemModels != null) {
+                    if (multipleSelectedItemModels != null&&multipleSelectedItemModels.size()>0) {
 
                         shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
                         shareOnFriendsTimeLineAsyncTask.execute();

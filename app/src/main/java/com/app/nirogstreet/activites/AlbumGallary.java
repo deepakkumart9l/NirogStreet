@@ -25,6 +25,7 @@ import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.TouchImageViewComplex;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,13 +176,12 @@ class TouchImageAdapter extends PagerAdapter {
     public View instantiateItem(ViewGroup container, int position) {
         TouchImageViewComplex img = new TouchImageViewComplex(
                 container.getContext());
-        Glide.with(AlbumGallary.this)
-                .load(listImages.get(position)) // Uri of the picture
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .crossFade()
-                .override(100, 100)
-                .into( img);
+
+        Picasso.with(AlbumGallary.this)
+                .load(listImages.get(position))
+                .placeholder(R.drawable.default_)
+                .error(R.drawable.default_)
+                .into(img);
 
         container.addView(img,
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -266,13 +266,12 @@ public class ImageAAdapter extends BaseAdapter {
 
             /*imageLoader.DisplayImage(AlbumGallary.this
                     ,data.get(position), holder.imgView,null , 150, 150, R.drawable.bannerdummy);*/
-        Glide.with(AlbumGallary.this)
-                .load(data.get(position)) // Uri of the picture
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .crossFade()
-                .override(100, 100)
-                .into( holder.imgView);
+
+        Picasso.with(AlbumGallary.this)
+                .load(data.get(position))
+                .placeholder(R.drawable.default_)
+                .error(R.drawable.default_)
+                .into(holder.imgView);
         holder.imgView.setVisibility(View.VISIBLE);
 
         return convertView;

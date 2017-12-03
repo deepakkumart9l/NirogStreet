@@ -22,6 +22,7 @@ import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -39,7 +40,7 @@ public class CommunitiesDetails extends AppCompatActivity {
     String groupId;
 public static    ImageView moreImageView;
   static   LetterTileProvider mLetterTileProvider;
-   public static CircleImageView circleImageView;
+   public static RoundedImageView circleImageView;
     ImageView backImageView;
 
     @Override
@@ -57,7 +58,7 @@ public static    ImageView moreImageView;
         mLetterTileProvider = new LetterTileProvider(CommunitiesDetails.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(textTab,CommunitiesDetails.this);
 
-        circleImageView=(CircleImageView)findViewById(R.id.pro);
+        circleImageView=(RoundedImageView)findViewById(R.id.pro);
         moreImageView=(ImageView)findViewById(R.id.more);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);

@@ -69,11 +69,21 @@ public FeedModel()
         this.doc_Type = doc_Type;
     }
 
-    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name,String doc_Type) {
+    public String getCommunity_name() {
+        return community_name;
+    }
+
+    public void setCommunity_name(String community_name) {
+        this.community_name = community_name;
+    }
+
+    public String community_name;
+    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name,String doc_Type,String community_name) {
         this.feed_id = feed_id;
         this.userDetailModel_creator = userDetailModel_creator;
         this.community_Id = community_Id;
         this.parentFeedDetail = parentFeedDetail;
+        this.community_name=community_name;
         this.parent_feed = parent_feed;
         this.feed_type = feed_type;
         this.doc_Type=doc_Type;

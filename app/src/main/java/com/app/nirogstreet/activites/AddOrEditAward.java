@@ -201,6 +201,8 @@ public class AddOrEditAward extends AppCompatActivity {
     pd.show(getFragmentManager(), "MonthYearPickerDialog");*/
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         MonthYearPickerDialog newFragment = new MonthYearPickerDialog();
+        newFragment.setCancelable(false);
+
         newFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

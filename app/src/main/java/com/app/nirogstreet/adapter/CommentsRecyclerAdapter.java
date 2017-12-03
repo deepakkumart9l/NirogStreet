@@ -19,6 +19,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -75,12 +76,22 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final CommentsModel rowItem = commentsModels.get(position);
+        try {
+            Picasso.with(context)
+                    .load(rowItem.getProfile_pic_url())
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
+                    .into(holder.imageView);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         if (rowItem.getFname() != null) {
             if (rowItem.getLname() != null)
-                holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());
+                holder.name.setText("Dr. "+rowItem.getFname() + " " + rowItem.getLname());
             else
-                holder.name.setText(rowItem.getFname());
+                holder.name.setText("Dr. "+rowItem.getFname());
         }
         if (commentsModels.get(position).isUserLiked()) {
             holder.like.setText("Unlike");
@@ -108,14 +119,15 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         });
         if (commentsModels.get(position).getCommentsModels() != null && commentsModels.get(position).getCommentsModels().size() >= 1) {
             holder.subComment.setVisibility(View.VISIBLE);
-          /*  Glide.with(context)
-                    .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()) // Uri of the picture
+            holder.subCommntName.setText("Dr. "+rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+            Glide.with(context)
+                    .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()).placeholder(R.drawable.user) // Uri of the picture
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .crossFade()
                     .override(100, 100)
                     .into( holder.subcommentimg);
-          */ // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
+           // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
             holder.subcommnt.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment());
             if (commentsModels.get(position).getCommentsModels().size() > 1) {
                 holder.numberOfReplies.setVisibility(View.VISIBLE);
@@ -203,8 +215,11 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         CircleImageView subcommentimg;
         LinearLayout subComment, likeslayout;
 
+        TextView subCommntName;
+
         public MyHolderView(View convertView) {
             super(convertView);
+            subCommntName=(TextView)convertView.findViewById(R.id.subCommntName) ;
             subcommentimg = (CircleImageView) convertView.findViewById(R.id.subcommentimg);
             subcommnt = (TextView) convertView.findViewById(R.id.subcommnt);
             name = (TextView) convertView.findViewById(R.id.name);

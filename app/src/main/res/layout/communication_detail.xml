@@ -32,15 +32,30 @@
                 android:visibility="visible" />
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/pro"
+                android:id="@+id/proo"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_margin="0dp"
                 android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/back"
+                android:visibility="gone"
                 android:src="@drawable/default_"
                 mk:border_color="@color/textcolorgray"
                 mk:border_width="1dp" />
+            <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/pro"
+                android:layout_width="30dp"
+                android:layout_toRightOf="@+id/back"
+
+                android:layout_height="30dp"
+                app:riv_border_color="#333333"
+                app:riv_border_width="0dip"
+                android:layout_marginRight="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="5dp"
+                app:riv_corner_radius="20dip"
+                app:riv_mutate_background="true"
+          app:riv_tile_mode="clamp" />
 
             <TextView
                 android:id="@+id/textTab"
@@ -50,6 +65,7 @@
                 android:layout_toRightOf="@+id/pro"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/white"
+                android:layout_marginLeft="5dp"
                 android:textSize="16dp"
                 android:textStyle="normal" />
 <ImageView
@@ -74,7 +90,7 @@
         app:tabTextColor="@color/selctor_red_color"
 
         app:tabIndicatorColor="@color/buttonBackground"
-        app:tabIndicatorHeight="1dp"
+        app:tabIndicatorHeight="2dp"
         app:tabMode="fixed" />
 
     <View

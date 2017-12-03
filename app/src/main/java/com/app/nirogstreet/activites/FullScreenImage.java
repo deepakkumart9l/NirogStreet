@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.app.nirogstreet.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Preeti on 07-11-2017.
@@ -52,13 +53,12 @@ public class FullScreenImage extends Activity {
                     .into(imageView);
         } else
             // imageLoader.displayImage(imageUrl, imageView, defaultOptions);
-        Glide.with(FullScreenImage.this)
-                .load(imageUrl) // Uri of the picture
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .crossFade()
-                .override(100, 100)
-                .into( imageView);
+
+        Picasso.with(FullScreenImage.this)
+                .load(imageUrl)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
+                .into(imageView);
 
 
 

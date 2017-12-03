@@ -1,25 +1,34 @@
 package com.app.nirogstreet.activites;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.adapter.LikesAdapter;
+import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.parser.LikeParser;
 import com.app.nirogstreet.uttil.AppUrl;
@@ -27,11 +36,16 @@ import com.app.nirogstreet.uttil.CustomPagerAdapter;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.app.nirogstreet.uttil.Utils2;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.cast.framework.SessionManager;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -51,10 +65,22 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
+    int count = 1;
     public static ViewPager viewPager;
+    Menu menu1;
+
     FrameLayout notiframe;
+    TextView tv;
+    RelativeLayout notifCount;
+
+    int totalUnReadCount = 0;
+
     LinearLayout linearLayoutHeader;
+    boolean doubleBackToExitPressedOnce = false;
+    NotificationAsyncTask notificationAsyncTask;
+
     FrameLayout frameLayoutview_alert_red_circle;
+    TextView view_alert_count_textviewTextView;
 
     ImageView searchImageView, notifictaionImageView;
     public TextView textViewTab, createTextView;
@@ -63,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView searchgroupImageView;
     ImageView logout;
     SesstionManager sesstionManager;
+    MenuItem item1, item;
+
     LogoutAsyncTask logoutAsyncTask;
 
     @Override
@@ -71,13 +99,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+        // frameLayoutview_alert_red_circle.setVisibility(View.VISIBLE);
+        view_alert_count_textviewTextView = (TextView) findViewById(R.id.view_alert_count_textview);
+        // view_alert_count_textviewTextView.setText("655");
+        frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
+        frameLayoutview_alert_red_circle.setVisibility(View.GONE);
         textViewTab = (TextView) findViewById(R.id.textTab);
         logout = (ImageView) findViewById(R.id.logout);
         sesstionManager = new SesstionManager(MainActivity.this);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              setDialog();
+                setDialog();
             }
         });
         searchgroupImageView = (ImageView) findViewById(R.id.searchgroup);
@@ -127,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.GONE);
-                        logout.setVisibility(View.VISIBLE);
+                        logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
                         setTabText("You");
                         break;
@@ -242,9 +275,82 @@ public class MainActivity extends AppCompatActivity {
     public static int selectedFragment() {
         return viewPager.getCurrentItem();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.search_notification, menu);
+        menu1 = menu;
+        item1 = menu.findItem(R.id.noti);
+        HashMap<String, String> userDetails = sesstionManager.getUserDetails();
+        String userId = userDetails.get(SesstionManager.USER_ID);
+
+        MenuItemCompat.setActionView(item1, R.layout.actionbar_badge);
+        item = menu.findItem(R.id.action_settings);
+        try {
+            LayerDrawable icon = (LayerDrawable) item1.getIcon();
+            Utils2.setBadgeCount(this, icon, 2000);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            notifCount = (RelativeLayout) MenuItemCompat.getActionView(item1);
+            tv = (TextView) notifCount.findViewById(R.id.actionbar_notifcation_textview);
+            tv.setText("12");
+            if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
+                notificationAsyncTask = new NotificationAsyncTask(userId, "", "");
+                notificationAsyncTask.execute();
+
+            } else {
+                NetworkUtill.showNoInternetDialog(MainActivity.this);
+            }
+        } catch (Exception e)
+
+        {
+            e.printStackTrace();
+        }
+        if (totalUnReadCount == 0) {
+            tv.setVisibility(View.GONE);
+        }
+        // Update LayerDrawable's BadgeDrawable
+        notifCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelNotificationOnLogout();
+                totalUnReadCount = 0;
+                tv.setText("");
+                tv.setVisibility(View.GONE);
+                Intent intent = new Intent(MainActivity.this, NotificationListing.class);
+                startActivity(intent);
+            }
+        });
+        // if (isMenuVisible) {
+        item.setVisible(true);//
+        item1.setVisible(true);
+       /* } else {
+            item.setVisible(false);//
+            item1
+                    .setVisible(false);
+        }*/
+        return super.onCreateOptionsMenu(menu);
+    }
+    public void cancelNotificationOnLogout() {
+        try {
+           // ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.cancelAll();
+    }
+
     public void setDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Are you sure you want to leave the community.");// Add the buttons
+        builder.setTitle("Are you sure you want to Logout.");// Add the buttons
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
@@ -253,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
                     logoutAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(MainActivity.this);
-                  NetworkUtill.showNoInternetDialog(MainActivity.this);
+                    NetworkUtill.showNoInternetDialog(MainActivity.this);
                 }
             }
         });
@@ -270,6 +376,141 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
     }
 
+
+    public class NotificationAsyncTask extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String email, password;
+        CircularProgressBar bar;
+        String lang, authToken;
+        String userId;
+
+        //PlayServiceHelper regId;
+        public NotificationAsyncTask(String userId, String lang, String authToken) {
+            this.userId = userId;
+            this.lang = lang;
+            this.authToken = authToken;
+
+        }
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //  bar = (ProgressBar) findViewById(R.id.progressBar);
+            //   bar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.BaseUrl + "feed/notification";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                String credentials = email + ":" + password;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                pairs.add(new BasicNameValuePair("userID", userId));
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils
+                        .toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+
+                if (jo != null) {
+                    if (jo.has("notificationdetail") && !jo.isNull("notificationdetail")) {
+                        JSONObject jsonObject = jo.getJSONObject("notificationdetail");
+                        if (jsonObject.has("notification") && !jsonObject.isNull("notification")) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("notification");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                String profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "";
+                                int msg;
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+
+                                if (jsonObject1.has("totalUnreadmsg") && !jsonObject1.isNull("totalUnreadmsg")) {
+                                    totalUnReadCount = jsonObject1.getInt("totalUnreadmsg");
+                                    if (totalUnReadCount > 0) {
+
+                                        frameLayoutview_alert_red_circle.setVisibility(View.VISIBLE);
+                                        view_alert_count_textviewTextView.setText(totalUnReadCount + "");
+                                       /* try {
+                                            ShortcutBadger.setBadge(getApplicationContext(), totalUnReadCount); //for 1.1.4+
+                                            ShortcutBadger.with(getApplicationContext()).count(totalUnReadCount); //for 1.1.3
+
+                                        } catch (ShortcutBadgeException e) {
+                                            e.printStackTrace();
+                                        }*/
+                                    }
+                                    else {
+                                        frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+                                        try {
+                                           /// ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    break;
+                                }
+
+                            }
+                            if (jsonArray.length() == 0) {
+                                frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+
+                            }
+                        }
+                    }
+                    if (totalUnReadCount != 0) {
+                        tv.setVisibility(View.VISIBLE);
+                        tv.setText(totalUnReadCount + "");
+                    } else {
+                        tv.setVisibility(View.GONE);
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //  bar.setVisibility(View.GONE);
+
+        }
+
+    }
     public class LogoutAsyncTask extends AsyncTask<Void, Void, Void> {
         JSONObject jo;
         String feedId;
@@ -297,18 +538,16 @@ public class MainActivity extends AppCompatActivity {
                 if (jo != null) {
                     if (jo.has("status") && !jo.isNull("status")) {
                         boolean status = jo.getBoolean("status");
-                        if(status)
-                        {
+                        if (status) {
                             sesstionManager.logoutUser();
 
-                            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
                         }
                     }
                 }
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -344,6 +583,42 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        count=1;
+        HashMap<String, String> userDetails = sesstionManager.getUserDetails();
+        String userId = userDetails.get(SesstionManager.USER_ID);
+        if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
+            notificationAsyncTask = new NotificationAsyncTask(
+                    userId, "", "");
+            notificationAsyncTask.execute();
+
+        } else {
+            NetworkUtill.showNoInternetDialog(MainActivity.this);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+
     }
 
 }

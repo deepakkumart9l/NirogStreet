@@ -110,8 +110,7 @@ public class GroupListingAdapter extends
         }
         if (groupModel.getGroupBanner() != null&&!groupModel.getGroupBanner().contains("banner-default")&&!groupModel.getGroupBanner().contains("tempimages")) {
             Glide.with(context)
-                    .load(groupModel.getGroupBanner()) // Uri of the picture
-                    .centerCrop()
+                    .load(groupModel.getGroupBanner()).placeholder(R.drawable.default_).centerCrop() // Uri of the picture
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .crossFade()
                     .override(100, 100)
@@ -256,6 +255,7 @@ public class GroupListingAdapter extends
                 pairs.add(new BasicNameValuePair("invited_to", userId));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
+                pairs.add(new BasicNameValuePair("addedType",1+""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));

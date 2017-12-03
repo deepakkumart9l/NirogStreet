@@ -109,7 +109,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     EditText editTextDob, editTextemail, editTextName, editTextCity, editTextYearOfExpeicence, editTextWebsite, editTextAbout, editTextContactNumber;
     TextInputLayout textInputLayout;
     File photoFile;
-    private static final String[] titleArray = {"DR/Mr", "DR/Mrs", "DR/Miss"};
+    private static final String[] titleArray = {"Dr/Mr", "Dr/Mrs", "Dr/Miss"};
     private static final String[] genderArray = {"Male", "Female"};
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
@@ -168,6 +168,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         if (isSkip) {
             skipTextView.setVisibility(View.GONE);
+            backImageView.setVisibility(View.GONE);
         } else {
             skipTextView.setVisibility(View.GONE);
 
@@ -827,10 +828,10 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                                     Toast.makeText(CreateDrProfile.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                     if (isSkip) {
-                                        Intent intent = new Intent(CreateDrProfile.this, EditQualificationDetailOrAddQualificationsDetails.class);
+                                        Intent intent = new Intent(CreateDrProfile.this, MainActivity.class);
                                         intent.putExtra("isSkip", true);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
-                                        finish();
                                     }
                                     else {
                                         ApplicationSingleton.setIsContactInfoUpdated(true);
@@ -980,7 +981,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                     }
                                     if (userDetailModel.getProfile_pic() != null) {
                                         ImageLoader imageLoader = new ImageLoader(CreateDrProfile.this);
-                                        imageLoader.DisplayImage(CreateDrProfile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
+                                        imageLoader.DisplayImage(CreateDrProfile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.user);
                                     }
                                 }
 

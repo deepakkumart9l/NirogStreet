@@ -9,10 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,8 +58,8 @@ public class CommentsRepilesActivity extends AppCompatActivity {
     SesstionManager sessionManager;
     CircularProgressBar circularProgressBar;
     EditText editText;
-    ImageView sendImageView;
-    ArrayList<CommentsModel> commentsModels=new ArrayList<>();
+    TextView sendImageView;
+    ArrayList<CommentsModel> commentsModels = new ArrayList<>();
     PostSubCommentAsyncTask postCommentAsyncTask;
     RecyclerView commentsrecyclerview;
     ImageView backImageView;
@@ -64,9 +68,11 @@ public class CommentsRepilesActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager1;
     String userId, authToken, feedId;
     private boolean albumupdate = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); setContentView(R.layout.comments_listing);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.comments_listing);
         ((TextView) findViewById(R.id.searchButton)).setText("Replies");
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
@@ -87,7 +93,9 @@ public class CommentsRepilesActivity extends AppCompatActivity {
 
 
         }
-        sendImageView = (ImageView) findViewById(R.id.commentTV);
+        sendImageView = (TextView) findViewById(R.id.commentTV);
+        sendImageView.setEnabled(false);
+        sendImageView.setClickable(false);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +109,30 @@ public class CommentsRepilesActivity extends AppCompatActivity {
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (s.length() == 0) {
+                    sendImageView.setClickable(false);
+                    sendImageView.setEnabled(false);
+                } else {
+                    sendImageView.setClickable(true);
+                    sendImageView.setEnabled(true);
+                }
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         sendImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +151,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
 
         if (commentsModel != null && commentsModel.getCommentsModels() != null && commentsModel.getCommentsModels().size() > 0) {
             commentsModels = commentsModel.getCommentsModels();
-            commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId,false);
+            commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId, false);
             commentsrecyclerview.setAdapter(commentsAdapter);
         }
     }
@@ -144,12 +176,13 @@ public class CommentsRepilesActivity extends AppCompatActivity {
 
         public PostSubCommentAsyncTask(String feedId, String msg, String commentID) {
             try {
-                this.msg = URLEncoder.encode(msg,"UTF-8");
+                this.msg = URLEncoder.encode(msg, "UTF-8");
 
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-            }            this.feedId = feedId;
+            }
+            this.feedId = feedId;
             this.commentID = commentID;
         }
 
@@ -251,10 +284,9 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                             commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment));
 
                             if (commentsAdapter == null) {
-                                commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId,false);
+                                commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId, false);
                                 commentsrecyclerview.setAdapter(commentsAdapter);
-                            }
-                            else {
+                            } else {
                                 commentsAdapter.notifyDataSetChanged();
                             }
                             commentsrecyclerview.scrollToPosition(commentsAdapter.getItemCount() - 1);
@@ -318,5 +350,6 @@ public class CommentsRepilesActivity extends AppCompatActivity {
             circularProgressBar.setVisibility(View.VISIBLE);
 
         }
-    }}
+    }
+}
 

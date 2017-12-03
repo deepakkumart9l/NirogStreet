@@ -114,7 +114,7 @@ String groupId="";
         specilization = (TextView) findViewById(R.id.specilization);
         searchET = (EditText) findViewById(R.id.searchET);
 
-        specilization.setText("Invite Peoples");
+        specilization.setText("Invite People");
         searchET.setHint("Search People");
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
@@ -191,7 +191,7 @@ if(NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this))
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 addQualificationTextView.setVisibility(View.GONE);
-
+page=1;
                 text = s.toString();
                 query = text;
                 if (searchModels != null) {
@@ -252,7 +252,7 @@ if(NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this))
 
                     @Override
                     public void afterTextChanged(final Editable s) {
-
+page=1;
                         timer.cancel();
                         timer = new Timer();
                         timer.schedule(
@@ -430,7 +430,6 @@ if(jo.has("response")&&!jo.isNull("response"))
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
-            recyclerViewsearchData.setVisibility(View.GONE);
             //  bar = (ProgressBar) findViewById(R.id.progressBar);
             //   bar.setVisibility(View.VISIBLE);
             super.onPreExecute();
@@ -455,7 +454,7 @@ if(jo.has("response")&&!jo.isNull("response"))
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("pageNo", page + ""));
-                pairs.add(new BasicNameValuePair("searchkey", strTobeSearch));
+                pairs.add(new BasicNameValuePair("searchKey", strTobeSearch));
                 pairs.add(new BasicNameValuePair("userID", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 if (list != null && list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {

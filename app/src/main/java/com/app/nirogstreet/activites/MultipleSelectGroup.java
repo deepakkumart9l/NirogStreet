@@ -174,10 +174,11 @@ public class MultipleSelectGroup extends Activity
                     return_intent.putExtra("friendsCsv", s);
                     return_intent.putExtra("list", (Serializable) list);
                     setResult(RESULT_CODE, return_intent);
+                    finish();
+
                 }else {
                     Toast.makeText(MultipleSelectGroup.this,"Select Group.",Toast.LENGTH_LONG).show();
                 }
-                finish();
 
             }
         });

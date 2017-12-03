@@ -61,10 +61,9 @@ public class Communication_Feed_Fragment extends Fragment {
     private boolean isLoading = false;
 
     int page = 1;
-    CircularProgressBar circularProgressBar;
     TimelineAdapter feedsAdapter;
     private SwipeRefreshLayout swipeLayout;
-
+CircularProgressBar circularProgressBar;
     private LinearLayoutManager linearLayoutManager;
 FrameLayout customViewContainer;
     View view;
@@ -212,8 +211,7 @@ FrameLayout customViewContainer;
         }
         totalFeeds=new ArrayList<>();
 
-        feedsAdapter=new TimelineAdapter(context,totalFeeds,getActivity(),groupId,customViewContainer);
-        recyclerView.setAdapter(feedsAdapter);
+
 
         return view;
     }
@@ -307,7 +305,7 @@ FrameLayout customViewContainer;
                 if (feedsAdapter == null && totalFeeds.size() > 0) {
                     // appBarLayout.setExpanded(true);
 
-                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),groupId,customViewContainer);
+                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),groupId,customViewContainer,circularProgressBar);
                     recyclerView.setAdapter(feedsAdapter);
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

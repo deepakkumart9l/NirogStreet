@@ -200,7 +200,7 @@ public class Multi_Select_Search extends Activity
                     searchAsync.cancel(true);
                 totalFeeds = new ArrayList<>();
                 totalFeeds = new ArrayList<>();
-
+page=1;
                 // setVisibilty(0);
                 if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
                     if (searchET.getText().toString().length() == 0) {
@@ -251,7 +251,7 @@ public class Multi_Select_Search extends Activity
 
                     @Override
                     public void afterTextChanged(final Editable s) {
-
+page=1;
                         timer.cancel();
                         timer = new Timer();
                         timer.schedule(
@@ -333,7 +333,7 @@ public class Multi_Select_Search extends Activity
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
-            recyclerViewsearchData.setVisibility(View.GONE);
+           // recyclerViewsearchData.setVisibility(View.GONE);
             //  bar = (ProgressBar) findViewById(R.id.progressBar);
             //   bar.setVisibility(View.VISIBLE);
             super.onPreExecute();
@@ -358,7 +358,7 @@ public class Multi_Select_Search extends Activity
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("pageNo", page + ""));
-                pairs.add(new BasicNameValuePair("searchkey", strTobeSearch));
+                pairs.add(new BasicNameValuePair("searchKey", strTobeSearch));
                 pairs.add(new BasicNameValuePair("userID", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 if (list != null && list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
@@ -569,7 +569,7 @@ public class Multi_Select_Search extends Activity
                         holder.textViewInvite.setVisibility(View.VISIBLE);
 
                     }
-                    textViewDone.setText("Done(" + list.size() + ")");
+                    textViewDone.setText("Done (" + list.size() + ")");
                 }
             });
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);

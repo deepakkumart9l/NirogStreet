@@ -9,11 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
@@ -57,7 +62,7 @@ public class CommentsActivity extends AppCompatActivity{
     CircularProgressBar circularProgressBar;
    // PostCommentAsyncTask postCommentAsyncTask;
     EditText editText;
-    ImageView sendImageView;
+    TextView sendImageView;
     ArrayList<CommentsModel> commentsModels;
     RecyclerView commentsrecyclerview;
     ImageView backImageView;
@@ -110,7 +115,10 @@ public class CommentsActivity extends AppCompatActivity{
         linearLayoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         commentsrecyclerview.setLayoutManager(linearLayoutManager1);
 
-        sendImageView = (ImageView) findViewById(R.id.commentTV);
+        sendImageView = (TextView) findViewById(R.id.commentTV);
+        sendImageView.setEnabled(false);
+        sendImageView.setClickable(false);
+
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +127,33 @@ public class CommentsActivity extends AppCompatActivity{
             }
         });
         editText = (EditText) findViewById(R.id.etMessageBox);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(s.length()==0)
+                {
+                    sendImageView.setEnabled(false);
+                    sendImageView.setClickable(false);
+
+                }
+                else {
+                    sendImageView.setEnabled(true);
+                    sendImageView.setClickable(true);
+
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         if(isHideCommentSection)
         {
             editText.setVisibility(View.GONE);
@@ -133,7 +168,7 @@ public class CommentsActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(CommentsActivity.this)) {
-                    if (editText.getText() != null) {
+                    if (editText.getText() != null&&editText.getText().length()>0) {
                         postCommentAsyncTask = new PostCommentAsyncTask(feedId, editText.getText().toString());
                         postCommentAsyncTask.execute();
                     } else {

@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -200,7 +201,14 @@ public class UpdateCommunity extends Activity {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.print(requestCode);
+        if (requestCode == 1) {
+            selectImage();
+        }
+    }
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -340,8 +348,15 @@ public class UpdateCommunity extends Activity {
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImageUri = data.getData();
                     selectedImagePath = getPath(selectedImageUri, UpdateCommunity.this);
-                    imgCover.setImageBitmap(BitmapFactory
-                            .decodeFile(selectedImagePath));
+
+                    File fff = new File(selectedImagePath);
+                    Glide.with(UpdateCommunity.this)
+                            .load(fff) // Uri of the picture
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .crossFade()
+                            .override(100, 100)
+                            .into(imgCover);
 
 
                        /* imgCover.setImageBitmap(BitmapFactory

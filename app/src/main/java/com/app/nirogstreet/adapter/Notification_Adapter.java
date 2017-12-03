@@ -16,10 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
+import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -53,7 +56,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
     String userId;
     String authToken;
 
-    public Notification_Adapter(Context context, ArrayList<NotificationModel> notificationModels,  String authToken) {
+    public Notification_Adapter(Context context, ArrayList<NotificationModel> notificationModels, String authToken) {
         this.context = context;
         this.notificationModels = notificationModels;
         this.authToken = authToken;
@@ -83,17 +86,28 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         final NotificationModel item = notificationModels.get(position);
         try {
             genericViewHolder.name.setText(Html.fromHtml("<b>" + item.getName() + "</b>" + " " + item.getMessage()));
+            TypeFaceMethods.setRegularTypeFaceForTextView(genericViewHolder.name, context);
             genericViewHolder.time.setText(item.getTime());
+            TypeFaceMethods.setRegularTypeFaceForTextView(genericViewHolder.time, context);
+
             String imgUrl = item.getProfile_pic();
             try {
-                Glide.with(context)
-                        .load(imgUrl) // Uri of the picture
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .crossFade()
-                        .override(100, 100)
-                        .into( genericViewHolder.imageView);
-
+                if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
+                    Glide.with(context)
+                            .load(imgUrl).placeholder(R.drawable.user) // Uri of the picture
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .crossFade()
+                            .override(100, 100)
+                            .into(genericViewHolder.imageView);
+                else
+                    Glide.with(context)
+                            .load(R.drawable.user) // Uri of the picture
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .crossFade()
+                            .override(100, 100)
+                            .into(genericViewHolder.imageView);
                 //  imageLoader.DisplayImage(context, imgUrl, genericViewHolder.imageView, null, 150, 150, R.drawable.profile_default);
 
             } catch (Exception e) {
@@ -115,12 +129,12 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
                             readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
                             readUnReadAsyncTask.execute();
                         } else {
-                            // openNotification(notificationModel);
+                            openNotification(notificationModel);
                         }
 
                     } else {
 
-                        // openNotification(notificationModel);
+                         openNotification(notificationModel);
                     }
                 }
             });
@@ -190,7 +204,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         protected Void doInBackground(Void... params) {
             try {
 
-                String url = AppUrl.AppBaseUrl + "user/notificationseen";
+                String url = AppUrl.BaseUrl + "feed/notificationseen";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -227,22 +241,16 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
             try {
                 notificationModels.get(pos).setUnread(0);
                 notifyItemChanged(pos);
-                //openNotification(notificationModel);
+                openNotification(notificationModel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-/*
     private void openNotification(NotificationModel notificationModel) {
-        if (notificationModel.getEventId() != null && !notificationModel.getEventId().equals("")) {
-            Intent intent = new Intent(context, EventDetailActivity.class);
-            intent.putExtra("userId", userId);
-            intent.putExtra("eventID", notificationModel.getEventId());
-            context.startActivity(intent);
-        } else if (notificationModel.getGroupId() != null && !notificationModel.getGroupId().equals("")) {
-            Intent intent = new Intent(context, GroupDetailActivity.class);
+     if (notificationModel.getGroupId() != null && !notificationModel.getGroupId().equals("")) {
+            Intent intent = new Intent(context, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
             intent.putExtra("groupId", notificationModel.getGroupId());
             context.startActivity(intent);
@@ -250,12 +258,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
             Intent intent = new Intent(context, PostDetailActivity.class);
             intent.putExtra("feedId", notificationModel.getPostId());
             context.startActivity(intent);
-        } else if (notificationModel.getForumId() != null && !notificationModel.getForumId().equals("")) {
-            Intent intent = new Intent(context, ForumDetailActivity.class);
-            intent.putExtra("forumId", notificationModel.getForumId());
-            context.startActivity(intent);
         }
     }
-*/
 }
 

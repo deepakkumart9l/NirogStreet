@@ -50,7 +50,15 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class SearchActivity extends AppCompatActivity {
     SearchAsync searchAsync;
     ArrayList<SearchModel> searchModels;
+    int totalPageCount;
+    int page = 1;
+    SearchAdapter searchAdapter;
+    private boolean isLoading = false;
+
+
     EditText searchET;
+    private LinearLayoutManager linearLayoutManager;
+
     private RecyclerView mRecyclerView;
     ImageView imageViewSearch;
     ImageView backImageView;
@@ -59,7 +67,7 @@ public class SearchActivity extends AppCompatActivity {
     private String text = "";
     private String query = "";
     SesstionManager sessionManager;
-    private  String authToken, userId;
+    private String authToken, userId;
 
 
     @Override
@@ -74,11 +82,13 @@ public class SearchActivity extends AppCompatActivity {
         }
         sessionManager = new SesstionManager(SearchActivity.this);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.lv);
+        mRecyclerView = (RecyclerView) findViewById(R.id.lv);
         mRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(SearchActivity.this);
-        mRecyclerView.setLayoutManager(llm);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        linearLayoutManager = new LinearLayoutManager(SearchActivity.this);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
         searchET = (EditText) findViewById(R.id.searchET);
@@ -91,6 +101,8 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         imageViewSearch = (ImageView) findViewById(R.id.searchButton);
+        searchModels = new ArrayList<>();
+        imageViewSearch.setVisibility(View.GONE);
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -113,6 +125,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
+                searchModels = new ArrayList<>();
+                page = 1;
+                searchAdapter = null;
                 text = s.toString();
                 query = text;
                 if (searchModels != null) {
@@ -214,6 +229,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("pageNo", page + ""));
 
                 pairs.add(new BasicNameValuePair("searchKey", strTobeSearch));
                 pairs.add(new BasicNameValuePair("userID", userId));
@@ -234,13 +250,14 @@ public class SearchActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
-            searchModels = new ArrayList<>();
             try {
                 if (jo != null) {
                     String nextUri = null, authToken = null, userName = null, profileUrl = null;
                     JSONObject jsonObject;
-                    if (jo.has("response") && !jo.isNull("response"))
-                    {
+                    if (jo.has("totalpage") && !jo.isNull("totalpage")) {
+                        totalPageCount = jo.getInt("totalpage");
+                    }
+                    if (jo.has("response") && !jo.isNull("response")) {
                         jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("users") && !jsonObject.isNull("users")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("users");
@@ -274,9 +291,37 @@ public class SearchActivity extends AppCompatActivity {
                                 }
                                 searchModels.add(new SearchModel(fname, slug, lname, department, profile_pic, id));
                             }
-                            if (searchModels != null && searchModels.size() > 0) {
-                                mRecyclerView.setAdapter(new SearchAdapter(SearchActivity.this, searchModels));
+                            isLoading = false;
+                            if (searchAdapter == null && searchModels != null && searchModels.size() > 0) {
+                                searchAdapter = new SearchAdapter(SearchActivity.this, searchModels);
+                                mRecyclerView.setAdapter(searchAdapter);
+                                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                    @Override
+                                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                        super.onScrolled(recyclerView, dx, dy);
 
+                                        int totalItemCount = linearLayoutManager.getItemCount();
+                                        int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                                        if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                            try {
+                                                String has_more = "";
+                                                if (page < totalPageCount) {
+                                                    page++;
+
+                                                    searchAsync = new SearchAsync("");
+                                                    searchAsync.execute();
+
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            isLoading = true;
+                                        }
+                                    }
+                                });
+
+                            } else {
+                                searchAdapter.notifyDataSetChanged();
                             }
                         }
 

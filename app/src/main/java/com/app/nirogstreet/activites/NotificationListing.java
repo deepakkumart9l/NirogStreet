@@ -137,7 +137,7 @@ public class NotificationListing extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             try {
 
-                String url = AppUrl.AppBaseUrl + "user/notification";
+                String url = AppUrl.BaseUrl + "feed/notification";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -213,8 +213,8 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("event_id") && !jsonObject1.isNull("event_id")) {
                                     event_id = jsonObject1.getString("event_id");
                                 }
-                                if (jsonObject1.has("group_id") && !jsonObject1.isNull("group_id")) {
-                                    group_id = jsonObject1.getString("group_id");
+                                if (jsonObject1.has("community_id") && !jsonObject1.isNull("community_id")) {
+                                    group_id = jsonObject1.getString("community_id");
                                 }
                                 if (jsonObject1.has("forum_id") && !jsonObject1.isNull("forum_id")) {
                                     forum_id = jsonObject1.getString("forum_id");

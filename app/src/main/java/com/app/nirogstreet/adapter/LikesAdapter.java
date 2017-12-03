@@ -15,6 +15,7 @@ import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -61,12 +62,11 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
         });
         //  holder.name.setText(rowItem.getName());
         ImageLoader imageLoader = new ImageLoader(context);
-        Glide.with(context)
-                .load(rowItem.getUserProfile_pic()) // Uri of the picture
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .crossFade()
-                .override(100, 100)
+
+        Picasso.with(context)
+                .load(rowItem.getUserProfile_pic())
+                .placeholder(R.drawable.default_)
+                .error(R.drawable.default_)
                 .into(holder.imageView);
         TypeFaceMethods.setRegularTypeFaceForTextView(holder.name,context);
     }

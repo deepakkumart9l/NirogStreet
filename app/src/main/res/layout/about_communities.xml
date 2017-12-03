@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#f8f9fb"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/first"
         android:background="@color/white">
 
         <TextView
@@ -20,11 +20,11 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/sec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-android:id="@+id/sec"
         android:layout_below="@+id/first"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:background="@color/white">
 
         <TextView
@@ -37,11 +37,11 @@ android:id="@+id/sec"
             android:textSize="15sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/AdminImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
-android:id="@+id/AdminImage"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="40dp"
             android:src="@drawable/user"
@@ -52,7 +52,7 @@ android:id="@+id/AdminImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="100dp"
             android:text="preeti saini"
@@ -62,9 +62,10 @@ android:id="@+id/AdminImage"
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/sec"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="15dp">
+
         <TextView
             android:id="@+id/titleMembers"
             android:layout_width="match_parent"
@@ -74,26 +75,101 @@ android:id="@+id/AdminImage"
             android:textColor="@color/cardbluebackground"
             android:textSize="15sp" />
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:fillViewport="true"
-            android:scrollbars="none">
+       >
 
             <LinearLayout
                 android:id="@+id/llGallery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:scrollbars="vertical"></LinearLayout>
-        </HorizontalScrollView>
+                android:scrollbars="vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/memoneimg"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+
+                    android:layout_gravity="center_vertical|center_horizontal"    android:layout_marginBottom="15dp"
+                        android:layout_marginTop="40dp"
+                        android:src="@drawable/user"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/memberonename"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:text=""
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/memtwoimg"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_marginTop="40dp"
+                        android:src="@drawable/user"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/membertwoname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:text=""
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical|center_horizontal"
+
+                    android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/memthreeimg"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="15dp"
+
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginTop="40dp"
+                        android:src="@drawable/user"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/memberthreename"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:text="View All"
+                        android:layout_gravity="center_vertical|center_horizontal"
+
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+            </LinearLayout>
 
     </android.support.v7.widget.CardView>
+
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"
         android:layout_width="40dp"

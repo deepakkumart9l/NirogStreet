@@ -53,6 +53,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -103,7 +104,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     File photoFile;
     private int SELECT_FILE = 999;
 
-    ImageView edtImage;
+    ImageView edtImage,webSite_icon;
     private boolean mIsTheTitleContainerVisible = true;
     ImageView backimg;
     private AppBarLayout appbar;
@@ -133,7 +134,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             if (!mIsTheTitleVisible) {
                 startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleVisible = true;
-                backimg.setVisibility(View.GONE);
+                backimg.setVisibility(View.VISIBLE);
 
                 textviewTitle.setText(nameTv.getText().toString());
 
@@ -161,7 +162,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
             if (!mIsTheTitleContainerVisible) {
                 textviewTitle.setText(nameTv.getText().toString());
-                backimg.setVisibility(View.GONE);
+                backimg.setVisibility(View.VISIBLE);
                 startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleContainerVisible = true;
             }
@@ -203,15 +204,19 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         edtImage = (ImageView) findViewById(R.id.edtImage);
 
-
+webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
         editInfo = (ImageView) findViewById(R.id.editInfo);
         circleImageView = (CircleImageView) findViewById(R.id.pro);
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
-                intent.putExtra("userModel", (Serializable) userDetailModel);
-                startActivity(intent);
+                if (!UserId.equalsIgnoreCase("")) {
+
+                }else {
+                    Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
+                    intent.putExtra("userModel", (Serializable) userDetailModel);
+                    startActivity(intent);
+                }
             }
         });
         specilizationTv = (TextView) findViewById(R.id.specilizationTv);
@@ -319,7 +324,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
             emailTv.setText(email);
             phoneTv.setText(mobile);
-            nameTv.setText(userName);
+            nameTv.setText("Dr. "+userName);
 
 
         }
@@ -408,7 +413,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                         dialog.dismiss();
                         selectedImagePath = null;
                         Glide.with(Dr_Profile.this)
-                                .load(R.drawable.default_image)
+                                .load(R.drawable.user)
                                 .into(circleImageView);
                     } else if (items[item].equals("Cancel")) {
                         dialog.dismiss();
@@ -990,7 +995,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 yearOfExperienceTv.setText(userDetailModel.getExperience() + " " + "years experience");
             }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
-                nameTv.setText(userDetailModel.getName());
+                nameTv.setText("Dr. "+userDetailModel.getName());
             }
             if (userDetailModel.getEmail() != null && !userDetailModel.getEmail().equalsIgnoreCase("")) {
                 emailTv.setText(userDetailModel.getEmail());
@@ -1000,6 +1005,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
             if (userDetailModel.getWebSite() != null && !userDetailModel.getWebSite().equalsIgnoreCase("")) {
                 WebTv.setText(userDetailModel.getWebSite());
+                webSite_icon.setVisibility(View.VISIBLE);
+            }
+            else {
+                WebTv.setVisibility(View.GONE);
+                webSite_icon.setVisibility(View.GONE);
             }
             if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
                 yearOfBirthTv.setText(userDetailModel.getDob());
@@ -1012,8 +1022,13 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
 
             if (userDetailModel.getProfile_pic() != null) {
-                ImageLoader imageLoader = new ImageLoader(Dr_Profile.this);
-                imageLoader.DisplayImage(Dr_Profile.this, userDetailModel.getProfile_pic(), circleImageView, null, 150, 150, R.drawable.default_image);
+                Picasso.with(Dr_Profile.this)
+                        .load(userDetailModel.getProfile_pic())
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into( circleImageView);
+
+
             }
         }
     }

@@ -285,9 +285,9 @@ public class Timings extends Activity {
 
                                     } else {
                                         holder.secondSesstion.setText(time);
-                                        timingsModels1.get(position).setSesstionModel2(new SesstionModel(hourString + ":" + minuteString, hourStringEnd + ":" + minuteString, "2", "", true));
+                                        timingsModels1.get(position).setSesstionModel2(new SesstionModel(hourString + ":" + minuteString, hourStringEnd + ":" + minuteString, "", "2", true));
 
-                                        timingsModels.get(position).setSesstionModel2(new SesstionModel(hourString + ":" + minuteString, hourStringEnd + ":" + minuteString, "2", "", true));
+                                        timingsModels.get(position).setSesstionModel2(new SesstionModel(hourString + ":" + minuteString, hourStringEnd + ":" + minuteString, "", "2", true));
 
                                     }
                                 }
@@ -731,7 +731,7 @@ public class Timings extends Activity {
                             boolean check = jsonObject.getBoolean("status");
                             if (check) {
                                 ArrayList<ClinicDetailModel> clinicDetailModels = new ArrayList<>();
-                                clinicDetailModels = Clinic_Detail_Parser.clinic_detail_parser(jo);
+                                clinicDetailModels = Clinic_Detail_Parser.clinic_detail_parser(jsonObject);
                                 UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
                                 userDetailModel.setClinicDetailModels(clinicDetailModels);
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);

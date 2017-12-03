@@ -36,12 +36,14 @@ import com.app.nirogstreet.adapter.TimelineAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
+import com.google.android.gms.cast.framework.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,6 +77,8 @@ public class MoreFragment extends Fragment {
     private UserDetailModel userDetailModel;
     RecyclerView recyclerView;
     int totalPageCount;
+
+    UserFeedsAsyncTask userFeedsAsyncTask;
     FrameLayout customViewContainer;
     UserDetailAsyncTask userDetailAsyncTask;
     private boolean isLoading = false;
@@ -151,10 +155,11 @@ public class MoreFragment extends Fragment {
                 totalFeeds = new ArrayList<>();
                 feedsAdapter = null;
                 page = 1;
-                if (NetworkUtill.isNetworkAvailable(context)) {
-                    String url = AppUrl.AppBaseUrl + "user/home";
-                 /*   userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                    userFeedsAsyncTask.execute();*/
+                if (NetworkUtill.isNetworkAvailable(context))
+
+                {
+                    userDetailAsyncTask = new UserDetailAsyncTask();
+                    userDetailAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -175,18 +180,9 @@ public class MoreFragment extends Fragment {
             authToken = userDetail.get(SesstionManager.AUTH_TOKEN);
             userId = userDetail.get(SesstionManager.USER_ID);
         }
-        if (NetworkUtill.isNetworkAvailable(context)) {
-            String url = AppUrl.AppBaseUrl + "user/home";
-          /*  userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-            userFeedsAsyncTask.execute();*/
-        } else {
-            NetworkUtill.showNoInternetDialog(context);
-        }
+
         totalFeeds = new ArrayList<>();
-        totalFeeds.add(new FeedModel());
-        totalFeeds.add(new FeedModel());
-        feedsAdapter = new MoreAdapter(totalFeeds, context);
-        recyclerView.setAdapter(feedsAdapter);
+
 
         if (NetworkUtill.isNetworkAvailable(context))
 
@@ -285,8 +281,17 @@ public class MoreFragment extends Fragment {
                             } else {
                                 userDetailModel = UserDetailPaser.userDetailParser(dataJsonObject);
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
-                                updateContactInfo();
-
+                               // updateContactInfo();
+                                totalFeeds = new ArrayList<>();
+                                feedsAdapter = null;
+                                page = 1;
+                                if (NetworkUtill.isNetworkAvailable(context)) {
+                                    String url = AppUrl.BaseUrl + "feed/my-activity";
+                                    userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
+                                    userFeedsAsyncTask.execute();
+                                } else {
+                                    NetworkUtill.showNoInternetDialog(context);
+                                }
 
                             }
 
@@ -305,5 +310,137 @@ public class MoreFragment extends Fragment {
         feedsAdapter.notifyDataSetChanged();
     }
 
+    public class UserFeedsAsyncTask extends AsyncTask<Void, Void, Void> {
+        CircularProgressBar circularProgressBar;
+        Context context;
+        String url;
+        HttpClient client;
+        ArrayList<FeedModel> feedModels;
+        String userId;
+        String authToken;
+        JSONObject jo;
+        SessionManager sessionManager;
+
+        private String responseBody;
+
+        public UserFeedsAsyncTask(Context context, CircularProgressBar circularProgressBar, String url, String authToken, String userId) {
+            this.circularProgressBar = circularProgressBar;
+            this.context = context;
+            this.authToken = authToken;
+            this.userId = userId;
+            this.url = url;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //circularProgressBar.setVisibility(View.VISIBLE);
+            swipeLayout.setRefreshing(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("pageNo", page + ""));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+                httppost.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            swipeLayout.setRefreshing(false);
+            circularProgressBar.setVisibility(View.GONE);
+
+            swipeLayout.setRefreshing(false);
+            //  System.out.print(feedModels.size());
+            try {
+                if (jo != null) {
+
+                    if (page == 1) {
+                        feedModels = FeedParser.feedParserList(jo, page);
+                        totalFeeds.add(new FeedModel());
+                        totalFeeds.addAll(1, feedModels);
+                    } else {
+                        feedModels = FeedParser.feedParserList(jo, page);
+
+                        totalFeeds.addAll(feedModels);
+                    }
+                    if (jo.has("totalpage") && !jo.isNull("totalpage")) {
+                        totalPageCount = jo.getInt("totalpage");
+                    }
+                } else {
+                    feedModels.add(new FeedModel());
+
+                    totalFeeds.addAll(feedModels);
+
+                }
+
+                isLoading = false;
+
+                if (feedsAdapter == null && totalFeeds.size() > 0) {
+                    // appBarLayout.setExpanded(true);
+
+                    feedsAdapter = new MoreAdapter(context, totalFeeds, getActivity(), "", customViewContainer,circularProgressBar);
+                    recyclerView.setAdapter(feedsAdapter);
+                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            int totalItemCount = linearLayoutManager.getItemCount();
+                            int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                            if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                try {
+                                    String has_more = "";
+                                    if (page < totalPageCount) {
+                                        page++;
+
+                                        String url = AppUrl.BaseUrl + "feed/my-activity";
+                                        userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
+                                        userFeedsAsyncTask.execute();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                isLoading = true;
+                            }
+                        }
+                    });
+                } else {
+                    feedsAdapter.notifyDataSetChanged();
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+
+    }
 
 }

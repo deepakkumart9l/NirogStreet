@@ -25,7 +25,7 @@
                 android:padding="8dp"
 
                 android:src="@drawable/back"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/title_side_left"
@@ -285,7 +285,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="@color/buttonBackground"
-
+android:checked="true"
                             android:text="I accept all terms and conditions"
                             android:textColor="@color/textcolorgray" />
                     </LinearLayout>

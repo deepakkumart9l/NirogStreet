@@ -16,6 +16,7 @@ import com.app.nirogstreet.model.UserList;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -65,15 +66,13 @@ SesstionManager sesstionManager;
         holder.txtTitle.setText(rowItem.getName() );
         //ImageLoader imageLoader=new ImageLoader(context);
         String imgUrl = rowItem.getProfile_pic();
-        if(imgUrl!=null)
-        Glide.with(context)
-                .load(imgUrl) // Uri of the picture
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .crossFade()
-                .override(100, 100)
-                .into(holder.imageView);
+        if(imgUrl!=null&&!imgUrl.equalsIgnoreCase(""))
 
+        Picasso.with(context)
+                .load(imgUrl)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
+                .into(holder.imageView);
         // imageLoader.DisplayImage(context,imgUrl,holder.imageView,null,150,150,R.drawable.profile_default);
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override

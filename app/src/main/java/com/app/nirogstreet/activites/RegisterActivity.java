@@ -64,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.register);
         checkbox = (CheckBox) findViewById(R.id.checkbox);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);

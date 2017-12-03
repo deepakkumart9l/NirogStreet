@@ -1,6 +1,7 @@
 package com.app.nirogstreet.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.FrameLayout;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.adapter.TimelineAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.FeedModel;
@@ -168,7 +170,7 @@ public class TimeLineFragment extends Fragment {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ((MainActivity) context).setTabText("Timeline");
+                ((MainActivity) context).setTabText("Home");
                 totalFeeds = new ArrayList<>();
                 feedsAdapter = null;
                 page = 1;
@@ -205,8 +207,7 @@ public class TimeLineFragment extends Fragment {
         }
         totalFeeds = new ArrayList<>();
 
-        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer);
-        recyclerView.setAdapter(feedsAdapter);
+
 
         return view;
     }
@@ -296,11 +297,12 @@ public class TimeLineFragment extends Fragment {
 
                 isLoading = false;
 
-                if (feedsAdapter == null && totalFeeds.size() > 0) {
+                if (feedsAdapter == null) {
                     // appBarLayout.setExpanded(true);
-
-                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer);
-                    recyclerView.setAdapter(feedsAdapter);
+                    if (totalFeeds.size() > 0) {
+                        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer,circularProgressBar);
+                        recyclerView.setAdapter(feedsAdapter);
+                    }
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

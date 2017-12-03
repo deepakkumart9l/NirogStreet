@@ -447,6 +447,12 @@ public class Multi_Select_Search_specialization extends Activity
                                     searchModels.add(new SpecializationModel(fname, id, false));
                                 }
                             }
+                            else {
+                                addQualificationTextView.setVisibility(View.VISIBLE);
+                                addQualificationTextView.setText("+Add "+"("+searchET.getText().toString()+")");
+                                addQualificationTextView.setVisibility(View.VISIBLE);
+
+                            }
                         } else if (!isService) {
                             if (jsonObject.has("specialities") && !jsonObject.isNull("specialities")) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("specialities");
@@ -596,8 +602,9 @@ public class Multi_Select_Search_specialization extends Activity
                 String language = list.get(i).getSpecializationName();
                 if (language != null && !language.trim().isEmpty()
                         && languageCSV != null && !languageCSV.trim().isEmpty())
-                    languageCSV = "#"+languageCSV + " ";
-                languageCSV = languageCSV + language;
+                    languageCSV = ""+languageCSV + " ";
+                String s="#"+language;
+                languageCSV = languageCSV + s;
 
             }
         }
@@ -649,7 +656,7 @@ public class Multi_Select_Search_specialization extends Activity
                         holder.textViewInvite.setVisibility(View.VISIBLE);
 
                     }
-                    textViewDone.setText("Done("+list.size()+")");
+                    textViewDone.setText("Done ("+list.size()+")");
 
                 }
             });

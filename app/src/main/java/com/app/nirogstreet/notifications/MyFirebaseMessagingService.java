@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.PostDetailActivity;
+import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -76,7 +80,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 }
                                 if (msgObject.has("message") && !msgObject.isNull("message")) {
                                     msg = msgObject.getString("message");
-                                   // sendNotification(msg, url, forumId, eventId, groupId, postId);
+                                    sendNotification(msg, url, forumId, eventId, groupId, postId);
 
                                 }
 
@@ -87,31 +91,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     e.printStackTrace();
                 }
                 //  Toast.makeText(ctx, "Key: "+key+" Value: "+value, Toast.LENGTH_LONG).show();
-                //   sendNotification(value);
+                 // sendNotification(value);
             } else {
                 myVeryOwnIterator.next();
             }
         }
     }
 
-/*
     private void sendNotification(String messageBody, String url, String forum, String event, String group, String post) {
         Intent intent = null;
-        SessionManager sessionManager = new SessionManager(this);
+        SesstionManager sessionManager = new SesstionManager(this);
         HashMap<String, String> user = sessionManager.getUserDetails();
-        String authToken = user.get(SessionManager.AUTH_TOKEN);
-        String userId = user.get(SessionManager.USER_ID);
-        if (!forum.equalsIgnoreCase("")) {
-
-            intent = new Intent(this, ForumDetailActivity.class);
-            intent.putExtra("forumId", forum);
-        } else if (!event.equalsIgnoreCase("")) {
-
-            intent = new Intent(this, EventDetailActivity.class);
-            intent.putExtra("userId", userId);
-            intent.putExtra("eventID", event);
-        } else if (!group.equalsIgnoreCase("")) {
-            intent = new Intent(this, GroupDetailActivity.class);
+        String authToken = user.get(SesstionManager.AUTH_TOKEN);
+        String userId = user.get(SesstionManager.USER_ID);
+     if (!group.equalsIgnoreCase("")) {
+            intent = new Intent(this, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
             intent.putExtra("groupId", group);
         } else {
@@ -123,14 +117,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bundle.putBoolean("openTab", true);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        try {
+       /* try {
             ShortcutBadger.setBadge(getApplicationContext(), badgeCount); //for 1.1.4+
             ShortcutBadger.with(getApplicationContext()).count(badgeCount); //for 1.1.3
 
         } catch (ShortcutBadgeException e) {
             e.printStackTrace();
         }*/
-/**//*
+
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -139,8 +133,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.white_notification)
-                    .setContentTitle("Empwin")
+                    .setSmallIcon(R.drawable.white_noti)
+                    .setContentTitle("NirogStreet")
                     .setContentText(messageBody)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
@@ -153,8 +147,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // notificationManager.notify(1,notificationBuilder.build());
         } else {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.blue_notification)
-                    .setContentTitle("Empwin")
+                    .setSmallIcon(R.drawable.white_noti)
+                    .setContentTitle("NirogStreet")
                     .setContentText(messageBody)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
@@ -166,6 +160,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.notify(0, notificationBuilder.build());
         }
     }
-*/
 
 }
