@@ -38,17 +38,17 @@ public class CommunitiesDetails extends AppCompatActivity {
     ViewPager viewPager;
     static TextView textTab;
     String groupId;
-public static    ImageView moreImageView;
-  static   LetterTileProvider mLetterTileProvider;
-   public static RoundedImageView circleImageView;
+    public static ImageView moreImageView;
+    static LetterTileProvider mLetterTileProvider;
+    public static RoundedImageView circleImageView;
     ImageView backImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.communication_detail);
-        textTab=(TextView)findViewById(R.id.textTab);
-        backImageView=(ImageView)findViewById(R.id.back);
+        textTab = (TextView) findViewById(R.id.textTab);
+        backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,17 +56,17 @@ public static    ImageView moreImageView;
             }
         });
         mLetterTileProvider = new LetterTileProvider(CommunitiesDetails.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(textTab,CommunitiesDetails.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(textTab, CommunitiesDetails.this);
 
-        circleImageView=(RoundedImageView)findViewById(R.id.pro);
-        moreImageView=(ImageView)findViewById(R.id.more);
+        circleImageView = (RoundedImageView) findViewById(R.id.pro);
+        moreImageView = (ImageView) findViewById(R.id.more);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager.setOffscreenPageLimit(2);
         if (getIntent().hasExtra("groupId")) {
-    groupId=getIntent().getStringExtra("groupId");
+            groupId = getIntent().getStringExtra("groupId");
         }
-        customPagerCommunitiesAdapter = new CustomPagerCommunitiesAdapter(getSupportFragmentManager(), tabLayout, this,groupId);
+        customPagerCommunitiesAdapter = new CustomPagerCommunitiesAdapter(getSupportFragmentManager(), tabLayout, this, groupId);
         // increase this limit if you have more tabs!
         //viewPager.setOffscreenPageLimit(2);
 
@@ -137,16 +137,15 @@ public static    ImageView moreImageView;
 
 
     }
-    public static void setNameAndCoverPic(String name, String url)
-    {
+
+    public static void setNameAndCoverPic(String name, String url) {
         textTab.setText(name);
 
     }
     // ImageLoader imageLoader=new ImageLoader(CommunitiesDetails.this);
 
-    private static void setBanner(String url)
-    {
-        if (url != null&&!url.contains("banner-default")&&!url.contains("tempimages")) {
+    private static void setBanner(String url) {
+        if (url != null && !url.contains("banner-default") && !url.contains("tempimages")) {
            /* Glide.with(CommunitiesDetails.this)
                     .load(url) // Uri of the picture
                     .centerCrop()

@@ -100,11 +100,12 @@ public class FeedParser {
                         }
                     }
                     if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                        if (jsonObject.getJSONObject("parent_feed_detail").has("user_id") && !jsonObject.getJSONObject("parent_feed_detail").isNull("user_id")) {
                             String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
-                            JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
-                            if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                            JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
+                            if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
+                                id = userJsonObject.getString("user_id");
+                            } if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                                 name = userJsonObject.getString("name");
                             }
                             if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
@@ -143,7 +144,7 @@ public class FeedParser {
                             parentFeedDetail = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                         }
-                    }
+
                     if (jsonObject.has("parent_feed") && !jsonObject.isNull("parent_feed")) {
                         parent_feed = jsonObject.getString("parent_feed");
                     }
@@ -353,13 +354,15 @@ public class FeedParser {
                                     }
                                 }
                                 if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                                    if (jsonObject.getJSONObject("parent_feed_detail").has("user_id") && !jsonObject.getJSONObject("parent_feed_detail").isNull("user_id")) {
                                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
-                                        JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
-                                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                                        JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
+                                        if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
+                                            id = userJsonObject.getString("user_id");
+                                        }                                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                                             name = userJsonObject.getString("name");
                                         }
+
                                         if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
                                             experience = userJsonObject.getString("experience");
                                         }
@@ -395,7 +398,7 @@ public class FeedParser {
                                         }
                                         parentFeedDetail = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
-                                    }
+
                                 }
                                 if (jsonObject.has("parent_feed") && !jsonObject.isNull("parent_feed")) {
                                     parent_feed = jsonObject.getString("parent_feed");
@@ -602,10 +605,12 @@ public class FeedParser {
                     }
                 }
                 if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                    if (jsonObject.getJSONObject("parent_feed_detail").has("user_id") && !jsonObject.getJSONObject("parent_feed_detail").isNull("user_id")) {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
-                        JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
+                        JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
+                        if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
+                            id = userJsonObject.getString("user_id");
+                        }
                         if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                             name = userJsonObject.getString("name");
                         }
@@ -644,7 +649,7 @@ public class FeedParser {
                         }
                         parentFeedDetail = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
-                    }
+
                 }
                 if (jsonObject.has("parent_feed") && !jsonObject.isNull("parent_feed")) {
                     parent_feed = jsonObject.getString("parent_feed");
@@ -709,6 +714,9 @@ public class FeedParser {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
                         JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
+                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                            name = userJsonObject.getString("name");
+                        }
                         if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                             name = userJsonObject.getString("name");
                         }

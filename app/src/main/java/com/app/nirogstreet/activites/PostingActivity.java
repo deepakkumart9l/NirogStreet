@@ -345,7 +345,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.print(requestCode);
         if (requestCode == 1) {
-            openFile();
+            chooseOption();
         }
     }
 

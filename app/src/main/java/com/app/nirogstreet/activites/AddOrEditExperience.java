@@ -513,6 +513,11 @@ if(isFromDate)
             Toast.makeText(AddOrEditExperience.this, R.string.address, Toast.LENGTH_SHORT).show();
             return false;
         }
+        if(!checkBox.isChecked()&&Integer.parseInt(fromEt.getText().toString())>Integer.parseInt(toEt.getText().toString()))
+        {
+            Toast.makeText(AddOrEditExperience.this, "Invalid Year", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         if (clinicOrhospital.getText().toString().length() == 0) {
             Toast.makeText(AddOrEditExperience.this, R.string.HospitalorClinic, Toast.LENGTH_SHORT).show();
             return false;

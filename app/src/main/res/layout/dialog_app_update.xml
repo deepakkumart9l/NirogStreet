@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#3c81da"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/Txt"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="#fff"
+        android:text="A new version NirogStreet is available please update."
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+
+        android:paddingBottom="10dp" android:paddingLeft="20dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Txt"
+
+        android:layout_marginBottom="30dp">
+
+        <TextView
+            android:id="@+id/skip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="#fa7800"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="SKIP"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/update"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="#fa7800"
+            android:gravity="center"
+
+            android:padding="10dp"
+            android:text="UPDATE"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</RelativeLayout>

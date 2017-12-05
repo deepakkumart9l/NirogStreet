@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -11,10 +13,20 @@ import android.os.Message;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -106,6 +118,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
+    private SpannableStringBuilder builder;
+    SpannableString str2;
 
     public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer,CircularProgressBar circularProgressBar) {
         this.context = context;
@@ -565,8 +579,14 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
 
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
-                        viewHolder.statusTextView.setText(feedModel.getMessage());
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
+                        viewHolder.statusTextView.setText(feedModel.getMessage());
+
+                        if (feedModel.getMessage().length() > 170)
+                            makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true,context,feedModel,position);
+                        else {
+                            viewHolder.statusTextView.setText(feedModel.getMessage());
+                        }
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
@@ -587,9 +607,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     }
                     final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
-                    if (userDetailModel != null && userDetailModel.getName() != null) {
-                        viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
-                    }
+
                     if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
                         Picasso.with(context)
                                 .load(userDetailModel.getProfile_pic())
@@ -663,13 +681,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            positionat = position;
+                           /* positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
                                 likePostAsynctask.execute();
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
-                            }
+                            }*/
                         }
                     });
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -696,6 +714,23 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.GONE);
 
                     }
+                    if(feedModel.getParentFeedDetail()!=null&&feedModel.getUserDetailModel_creator()!=null) {
+                        if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
+                            if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
+                            } else {
+                                viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
+
+                            }
+                        } else {
+                            viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
+
+                        }
+                    }else {
+                        viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
+
+                    }
+
                     viewHolder.feedcommentlistingLinearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -707,103 +742,116 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     });
                     viewHolder.sectionTv.setVisibility(View.VISIBLE);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.sectionTv,context);
-                    if(feedModel.getCommunity_Id()==null||feedModel.getCommunity_Id().equalsIgnoreCase(""))
-                    {
-                        if(feedModel.getParent_feed()!=null)
-                        {
-                            if(feedModel.getFeed_type().equalsIgnoreCase("5"))
-                            viewHolder.sectionTv.setText("You shared a video.");
-                            if(feedModel.getFeed_type().equalsIgnoreCase("1"))
-                                viewHolder.sectionTv.setText("You shared a post.");
-                            if(feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                viewHolder.sectionTv.setText("You shared a Link.");
+                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
 
-                            }else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
-                                    viewHolder.sectionTv.setText("You shared a Image.");
-                            }
-                            if(feedModel.getFeed_type().equalsIgnoreCase("6"))
-                            {
-                                viewHolder.sectionTv.setText("You shared a Document.");
+                    if (userDetailModel != null && userDetailModel.getName() != null) {
+                        String name = "Dr. " + userDetailModel.getName();
+                        builder = new SpannableStringBuilder();
+                        SpannableString span = new SpannableString(name);
+                        span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
+                        span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.append(span);
+                        // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
+                        if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
 
-                            }
-                        }
-                        else {
-                            if(feedModel.getFeed_type().equalsIgnoreCase("5"))
-                                viewHolder.sectionTv.setText("You Posted a video.");
-                            if(feedModel.getFeed_type().equalsIgnoreCase("1"))
-                                viewHolder.sectionTv.setText("You Posted a post.");
-                            if(feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                viewHolder.sectionTv.setText("You Posted a Link.");
-
-                            }else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
-                                    viewHolder.sectionTv.setText("You Posted a Image.");
-                            }
-                            if(feedModel.getFeed_type().equalsIgnoreCase("6"))
-                            {
-                                viewHolder.sectionTv.setText("You Posted a Document.");
-
-                            }
-                        }
-                    }else {
-                        viewHolder.sectionTv.setText("You Posted in a Community.");
-
-                    }
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.txtTextView, context);
-                    if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
-                        if (feedModel.getParent_feed() != null) {
-                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
-                                viewHolder.txtTextView.setText("shared a video");
-                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
-                                viewHolder.txtTextView.setText("shared an post");
-                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                viewHolder.txtTextView.setText("shared a link");
-
-                            } else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
-                                    viewHolder.txtTextView.setText("shared an image");
-                            }
-                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
-                                viewHolder.txtTextView.setText("shared a document");
-
-                            }
-                        } else {
-                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
-                                viewHolder.txtTextView.setText("posted a video");
-                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
-                                viewHolder.txtTextView.setText("posted a status");
-                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                viewHolder.txtTextView.setText("posted a link");
-
-                            } else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
-                                    viewHolder.txtTextView.setText("posted a image");
-                            }
-                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
-                                viewHolder.txtTextView.setText("posted a document");
-
-                            }
-                        }
-                    } else {
-                        if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                                viewHolder.txtTextView.setText("posted in a " + Html.fromHtml("<b>"+feedModel.getCommunity_name()+"</b>", Html.FROM_HTML_MODE_LEGACY));
-
-                            } else {
-                                viewHolder.txtTextView.setText("posted in a " + Html.fromHtml("<b>"+feedModel.getCommunity_name()+"</b>"));
-                            }
-                            viewHolder.txtTextView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(context, CommunitiesDetails.class);
-                                    intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                    context.startActivity(intent);
+                            if (feedModel.getParent_feed() != null) {
+                                if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
+                                    str2 = new SpannableString(" shared a video ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
                                 }
-                            });
-
+                                if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
+                                    str2 = new SpannableString(" shared an post ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                }
+                                if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                    str2 = new SpannableString(" shared a link ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                } else {
+                                    if (feedModel.getFeed_type().equalsIgnoreCase("2")) {
+                                        str2 = new SpannableString(" shared an image ");
+                                        str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                        builder.append(str2);
+                                    }
+                                }
+                                if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                                    str2 = new SpannableString(" shared a document ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                }
+                            } /*else {
+                                if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
+                                    str2 = new SpannableString(" posted a video ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                }
+                                if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
+                                    str2 = new SpannableString(" posted a status ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                }
+                                if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                    str2 = new SpannableString(" posted a link ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                } else {
+                                    if (feedModel.getFeed_type().equalsIgnoreCase("2")) {
+                                        str2 = new SpannableString(" posted a image ");
+                                        str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                        builder.append(str2);
+                                    }
+                                }
+                                if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                                    str2 = new SpannableString(" posted a document ");
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    builder.append(str2);
+                                }
+                            }*/
+                        } else {
+                            if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
+                                str2 = new SpannableString(" posted in a " + " " + feedModel.getCommunity_name());
+                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                builder.append(str2);
+                            }
                         }
+                        ClickableSpan clickSpan = new ClickableSpan() {
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                                ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                ds.setUnderlineText(false);// this remove the underline
+                            }
+
+                            @Override
+                            public void onClick(View textView) {
+                                Intent intent = new Intent(context, Dr_Profile.class);
+                                if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                    intent.putExtra("UserId", userDetailModel.getUserId());
+                                context.startActivity(intent);
+                            }
+                        };
+                        ClickableSpan clickSpan1 = new ClickableSpan() {
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                ds.setUnderlineText(false);// this remove the underline
+                            }
+
+                            @Override
+                            public void onClick(View textView) {
+                                Intent intent = new Intent(context, CommunitiesDetails.class);
+                                intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                context.startActivity(intent);
+                            }
+                        };
+                        String thirdspan = str2.toString();
+                        int third = builder.toString().indexOf(thirdspan);
+                        builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     }
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
@@ -1275,6 +1323,89 @@ sectionTv=(TextView)itemView.findViewById(R.id.section);
             super.onPreExecute();
             circularProgressBar.setVisibility(View.VISIBLE);
         }
+    }
+    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
+
+        if (tv.getTag() == null) {
+            tv.setTag(tv.getText());
+        }
+        ViewTreeObserver vto = tv.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onGlobalLayout() {
+                try {
+
+
+                    ViewTreeObserver obs = tv.getViewTreeObserver();
+                    obs.removeGlobalOnLayoutListener(this);
+                    if (maxLine == 0) {
+                        int lineEndIndex = tv.getLayout().getLineEnd(0);
+                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                        viewMore,context,feedModel,position), TextView.BufferType.SPANNABLE);
+                    } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
+                        int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
+                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                        viewMore,context,feedModel,position), TextView.BufferType.SPANNABLE);
+                    } else {
+                        int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
+                        String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
+                                        viewMore,context,feedModel,position), TextView.BufferType.SPANNABLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
+                                                                            final int maxLine, final String spanableText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
+        String str = strSpanned.toString();
+        SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
+
+        if (str.contains(spanableText)) {
+            ssb.setSpan(new ClickableSpan() {
+
+                @Override
+                public void onClick(View widget) {
+
+                    if (viewMore) {
+                     /*   tv.setLayoutParams(tv.getLayoutParams());
+                        tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
+                        tv.invalidate();
+                        makeTextViewResizable(tv, -1, "view less", false);*/
+                        ApplicationSingleton.setPostSelectedPostion(position);
+                        Intent intent = new Intent(context, PostDetailActivity.class);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
+                        context.startActivity(intent);
+                    } else {
+                        tv.setLayoutParams(tv.getLayoutParams());
+                        tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
+                        tv.invalidate();
+                        makeTextViewResizable(tv, 3, "view more", true,context,feedModel,position);
+                    }
+
+                }
+            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
+
+        }
+        return ssb;
+
     }
 
 }

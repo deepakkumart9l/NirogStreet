@@ -101,7 +101,7 @@
                         android:layout_height="45dp"
                         android:layout_marginLeft="29dp"
                         android:id="@+id/edtImage"
-                        android:layout_marginTop="75dp"
+                        android:layout_marginTop="77dp"
                         android:padding="10dp"
                         android:src="@drawable/camera" />
                 </RelativeLayout>

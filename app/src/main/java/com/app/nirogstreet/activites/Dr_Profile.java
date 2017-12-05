@@ -765,8 +765,15 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
 
     private void updateSpecilizationAndService() {
         if (userDetailModel != null) {
+            if(userDetailModel.getSpecializationModels().size()==0&& userDetailModel.getServicesModels().size()==0)
+            {
+                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
+
+            }
             if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
                 spcilizationCsv.setText(getSelectedNameCsv());
+                specilizationTv.setVisibility(View.VISIBLE);
+                spcilizationCsv.setVisibility(View.VISIBLE);
             } else {
                 spcilizationCsv.setVisibility(View.GONE);
                 specilizationTv.setVisibility(View.GONE);
@@ -774,18 +781,14 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
             if (userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() != 0) {
                 sevicesCsvTextView.setText(getSelectedServicesCsv());
                 QualificationTv.setText(getSelectedNameCsv());
+                sevicesCsvTextView.setVisibility(View.VISIBLE);
+                sevicesTextView.setVisibility(View.VISIBLE);
 
             } else {
                 sevicesCsvTextView.setVisibility(View.GONE);
                 sevicesTextView.setVisibility(View.GONE);
             }
-            if (userDetailModel.getSpecializationModels() == null && userDetailModel.getServicesModels() == null) {
-                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
-            } else {
-                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
-                SpecilizationsevicesTextView.setText("Service & Specialization");
 
-            }
         }
     }
 
@@ -1021,7 +1024,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 QualificationTv.setText(getSelectedNameCsv());
             }
 
-            if (userDetailModel.getProfile_pic() != null) {
+            if (userDetailModel.getProfile_pic() != null&&!userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
                 Picasso.with(Dr_Profile.this)
                         .load(userDetailModel.getProfile_pic())
                         .placeholder(R.drawable.user)
