@@ -803,11 +803,16 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             context.startActivity(intent);
                         }
                     };
-                    String thirdspan = str2.toString();
-                    int third = builder.toString().indexOf(thirdspan);
-                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                    if(str2!=null&&str2.length()>0) {
+
+
+                        String thirdspan = str2.toString();
+                        int third = builder.toString().indexOf(thirdspan);
+                        builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                        builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+
                 }
 
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);

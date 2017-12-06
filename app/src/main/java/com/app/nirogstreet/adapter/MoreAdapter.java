@@ -121,12 +121,12 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private SpannableStringBuilder builder;
     SpannableString str2;
 
-    public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer,CircularProgressBar circularProgressBar) {
+    public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar) {
         this.context = context;
         this.feedModels = feedModel;
         this.activity = activity;
         this.customViewContainer = customViewContainer;
-        this.circularProgressBar=circularProgressBar;
+        this.circularProgressBar = circularProgressBar;
         sesstionManager = new SesstionManager(context);
         HashMap<String, String> userDetails = sesstionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
@@ -136,6 +136,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mWebChromeClient = new myWebChromeClient();
 
     }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
 
@@ -143,7 +144,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             MyViewHolder viewHolder = (MyViewHolder) holder;
 
             if (payloads.get(0) instanceof String) {
-                if(String.valueOf(payloads.get(0)).equalsIgnoreCase("0")||String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
+                if (String.valueOf(payloads.get(0)).equalsIgnoreCase("0") || String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
                     viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Like");
                 else
                     viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
@@ -157,6 +158,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super.onBindViewHolder(holder, position, payloads);
         }
     }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
@@ -189,7 +191,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 try {
                     SesstionManager sesstionManager = new SesstionManager(context);
                     String name = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
-                    if (userDetailModel1.getProfile_pic() != null&&!userDetailModel1.getProfile_pic().equalsIgnoreCase("")) {
+                    if (userDetailModel1.getProfile_pic() != null && !userDetailModel1.getProfile_pic().equalsIgnoreCase("")) {
 
                         Picasso.with(context)
                                 .load(userDetailModel1.getProfile_pic())
@@ -201,7 +203,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
 
                     if (name != null)
-                        myViewHolder.nameTv.setText(name);
+                        myViewHolder.nameTv.setText("Dr. " + name);
                     if (userDetailModel1.getEmail() != null)
                         myViewHolder.emailTv.setText(userDetailModel1.getEmail());
                     if (userDetailModel1.getMobile() != null)
@@ -212,11 +214,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         myViewHolder.yearOfExperienceTv.setText(userDetailModel1.getExperience() + " years experince");
                     if (userDetailModel1 != null && userDetailModel1.getSpecializationModels() != null) {
                         myViewHolder.QualificationTv.setText(getSelectedNameCsv(userDetailModel1));
-                    }if(userDetailModel1!=null&&userDetailModel1.getWebSite()!=null&&!userDetailModel1.getWebSite().equalsIgnoreCase(""))
-                    {
+                    }
+                    if (userDetailModel1 != null && userDetailModel1.getWebSite() != null && !userDetailModel1.getWebSite().equalsIgnoreCase("")) {
                         myViewHolder.WebTv.setText(userDetailModel1.getWebSite());
                         myViewHolder.webSite_icon.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         myViewHolder.WebTv.setVisibility(View.GONE);
                         myViewHolder.webSite_icon.setVisibility(View.GONE);
                     }
@@ -430,8 +432,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
 
 
-
-
                                         Picasso.with(context)
                                                 .load(singleImageUrl)
                                                 .placeholder(R.drawable.default_)
@@ -583,7 +583,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewHolder.statusTextView.setText(feedModel.getMessage());
 
                         if (feedModel.getMessage().length() > 170)
-                            makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true,context,feedModel,position);
+                            makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true, context, feedModel, position);
                         else {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
                         }
@@ -714,7 +714,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.GONE);
 
                     }
-                    if(feedModel.getParentFeedDetail()!=null&&feedModel.getUserDetailModel_creator()!=null) {
+                    if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
                         if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
                             if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
                                 viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
@@ -726,7 +726,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                         }
-                    }else {
+                    } else {
                         viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                     }
@@ -847,11 +847,53 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 context.startActivity(intent);
                             }
                         };
-                        String thirdspan = str2.toString();
-                        int third = builder.toString().indexOf(thirdspan);
-                        builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        if (str2 != null && str2.length() > 0) {
+
+
+                            String thirdspan = str2.toString();
+                            int third = builder.toString().indexOf(thirdspan);
+                            builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
                         builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                    }
+                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.sectionTv, context);
+                    if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
+                        if (feedModel.getParent_feed() != null) {
+                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
+                                viewHolder.sectionTv.setText("You shared a video.");
+                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
+                                viewHolder.sectionTv.setText("You shared a post.");
+                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                viewHolder.sectionTv.setText("You shared a Link.");
+
+                            } else {
+                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
+                                    viewHolder.sectionTv.setText("You shared a Image.");
+                            }
+                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                                viewHolder.sectionTv.setText("You shared a Document.");
+
+                            }
+                        } else {
+                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
+                                viewHolder.sectionTv.setText("You Posted a video.");
+                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
+                                viewHolder.sectionTv.setText("You Posted a post.");
+                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                viewHolder.sectionTv.setText("You Posted a Link.");
+
+                            } else {
+                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
+                                    viewHolder.sectionTv.setText("You Posted a Image.");
+                            }
+                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
+                                viewHolder.sectionTv.setText("You Posted a Document.");
+
+                            }
+                        }
+                    } else {
+                        viewHolder.sectionTv.setText("You Posted in a Community.");
                     }
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
@@ -913,14 +955,14 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class HeaderView extends RecyclerView.ViewHolder {
         CircleImageView circleImageView;
-        ImageView editInfo,webSite_icon;
+        ImageView editInfo, webSite_icon;
         TextView QualificationTv, yearOfBirthTv, yearOfExperienceTv, WebTv, emailTv, phoneTv, view_detail, nameTv, myActivitiesTextView;
         TextView postAn, aboutTextView;
         RelativeLayout profileRelativeLayout;
 
         public HeaderView(View itemView) {
             super(itemView);
-            webSite_icon=(ImageView)itemView.findViewById(R.id.webSite_icon);
+            webSite_icon = (ImageView) itemView.findViewById(R.id.webSite_icon);
             profileRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.profile);
             view_detail = (TextView) itemView.findViewById(R.id.view_detail);
             nameTv = (TextView) itemView.findViewById(R.id.name1);
@@ -967,7 +1009,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             left_view = (View) itemView.findViewById(R.id.left_view);
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
-sectionTv=(TextView)itemView.findViewById(R.id.section);
+            sectionTv = (TextView) itemView.findViewById(R.id.section);
             txtTextView = (TextView) itemView.findViewById(R.id.txt);
 
             link_title_des_lay = (LinearLayout) itemView.findViewById(R.id.link_title_des_lay);
@@ -1324,6 +1366,7 @@ sectionTv=(TextView)itemView.findViewById(R.id.section);
             circularProgressBar.setVisibility(View.VISIBLE);
         }
     }
+
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
 
         if (tv.getTag() == null) {
@@ -1347,7 +1390,7 @@ sectionTv=(TextView)itemView.findViewById(R.id.section);
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore,context,feedModel,position), TextView.BufferType.SPANNABLE);
+                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
                     } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
                         int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
                         String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
@@ -1355,7 +1398,7 @@ sectionTv=(TextView)itemView.findViewById(R.id.section);
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore,context,feedModel,position), TextView.BufferType.SPANNABLE);
+                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
                     } else {
                         int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
                         String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
@@ -1363,7 +1406,7 @@ sectionTv=(TextView)itemView.findViewById(R.id.section);
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-                                        viewMore,context,feedModel,position), TextView.BufferType.SPANNABLE);
+                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1397,7 +1440,7 @@ sectionTv=(TextView)itemView.findViewById(R.id.section);
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, "view more", true,context,feedModel,position);
+                        makeTextViewResizable(tv, 3, "view more", true, context, feedModel, position);
                     }
 
                 }

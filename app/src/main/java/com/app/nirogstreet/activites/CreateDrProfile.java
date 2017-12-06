@@ -265,6 +265,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         initSpinnerScrollingTitle();
         initSpinnerScrollingCategory();
+        spinnerCategory.setSelection(1);
         if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
             userDetailAsyncTask = new UserDetailAsyncTask();
             userDetailAsyncTask.execute();

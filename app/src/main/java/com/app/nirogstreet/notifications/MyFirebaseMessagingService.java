@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import me.leolin.shortcutbadger.ShortcutBadgeException;
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 
 /**
  * Created by Preeti on 07-02-2017.
@@ -117,13 +120,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bundle.putBoolean("openTab", true);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-       /* try {
+        try {
             ShortcutBadger.setBadge(getApplicationContext(), badgeCount); //for 1.1.4+
             ShortcutBadger.with(getApplicationContext()).count(badgeCount); //for 1.1.3
 
         } catch (ShortcutBadgeException e) {
             e.printStackTrace();
-        }*/
+        }
 
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,

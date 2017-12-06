@@ -166,7 +166,6 @@ public class Splash extends AppCompatActivity {
                         .toString(response.getEntity());
                 jo = new JSONObject(responseBody);
 
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

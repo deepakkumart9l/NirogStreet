@@ -99,7 +99,7 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        android:layout_marginLeft="29dp"
+                        android:layout_marginLeft="31dp"
                         android:id="@+id/edtImage"
                         android:layout_marginTop="77dp"
                         android:padding="10dp"

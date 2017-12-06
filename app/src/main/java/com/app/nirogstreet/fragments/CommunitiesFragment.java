@@ -110,7 +110,7 @@ public class CommunitiesFragment extends Fragment {
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/index";
 
-                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context,false);
+                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                 groupsOfUserAsyncTask.execute();
 
             } else {
@@ -148,7 +148,8 @@ public class CommunitiesFragment extends Fragment {
         myGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                recyclerView.removeAllViews();
+otherGroupTextView.setClickable(false);
                 userView.setSelected(true);
                 allView.setSelected(false);
                 page = 1;
@@ -162,7 +163,7 @@ public class CommunitiesFragment extends Fragment {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/index";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context,false);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -175,7 +176,9 @@ public class CommunitiesFragment extends Fragment {
                 page = 1;
                 groupModelsTotal = new ArrayList<GroupModel>();
                 userView.setSelected(false);
+                recyclerView.removeAllViews();
                 isLoading = false;
+                myGroupTextView.setClickable(false);
                 allView.setSelected(true);
                 groupListingAdapter = null;
                 recyclerView.setVisibility(View.GONE);
@@ -185,7 +188,7 @@ public class CommunitiesFragment extends Fragment {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/all-groups";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context,true);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -203,7 +206,7 @@ public class CommunitiesFragment extends Fragment {
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/index";
 
-                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context,false);
+                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
@@ -212,7 +215,7 @@ public class CommunitiesFragment extends Fragment {
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/all-groups";
 
-                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context,true);
+                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
@@ -231,7 +234,7 @@ public class CommunitiesFragment extends Fragment {
         String url;
         boolean isHide;
         SesstionManager sessionManager;
-boolean showJoin;
+        boolean showJoin;
         private String responseBody;
 
         public void cancelAsyncTask() {
@@ -241,10 +244,10 @@ boolean showJoin;
             }
         }
 
-        public GroupsOfUserAsyncTask(String userId, String authToken, String url, boolean isHide, Context context,boolean showJoin) {
+        public GroupsOfUserAsyncTask(String userId, String authToken, String url, boolean isHide, Context context, boolean showJoin) {
             this.userId = userId;
             this.isHide = isHide;
-            this.showJoin=showJoin;
+            this.showJoin = showJoin;
             this.context = context;
             this.authToken = authToken;
             this.url = url;
@@ -291,13 +294,15 @@ boolean showJoin;
             circularProgressBar.setVisibility(View.GONE);
             ArrayList<GroupModel> groupModels = new ArrayList<>();
             groupModels = Group_Listing_Parser.groupListingParser(jo);
-
+otherGroupTextView.setClickable(true);
+            myGroupTextView.setClickable(true);
             groupModelsTotal.addAll(groupModels);
             super.onPostExecute(aVoid);
             try {
                 if (jo != null)
 
                 {
+                    recyclerView.setVisibility(View.VISIBLE);
 
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObjectResponce = jo.getJSONObject("response");
@@ -310,9 +315,8 @@ boolean showJoin;
 
 
                     if (groupListingAdapter == null && groupModelsTotal != null && groupModelsTotal.size() > 0) {
-                        groupListingAdapter = new GroupListingAdapter(groupModelsTotal, context, isHide, userId,showJoin);
+                        groupListingAdapter = new GroupListingAdapter(groupModelsTotal, context, isHide, userId, showJoin);
                         recyclerView.setAdapter(groupListingAdapter);
-                        recyclerView.setVisibility(View.VISIBLE);
                         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override
                             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -326,7 +330,7 @@ boolean showJoin;
                                         if (page < totalPageCount) {
                                             page++;
 
-                                            groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, isHide, context,showJoin);
+                                            groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, isHide, context, showJoin);
                                             groupsOfUserAsyncTask.execute();
                                         }
                                     } catch (Exception e) {

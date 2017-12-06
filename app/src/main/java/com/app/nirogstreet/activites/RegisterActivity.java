@@ -1,15 +1,26 @@
 package com.app.nirogstreet.activites;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,7 +43,9 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLContext;
 
@@ -55,18 +68,105 @@ public class RegisterActivity extends AppCompatActivity {
     SendOtpAsyncTask sendOtpAsyncTask;
     CheckBox checkbox;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
-
+    private int CONTACT_PERMISSION_CODE = 1;
+    String email = null;
+    String fname = null, lname = null;
     EditText firstNameEt, lastNameEt, phoneEt, emailEt, confirmpassEt, setPass;
     ImageView backImageView;
+    String phoneNumber = null;
     TextView registerHeader, registerAs, AllreadyhaveAccount, signIn, sentTv;
     CircularProgressBar circularProgressBar;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.print(requestCode);
+        if (requestCode == 1) {
+            getInfo();
+        }
+    }
+    private void getInfo() {
+        AccountManager am = AccountManager.get(this);
+        Pattern gmailPattern = Patterns.EMAIL_ADDRESS;
+
+        Account[] accounts = am.getAccounts();
+        for (Account ac : accounts) {
+            String acname = ac.name;
+            String actype = ac.type;
+            // Take your time to look at all available accounts
+            System.out.println("Accounts : " + acname + ", " + actype);
+            if (gmailPattern.matcher(ac.name).matches()) {
+                email = ac.name;
+                break;
+            }
+            System.out.print(email);
+        }
+        Cursor c = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
+        int count = c.getCount();
+        String[] columnNames = c.getColumnNames();
+        boolean b = c.moveToFirst();
+        int position = c.getPosition();
+        if (count == 1 && position == 0) {
+            for (int j = 0; j < columnNames.length; j++) {
+                String columnName = columnNames[j];
+                if (columnName.equalsIgnoreCase("sort_key")) {
+                    String columnValue = c.getString(c.getColumnIndex(columnName));
+                    if (columnValue.contains(" ")) {
+                        String[] val = columnValue.split(" ");
+                        fname = val[0];
+                        lname = val[1];
+                    } else {
+                        fname = columnValue;
+                    }
+                }
+                //Use the values
+                //     System.out.print(columnValue);
+            }
+        }
+        c.close();
+
+        TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String mPhoneNumber = tMgr.getLine1Number();
+        System.out.print(mPhoneNumber);
+        if (!mPhoneNumber.equalsIgnoreCase("")) {
+            if (mPhoneNumber.length() > 10)
+
+            {
+                if (mPhoneNumber.length() == 12) {
+                    phoneNumber = mPhoneNumber.substring(2);
+                }
+                if (mPhoneNumber.length() == 13) {
+                    phoneNumber = mPhoneNumber.substring(3);
+
+                }
+            } else {
+                phoneNumber = mPhoneNumber;
+
+            }
+        }
+        if (email != null) {
+            emailEt.setText(email);
+        }
+        if (fname != null) {
+            firstNameEt.setText(fname);
+        }
+        if (lname != null) {
+            lastNameEt.setText(lname);
+        }
+        if (phoneNumber != null) {
+            phoneEt.setText(phoneNumber);
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.register);
+       /* ArrayList<HashMap<String, Object>> contactList = getContacts();
+        System.out.println("Contact List : " +contactList);*/
         checkbox = (CheckBox) findViewById(R.id.checkbox);
+        checkPermission();
+
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         registerHeader = (TextView) findViewById(R.id.title_side);
         sentTv = (TextView) findViewById(R.id.sentTv);
@@ -80,6 +180,18 @@ public class RegisterActivity extends AppCompatActivity {
         confirmpassEt = (EditText) findViewById(R.id.confirmpassEt);
         emailEt = (EditText) findViewById(R.id.emailEt);
         setPass = (EditText) findViewById(R.id.passEt);
+        if (email != null) {
+            emailEt.setText(email);
+        }
+        if (fname != null) {
+            firstNameEt.setText(fname);
+        }
+        if (lname != null) {
+            lastNameEt.setText(lname);
+        }
+        if (phoneNumber != null) {
+            phoneEt.setText(phoneNumber);
+        }
         checkPermissionGeneral();
         TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(registerHeader, RegisterActivity.this);
@@ -121,10 +233,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(RegisterActivity.this)) {
                     if (validation()) {
-                        if(checkWriteExternalPermission()){
-                        sendOtpAsyncTask = new SendOtpAsyncTask(phoneEt.getText().toString(), setPass.getText().toString(), lastNameEt.getText().toString(), firstNameEt.getText().toString(), emailEt.getText().toString());
-                        sendOtpAsyncTask.execute();
-                    }else {
+                        if (checkWriteExternalPermission()) {
+                            sendOtpAsyncTask = new SendOtpAsyncTask(phoneEt.getText().toString(), setPass.getText().toString(), lastNameEt.getText().toString(), firstNameEt.getText().toString(), emailEt.getText().toString());
+                            sendOtpAsyncTask.execute();
+                        } else {
                             checkPermissionGeneral();
                         }
                     }
@@ -134,13 +246,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    private boolean checkWriteExternalPermission()
-    {
+
+    private boolean checkWriteExternalPermission() {
 
         String permission = "android.permission.READ_SMS";
         int res = checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
     }
+
     public void checkPermissionGeneral() {
         if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
@@ -239,25 +352,21 @@ public class RegisterActivity extends AppCompatActivity {
                         if (dataJsonObject.has("status") && !dataJsonObject.isNull("status")) {
                             status = dataJsonObject.getBoolean("status");
 
-                                if (status) {
+                            if (status) {
 
-                                    dataJsonObject = jo.getJSONObject("data");
-                                    if (dataJsonObject.has("OTP") && !dataJsonObject.isNull("OTP")) {
-                                        otp = dataJsonObject.getString("OTP");
-                                    }
-                                    Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
-                                    intent.putExtra("fname", firstNameEt.getText().toString());
-                                    intent.putExtra("lname", lastNameEt.getText().toString());
-                                    intent.putExtra("otp", otp);
-                                    intent.putExtra("email", emailEt.getText().toString().trim());
-                                    intent.putExtra("phone", phoneEt.getText().toString());
-                                    intent.putExtra("password", setPass.getText().toString());
-                                    startActivity(intent);
+                                dataJsonObject = jo.getJSONObject("data");
+                                if (dataJsonObject.has("OTP") && !dataJsonObject.isNull("OTP")) {
+                                    otp = dataJsonObject.getString("OTP");
                                 }
-
-
-
-                             else {
+                                Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
+                                intent.putExtra("fname", firstNameEt.getText().toString());
+                                intent.putExtra("lname", lastNameEt.getText().toString());
+                                intent.putExtra("otp", otp);
+                                intent.putExtra("email", emailEt.getText().toString().trim());
+                                intent.putExtra("phone", phoneEt.getText().toString());
+                                intent.putExtra("password", setPass.getText().toString());
+                                startActivity(intent);
+                            } else {
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                                     errorArray = dataJsonObject.getJSONArray("message");
                                     for (int i = 0; i < errorArray.length(); i++) {
@@ -266,7 +375,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        }}
+                        }
+                    }
 
                 }
 
@@ -327,4 +437,167 @@ public class RegisterActivity extends AppCompatActivity {
             sendOtpAsyncTask.cancelAsyncTask();
         }
     }
+
+    public ArrayList<HashMap<String, Object>> getContacts() {
+
+        ArrayList<HashMap<String, Object>> contacts = new ArrayList<HashMap<String, Object>>();
+        final String[] projection = new String[]{ContactsContract.RawContacts.CONTACT_ID, ContactsContract.RawContacts.DELETED};
+
+        @SuppressWarnings("deprecation")
+        final Cursor rawContacts = managedQuery(ContactsContract.RawContacts.CONTENT_URI, projection, null, null, null);
+
+        final int contactIdColumnIndex = rawContacts.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID);
+        final int deletedColumnIndex = rawContacts.getColumnIndex(ContactsContract.RawContacts.DELETED);
+
+        if (rawContacts.moveToFirst()) {
+            while (!rawContacts.isAfterLast()) {
+                final int contactId = rawContacts.getInt(contactIdColumnIndex);
+                final boolean deleted = (rawContacts.getInt(deletedColumnIndex) == 1);
+
+                if (!deleted) {
+                    HashMap<String, Object> contactInfo = new HashMap<String, Object>() {
+                        {
+                            put("contactId", "");
+                            put("name", "");
+                            put("email", "");
+                            put("address", "");
+                            put("photo", "");
+                            put("phone", "");
+                        }
+                    };
+                    contactInfo.put("contactId", "" + contactId);
+                    contactInfo.put("name", getName(contactId));
+                    contactInfo.put("email", getEmail(contactId));
+                    contactInfo.put("photo", getPhoto(contactId) != null ? getPhoto(contactId) : "");
+                    contactInfo.put("address", getAddress(contactId));
+                    contactInfo.put("phone", getPhoneNumber(contactId));
+                    contactInfo.put("isChecked", "false");
+                    contacts.add(contactInfo);
+                }
+                rawContacts.moveToNext();
+            }
+        }
+
+        rawContacts.close();
+
+        return contacts;
+    }
+
+    private String getName(int contactId) {
+        String name = "";
+        final String[] projection = new String[]{ContactsContract.Contacts.DISPLAY_NAME};
+
+        final Cursor contact = managedQuery(ContactsContract.Contacts.CONTENT_URI, projection, ContactsContract.Contacts._ID + "=?", new String[]{String.valueOf(contactId)}, null);
+
+        if (contact.moveToFirst()) {
+            name = contact.getString(contact.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            contact.close();
+        }
+        contact.close();
+        return name;
+
+    }
+
+    private String getEmail(int contactId) {
+        String emailStr = "";
+        final String[] projection = new String[]{ContactsContract.CommonDataKinds.Email.DATA, // use
+                // Email.ADDRESS
+                // for API-Level
+                // 11+
+                ContactsContract.CommonDataKinds.Email.TYPE};
+
+        final Cursor email = managedQuery(ContactsContract.CommonDataKinds.Email.CONTENT_URI, projection, ContactsContract.Data.CONTACT_ID + "=?", new String[]{String.valueOf(contactId)}, null);
+
+        if (email.moveToFirst()) {
+            final int contactEmailColumnIndex = email.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+
+            while (!email.isAfterLast()) {
+                emailStr = emailStr + email.getString(contactEmailColumnIndex) + ";";
+                email.moveToNext();
+            }
+        }
+        email.close();
+        return emailStr;
+
+    }
+
+    private Bitmap getPhoto(int contactId) {
+        Bitmap photo = null;
+        final String[] projection = new String[]{ContactsContract.Contacts.PHOTO_ID};
+
+        final Cursor contact = managedQuery(ContactsContract.Contacts.CONTENT_URI, projection, ContactsContract.Contacts._ID + "=?", new String[]{String.valueOf(contactId)}, null);
+
+        if (contact.moveToFirst()) {
+            final String photoId = contact.getString(contact.getColumnIndex(ContactsContract.Contacts.PHOTO_ID));
+            if (photoId != null) {
+                photo = getBitmap(photoId);
+            } else {
+                photo = null;
+            }
+        }
+        contact.close();
+
+        return photo;
+    }
+
+    private Bitmap getBitmap(String photoId) {
+        final Cursor photo = managedQuery(ContactsContract.Data.CONTENT_URI, new String[]{ContactsContract.CommonDataKinds.Photo.PHOTO}, ContactsContract.Data._ID + "=?", new String[]{photoId}, null);
+
+        final Bitmap photoBitmap;
+        if (photo.moveToFirst()) {
+            byte[] photoBlob = photo.getBlob(photo.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO));
+            photoBitmap = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
+        } else {
+            photoBitmap = null;
+        }
+        photo.close();
+        return photoBitmap;
+    }
+
+    private String getAddress(int contactId) {
+        String postalData = "";
+        String addrWhere = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
+        String[] addrWhereParams = new String[]{String.valueOf(contactId), ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE};
+
+        Cursor addrCur = managedQuery(ContactsContract.Data.CONTENT_URI, null, addrWhere, addrWhereParams, null);
+
+        if (addrCur.moveToFirst()) {
+            postalData = addrCur.getString(addrCur.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS));
+        }
+        addrCur.close();
+        return postalData;
+    }
+
+    private String getPhoneNumber(int contactId) {
+
+        String phoneNumber = "";
+        final String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.TYPE,};
+        final Cursor phone = managedQuery(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, ContactsContract.Data.CONTACT_ID + "=?", new String[]{String.valueOf(contactId)}, null);
+
+        if (phone.moveToFirst()) {
+            final int contactNumberColumnIndex = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
+
+            while (!phone.isAfterLast()) {
+                phoneNumber = phoneNumber + phone.getString(contactNumberColumnIndex) + ";";
+                phone.moveToNext();
+            }
+
+        }
+        phone.close();
+        return phoneNumber;
+    }
+
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            Log.e("", " Permission Already given ");
+            getInfo();
+        } else {
+            Log.e("", "Current app does not have READ_PHONE_STATE permission");
+            ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{
+                    Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.WRITE_CONTACTS}, CONTACT_PERMISSION_CODE);
+        }
+    }
+
 }

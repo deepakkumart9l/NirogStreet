@@ -61,6 +61,8 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import io.fabric.sdk.android.Fabric;
+import me.leolin.shortcutbadger.ShortcutBadgeException;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -335,18 +337,7 @@ public class MainActivity extends AppCompatActivity {
         }*/
         return super.onCreateOptionsMenu(menu);
     }
-    public void cancelNotificationOnLogout() {
-        try {
-           // ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.cancelAll();
-    }
 
     public void setDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -466,18 +457,18 @@ public class MainActivity extends AppCompatActivity {
 
                                         frameLayoutview_alert_red_circle.setVisibility(View.VISIBLE);
                                         view_alert_count_textviewTextView.setText(totalUnReadCount + "");
-                                       /* try {
+                                        try {
                                             ShortcutBadger.setBadge(getApplicationContext(), totalUnReadCount); //for 1.1.4+
                                             ShortcutBadger.with(getApplicationContext()).count(totalUnReadCount); //for 1.1.3
 
                                         } catch (ShortcutBadgeException e) {
                                             e.printStackTrace();
-                                        }*/
+                                        }
                                     }
                                     else {
                                         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
                                         try {
-                                           /// ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
+                                         ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
 
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -511,6 +502,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    public void cancelNotificationOnLogout() {
+        try {
+            ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.cancelAll();
+    }
+
     public class LogoutAsyncTask extends AsyncTask<Void, Void, Void> {
         JSONObject jo;
         String feedId;

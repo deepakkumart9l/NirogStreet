@@ -39,7 +39,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,11 +46,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
-import com.app.nirogstreet.adapter.AskQuestionForumImagesAdapter;
+import com.app.nirogstreet.adapter.PostDetailAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.helpers.Constants;
+import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.Image;
 import com.app.nirogstreet.model.SpecializationModel;
+import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.GridSpacingItemDecoration;
@@ -65,7 +66,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
-
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -100,11 +101,12 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Preeti on 24-10-2017.
+ * Created by Preeti on 06-12-2017.
  */
 
-public class PostingActivity extends Activity implements HashTagHelper.OnHashTagClickListener {
-    String selectedImagePath = null;
+public class PostEditActivity extends Activity implements HashTagHelper.OnHashTagClickListener{
+    PostDetailAsyncTask postDetailAsyncTask;
+    String feedId = "", authToken = "", userId = ""; String selectedImagePath = null;
     String selectedVideoPath = null;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
@@ -145,10 +147,22 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     CheckBox checkBox;
     private boolean albumupdate = false;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.post);
+        setContentView(R.layout.post_edit);
+        if (getIntent().hasExtra("feedId")) {
+            feedId = getIntent().getStringExtra("feedId");
+        }
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
+        if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
+            postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
+            postDetailAsyncTask.execute();
+        } else {
+            NetworkUtill.showNoInternetDialog(PostEditActivity.this);
+        }
         backImageView = (ImageView) findViewById(R.id.back);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +171,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 linkLay.setVisibility(View.GONE);
             }
         });
-        sesstionManager = new SesstionManager(PostingActivity.this);
+        sesstionManager = new SesstionManager(PostEditActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +194,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         if (sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC) != null) {
             String url;
             url = sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC);
-            Glide.with(PostingActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
+            Glide.with(PostEditActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
 
         }
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
@@ -222,12 +236,12 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             }
         });
         refernceEditText = (EditText) findViewById(R.id.refernce);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView, PostingActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView, PostingActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(title_QuestionEditText, PostingActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextMessage, PostingActivity.this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView, PostEditActivity.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView, PostEditActivity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(title_QuestionEditText, PostEditActivity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(editTextMessage, PostEditActivity.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(refernceEditText, PostingActivity.this);
+        TypeFaceMethods.setRegularTypeFaceEditText(refernceEditText, PostEditActivity.this);
 
 /*
         Glide.with(PostingActivity.this).load("https://www.google.com/search?q=nature+image+url&hl=en-US&tbm=isch&source=iu&pf=m&ictx=1&fir=L8qB97yhUQFCnM%253A%252CwMEPW2TZnfw3vM%252C_&usg=__tdpx9ET1W2b6i6SjlmIvIkJYDmo%3D&sa=X&ved=0ahUKEwib7eScsovXAhUFtI8KHYIxCyUQ9QEIPjAE#imgrc=BOuufLthHd4NKM:").into(circleImageView);
@@ -241,11 +255,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
         mEditTextView.setFocusable(false);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
+        TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostEditActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PostingActivity.this, Multi_Select_Search_specialization.class);
+                Intent intent = new Intent(PostEditActivity.this, Multi_Select_Search_specialization.class);
                 intent.putExtra("list", servicesMultipleSelectedModels);
 
                 intent.putExtra("tags", true);
@@ -254,25 +268,25 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        linearLayoutManager = new LinearLayoutManager(PostingActivity.this);
+        linearLayoutManager = new LinearLayoutManager(PostEditActivity.this);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerView.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(PostingActivity.this, 3);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(PostEditActivity.this, 3);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(4), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         textViewpost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Methods.hideKeyboardOfView(editTextMessage, PostingActivity.this);
+                Methods.hideKeyboardOfView(editTextMessage, PostEditActivity.this);
                 if (validate()) {
                     String check = "2";
                     if (checkBox.isChecked()) {
                         check = "1";
                     }
-                    if (NetworkUtill.isNetworkAvailable(PostingActivity.this)) {
+                    if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
                         String refernce = "";
                         if (refernceEditText.getText().toString().length() == 0) {
                             refernce = refernceEditText.getText().toString();
@@ -292,7 +306,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
                                 }
                             } else {
-                                Toast.makeText(PostingActivity.this, "Sorry! The maximum upload limit is size 30MB.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PostEditActivity.this, "Sorry! The maximum upload limit is size 30MB.", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             if (!isposting) {
@@ -302,10 +316,10 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                             }
                         }
                     } else {
-                        NetworkUtill.showNoInternetDialog(PostingActivity.this);
+                        NetworkUtill.showNoInternetDialog(PostEditActivity.this);
                     }
                 } else {
-                    Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PostEditActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -325,16 +339,15 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), this, additionalSymbols);
         mTextHashTagHelper.handle(mEditTextView);
     }
-
     public void checkPermission() {
-        if (ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
             chooseOption();
         } else {
             Log.e("", "Current app does not have READ_PHONE_STATE permission");
-            ActivityCompat.requestPermissions(PostingActivity.this, new String[]{Manifest.permission.CAMERA,
+            ActivityCompat.requestPermissions(PostEditActivity.this, new String[]{Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_CODE);
         }
@@ -352,7 +365,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     private void chooseOption() {
 
         final CharSequence[] items = {"Photo", "Video", "Document", "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(PostingActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
         builder.setTitle("Choose One!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
@@ -393,7 +406,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(PostingActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
@@ -409,7 +422,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     strings = new ArrayList<String>();
 
 
-                    Intent intent = new Intent(PostingActivity.this, AlbumSelectActivity.class);
+                    Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
                     intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 3);
                     startActivityForResult(intent, Constants.REQUEST_CODE);
 
@@ -459,18 +472,18 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                         strings.remove(i);
                     }
                 }
-                askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostingActivity.this);
+                askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostEditActivity.this);
                 recyclerView.setAdapter(askQuestionForumImagesAdapter);
             }
         }
         if (requestCode == 102 && resultCode == RESULT_OK) {
             if (data.getData() != null) {
                 Uri uri = data.getData();
-                Glide.with(PostingActivity.this).load(uri).into(imageViewSelected);
+                Glide.with(PostEditActivity.this).load(uri).into(imageViewSelected);
                 try {
                     selectedImagePath = null;
                     docpath = null;
-                    selectedVideoPath = PathUtil.getPath(PostingActivity.this, uri);
+                    selectedVideoPath = PathUtil.getPath(PostEditActivity.this, uri);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -486,28 +499,28 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imageViewSelected.setImageBitmap(selectedImage);
-                Uri selectedImagePath1 = getImageUri(PostingActivity.this, selectedImage);
-                selectedImagePath = getPath(selectedImagePath1, PostingActivity.this);
+                Uri selectedImagePath1 = getImageUri(PostEditActivity.this, selectedImage);
+                selectedImagePath = getPath(selectedImagePath1, PostEditActivity.this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         if (requestCode == REQUEST_CAMERA) {
             try {
-                    Uri uri = Uri.fromFile(photoFile);
-                    selectedVideoPath = null;
-                    docpath = null;
-                    ImageProcess obj = new ImageProcess(PostingActivity.this);
-                    mCurrentPhotoPath = obj.getPath(uri);
-                    selectedImagePath = mCurrentPhotoPath;
-                    File fff = new File(selectedImagePath);
-                    Glide.with(PostingActivity.this)
-                            .load(fff) // Uri of the picture
-                            .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .crossFade()
-                            .override(100, 100)
-                            .into(imageViewSelected);
+                Uri uri = Uri.fromFile(photoFile);
+                selectedVideoPath = null;
+                docpath = null;
+                ImageProcess obj = new ImageProcess(PostEditActivity.this);
+                mCurrentPhotoPath = obj.getPath(uri);
+                selectedImagePath = mCurrentPhotoPath;
+                File fff = new File(selectedImagePath);
+                Glide.with(PostEditActivity.this)
+                        .load(fff) // Uri of the picture
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .crossFade()
+                        .override(100, 100)
+                        .into(imageViewSelected);
 
             } catch (Exception e) {
             }
@@ -519,7 +532,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 // String pathe = data1.getPath();
                 // path = getRealPathFromURI_API19(getActivity(), data1);
                 try {
-                    String path = PathUtil.getPath(PostingActivity.this, data1);
+                    String path = PathUtil.getPath(PostEditActivity.this, data1);
                     selectedImagePath = null;
                     selectedVideoPath = null;
                     if (path != null) {
@@ -531,11 +544,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 imageViewSelected.setImageResource(R.drawable.pdf_image);
                                 imageViewSelected.setClickable(false);
                             } else {
-                                Toast.makeText(PostingActivity.this, "Not Supported", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PostEditActivity.this, "Not Supported", Toast.LENGTH_LONG).show();
                             }
                         }
                     } else {
-                        Toast.makeText(PostingActivity.this, "Not Supported", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PostEditActivity.this, "Not Supported", Toast.LENGTH_LONG).show();
                     }
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
@@ -557,8 +570,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
     public void checkPermissionForDoc() {
         if (
-                ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
             openFile();
         } else {
@@ -567,7 +580,97 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE_DOCUMENT);
         }
     }
+    public class PostDetailAsyncTask extends AsyncTask<Void, Void, Void> {
+        String authToken;
+        JSONObject jo;
+        String feedId, userId;
 
+
+        private String responseBody;
+        HttpClient client;
+        Context context;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public PostDetailAsyncTask(String feedId, String userId, String authToken) {
+            this.feedId = feedId;
+            this.authToken = authToken;
+            this.userId = userId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            circularProgressBar.setVisibility(View.VISIBLE);
+
+            super.onPostExecute(aVoid);
+            try {
+
+                if (jo != null) {
+                    int ispostDeletd = 0;
+                    if (jo.has("detail") && !jo.isNull("detail")) {
+                        JSONArray jsonArray = jo.getJSONArray("detail");
+                        if (jsonArray != null) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            if (jsonObject != null) {
+                                if (jsonObject.has("postdeleted") && !jsonObject.isNull("postdeleted")) {
+                                    ispostDeletd = jsonObject.getInt("postdeleted");
+
+                                }
+                            }
+
+                                ArrayList<FeedModel> feedModels = new ArrayList<>();
+                                feedModels.addAll(FeedParser.singlePostFeed(jsonArray.getJSONObject(0)));
+
+                            } else {
+                                circularProgressBar.setVisibility(View.GONE);
+                                                       }
+                        }
+                    }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.print(e);
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String url = AppUrl.BaseUrl + "feed/single-post";
+                SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(), SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("postID", feedId));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
     public class LinkPostAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -619,7 +722,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                             }
                             if (linkDetailJsonObject.has("images") && !linkDetailJsonObject.isNull("images")) {
                                 linkImage = linkDetailJsonObject.getString("images");
-                                Glide.with(PostingActivity.this)
+                                Glide.with(PostEditActivity.this)
                                         .load(linkImage) // Uri of the picture
                                         .centerCrop()
                                         .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -708,7 +811,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         protected void onPreExecute() {
             super.onPreExecute();
             //  circularProgressBar.setVisibility(View.VISIBLE);
-            pDialog = new ProgressDialog(PostingActivity.this);
+            pDialog = new ProgressDialog(PostEditActivity.this);
             pDialog.setMessage("Uploading...");
             //pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             pDialog.setCancelable(false);
@@ -849,7 +952,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     if (jo.has("responce") && !jo.isNull("responce")) {
                         JSONObject jsonObject = jo.getJSONObject("responce");
                         if (jsonObject.has("message") && !jsonObject.isNull("message")) {
-                            Toast.makeText(PostingActivity.this, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(PostEditActivity.this, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             albumupdate = true;
                             SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor1 = sharedPref1.edit();
@@ -913,7 +1016,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
     @Override
     public void onHashTagClicked(String hashTag) {
-        Toast.makeText(PostingActivity.this, hashTag, Toast.LENGTH_SHORT).show();
+        Toast.makeText(PostEditActivity.this, hashTag, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -937,11 +1040,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 case VIEW_TYPE_ADD_NEW:
                     View v1 = inflater.inflate(R.layout.add_image, parent, false);
 
-                    viewHolder = new AddNewArtistHolder(v1);
+                    viewHolder = new AskQuestionForumImagesAdapter.AddNewArtistHolder(v1);
                     break;
                 case VIEW_TYPE_LIST:
                     View v2 = inflater.inflate(R.layout.grid_image_item, parent, false);
-                    viewHolder = new MyHolderView(v2);
+                    viewHolder = new AskQuestionForumImagesAdapter.MyHolderView(v2);
                     break;
             }
             return viewHolder;
@@ -952,7 +1055,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             switch (viewHolder.getItemViewType()) {
                 case VIEW_TYPE_LIST:
                     final String askQuestionImages = (String) askQuestionImagesarr.get(position);
-                    MyHolderView myViewHolder = (MyHolderView) viewHolder;
+                    PostingActivity.AskQuestionForumImagesAdapter.MyHolderView myViewHolder = (PostingActivity.AskQuestionForumImagesAdapter.MyHolderView) viewHolder;
                   /*  if (!askQuestionImages.isServerImage()) {
                     *//*Picasso.with(context)
                             .load(askQuestionImages.getImage())
@@ -999,12 +1102,12 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     });
                     break;
                 case VIEW_TYPE_ADD_NEW:
-                    AddNewArtistHolder addnew = (AddNewArtistHolder) viewHolder;
+                    PostingActivity.AskQuestionForumImagesAdapter.AddNewArtistHolder addnew = (PostingActivity.AskQuestionForumImagesAdapter.AddNewArtistHolder) viewHolder;
 
                     addnew.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(PostingActivity.this, AlbumSelectActivity.class);
+                            Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
 
                             switch (strings.size()) {
 
@@ -1071,7 +1174,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = new ImageProcess(PostingActivity.this).getOutputMediaFile("");
+        photoFile = new ImageProcess(PostEditActivity.this).getOutputMediaFile("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 try {
@@ -1079,7 +1182,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                Uri photoURI = FileProvider.getUriForFile(PostingActivity.this,
+                Uri photoURI = FileProvider.getUriForFile(PostEditActivity.this,
                         "com.app.nirogstreet.fileprovider",
                         photoFile);
                 Log.e("photoURI", "" + photoURI);
@@ -1107,7 +1210,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = new ImageProcess(PostingActivity.this).getOutputMediaFile("");
+        photoFile = new ImageProcess(PostEditActivity.this).getOutputMediaFile("");
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             try {
                 photoFile = createImageFile();
@@ -1126,9 +1229,10 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         List<String> allHashTags = mTextHashTagHelper.getAllHashTags();
         allHashTags.toString();
         if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0 && title_QuestionEditText.getText().length() == 0) {
-            Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
+            Toast.makeText(PostEditActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
             check = false;
         }
         return check;
     }
+
 }

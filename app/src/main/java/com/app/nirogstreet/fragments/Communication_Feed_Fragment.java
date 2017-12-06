@@ -63,15 +63,16 @@ public class Communication_Feed_Fragment extends Fragment {
     int page = 1;
     TimelineAdapter feedsAdapter;
     private SwipeRefreshLayout swipeLayout;
-CircularProgressBar circularProgressBar;
+    CircularProgressBar circularProgressBar;
     private LinearLayoutManager linearLayoutManager;
-FrameLayout customViewContainer;
+    FrameLayout customViewContainer;
     View view;
     private ArrayList<FeedModel> totalFeeds;
     private UserFeedsAsyncTask userFeedsAsyncTask;
     private SesstionManager session;
     String authToken, userId;
     String groupId;
+
     public static Communication_Feed_Fragment getInstance(String groupId) {
         Communication_Feed_Fragment artistDetailFragment = new Communication_Feed_Fragment();
         Bundle bundle = new Bundle();
@@ -80,6 +81,7 @@ FrameLayout customViewContainer;
         artistDetailFragment.setArguments(bundle);
         return artistDetailFragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,21 +126,21 @@ FrameLayout customViewContainer;
             SharedPreferences sharedPref = getActivity().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             postsuccess = sharedPref.getBoolean("imgvidupdate", false);
-                if (ApplicationSingleton.isProfilePostExecuted() || ApplicationSingleton.isEditFeedPostExecuted()) {
-                    totalFeeds = new ArrayList<>();
-                    feedsAdapter = null;
-                    page = 1;
-                    editor.clear();
-                    editor.commit();
-                    if (NetworkUtill.isNetworkAvailable(context)) {
-                        String url = AppUrl.BaseUrl + "group/timeline";
-                        userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                        userFeedsAsyncTask.execute();
-                    } else {
-                        NetworkUtill.showNoInternetDialog(context);
-                    }
-                    ApplicationSingleton.setIsProfilePostExecuted(false);
+            if (ApplicationSingleton.isProfilePostExecuted() || ApplicationSingleton.isEditFeedPostExecuted()) {
+                totalFeeds = new ArrayList<>();
+                feedsAdapter = null;
+                page = 1;
+                editor.clear();
+                editor.commit();
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    String url = AppUrl.BaseUrl + "group/timeline";
+                    userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
+                    userFeedsAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
                 }
+                ApplicationSingleton.setIsProfilePostExecuted(false);
+            }
 
             if (feedsAdapter != null && totalFeeds != null && totalFeeds.size() > 0 && ApplicationSingleton.getPost_position() != -1) {
 
@@ -209,8 +211,7 @@ FrameLayout customViewContainer;
         } else {
             NetworkUtill.showNoInternetDialog(context);
         }
-        totalFeeds=new ArrayList<>();
-
+        totalFeeds = new ArrayList<>();
 
 
         return view;
@@ -258,7 +259,7 @@ FrameLayout customViewContainer;
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("pageNo", page + ""));
-                pairs.add(new BasicNameValuePair("groupID",groupId));
+                pairs.add(new BasicNameValuePair("groupID", groupId));
                 httppost.setHeader("Authorization", "Basic " + authToken);
                 httppost.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
                 response = client.execute(httppost);
@@ -305,7 +306,7 @@ FrameLayout customViewContainer;
                 if (feedsAdapter == null && totalFeeds.size() > 0) {
                     // appBarLayout.setExpanded(true);
 
-                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(),groupId,customViewContainer,circularProgressBar);
+                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), groupId, customViewContainer, circularProgressBar);
                     recyclerView.setAdapter(feedsAdapter);
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

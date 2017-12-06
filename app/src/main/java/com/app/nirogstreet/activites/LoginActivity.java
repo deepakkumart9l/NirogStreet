@@ -210,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                     JSONArray errorArray;
                     JSONObject dataJsonObject;
                     boolean status = false;
+
                     String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
@@ -219,10 +220,8 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             status = dataJsonObject.getBoolean("status");
                             if (!status) {
-                                if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                      Toast.makeText(LoginActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
 
-                                        Toast.makeText(LoginActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                                    }
 
                             } else {
                                 if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
@@ -263,7 +262,22 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
                         }
+                    }else {
+                        if(jo.has("message")&&!jo.isNull("message"))
+                        {
+                            if(jo.getString("message").equalsIgnoreCase("OK"))
+                            {
+                                if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {
+                                        loginAsync = new LoginAsync();
+                                        loginAsync.execute();
+
+                                } else
+                                    NetworkUtill.showNoInternetDialog(LoginActivity.this);
+                            }
+                        }
+
                     }
+
                 }
 
             } catch (Exception e) {

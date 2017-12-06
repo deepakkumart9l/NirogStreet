@@ -723,10 +723,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
                         span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         builder.append(span);
-                        // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                         if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
 
-                            if (feedModel.getParent_feed() != null) {
+                            if (feedModel.getParent_feed() != null)
+                            {
                                 if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
                                     str2 = new SpannableString(" shared a video ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -753,8 +753,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
                                 }
-                            }/* else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
+                            }
+                            else {
+                                String name2 = "Dr. " + userDetailModel.getName();
+                                builder = new SpannableStringBuilder();
+                                SpannableString span2 = new SpannableString(name2);
+                                span2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span2.length(), 0);
+                                span2.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                builder.append(span2);
+                            }
+
+                                /*else {
+                                */
+                            /*if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
                                     str2 = new SpannableString(" posted a video ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
@@ -779,11 +790,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     str2 = new SpannableString(" posted a document ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
-                                }
+                                }*//*
+
                             }*/
                         } else {
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                                str2 = new SpannableString(" posted in a " + " " + feedModel.getCommunity_name());
+                                str2 = new SpannableString(" posted in a" + " " + feedModel.getCommunity_name());
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                 builder.append(str2);
                             }
@@ -819,9 +831,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 context.startActivity(intent);
                             }
                         };
-                        String thirdspan = str2.toString();
-                        int third = builder.toString().indexOf(thirdspan);
-                        builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        if(str2!=null&&str2.length()>0) {
+
+
+                                String thirdspan = str2.toString();
+                                int third = builder.toString().indexOf(thirdspan);
+                                builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            }
                         builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     }
