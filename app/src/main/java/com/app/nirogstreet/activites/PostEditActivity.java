@@ -75,6 +75,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -104,9 +105,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Preeti on 06-12-2017.
  */
 
-public class PostEditActivity extends Activity implements HashTagHelper.OnHashTagClickListener{
+public class PostEditActivity extends Activity implements HashTagHelper.OnHashTagClickListener {
     PostDetailAsyncTask postDetailAsyncTask;
-    String feedId = "", authToken = "", userId = ""; String selectedImagePath = null;
+    String feedId = "", authToken = "", userId = "";
+    String selectedImagePath = null;
     String selectedVideoPath = null;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
@@ -148,7 +150,6 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     private boolean albumupdate = false;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +170,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             @Override
             public void onClick(View v) {
                 linkLay.setVisibility(View.GONE);
+                imagelay.setVisibility(View.VISIBLE);
             }
         });
         sesstionManager = new SesstionManager(PostEditActivity.this);
@@ -198,7 +200,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
 
         }
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
-        dr_nameTextView.setText("Dr. "+sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
+        dr_nameTextView.setText("Dr. " + sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
         publicTextView = (TextView) findViewById(R.id.public_);
         title_QuestionEditText = (EditText) findViewById(R.id.title_Question);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
@@ -339,6 +341,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), this, additionalSymbols);
         mTextHashTagHelper.handle(mEditTextView);
     }
+
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(PostEditActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
@@ -580,6 +583,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE_DOCUMENT);
         }
     }
+
     public class PostDetailAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -605,7 +609,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            circularProgressBar.setVisibility(View.VISIBLE);
+            circularProgressBar.setVisibility(View.GONE);
 
             super.onPostExecute(aVoid);
             try {
@@ -623,14 +627,15 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                                 }
                             }
 
-                                ArrayList<FeedModel> feedModels = new ArrayList<>();
-                                feedModels.addAll(FeedParser.singlePostFeed(jsonArray.getJSONObject(0)));
-
-                            } else {
-                                circularProgressBar.setVisibility(View.GONE);
-                                                       }
+                            ArrayList<FeedModel> feedModels = new ArrayList<>();
+                            feedModels.addAll(FeedParser.singlePostFeed(jsonArray.getJSONObject(0)));
+                            System.out.print(feedModels.size());
+                            getFeedTypeImg(feedModels.get(0));
+                        } else {
+                            circularProgressBar.setVisibility(View.GONE);
                         }
                     }
+                }
 
 
             } catch (Exception e) {
@@ -671,6 +676,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             circularProgressBar.setVisibility(View.VISIBLE);
         }
     }
+
     public class LinkPostAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -849,7 +855,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String url = AppUrl.BaseUrl + "feed/post";
+                String url = AppUrl.BaseUrl + "feed/update";
                 SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
                 Scheme sch = new Scheme("https", 443, sf);
@@ -865,6 +871,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 entityBuilder.addTextBody("userID", userId);
                 Log.e("messageText", "inside" + messageText);
+                entityBuilder.addTextBody("feedID", feedId);
                 entityBuilder.addTextBody("Feed[title]", question);
                 entityBuilder.addTextBody("Feed[refrence]", refrence);
                 entityBuilder.addTextBody("Feed[message]", messageText);
@@ -896,10 +903,18 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                     }
                     for (int i = 0; i < strings.size(); i++) {
                         if (!strings.get(i).equalsIgnoreCase("add")) {
-                            File file = new File(strings.get(i));
-                            FileBody encFile = new FileBody(file);
-                            entityBuilder.addPart("Feed[imageFile][img][" + i + "]", encFile);
+                            if(strings.get(i).startsWith("https://s3-ap-southeast"))
+                            {
+                                URL urlImage = new URL(strings.get(i));
 
+                                String name=getFileName(urlImage);
+                                entityBuilder.addTextBody("Feed[imageFile][img][" + i + "]", name);
+
+                            }else {
+                                File file = new File(strings.get(i));
+                                FileBody encFile = new FileBody(file);
+                                entityBuilder.addPart("Feed[imageFile][img][" + i + "]", encFile);
+                            }
                         }
                     }
                 } else if (selectedImagePath != null && selectedImagePath.toString().trim().length() > 0) {
@@ -1040,11 +1055,11 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 case VIEW_TYPE_ADD_NEW:
                     View v1 = inflater.inflate(R.layout.add_image, parent, false);
 
-                    viewHolder = new AskQuestionForumImagesAdapter.AddNewArtistHolder(v1);
+                    viewHolder = new AddNewArtistHolder(v1);
                     break;
                 case VIEW_TYPE_LIST:
                     View v2 = inflater.inflate(R.layout.grid_image_item, parent, false);
-                    viewHolder = new AskQuestionForumImagesAdapter.MyHolderView(v2);
+                    viewHolder = new MyHolderView(v2);
                     break;
             }
             return viewHolder;
@@ -1055,7 +1070,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             switch (viewHolder.getItemViewType()) {
                 case VIEW_TYPE_LIST:
                     final String askQuestionImages = (String) askQuestionImagesarr.get(position);
-                    PostingActivity.AskQuestionForumImagesAdapter.MyHolderView myViewHolder = (PostingActivity.AskQuestionForumImagesAdapter.MyHolderView) viewHolder;
+                    MyHolderView myViewHolder = (MyHolderView) viewHolder;
                   /*  if (!askQuestionImages.isServerImage()) {
                     *//*Picasso.with(context)
                             .load(askQuestionImages.getImage())
@@ -1063,7 +1078,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                             .into(((MyHolderView) viewHolder).imageViewString);*//*
                         ((MyHolderView) viewHolder).imageViewString.setImageBitmap(BitmapFactory.decodeFile(askQuestionImages.getImage()));
                     } else {
-                        Glide.with(context).load(askQuestionImages.getMediaimage()).into(myViewHolder.imageViewString);
+                        Glide.with(co+ntext).load(askQuestionImages.getMediaimage()).into(myViewHolder.imageViewString);+
                         // imageLoader.DisplayImage(context, AppUrl.baseUrlWeb + askQuestionImages.getMediaimage(), myViewHolder.imageViewString, null, 100, 100, R.drawable.default_image);
                     }
                     myViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -1102,7 +1117,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                     });
                     break;
                 case VIEW_TYPE_ADD_NEW:
-                    PostingActivity.AskQuestionForumImagesAdapter.AddNewArtistHolder addnew = (PostingActivity.AskQuestionForumImagesAdapter.AddNewArtistHolder) viewHolder;
+                    AddNewArtistHolder addnew = (AddNewArtistHolder) viewHolder;
 
                     addnew.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1235,4 +1250,89 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         return check;
     }
 
+    public String getFeedTypeImg(FeedModel feedModel) {
+
+        if (feedModel.getFeed_type().equalsIgnoreCase("2") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
+            if (feedModel.getFeedSourceArrayList() != null) {
+                askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(feedModel.getFeedSourceArrayList(), PostEditActivity.this);
+                strings = feedModel.getFeedSourceArrayList();
+                recyclerView.setAdapter(askQuestionForumImagesAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        }
+        if (feedModel.getFeed_type().equalsIgnoreCase("5") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
+            selectedVideoPath = feedModel.getFeed_source();
+            imageViewSelected.setBackgroundColor(R.color.gray_2nd);
+            imageViewSelected.setImageResource(R.drawable.play_icon);
+
+        }
+        if (feedModel.getFeed_type().equalsIgnoreCase("2") && feedModel.getPost_Type().equalsIgnoreCase("2") && feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+            if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
+                linkPostAsynctask = new LinkPostAsynctask(feedModel.getFeed_source(), sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+                linkPostAsynctask.execute();
+            } else {
+                NetworkUtill.showNoInternetDialog(PostEditActivity.this);
+            }
+        }
+        if (feedModel.getFeed_type().equalsIgnoreCase("3") && feedModel.getPost_Type().equalsIgnoreCase("1") && feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("1")) {
+            if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
+                linkPostAsynctask = new LinkPostAsynctask(feedModel.getFeed_source(), sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+                linkPostAsynctask.execute();
+            } else {
+                NetworkUtill.showNoInternetDialog(PostEditActivity.this);
+            }
+        }
+        if (feedModel.getFeed_type().equalsIgnoreCase("6") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
+            docpath = feedModel.getFeed_source();
+            imageViewSelected.setImageResource(R.drawable.pdf_image);
+
+        }
+        return "";
+
+    }
+    public static String getFileName(URL extUrl) {
+        //URL: "http://photosaaaaa.net/photos-ak-snc1/v315/224/13/659629384/s659629384_752969_4472.jpg"
+        String filename = "";
+        //PATH: /photos-ak-snc1/v315/224/13/659629384/s659629384_752969_4472.jpg
+        String path = extUrl.getPath();
+        //Checks for both forward and/or backslash
+        //NOTE:**While backslashes are not supported in URL's
+        //most browsers will autoreplace them with forward slashes
+        //So technically if you're parsing an html page you could run into
+        //a backslash , so i'm accounting for them here;
+        String[] pathContents = path.split("[\\\\/]");
+        if(pathContents != null){
+            int pathContentsLength = pathContents.length;
+            System.out.println("Path Contents Length: " + pathContentsLength);
+            for (int i = 0; i < pathContents.length; i++) {
+                System.out.println("Path " + i + ": " + pathContents[i]);
+            }
+            //lastPart: s659629384_752969_4472.jpg
+            String lastPart = pathContents[pathContentsLength-1];
+            String[] lastPartContents = lastPart.split("\\.");
+            if(lastPartContents != null && lastPartContents.length > 1){
+                int lastPartContentLength = lastPartContents.length;
+                System.out.println("Last Part Length: " + lastPartContentLength);
+                //filenames can contain . , so we assume everything before
+                //the last . is the name, everything after the last . is the
+                //extension
+                String name = "";
+                for (int i = 0; i < lastPartContentLength; i++) {
+                    System.out.println("Last Part " + i + ": "+ lastPartContents[i]);
+                    if(i < (lastPartContents.length -1)){
+                        name += lastPartContents[i] ;
+                        if(i < (lastPartContentLength -2)){
+                            name += ".";
+                        }
+                    }
+                }
+                String extension = lastPartContents[lastPartContentLength -1];
+                filename = name + "." +extension;
+                System.out.println("Name: " + name);
+                System.out.println("Extension: " + extension);
+                System.out.println("Filename: " + filename);
+            }
+        }
+        return filename;
+    }
 }

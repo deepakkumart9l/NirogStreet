@@ -155,6 +155,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             @Override
             public void onClick(View v) {
                 linkLay.setVisibility(View.GONE);
+                imagelay.setVisibility(View.VISIBLE);
             }
         });
         sesstionManager = new SesstionManager(PostingActivity.this);

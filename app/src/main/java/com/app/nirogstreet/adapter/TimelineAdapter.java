@@ -53,6 +53,7 @@ import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.PostDetailActivity;
+import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.ShareOnFriendsTimeline;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
@@ -126,6 +127,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     ArrayList<FeedModel> feedModels;
     Context context;
     Activity activity;
+    SpannableString span2;
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
@@ -470,6 +472,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                             viewHolder.videoView.setVisibility(View.GONE);
                             viewHolder.webView.setVisibility(View.GONE);
+                            viewHolder.docTypeLayout.setVisibility(View.GONE);
                             viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
                             viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -566,7 +569,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
                     }
-                    if(feedModel.getParentFeedDetail()!=null&&feedModel.getUserDetailModel_creator()!=null) {
+                    viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteOrEditPopup(viewHolder.delImageView,feedModel);
+                        }
+                    });
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                        viewHolder.delImageView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.delImageView.setVisibility(View.GONE);
+                    }
+                    if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
                         if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
                             if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
                                 viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
@@ -578,7 +592,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                         }
-                    }else {
+                    } else {
                         viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                     }
@@ -725,8 +739,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         builder.append(span);
                         if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
 
-                            if (feedModel.getParent_feed() != null)
-                            {
+                            if (feedModel.getParent_feed() != null) {
                                 if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
                                     str2 = new SpannableString(" shared a video ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -753,11 +766,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
                                 }
-                            }
-                            else {
+                            } else {
                                 String name2 = "Dr. " + userDetailModel.getName();
                                 builder = new SpannableStringBuilder();
-                                SpannableString span2 = new SpannableString(name2);
+                                span2 = new SpannableString(name2);
                                 span2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span2.length(), 0);
                                 span2.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 builder.append(span2);
@@ -831,15 +843,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 context.startActivity(intent);
                             }
                         };
-                        if(str2!=null&&str2.length()>0) {
+                        if (str2 != null && str2.length() > 0) {
 
 
-                                String thirdspan = str2.toString();
-                                int third = builder.toString().indexOf(thirdspan);
-                                builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                        builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                            String thirdspan = str2.toString();
+                            int third = builder.toString().indexOf(thirdspan);
+                            builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                        if (span != null) {
+                            builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                        }
+                        if (span2 != null) {
+
+                        }
                     }
 
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
@@ -922,6 +939,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Button buttondownload;
         VideoView videoView;
         TextView txtTextView;
+        ImageView delImageView;
         WebView webView;
         LinearLayout link_title_des_lay;
         View basicAnnouncemet_view;
@@ -943,6 +961,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             moreviewTextView = (TextView) itemView.findViewById(R.id.moreview);
             imageFirstImageView = (ImageView) itemView.findViewById(R.id.imageFirst);
             imageSecImageView = (ImageView) itemView.findViewById(R.id.imageSec);
+            delImageView = (ImageView) itemView.findViewById(R.id.del);
             two_or_moreLinearLayout = (LinearLayout) itemView.findViewById(R.id.two_or_more);
             frameVideoFrameLayout = (FrameLayout) itemView.findViewById(R.id.frameVideo);
             viewAllTextView = (TextView) itemView.findViewById(R.id.viewAll);
@@ -1198,6 +1217,47 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         popup.show();//showing popup menu
     }
 
+    public void deleteOrEditPopup(ImageView view, final FeedModel feedModel) {
+        PopupMenu popup = new PopupMenu(context, view);
+        popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+                //  int index = info.position;
+                //  System.out.print(index);
+                switch (item.getItemId()) {
+                    case R.id.edit:
+
+
+                        Intent intent = new Intent(context, PostEditActivity.class);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
+                        context.startActivity(intent);
+                        break;
+                    case R.id.del:
+                        if (NetworkUtill.isNetworkAvailable(context)) {
+                            DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                            deletepostAsyncTask.execute();
+                        } else {
+                            NetworkUtill.showNoInternetDialog(context);
+                            //feedId
+                        }break;
+                }
+                /*if (item.getTitle().equals(R.string.SharePublic)) {
+
+
+                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
+
+                } else {
+
+                }*/
+                return true;
+            }
+        });
+
+        popup.show();//showing popup menu
+    }
+
     public class SharePublicAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -1286,6 +1346,83 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String url1 = url;
             System.out.print(url1);
             return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+    }
+    public class DeletepostAsyncTask extends AsyncTask<Void, Void, Void> {
+        String authToken;
+        JSONObject jo;
+        String feedId, userId;
+
+
+        private String responseBody;
+        HttpClient client;
+        Context context;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public DeletepostAsyncTask(String feedId, String userId, String authToken) {
+            this.feedId = feedId;
+            this.authToken = authToken;
+            this.userId = userId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                if (jo != null) {
+
+                    feedModels.remove(positionat);
+                    notifyItemRemoved(positionat);
+                    notifyItemRangeChanged(positionat, feedModels.size());
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+
+
+                String url = AppUrl.BaseUrl + "feed/delete";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", "140"));
+                pairs.add(new BasicNameValuePair("feedID", feedId));
+                httppost.setHeader("Authorization", "Basic " + "aKE5EOwUCNO9y3xaip5leMU1wWqcZadv");
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils
+                        .toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
     }
 
