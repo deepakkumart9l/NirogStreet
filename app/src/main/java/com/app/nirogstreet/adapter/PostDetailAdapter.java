@@ -46,6 +46,7 @@ import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.PostDetailActivity;
+import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
@@ -575,7 +576,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             .load(userDetailModel.getProfile_pic())
                             .placeholder(R.drawable.user)
                             .error(R.drawable.user)
-                            .into(viewHolder.linkImageView);
+                            .into(viewHolder.profileImageView);
                 }
                 viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -644,6 +645,17 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
                 });
+                viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
+                    }
+                });
+                if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                    viewHolder.delImageView.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.delImageView.setVisibility(View.GONE);
+                }
                 viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -669,15 +681,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
 
                 }
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, PostDetailActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);
 
-                    }
-                });
                 viewHolder.feedlikeLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -911,7 +915,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Button buttondownload;
         VideoView videoView;
         TextView txtTextView;
-
+ImageView delImageView;
         WebView webView;
         View left_view, right_view, bottom_view;
         LinearLayout link_title_des_lay;
@@ -922,6 +926,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            delImageView = (ImageView) itemView.findViewById(R.id.del);
+
             left_view = (View) itemView.findViewById(R.id.left_view);
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
@@ -1284,6 +1290,126 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String url1 = url;
             System.out.print(url1);
             return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+    }
+    public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
+        PopupMenu popup = new PopupMenu(context, view);
+        popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+                //  int index = info.position;
+                //  System.out.print(index);
+                switch (item.getItemId()) {
+                    case R.id.edit:
+
+
+                        Intent intent = new Intent(context, PostEditActivity.class);
+                        intent.putExtra("position", position);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
+                        context.startActivity(intent);
+                        break;
+                    case R.id.del:
+                        if (NetworkUtill.isNetworkAvailable(context)) {
+                            DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                            deletepostAsyncTask.execute();
+                        } else {
+                            NetworkUtill.showNoInternetDialog(context);
+                            //feedId
+                        }
+                        break;
+                }
+                /*if (item.getTitle().equals(R.string.SharePublic)) {
+
+
+                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
+
+                } else {
+
+                }*/
+                return true;
+            }
+        });
+
+        popup.show();//showing popup menu
+    }
+
+    public class DeletepostAsyncTask extends AsyncTask<Void, Void, Void> {
+        String authToken;
+        JSONObject jo;
+        String feedId, userId;
+
+
+        private String responseBody;
+        HttpClient client;
+        Context context;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public DeletepostAsyncTask(String feedId, String userId, String authToken) {
+            this.feedId = feedId;
+            this.authToken = authToken;
+            this.userId = userId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                if (jo != null) {
+
+                    feedModels.remove(positionat);
+                    notifyItemRemoved(positionat);
+                    notifyItemRangeChanged(positionat, feedModels.size());
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+
+
+                String url = AppUrl.BaseUrl + "feed/delete";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", "140"));
+                pairs.add(new BasicNameValuePair("feedID", feedId));
+                httppost.setHeader("Authorization", "Basic " + "aKE5EOwUCNO9y3xaip5leMU1wWqcZadv");
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils
+                        .toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
     }
 }

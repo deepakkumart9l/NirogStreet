@@ -8,10 +8,11 @@ import java.util.ArrayList;
 
 public class FeedModel {
     String feed_id;
-public FeedModel()
-{
 
-}
+    public FeedModel() {
+
+    }
+
     public String getDoc_name() {
         return doc_name;
     }
@@ -21,6 +22,7 @@ public FeedModel()
     }
 
     String doc_name;
+
     public String getTotal_likes() {
         return total_likes;
     }
@@ -28,6 +30,7 @@ public FeedModel()
     public void setTotal_likes(String total_likes) {
         this.total_likes = total_likes;
     }
+
     String total_likes;
 
     String feed_source;
@@ -77,21 +80,32 @@ public FeedModel()
         this.community_name = community_name;
     }
 
+    public String getActivity_detail() {
+        return activity_detail;
+    }
+
+    public void setActivity_detail(String activity_detail) {
+        this.activity_detail = activity_detail;
+    }
+
+    private String activity_detail;
     public String community_name;
-    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name,String doc_Type,String community_name) {
+
+    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name, String doc_Type, String community_name, String activity_detail) {
         this.feed_id = feed_id;
         this.userDetailModel_creator = userDetailModel_creator;
         this.community_Id = community_Id;
         this.parentFeedDetail = parentFeedDetail;
-        this.community_name=community_name;
+        this.activity_detail = activity_detail;
+        this.community_name = community_name;
         this.parent_feed = parent_feed;
         this.feed_type = feed_type;
-        this.doc_Type=doc_Type;
+        this.doc_Type = doc_Type;
         this.feed_source = feed_source;
         this.total_comments = total_comments;
         this.total_likes = total_likes;
         this.status = status;
-        this.doc_name=doc_name;
+        this.doc_name = doc_name;
         this.post_Type = post_Type;
         this.titleQuestion = titleQuestion;
         this.message = message;

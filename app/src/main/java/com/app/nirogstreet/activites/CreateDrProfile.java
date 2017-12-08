@@ -265,7 +265,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
         initSpinnerScrollingTitle();
         initSpinnerScrollingCategory();
-        spinnerCategory.setSelection(1);
+       // spinnerCategory.setSelection(0);
         if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
             userDetailAsyncTask = new UserDetailAsyncTask();
             userDetailAsyncTask.execute();
@@ -957,6 +957,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         editTextYearOfExpeicence.setText(userDetailModel.getExperience());
                                     }
                                     if (userDetailModel.getCategory() != null) {
+                                        if(!userDetailModel.getCategory().equalsIgnoreCase(""))
                                         if (userDetailModel.getCategory().equalsIgnoreCase("1") && !userDetailModel.getCategory().equalsIgnoreCase("")) {
                                             spinnerCategory.setSelection(1);
                                         } else {

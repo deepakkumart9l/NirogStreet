@@ -14,10 +14,28 @@ public class ApplicationSingleton extends Application {
         return isGroupUpdated;
     }
 
+    public static FeedModel getFeedModelPostEdited() {
+        return feedModelPostEdited;
+    }
+
+    public static void setFeedModelPostEdited(FeedModel feedModelPostEdited) {
+        ApplicationSingleton.feedModelPostEdited = feedModelPostEdited;
+    }
+
+    public static FeedModel feedModelPostEdited;
     public static boolean isClinicUpdated() {
         return isClinicUpdated;
     }
 
+    public static int getPostEditPosition() {
+        return postEditPosition;
+    }
+
+    public static void setPostEditPosition(int postEditPosition) {
+        ApplicationSingleton.postEditPosition = postEditPosition;
+    }
+
+    public static int postEditPosition=-1;
     public static boolean isListingFinish = false;
     public static FeedModel feedModel;
 

@@ -97,6 +97,35 @@ public class MoreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (ApplicationSingleton.getPostEditPosition() != -1) {
+            if (ApplicationSingleton.getFeedModelPostEdited() != null) {
+                totalFeeds.set(ApplicationSingleton.getPostEditPosition(), ApplicationSingleton.getFeedModelPostEdited());
+                feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostEditPosition());
+
+            }
+            ApplicationSingleton.setPostEditPosition(-1);
+            ApplicationSingleton.setFeedModelPostEdited(null);
+        }
+        if (ApplicationSingleton.getPostSelectedPostion() != -1) {
+            if (ApplicationSingleton.getNoOfComment() != -1) {
+                totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getNoOfComment() + "");
+                feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostSelectedPostion());
+                ApplicationSingleton.setNoOfComment(-1);
+            }
+            if (ApplicationSingleton.getTotalLike() != -1) {
+                totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getTotalLike() + "");
+
+                if (ApplicationSingleton.isCurruntUserLiked())
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(1);
+                else
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(0);
+                feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostSelectedPostion());
+
+            }
+            ApplicationSingleton.setPostSelectedPostion(-1);
+
+        }
+
         if (ApplicationSingleton.isContactInfoUpdated()) {
             updateContactInfo();
         }
@@ -286,7 +315,7 @@ public class MoreFragment extends Fragment {
                                 feedsAdapter = null;
                                 page = 1;
                                 if (NetworkUtill.isNetworkAvailable(context)) {
-                                    String url = AppUrl.BaseUrl + "feed/my-activity";
+                                    String url = AppUrl.BaseUrl + "feed/my-activity-new";
                                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                     userFeedsAsyncTask.execute();
                                 } else {
@@ -413,7 +442,7 @@ public class MoreFragment extends Fragment {
                                     if (page < totalPageCount) {
                                         page++;
 
-                                        String url = AppUrl.BaseUrl + "feed/my-activity";
+                                        String url = AppUrl.BaseUrl + "my-activity-new";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                         userFeedsAsyncTask.execute();
                                     }

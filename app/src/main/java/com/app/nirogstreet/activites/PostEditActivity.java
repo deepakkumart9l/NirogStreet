@@ -107,6 +107,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostEditActivity extends Activity implements HashTagHelper.OnHashTagClickListener {
     PostDetailAsyncTask postDetailAsyncTask;
+    int position;
     String feedId = "", authToken = "", userId = "";
     String selectedImagePath = null;
     String selectedVideoPath = null;
@@ -156,6 +157,10 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         setContentView(R.layout.post_edit);
         if (getIntent().hasExtra("feedId")) {
             feedId = getIntent().getStringExtra("feedId");
+        }
+        if(getIntent().hasExtra("position"))
+        {
+            position=getIntent().getIntExtra("position",-1);
         }
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
@@ -901,31 +906,53 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                         }
 
                     }
+                    ArrayList<String> files = new ArrayList<>();
+
+                    ArrayList<String> serverImages = new ArrayList<>();
                     for (int i = 0; i < strings.size(); i++) {
                         if (!strings.get(i).equalsIgnoreCase("add")) {
-                            if(strings.get(i).startsWith("https://s3-ap-southeast"))
-                            {
-                                URL urlImage = new URL(strings.get(i));
+                            if (strings.get(i).startsWith("https://s3-ap-southeast")) {
+                               /* URL urlImage = new URL(strings.get(i));
 
-                                String name=getFileName(urlImage);
-                                entityBuilder.addTextBody("Feed[imageFile][img][" + i + "]", name);
+                                String name = getFileName(urlImage);
+                                entityBuilder.addTextBody("Feed[mediaName][" + i + "]", name);*/
+                                serverImages.add(strings.get(i));
 
-                            }else {
-                                File file = new File(strings.get(i));
-                                FileBody encFile = new FileBody(file);
-                                entityBuilder.addPart("Feed[imageFile][img][" + i + "]", encFile);
+                            } else {
+                                files.add(strings.get(i));
+                              /*  */
                             }
                         }
+                    }
+                    for (int m = 0; m < files.size(); m++) {
+                        File file = new File(files.get(m));
+                        FileBody encFile = new FileBody(file);
+                        entityBuilder.addPart("Feed[imageFile][img][" + m + "]", encFile);
+                    }
+                    for (int m = 0; m < serverImages.size(); m++) {
+                        URL urlImage = new URL(serverImages.get(m));
+
+                        String name = getFileName(urlImage);
+                        entityBuilder.addTextBody("Feed[mediaName][" + m + "]", name);
                     }
                 } else if (selectedImagePath != null && selectedImagePath.toString().trim().length() > 0) {
                     File file = new File(selectedImagePath);
                     FileBody encFile = new FileBody(file);
                     entityBuilder.addPart("Feed[imageFile][img][]", encFile);
                 } else if (selectedVideoPath != null && selectedVideoPath.toString().trim().length() > 0) {
-                    File file = new File(selectedVideoPath);
-                    file.getAbsolutePath();
-                    ContentBody cbfile = new FileBody(file);
-                    entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                    if (selectedVideoPath.startsWith("https://s3-ap-southeast")) {
+                        URL urlImage = new URL(selectedVideoPath);
+
+                        String name = getFileName(urlImage);
+                        entityBuilder.addTextBody("Feed[mediaName][]", name);
+
+                    } else {
+
+                        File file = new File(selectedVideoPath);
+                        file.getAbsolutePath();
+                        ContentBody cbfile = new FileBody(file);
+                        entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                    }
                 }
                 if (servicesMultipleSelectedModels != null && servicesMultipleSelectedModels.size() > 0) {
                     for (int i = 0; i < servicesMultipleSelectedModels.size(); i++) {
@@ -935,10 +962,18 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                     }
                 }
                 if (docpath != null && docpath.toString().trim().length() > 0) {
-                    File file = new File(docpath);
-                    file.getAbsolutePath();
-                    ContentBody cbfile = new FileBody(file);
-                    entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                    if (docpath.startsWith("https://s3-ap-southeast")) {
+                        URL urlImage = new URL(docpath);
+
+                        String name = getFileName(urlImage);
+                        entityBuilder.addTextBody("Feed[mediaName][]", name);
+
+                    } else {
+                        File file = new File(docpath);
+                        file.getAbsolutePath();
+                        ContentBody cbfile = new FileBody(file);
+                        entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                    }
                 }
 
                 httppost.setHeader("Authorization", "Basic " + authToken);
@@ -964,18 +999,25 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             pDialog.dismiss();
             try {
                 if (jo != null) {
-                    if (jo.has("responce") && !jo.isNull("responce")) {
-                        JSONObject jsonObject = jo.getJSONObject("responce");
-                        if (jsonObject.has("message") && !jsonObject.isNull("message")) {
-                            Toast.makeText(PostEditActivity.this, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                            albumupdate = true;
-                            SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("imgvidupdate", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor1 = sharedPref1.edit();
-                            editor1.putBoolean("imgvidupdate", albumupdate);
-                            editor1.commit();
-                            ApplicationSingleton.setIsProfilePostExecuted(true);
-                            finish();
+                    if (jo.has("detail") && !jo.isNull("detail")) {
+                        JSONArray jsonArray = jo.getJSONArray("detail");
+                        if (jsonArray != null) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            if (jsonObject != null) {
+                                if (jsonObject.has("postdeleted") && !jsonObject.isNull("postdeleted")) {
 
+                                }
+                            }
+
+                            ArrayList<FeedModel> feedModels = new ArrayList<>();
+                            feedModels.addAll(FeedParser.singlePostFeed(jsonArray.getJSONObject(0)));
+                            ApplicationSingleton.setPostEditPosition(position);
+                            ApplicationSingleton.setFeedModelPostEdited(feedModels.get(0));
+                            System.out.print(feedModels.size());
+                            finish();
+                          //  getFeedTypeImg(feedModels.get(0));
+                        } else {
+                            circularProgressBar.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -1254,8 +1296,16 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
 
         if (feedModel.getFeed_type().equalsIgnoreCase("2") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
             if (feedModel.getFeedSourceArrayList() != null) {
+                if (feedModel.getFeedSourceArrayList().size() == 3) {
+                    strings = feedModel.getFeedSourceArrayList();
+
+                } else if (feedModel.getFeedSourceArrayList().size() < 3) {
+                    strings = feedModel.getFeedSourceArrayList();
+
+                    strings.add("add");
+                }
                 askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(feedModel.getFeedSourceArrayList(), PostEditActivity.this);
-                strings = feedModel.getFeedSourceArrayList();
+
                 recyclerView.setAdapter(askQuestionForumImagesAdapter);
                 recyclerView.setVisibility(View.VISIBLE);
             }
@@ -1287,9 +1337,16 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             imageViewSelected.setImageResource(R.drawable.pdf_image);
 
         }
+        if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
+            title_QuestionEditText.setText(feedModel.getTitleQuestion());
+        }
+        if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
+            editTextMessage.setText(feedModel.getMessage());
+        }
         return "";
 
     }
+
     public static String getFileName(URL extUrl) {
         //URL: "http://photosaaaaa.net/photos-ak-snc1/v315/224/13/659629384/s659629384_752969_4472.jpg"
         String filename = "";
@@ -1301,16 +1358,16 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         //So technically if you're parsing an html page you could run into
         //a backslash , so i'm accounting for them here;
         String[] pathContents = path.split("[\\\\/]");
-        if(pathContents != null){
+        if (pathContents != null) {
             int pathContentsLength = pathContents.length;
             System.out.println("Path Contents Length: " + pathContentsLength);
             for (int i = 0; i < pathContents.length; i++) {
                 System.out.println("Path " + i + ": " + pathContents[i]);
             }
             //lastPart: s659629384_752969_4472.jpg
-            String lastPart = pathContents[pathContentsLength-1];
+            String lastPart = pathContents[pathContentsLength - 1];
             String[] lastPartContents = lastPart.split("\\.");
-            if(lastPartContents != null && lastPartContents.length > 1){
+            if (lastPartContents != null && lastPartContents.length > 1) {
                 int lastPartContentLength = lastPartContents.length;
                 System.out.println("Last Part Length: " + lastPartContentLength);
                 //filenames can contain . , so we assume everything before
@@ -1318,16 +1375,16 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 //extension
                 String name = "";
                 for (int i = 0; i < lastPartContentLength; i++) {
-                    System.out.println("Last Part " + i + ": "+ lastPartContents[i]);
-                    if(i < (lastPartContents.length -1)){
-                        name += lastPartContents[i] ;
-                        if(i < (lastPartContentLength -2)){
+                    System.out.println("Last Part " + i + ": " + lastPartContents[i]);
+                    if (i < (lastPartContents.length - 1)) {
+                        name += lastPartContents[i];
+                        if (i < (lastPartContentLength - 2)) {
                             name += ".";
                         }
                     }
                 }
-                String extension = lastPartContents[lastPartContentLength -1];
-                filename = name + "." +extension;
+                String extension = lastPartContents[lastPartContentLength - 1];
+                filename = name + "." + extension;
                 System.out.println("Name: " + name);
                 System.out.println("Extension: " + extension);
                 System.out.println("Filename: " + filename);

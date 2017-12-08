@@ -150,7 +150,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // notificationManager.notify(1,notificationBuilder.build());
         } else {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.white_noti)
+                    .setSmallIcon(R.drawable.color_noti)
                     .setContentTitle("NirogStreet")
                     .setContentText(messageBody)
                     .setAutoCancel(true)

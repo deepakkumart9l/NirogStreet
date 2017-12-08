@@ -99,6 +99,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     int positionat;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     SpannableString str2;
+    SpannableString span;
 
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -127,7 +128,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     ArrayList<FeedModel> feedModels;
     Context context;
     Activity activity;
-    SpannableString span2;
+    SpannableString span2,str3;
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
@@ -572,7 +573,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            deleteOrEditPopup(viewHolder.delImageView,feedModel);
+                            deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
                         }
                     });
                     if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
@@ -620,7 +621,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 .error(R.drawable.user)
                                 .into(viewHolder.profileImageView);
                     }
-                    viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
+                 /*   viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(context, Dr_Profile.class);
@@ -628,7 +629,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 intent.putExtra("UserId", userDetailModel.getUserId());
                             context.startActivity(intent);
                         }
-                    });
+                    });*/
                     if (feedModel.getCreated() != null) {
                         viewHolder.timeStampTextView.setText(feedModel.getCreated());
                     }
@@ -733,132 +734,191 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (userDetailModel != null && userDetailModel.getName() != null) {
                         String name = "Dr. " + userDetailModel.getName();
                         builder = new SpannableStringBuilder();
-                        SpannableString span = new SpannableString(name);
+                        span = new SpannableString(name);
                         span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
                         span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         builder.append(span);
+                        // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
+                        String xxx = feedModel.getCommunity_Id();
                         if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
-
                             if (feedModel.getParent_feed() != null) {
                                 if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
                                     str2 = new SpannableString(" shared a video ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
+
+                                    ClickableSpan clickSpan1 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+                                    String thirdspan = str2.toString();
+                                    int third = builder.toString().indexOf(thirdspan);
+                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 }
                                 if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
                                     str2 = new SpannableString(" shared an post ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
+                                    ClickableSpan clickSpan1 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+
+                                    String thirdspan = str2.toString();
+                                    int third = builder.toString().indexOf(thirdspan);
+                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 }
                                 if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
                                     str2 = new SpannableString(" shared a link ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
+
+                                    ClickableSpan clickSpan1 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+                                    String thirdspan = str2.toString();
+                                    int third = builder.toString().indexOf(thirdspan);
+                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 } else {
                                     if (feedModel.getFeed_type().equalsIgnoreCase("2")) {
                                         str2 = new SpannableString(" shared an image ");
                                         str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                         builder.append(str2);
+
+                                        ClickableSpan clickSpan1 = new ClickableSpan() {
+                                            @Override
+                                            public void updateDrawState(TextPaint ds) {
+                                                ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                                ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                                ds.setUnderlineText(false);// this remove the underline
+                                            }
+
+                                            @Override
+                                            public void onClick(View textView) {
+                                                Intent intent = new Intent(context, CommunitiesDetails.class);
+                                                intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                                context.startActivity(intent);
+                                            }
+                                        };
+                                        String thirdspan = str2.toString();
+                                        int third = builder.toString().indexOf(thirdspan);
+
+
+                                        builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                     }
                                 }
                                 if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
                                     str2 = new SpannableString(" shared a document ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
+                                    ClickableSpan clickSpan1 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+
+                                    String thirdspan = str2.toString();
+                                    int third = builder.toString().indexOf(thirdspan);
+                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 }
-                            } else {
-                                String name2 = "Dr. " + userDetailModel.getName();
-                                builder = new SpannableStringBuilder();
-                                span2 = new SpannableString(name2);
-                                span2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span2.length(), 0);
-                                span2.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                builder.append(span2);
                             }
-
-                                /*else {
-                                */
-                            /*if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
-                                    str2 = new SpannableString(" posted a video ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                }
-                                if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
-                                    str2 = new SpannableString(" posted a status ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                }
-                                if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                    str2 = new SpannableString(" posted a link ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                } else {
-                                    if (feedModel.getFeed_type().equalsIgnoreCase("2")) {
-                                        str2 = new SpannableString(" posted a image ");
-                                        str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                        builder.append(str2);
-                                    }
-                                }
-                                if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
-                                    str2 = new SpannableString(" posted a document ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                }*//*
-
-                            }*/
                         } else {
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                                str2 = new SpannableString(" posted in a" + " " + feedModel.getCommunity_name());
-                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                builder.append(str2);
+                                str3 = new SpannableString(" posted in a " + " " + feedModel.getCommunity_name());
+                                str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
+                                builder.append(str3);
+
+                                ClickableSpan clickSpan1 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                        ds.setUnderlineText(false);// this remove the underline
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
+                                        Intent intent = new Intent(context, CommunitiesDetails.class);
+                                        intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                        context.startActivity(intent);
+                                    }
+                                };
+
+                                String thirdspan = str3.toString();
+                                int third = builder.toString().indexOf(thirdspan);
+                                builder.setSpan(clickSpan1, third, third + str3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                             }
                         }
-                        ClickableSpan clickSpan = new ClickableSpan() {
-                            @Override
-                            public void updateDrawState(TextPaint ds) {
-                                ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
-                                ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
-                                ds.setUnderlineText(false);// this remove the underline
-                            }
 
-                            @Override
-                            public void onClick(View textView) {
-                                Intent intent = new Intent(context, Dr_Profile.class);
-                                if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                    intent.putExtra("UserId", userDetailModel.getUserId());
-                                context.startActivity(intent);
-                            }
-                        };
-                        ClickableSpan clickSpan1 = new ClickableSpan() {
-                            @Override
-                            public void updateDrawState(TextPaint ds) {
-                                ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
-                                ds.setUnderlineText(false);// this remove the underline
-                            }
-
-                            @Override
-                            public void onClick(View textView) {
-                                Intent intent = new Intent(context, CommunitiesDetails.class);
-                                intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                context.startActivity(intent);
-                            }
-                        };
-                        if (str2 != null && str2.length() > 0) {
-
-
-                            String thirdspan = str2.toString();
-                            int third = builder.toString().indexOf(thirdspan);
-                            builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                        if (span != null) {
-                            builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                        }
-                        if (span2 != null) {
-
-                        }
                     }
+                    ClickableSpan clickSpan = new ClickableSpan() {
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                            ds.setUnderlineText(false);// this remove the underline
+                        }
 
+                        @Override
+                        public void onClick(View textView) {
+                            Intent intent = new Intent(context, Dr_Profile.class);
+                            if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                intent.putExtra("UserId", userDetailModel.getUserId());
+                            context.startActivity(intent);
+                        }
+                    };
+                    builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
                     TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.timeStampTextView, context);
@@ -1217,7 +1277,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         popup.show();//showing popup menu
     }
 
-    public void deleteOrEditPopup(ImageView view, final FeedModel feedModel) {
+    public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -1231,6 +1291,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
                         Intent intent = new Intent(context, PostEditActivity.class);
+                        intent.putExtra("position", position);
                         intent.putExtra("feedId", feedModel.getFeed_id());
                         context.startActivity(intent);
                         break;
@@ -1241,7 +1302,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
                             //feedId
-                        }break;
+                        }
+                        break;
                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
 
@@ -1348,6 +1410,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
         }
     }
+
     public class DeletepostAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;

@@ -52,8 +52,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
-        android:layout_above="@+id/sendOtp">
+        android:layout_above="@+id/sendOtp"
+        android:layout_below="@+id/header">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -63,8 +63,8 @@
                 android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -72,10 +72,10 @@
                     android:layout_marginTop="15dp"
                     android:gravity="center_horizontal"
                     android:text="Profile Photo"
-                    android:visibility="gone"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/relative"
@@ -97,10 +97,10 @@
                         mk:border_width="1dp" />
 
                     <ImageView
+                        android:id="@+id/edtImage"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:layout_marginLeft="31dp"
-                        android:id="@+id/edtImage"
                         android:layout_marginTop="77dp"
                         android:padding="10dp"
                         android:src="@drawable/camera" />
@@ -108,41 +108,41 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="14dp"
+                android:text="Select Title"
                 android:textColor="@color/textcolorgray"
                 android:textSize="11dp"
-                android:text="Select Title"
-                android:visibility="gone"
-                android:id="@+id/textView" />
+                android:visibility="gone" />
 
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/titleLay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="21dp"
-                android:layout_marginLeft="20dp"
+                android:layout_alignStart="@+id/textView"
+                android:layout_alignTop="@+id/textView"
                 android:layout_below="@+id/profile"
 
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="21dp"
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
                 app:ms_arrowColor="@color/textcolorgray"
                 app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/textcolorgray"
-                app:ms_hintColor="@color/textcolorgray"
-                android:layout_alignTop="@+id/textView"
-                android:layout_alignStart="@+id/textView" />
+                app:ms_hintColor="@color/textcolorgray" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/titleLay"
-                android:textColorHint="@color/textcolorgray"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
@@ -151,15 +151,15 @@
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
-                    android:backgroundTint="@color/textcolorgray"
                     android:layout_marginTop="-20dp"
-                    android:paddingBottom="15dp"
+                    android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Name"
-                    android:textSize="16dp"
                     android:inputType="textCapWords|textCapSentences|textMultiLine"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -168,23 +168,23 @@
                 android:id="@+id/registerAs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gender"
-                android:layout_marginLeft="3dp"
-                android:textSize="11dp"
-                android:textColor="@color/textcolorgray"
-                android:textStyle="normal"
-                android:visibility="visible"
+                android:layout_alignStart="@+id/input_layout_name"
                 android:layout_below="@+id/input_layout_name"
-                android:layout_alignStart="@+id/input_layout_name" />
+                android:layout_marginLeft="3dp"
+                android:text="Gender"
+                android:textColor="@color/textcolorgray"
+                android:textSize="11dp"
+                android:textStyle="normal"
+                android:visibility="visible" />
 
             <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/genderSpinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/registerAs"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginTop="6dp"
-                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/textcolorgray"
                 android:orientation="horizontal"
                 android:textColorHighlight="@color/textcolorgray"
@@ -196,9 +196,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="-5dp"
                     android:backgroundTint="@color/cardbluebackground"
-                    android:textColorHighlight="@color/cardbluebackground"
                     android:buttonTint="@color/buttonBackground"
-                    android:text="Male" />
+                    android:text="Male"
+                    android:textColorHighlight="@color/cardbluebackground" />
 
                 <RadioButton
                     android:id="@+id/female"
@@ -215,56 +215,57 @@
                 android:id="@+id/txt_selectcategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/genderSpinner"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="9dp"
-                android:layout_below="@+id/genderSpinner"
+                android:text="Select Category"
                 android:textColor="@color/textcolorgray"
                 android:textSize="11dp"
-                android:visibility="gone"
-                android:text="Select Category" />
+                android:visibility="gone" />
 
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/categorySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="-2dp"
-                android:layout_marginRight="21dp"
+                android:layout_alignStart="@+id/txt_selectcategory"
+                android:layout_alignTop="@+id/txt_selectcategory"
+
                 android:layout_below="@+id/genderSpinner"
-android:layout_marginLeft="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="21dp"
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
+                android:paddingBottom="-2dp"
                 app:ms_arrowColor="@color/textcolorgray"
                 app:ms_baseColor="@color/textcolorgray"
                 app:ms_floatingLabelColor="@color/textcolorgray"
-                app:ms_hintColor="@color/textcolorgray"
-                android:layout_alignTop="@+id/txt_selectcategory"
-                android:layout_alignStart="@+id/txt_selectcategory" />
+                app:ms_hintColor="@color/textcolorgray" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/city_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/categorySpinner"
-                android:textColorHint="@color/textcolorgray"
-
                 android:layout_marginLeft="21dp"
+
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="11dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
                     android:id="@+id/cityEt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="14dp"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="City"
-                    android:textSize="16dp"
                     android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
+                    android:paddingBottom="14dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -273,25 +274,25 @@ android:layout_marginLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/city_layout"
-                android:textColorHint="@color/textcolorgray"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="16dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
                     android:id="@+id/no_of_year"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Year of Experience"
-                    android:paddingBottom="15dp"
                     android:inputType="number|textNoSuggestions"
                     android:maxLength="3"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -300,67 +301,67 @@ android:layout_marginLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/No_of_Year_Ex_lay"
-                android:textColorHint="@color/textcolorgray"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="16dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
                     android:id="@+id/dob"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="DOB"
-                    android:paddingBottom="15dp"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:layout_below="@+id/dob_layout"
-                android:visibility="gone"
+                android:layout_marginLeft="20dp"
+                android:text="Website Or Blog (If Any)"
                 android:textColor="@color/textcolorgray"
                 android:textSize="11dp"
-                android:text="Website Or Blog (If Any)" />
+                android:visibility="gone" />
 
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/webSite_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColorHint="@color/textcolorgray"
-                android:layout_marginTop="16dp"
                 android:layout_below="@+id/dob_layout"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
 
-                android:orientation="horizontal">
+                android:textColorHint="@color/textcolorgray">
 
                 <EditText
                     android:id="@+id/website_blog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-16dp"
                     android:layout_gravity="center"
-                    android:paddingBottom="15dp"
-                    android:textSize="16dp"
+                    android:layout_marginTop="-16dp"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Website Or Blog (If Any)"
                     android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
+                    android:paddingBottom="15dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
             </android.support.design.widget.TextInputLayout>
 
             <!--
@@ -394,10 +395,10 @@ android:layout_marginLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/webSite_layout"
-                android:textColorHint="@color/textcolorgray"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="16dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
@@ -405,17 +406,17 @@ android:layout_marginLeft="20dp"
                     style="@style/TextLabel"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
-                    android:backgroundTint="@color/textcolorgray"
                     android:layout_marginTop="-20dp"
-                    android:paddingBottom="15dp"
-                    android:textSize="16dp"
+                    android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="About You"
-
                     android:inputType="textCapWords|textCapSentences|textMultiLine"
+                    android:paddingBottom="15dp"
 
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -424,10 +425,10 @@ android:layout_marginLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/about_you_layout"
-                android:textColorHint="@color/textcolorgray"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="16dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
@@ -436,15 +437,15 @@ android:layout_marginLeft="20dp"
                     android:layout_height="wrap_content"
 
                     android:layout_marginTop="-16dp"
-                    android:paddingBottom="15dp"
-                    android:textSize="16dp"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Contact Number"
                     android:inputType="number|textNoSuggestions"
                     android:maxLines="1"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -453,10 +454,10 @@ android:layout_marginLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/contact_num_layout"
-                android:textColorHint="@color/textcolorgray"
                 android:layout_marginLeft="21dp"
                 android:layout_marginRight="21dp"
                 android:layout_marginTop="16dp"
+                android:textColorHint="@color/textcolorgray"
                 app:passwordToggleTint="#000">
 
                 <EditText
@@ -464,16 +465,16 @@ android:layout_marginLeft="20dp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
                     android:layout_marginTop="-16dp"
-                    android:paddingBottom="15dp"
+                    android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Email Address"
-                    android:textSize="16dp"
                     android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:textColorHint="@color/textcolorgray"
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 

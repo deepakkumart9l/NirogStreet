@@ -48,6 +48,7 @@ import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.PostDetailActivity;
+import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.ShareOnFriendsTimeline;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
@@ -708,6 +709,17 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             context.startActivity(intent);
                         }
                     });
+                    viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
+                        }
+                    });
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                        viewHolder.delImageView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.delImageView.setVisibility(View.GONE);
+                    }
                     if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.VISIBLE);
                     } else {
@@ -859,41 +871,25 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                     TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.sectionTv, context);
                     if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
-                        if (feedModel.getParent_feed() != null) {
-                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
-                                viewHolder.sectionTv.setText("You shared a video.");
-                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
-                                viewHolder.sectionTv.setText("You shared a post.");
-                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                viewHolder.sectionTv.setText("You shared a Link.");
+                        if (feedModel.getActivity_detail() != null) {
+                            if (feedModel.getActivity_detail().equalsIgnoreCase("1"))
+                                viewHolder.sectionTv.setText("You created this post");
 
-                            } else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
-                                    viewHolder.sectionTv.setText("You shared a Image.");
-                            }
-                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
-                                viewHolder.sectionTv.setText("You shared a Document.");
+                        }
+                        if (feedModel.getActivity_detail().equalsIgnoreCase("2")) {
+                            viewHolder.sectionTv.setText("You commented on this post");
 
-                            }
-                        } else {
-                            if (feedModel.getFeed_type().equalsIgnoreCase("5"))
-                                viewHolder.sectionTv.setText("You Posted a video.");
-                            if (feedModel.getFeed_type().equalsIgnoreCase("1"))
-                                viewHolder.sectionTv.setText("You Posted a post.");
-                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                viewHolder.sectionTv.setText("You Posted a Link.");
+                        }
+                        if (feedModel.getActivity_detail().equalsIgnoreCase("3")) {
+                            viewHolder.sectionTv.setText("You shared this post");
 
-                            } else {
-                                if (feedModel.getFeed_type().equalsIgnoreCase("2"))
-                                    viewHolder.sectionTv.setText("You Posted a Image.");
-                            }
-                            if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
-                                viewHolder.sectionTv.setText("You Posted a Document.");
+                        }
+                        if (feedModel.getActivity_detail().equalsIgnoreCase("4")) {
+                            viewHolder.sectionTv.setText("You liked this post");
 
-                            }
                         }
                     } else {
-                        viewHolder.sectionTv.setText("You Posted in a Community.");
+                        viewHolder.sectionTv.setText("You posted in " + feedModel.getCommunity_name());
                     }
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
@@ -905,6 +901,127 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
 
+    }
+
+    public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
+        PopupMenu popup = new PopupMenu(context, view);
+        popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+                //  int index = info.position;
+                //  System.out.print(index);
+                switch (item.getItemId()) {
+                    case R.id.edit:
+
+
+                        Intent intent = new Intent(context, PostEditActivity.class);
+                        intent.putExtra("position", position);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
+                        context.startActivity(intent);
+                        break;
+                    case R.id.del:
+                        if (NetworkUtill.isNetworkAvailable(context)) {
+                            DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                            deletepostAsyncTask.execute();
+                        } else {
+                            NetworkUtill.showNoInternetDialog(context);
+                            //feedId
+                        }
+                        break;
+                }
+                /*if (item.getTitle().equals(R.string.SharePublic)) {
+
+
+                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
+
+                } else {
+
+                }*/
+                return true;
+            }
+        });
+
+        popup.show();//showing popup menu
+    }
+
+    public class DeletepostAsyncTask extends AsyncTask<Void, Void, Void> {
+        String authToken;
+        JSONObject jo;
+        String feedId, userId;
+
+
+        private String responseBody;
+        HttpClient client;
+        Context context;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public DeletepostAsyncTask(String feedId, String userId, String authToken) {
+            this.feedId = feedId;
+            this.authToken = authToken;
+            this.userId = userId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                if (jo != null) {
+
+                    feedModels.remove(positionat);
+                    notifyItemRemoved(positionat);
+                    notifyItemRangeChanged(positionat, feedModels.size());
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+
+
+                String url = AppUrl.BaseUrl + "feed/delete";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", "140"));
+                pairs.add(new BasicNameValuePair("feedID", feedId));
+                httppost.setHeader("Authorization", "Basic " + "aKE5EOwUCNO9y3xaip5leMU1wWqcZadv");
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils
+                        .toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
     }
 
     @Override
@@ -999,6 +1116,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Button buttondownload;
         VideoView videoView;
         WebView webView;
+        ImageView delImageView;
+
         LinearLayout link_title_des_lay;
         View basicAnnouncemet_view;
         LinearLayout moreLinearLayout, two_or_moreLinearLayout;
@@ -1007,6 +1126,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public MyViewHolder(View itemView) {
             super(itemView);
             left_view = (View) itemView.findViewById(R.id.left_view);
+            delImageView = (ImageView) itemView.findViewById(R.id.del);
+
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
             sectionTv = (TextView) itemView.findViewById(R.id.section);

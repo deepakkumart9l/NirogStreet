@@ -28,6 +28,7 @@ public class FeedParser {
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
                 int user_has_liked = 0, youcongratulated = 0;
                 UserDetailModel userDetailModel = null;
+                String activity_detail=null;
                 UserDetailModel parentFeedDetail = null;
                 UserDetailModel cretedBy = null;
                 if (jo.has("feed") && !jo.isNull("feed")) {
@@ -35,6 +36,10 @@ public class FeedParser {
 
                     if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                         feed_id = jsonObject.getString("id");
+                    }
+                    if(jsonObject.has("activity_detail")&&!jsonObject.isNull("activity_detail"))
+                    {
+                        activity_detail=jsonObject.getString("activity_detail");
                     }
                     if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
@@ -253,7 +258,7 @@ public class FeedParser {
 
                     }
 
-                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name);
+                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name,activity_detail);
                 }
 
 
@@ -277,6 +282,7 @@ public class FeedParser {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 String community_id = "",community_name="";
                                 ArrayList<String> mediaList = new ArrayList<>();
+                                String activity_detail=null;
                                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                                 UserDetailModel ParentFeedDetail = null;
@@ -289,6 +295,10 @@ public class FeedParser {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                                     feed_id = jsonObject.getString("id");
+                                }
+                                if(jsonObject.has("activity_detail")&&!jsonObject.isNull("activity_detail"))
+                                {
+                                    activity_detail=jsonObject.getString("activity_detail");
                                 }
                                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
@@ -508,7 +518,7 @@ public class FeedParser {
 
                                 }
 
-                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name));
+                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name,activity_detail));
                             }
                         }
                     }
@@ -531,6 +541,7 @@ public class FeedParser {
                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                 UserDetailModel ParentFeedDetail = null;
+                String activity_detail=null;
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
                 int user_has_liked = 0, youcongratulated = 0;
@@ -539,6 +550,11 @@ public class FeedParser {
                 UserDetailModel cretedBy = null;
                 if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                     feed_id = jsonObject.getString("id");
+                }
+
+                if(jsonObject.has("activity_detail")&&!jsonObject.isNull("activity_detail"))
+                {
+                    activity_detail=jsonObject.getString("activity_detail");
                 }
 
                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
@@ -762,7 +778,7 @@ public class FeedParser {
 
                 }
 
-                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name));
+                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name,activity_detail));
 
 
             }

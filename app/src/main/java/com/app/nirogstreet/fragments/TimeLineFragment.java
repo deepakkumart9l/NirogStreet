@@ -94,7 +94,15 @@ public class TimeLineFragment extends Fragment {
         super.onResume();
        /* ((MainActivity) context).setTabText("Timeline");*/
         try {
+            if (ApplicationSingleton.getPostEditPosition() != -1) {
+                if (ApplicationSingleton.getFeedModelPostEdited() != null) {
+                    totalFeeds.set(ApplicationSingleton.getPostEditPosition(), ApplicationSingleton.getFeedModelPostEdited());
+                    feedsAdapter.notifyItemChanged(ApplicationSingleton.getPostEditPosition());
 
+                }
+                ApplicationSingleton.setPostEditPosition(-1);
+                ApplicationSingleton.setFeedModelPostEdited(null);
+            }
             if (ApplicationSingleton.getPostSelectedPostion() != -1) {
                 if (ApplicationSingleton.getNoOfComment() != -1) {
                     totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getNoOfComment() + "");
@@ -208,7 +216,6 @@ public class TimeLineFragment extends Fragment {
         totalFeeds = new ArrayList<>();
 
 
-
         return view;
     }
 
@@ -300,7 +307,7 @@ public class TimeLineFragment extends Fragment {
                 if (feedsAdapter == null) {
                     // appBarLayout.setExpanded(true);
                     if (totalFeeds.size() > 0) {
-                        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer,circularProgressBar);
+                        feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer, circularProgressBar);
                         recyclerView.setAdapter(feedsAdapter);
                     }
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

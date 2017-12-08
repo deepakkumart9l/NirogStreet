@@ -96,6 +96,13 @@ public class Multi_Select_Search extends Activity
     RecyclerView.LayoutManager layoutManager;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multiple_select_search);

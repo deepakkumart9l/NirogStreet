@@ -123,26 +123,30 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
         c.close();
+try {
+    TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+    String mPhoneNumber = tMgr.getLine1Number();
+    System.out.print(mPhoneNumber);
+    if (!mPhoneNumber.equalsIgnoreCase("")) {
+        if (mPhoneNumber.length() > 10)
 
-        TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number();
-        System.out.print(mPhoneNumber);
-        if (!mPhoneNumber.equalsIgnoreCase("")) {
-            if (mPhoneNumber.length() > 10)
-
-            {
-                if (mPhoneNumber.length() == 12) {
-                    phoneNumber = mPhoneNumber.substring(2);
-                }
-                if (mPhoneNumber.length() == 13) {
-                    phoneNumber = mPhoneNumber.substring(3);
-
-                }
-            } else {
-                phoneNumber = mPhoneNumber;
+        {
+            if (mPhoneNumber.length() == 12) {
+                phoneNumber = mPhoneNumber.substring(2);
+            }
+            if (mPhoneNumber.length() == 13) {
+                phoneNumber = mPhoneNumber.substring(3);
 
             }
+        } else {
+            phoneNumber = mPhoneNumber;
+
         }
+    }
+}catch (Exception e)
+{
+    e.printStackTrace();
+}
         if (email != null) {
             emailEt.setText(email);
         }
@@ -165,7 +169,6 @@ public class RegisterActivity extends AppCompatActivity {
        /* ArrayList<HashMap<String, Object>> contactList = getContacts();
         System.out.println("Contact List : " +contactList);*/
         checkbox = (CheckBox) findViewById(R.id.checkbox);
-        checkPermission();
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         registerHeader = (TextView) findViewById(R.id.title_side);
@@ -192,7 +195,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (phoneNumber != null) {
             phoneEt.setText(phoneNumber);
         }
-        checkPermissionGeneral();
+      //  checkPermissionGeneral();
+        checkPermission();
+
         TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(registerHeader, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(sentTv, RegisterActivity.this);
@@ -589,14 +594,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
             getInfo();
         } else {
             Log.e("", "Current app does not have READ_PHONE_STATE permission");
             ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{
                     Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.WRITE_CONTACTS}, CONTACT_PERMISSION_CODE);
+                    Manifest.permission.WRITE_CONTACTS,Manifest.permission.READ_SMS,Manifest.permission.READ_PHONE_STATE}, CONTACT_PERMISSION_CODE);
         }
     }
 
