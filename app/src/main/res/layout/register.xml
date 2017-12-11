@@ -319,7 +319,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:layout_toRightOf="@+id/alreadyTv"
-                    android:text="  Signin"
+                    android:text="  Sign in"
                     android:textColor="@color/cardbluebackground" />
             </RelativeLayout>
 

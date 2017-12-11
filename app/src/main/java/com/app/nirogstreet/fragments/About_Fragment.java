@@ -827,7 +827,7 @@ public class About_Fragment extends Fragment {
 
     public void setDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Are you sure you want to leave the community.");// Add the buttons
+        builder.setTitle("Are you sure you want to leave the community?");// Add the buttons
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button

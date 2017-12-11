@@ -16,9 +16,9 @@
 
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:layout_below="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:layout_below="@+id/view">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -32,7 +32,8 @@
                 android:layout_height="48dp"
                 android:background="@color/tabbackground"
                 android:gravity="center"
-android:textSize="13sp"               android:text="MY COMMUNITIES"
+                android:text="MY COMMUNITIES"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <View
@@ -65,8 +66,8 @@ android:textSize="13sp"               android:text="MY COMMUNITIES"
                     android:layout_weight="1"
                     android:background="@color/tabbackground"
                     android:gravity="center"
-                    android:textSize="13sp"
                     android:text="DISCOVER COMMUNITIES"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <View
@@ -80,13 +81,14 @@ android:textSize="13sp"               android:text="MY COMMUNITIES"
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_below="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout1"
         android:scrollbars="vertical"
         android:visibility="visible"
 
         />
+
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"
         android:layout_width="40dp"
@@ -99,7 +101,6 @@ android:textSize="13sp"               android:text="MY COMMUNITIES"
         android:padding="8dp"
         android:visibility="visible"
         app:cpb_colors="@array/gplus_colors" />
-
 
 
 </RelativeLayout>

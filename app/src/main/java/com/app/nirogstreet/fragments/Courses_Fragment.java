@@ -20,8 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.adapter.Courses_Listing_Adapter;
 import com.app.nirogstreet.adapter.GroupListingAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.model.CoursesModel;
 import com.app.nirogstreet.model.GroupModel;
 import com.app.nirogstreet.parser.Group_Listing_Parser;
 import com.app.nirogstreet.uttil.AppUrl;
@@ -50,17 +52,17 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 /**
- * Created by Preeti on 01-11-2017.
+ * Created by Preeti on 11-12-2017.
  */
 
-public class CommunitiesFragment extends Fragment {
+public class Courses_Fragment extends Fragment {
     int page = 1;
     RecyclerView recyclerView;
     ImageView imageViewback;
     private static final int REQUEST_FOR_ACTIVITY_CODE = 6;
     private static final int REQUEST_FOR_UPDAED = 7;
 
-    ArrayList<GroupModel> groupModelsTotal = new ArrayList<>();
+    ArrayList<CoursesModel> groupModelsTotal = new ArrayList<>();
 
     String authToken, userId;
     int totalPageCount;
@@ -73,7 +75,7 @@ public class CommunitiesFragment extends Fragment {
     TextView createTextView;
     String logedinuserId;
     LinearLayout linearLayout1;
-    GroupListingAdapter groupListingAdapter;
+    Courses_Listing_Adapter groupListingAdapter;
     TextView myGroupTextView, otherGroupTextView;
     private boolean isLoading = false;
     ImageView imageViewBack;
@@ -103,9 +105,10 @@ public class CommunitiesFragment extends Fragment {
             allView.setSelected(false);
             page = 1;
             groupListingAdapter = null;
-            groupModelsTotal = new ArrayList<GroupModel>();
+            groupModelsTotal = new ArrayList<CoursesModel>();
             recyclerView.setVisibility(View.GONE);
             myGroupTextView.setTextColor(getResources().getColor(R.color.black));
+
             otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/index";
@@ -135,8 +138,10 @@ public class CommunitiesFragment extends Fragment {
         logedinuserId = userDetails.get(SesstionManager.USER_ID);
         userId = userDetails.get(SesstionManager.USER_ID);
         myGroupTextView = (TextView) view.findViewById(R.id.myGroup);
+        myGroupTextView.setText("MY COURSES");
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
         otherGroupTextView = (TextView) view.findViewById(R.id.otherGroup);
+        otherGroupTextView.setText("ALL COURSES");
         userView = (View) view.findViewById(R.id.userview);
         allView = (View) view.findViewById(R.id.allview);
         userView.setSelected(true);
@@ -156,7 +161,7 @@ public class CommunitiesFragment extends Fragment {
                 isLoading = false;
                 groupListingAdapter = null;
 
-                groupModelsTotal = new ArrayList<GroupModel>();
+                groupModelsTotal = new ArrayList<CoursesModel>();
                 recyclerView.setVisibility(View.GONE);
                 myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
@@ -174,7 +179,7 @@ public class CommunitiesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 page = 1;
-                groupModelsTotal = new ArrayList<GroupModel>();
+                groupModelsTotal = new ArrayList<CoursesModel>();
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
                 isLoading = false;
@@ -296,7 +301,11 @@ public class CommunitiesFragment extends Fragment {
             groupModels = Group_Listing_Parser.groupListingParser(jo);
             otherGroupTextView.setClickable(true);
             myGroupTextView.setClickable(true);
-            groupModelsTotal.addAll(groupModels);
+           // groupModelsTotal.addAll(groupModels);
+            groupModelsTotal.add(new CoursesModel("1","Lorem Ipsum is simply dummy text","of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum","2 h 58 min",
+                   "https://www.nirogstreet.com/images/profiles/1512367406.jpg",null));
+            groupModelsTotal.add(new CoursesModel("1","Lorem Ipsum is simply dummy text","of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum","2 h 58 min",
+                    "https://www.nirogstreet.com/images/profiles/1512367406.jpg",null));
             super.onPostExecute(aVoid);
             try {
                 if (jo != null)
@@ -320,7 +329,7 @@ public class CommunitiesFragment extends Fragment {
                     }
 
                     if (groupListingAdapter == null && groupModelsTotal != null && groupModelsTotal.size() > 0) {
-                        groupListingAdapter = new GroupListingAdapter(groupModelsTotal, context, isHide, userId, showJoin);
+                        groupListingAdapter = new Courses_Listing_Adapter(groupModelsTotal, context, isHide, userId, showJoin);
                         recyclerView.setAdapter(groupListingAdapter);
                         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override
@@ -367,3 +376,4 @@ public class CommunitiesFragment extends Fragment {
         }
     }
 }
+

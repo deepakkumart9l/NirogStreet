@@ -104,7 +104,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     File photoFile;
     private int SELECT_FILE = 999;
 
-    ImageView edtImage,webSite_icon;
+    ImageView edtImage, webSite_icon;
     private boolean mIsTheTitleContainerVisible = true;
     ImageView backimg;
     private AppBarLayout appbar;
@@ -204,7 +204,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         edtImage = (ImageView) findViewById(R.id.edtImage);
 
-webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
+        webSite_icon = (ImageView) findViewById(R.id.webSite_icon);
         editInfo = (ImageView) findViewById(R.id.editInfo);
         circleImageView = (CircleImageView) findViewById(R.id.pro);
         circleImageView.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +212,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
             public void onClick(View v) {
                 if (!UserId.equalsIgnoreCase("")) {
 
-                }else {
+                } else {
                     Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
                     intent.putExtra("userModel", (Serializable) userDetailModel);
                     startActivity(intent);
@@ -324,7 +324,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
             mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
             emailTv.setText(email);
             phoneTv.setText(mobile);
-            nameTv.setText("Dr. "+userName);
+            nameTv.setText("Dr. " + userName);
 
 
         }
@@ -765,8 +765,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
 
     private void updateSpecilizationAndService() {
         if (userDetailModel != null) {
-            if(userDetailModel.getSpecializationModels().size()==0&& userDetailModel.getServicesModels().size()==0)
-            {
+            if (userDetailModel.getSpecializationModels().size() == 0 && userDetailModel.getServicesModels().size() == 0) {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
 
             }
@@ -838,7 +837,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 }
             }
         }
-        if (!UserId.equalsIgnoreCase("") ) {
+        if (!UserId.equalsIgnoreCase("")) {
             ExperienceSectionTv.setText("Experience");
 
         }
@@ -884,7 +883,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 }
             }
         }
-        if (!UserId.equalsIgnoreCase("") ) {
+        if (!UserId.equalsIgnoreCase("")) {
             MemberShipSectionTv.setText("Membership");
 
         }
@@ -984,7 +983,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 }
             }
         }
-        if (!UserId.equalsIgnoreCase("") ) {
+        if (!UserId.equalsIgnoreCase("")) {
             AwardSectionTv.setText("Award");
 
         }
@@ -998,7 +997,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 yearOfExperienceTv.setText(userDetailModel.getExperience() + " " + "years experience");
             }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
-                nameTv.setText("Dr. "+userDetailModel.getName());
+                nameTv.setText("Dr. " + userDetailModel.getName());
             }
             if (userDetailModel.getEmail() != null && !userDetailModel.getEmail().equalsIgnoreCase("")) {
                 emailTv.setText(userDetailModel.getEmail());
@@ -1009,8 +1008,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
             if (userDetailModel.getWebSite() != null && !userDetailModel.getWebSite().equalsIgnoreCase("")) {
                 WebTv.setText(userDetailModel.getWebSite());
                 webSite_icon.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 WebTv.setVisibility(View.GONE);
                 webSite_icon.setVisibility(View.GONE);
             }
@@ -1024,12 +1022,12 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 QualificationTv.setText(getSelectedNameCsv());
             }
 
-            if (userDetailModel.getProfile_pic() != null&&!userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
+            if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
                 Picasso.with(Dr_Profile.this)
                         .load(userDetailModel.getProfile_pic())
                         .placeholder(R.drawable.user)
                         .error(R.drawable.user)
-                        .into( circleImageView);
+                        .into(circleImageView);
 
 
             }
@@ -1089,7 +1087,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
 
             }
         }
-        if (!UserId.equalsIgnoreCase("") ) {
+        if (!UserId.equalsIgnoreCase("")) {
             clinicAddressHeading.setText("Clinic");
 
         }
@@ -1187,7 +1185,7 @@ webSite_icon=(ImageView)findViewById(R.id.webSite_icon);
                 }
             }
         }
-        if (!UserId.equalsIgnoreCase("") ) {
+        if (!UserId.equalsIgnoreCase("")) {
             RegistrationSectionHeadingTv.setText("Registration & documents");
 
         }

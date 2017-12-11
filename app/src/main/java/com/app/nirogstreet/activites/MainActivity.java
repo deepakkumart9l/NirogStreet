@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         createTextView = (TextView) findViewById(R.id.create);
         TypeFaceMethods.setRegularTypeFaceForTextView(createTextView, MainActivity.this);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
 
         customPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), tabLayout, this);
         // increase this limit if you have more tabs!
@@ -150,6 +150,14 @@ public class MainActivity extends AppCompatActivity {
                         setTabText("Home");
                         break;
                     case 1:
+                        createTextView.setVisibility(View.GONE);
+                        notiframe.setVisibility(View.GONE);
+                        searchgroupImageView.setVisibility(View.GONE);
+                        logout.setVisibility(View.GONE);
+                        searchImageView.setVisibility(View.GONE);
+                        setTabText("Knowlwdge centre");
+                        break;
+                    case 2:
                         searchImageView.setVisibility(View.GONE);
                         createTextView.setVisibility(View.VISIBLE);
                         notiframe.setVisibility(View.GONE);
@@ -157,8 +165,14 @@ public class MainActivity extends AppCompatActivity {
                         searchgroupImageView.setVisibility(View.VISIBLE);
 
                         setTabText("Community");
+                      /*  createTextView.setVisibility(View.GONE);
+                        notiframe.setVisibility(View.GONE);
+                        searchgroupImageView.setVisibility(View.GONE);
+                        logout.setVisibility(View.GONE);
+                        searchImageView.setVisibility(View.GONE);
+                        setTabText("You");*/
                         break;
-                    case 2:
+                    case  3:
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.GONE);
@@ -202,6 +216,16 @@ public class MainActivity extends AppCompatActivity {
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);
         oneImgTimeline.setImageResource(R.drawable.home_);
         tabLayout.getTabAt(0).setCustomView(tabLinearLayoutTimeline);
+        LinearLayout tabLinearLayout1 = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
+
+        TextView tabOneknwledge = (TextView) tabLinearLayout1.findViewById(R.id.tab);
+        tabOneknwledge.setText("KNOWLEDGE CENTRE");
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOneknwledge, MainActivity.this);
+
+        tabOneknwledge.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        ImageView oneImglnw = (ImageView) tabLinearLayout1.findViewById(R.id.icon);
+        oneImglnw.setImageResource(R.drawable.comm);
+        tabLayout.getTabAt(1).setCustomView(tabLinearLayout1);
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
 
@@ -212,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImg = (ImageView) tabLinearLayout.findViewById(R.id.icon);
         oneImg.setImageResource(R.drawable.comm);
-        tabLayout.getTabAt(1).setCustomView(tabLinearLayout);
+        tabLayout.getTabAt(2).setCustomView(tabLinearLayout);
 
         LinearLayout tabtwo = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
         TextView tabtwoText = (TextView) tabtwo.findViewById(R.id.tab);
@@ -222,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         tabtwoText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView TwoImg = (ImageView) tabtwo.findViewById(R.id.icon);
         TwoImg.setImageResource(R.drawable.youlay);
-        tabLayout.getTabAt(2).setCustomView(tabtwo);
+        tabLayout.getTabAt(3).setCustomView(tabtwo);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) tab.setCustomView(R.layout.view_home_tab);

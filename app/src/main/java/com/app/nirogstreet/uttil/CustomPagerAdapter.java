@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.fragments.BlogsFragment;
 import com.app.nirogstreet.fragments.CommunitiesFragment;
+import com.app.nirogstreet.fragments.Courses_Fragment;
 import com.app.nirogstreet.fragments.MoreFragment;
 import com.app.nirogstreet.fragments.ProfileFragment;
 import com.app.nirogstreet.fragments.TimeLineFragment;
@@ -39,6 +40,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
     private void initializeTabs() {
         tabs.add(HostFragment.newInstance(new TimeLineFragment()));
+        tabs.add(HostFragment.newInstance(new Courses_Fragment()));
         tabs.add(HostFragment.newInstance(new CommunitiesFragment()));
         tabs.add(HostFragment.newInstance(new MoreFragment()));
 
