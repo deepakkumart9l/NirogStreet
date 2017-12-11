@@ -75,6 +75,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
 CheckBox checkBox;
 
     ImageView backImageView;
+
     private SesstionManager sesstionManager;
     UserDetailModel userDetailModel;
     int position = -1;
