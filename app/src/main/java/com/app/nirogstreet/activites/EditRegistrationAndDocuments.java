@@ -243,7 +243,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     @Override
     protected void onResume() {
         super.onResume();
-        if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0 && position != -1)
+        if (userDetailModel != null && userDetailModel.getRegistrationAndDocumenModels() != null && userDetailModel.getRegistrationAndDocumenModels().size() > 0 && position != -1)
 
         {
 

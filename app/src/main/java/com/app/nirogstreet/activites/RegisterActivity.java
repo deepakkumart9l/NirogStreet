@@ -76,14 +76,17 @@ public class RegisterActivity extends AppCompatActivity {
     String phoneNumber = null;
     TextView registerHeader, registerAs, AllreadyhaveAccount, signIn, sentTv;
     CircularProgressBar circularProgressBar;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.print(requestCode);
         if (requestCode == 1) {
+
             getInfo();
         }
     }
+
     private void getInfo() {
         AccountManager am = AccountManager.get(this);
         Pattern gmailPattern = Patterns.EMAIL_ADDRESS;
@@ -100,53 +103,56 @@ public class RegisterActivity extends AppCompatActivity {
             }
             System.out.print(email);
         }
-        Cursor c = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
-        int count = c.getCount();
-        String[] columnNames = c.getColumnNames();
-        boolean b = c.moveToFirst();
-        int position = c.getPosition();
-        if (count == 1 && position == 0) {
-            for (int j = 0; j < columnNames.length; j++) {
-                String columnName = columnNames[j];
-                if (columnName.equalsIgnoreCase("sort_key")) {
-                    String columnValue = c.getString(c.getColumnIndex(columnName));
-                    if (columnValue.contains(" ")) {
-                        String[] val = columnValue.split(" ");
-                        fname = val[0];
-                        lname = val[1];
-                    } else {
-                        fname = columnValue;
+        try {
+            Cursor c = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
+            int count = c.getCount();
+            String[] columnNames = c.getColumnNames();
+            boolean b = c.moveToFirst();
+            int position = c.getPosition();
+            if (count == 1 && position == 0) {
+                for (int j = 0; j < columnNames.length; j++) {
+                    String columnName = columnNames[j];
+                    if (columnName.equalsIgnoreCase("sort_key")) {
+                        String columnValue = c.getString(c.getColumnIndex(columnName));
+                        if (columnValue.contains(" ")) {
+                            String[] val = columnValue.split(" ");
+                            fname = val[0];
+                            lname = val[1];
+                        } else {
+                            fname = columnValue;
+                        }
                     }
+                    //Use the values
+                    //     System.out.print(columnValue);
                 }
-                //Use the values
-                //     System.out.print(columnValue);
             }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        c.close();
-try {
-    TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-    String mPhoneNumber = tMgr.getLine1Number();
-    System.out.print(mPhoneNumber);
-    if (!mPhoneNumber.equalsIgnoreCase("")) {
-        if (mPhoneNumber.length() > 10)
+        try {
+            TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+            System.out.print(mPhoneNumber);
+            if (!mPhoneNumber.equalsIgnoreCase("")) {
+                if (mPhoneNumber.length() > 10)
 
-        {
-            if (mPhoneNumber.length() == 12) {
-                phoneNumber = mPhoneNumber.substring(2);
+                {
+                    if (mPhoneNumber.length() == 12) {
+                        phoneNumber = mPhoneNumber.substring(2);
+                    }
+                    if (mPhoneNumber.length() == 13) {
+                        phoneNumber = mPhoneNumber.substring(3);
+
+                    }
+                } else {
+                    phoneNumber = mPhoneNumber;
+
+                }
             }
-            if (mPhoneNumber.length() == 13) {
-                phoneNumber = mPhoneNumber.substring(3);
-
-            }
-        } else {
-            phoneNumber = mPhoneNumber;
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-}catch (Exception e)
-{
-    e.printStackTrace();
-}
         if (email != null) {
             emailEt.setText(email);
         }
@@ -195,9 +201,12 @@ try {
         if (phoneNumber != null) {
             phoneEt.setText(phoneNumber);
         }
-      //  checkPermissionGeneral();
-        checkPermission();
-
+        //  checkPermissionGeneral();
+        try {
+            checkPermission();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(registerHeader, RegisterActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(sentTv, RegisterActivity.this);
@@ -594,14 +603,14 @@ try {
 
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
             getInfo();
         } else {
             Log.e("", "Current app does not have READ_PHONE_STATE permission");
             ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{
                     Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.WRITE_CONTACTS,Manifest.permission.READ_SMS,Manifest.permission.READ_PHONE_STATE}, CONTACT_PERMISSION_CODE);
+                    Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE}, CONTACT_PERMISSION_CODE);
         }
     }
 

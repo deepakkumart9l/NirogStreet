@@ -39,7 +39,7 @@
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text=""
+                android:text="Personal Details"
                 android:textColor="@color/white"
 
                 android:textSize="16sp" />

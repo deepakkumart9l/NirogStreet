@@ -18,6 +18,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -49,6 +50,7 @@ import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
+import com.app.nirogstreet.activites.YoutubeVideo_Play;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
@@ -188,7 +190,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     case FEED_TYPE_YOUTUBEVIDEO_LINK:
                         switch (link_type) {
                             case LINK_TYPE_YOUTUBE_VIDEO:
-                                viewHolder.playicon.setVisibility(View.GONE);
+                               /* viewHolder.playicon.setVisibility(View.GONE);
                                 viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
                                 viewHolder.linkImageView.setVisibility(View.GONE);
                                 viewHolder.linkTitleTextView.setVisibility(View.GONE);
@@ -199,7 +201,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                                 viewHolder.anniversaryLinearLayout.setVisibility(View.GONE);
                                 viewHolder.anniverasaryLayoutImage.setVisibility(View.GONE);
-                                viewHolder.relativeLayout1.setVisibility(View.GONE);
+                                viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
                                 viewHolder.link_title_des_lay.setVisibility(View.GONE);
                                 viewHolder.left_view.setVisibility(View.GONE);
                                 viewHolder.right_view.setVisibility(View.GONE);
@@ -252,6 +254,46 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 viewHolder.webView.loadData(frameVideo, "text/html", "utf-8");
 
 
+                               */
+                                viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                                viewHolder.left_view.setVisibility(View.GONE);
+                                viewHolder.right_view.setVisibility(View.GONE);
+                                viewHolder.bottom_view.setVisibility(View.GONE);
+                                viewHolder.playicon.setVisibility(View.VISIBLE);
+                                viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                                viewHolder.linkImageView.setVisibility(View.GONE);
+                                viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                                viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                                viewHolder.feedImageView.setVisibility(View.VISIBLE);
+                                viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                                viewHolder.docTypeLayout.setVisibility(View.GONE);
+                                viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                                viewHolder.anniversaryLinearLayout.setVisibility(View.GONE);
+                                viewHolder.anniverasaryLayoutImage.setVisibility(View.GONE);
+                                viewHolder.videoView.setVisibility(View.GONE);
+                                viewHolder.playicon.setVisibility(View.VISIBLE);
+                                viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+
+                               /* Glide.with(context)
+                                        .load(feedModel.getUrl_image()) // Uri of the picture
+                                        .centerCrop()
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .crossFade()
+                                        .override(100, 100)
+                                        .into(viewHolder.feedImageView);*/
+                                Picasso.with(context)
+                                        .load(feedModel.getUrl_image())
+                                        .placeholder(R.drawable.default_)
+                                        .into(viewHolder.feedImageView);
+
+                                viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent = new Intent(context, YoutubeVideo_Play.class);
+                                        intent.putExtra("videourl", feedModel.getFeed_source());
+                                        context.startActivity(intent);
+                                    }
+                                });
                                 break;
                             case LINK_TYPE_WEB_LINK:
                                 viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
@@ -261,7 +303,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 viewHolder.left_view.setVisibility(View.VISIBLE);
                                 viewHolder.right_view.setVisibility(View.VISIBLE);
                                 viewHolder.bottom_view.setVisibility(View.VISIBLE);
-                                viewHolder.relativeLayout1.setVisibility(View.GONE);
+                                viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
 
                                 viewHolder.videoView.setVisibility(View.GONE);
                                 viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
@@ -455,6 +497,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                         viewHolder.videoView.setVisibility(View.GONE);
                         viewHolder.webView.setVisibility(View.GONE);
+                        viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
                         viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
                         viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -481,7 +524,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.left_view.setVisibility(View.GONE);
                         viewHolder.right_view.setVisibility(View.GONE);
                         viewHolder.bottom_view.setVisibility(View.GONE);
-                        viewHolder.relativeLayout1.setVisibility(View.GONE);
+                        viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
 
                         viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                         viewHolder.feedImageView.setVisibility(View.GONE);
@@ -772,6 +815,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 int third = builder.toString().indexOf(thirdspan);
                                 builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
                             }
                             if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
                                 str2 = new SpannableString(" shared an post ");
@@ -797,6 +842,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 int third = builder.toString().indexOf(thirdspan);
                                 builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
                             }
                             if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
                                 str2 = new SpannableString(" shared a link ");
@@ -822,6 +869,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 int third = builder.toString().indexOf(thirdspan);
                                 builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
                             } else {
                                 if (feedModel.getFeed_type().equalsIgnoreCase("2")) {
                                     str2 = new SpannableString(" shared an image ");
@@ -849,6 +898,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                     builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
                                 }
                             }
                             if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
@@ -875,6 +926,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 int third = builder.toString().indexOf(thirdspan);
                                 builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
                             }
                         }
                     } else {
@@ -903,6 +956,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             int third = builder.toString().indexOf(thirdspan);
                             builder.setSpan(clickSpan1, third, third + str3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                            viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
                         }
                     }
 
@@ -910,7 +965,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ClickableSpan clickSpan = new ClickableSpan() {
                     @Override
                     public void updateDrawState(TextPaint ds) {
-                        ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                        ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
                         ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
                         ds.setUnderlineText(false);// this remove the underline
                     }
@@ -925,6 +980,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 };
                 builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
 
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);

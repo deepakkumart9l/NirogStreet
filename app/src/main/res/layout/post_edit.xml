@@ -45,16 +45,18 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="25dp"
+                android:visibility="gone"
                 android:background="@color/white">
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/dr_profile"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
+
                     android:src="@drawable/user"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -68,17 +70,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text=""
+                        android:text="Dr. Saini"
+                        android:visibility="gone"
                         android:textColor="@color/black" />
 
                     <LinearLayout
                         android:layout_width="70dp"
                         android:layout_height="27dp"
                         android:layout_marginTop="5dp"
-                        android:visibility="gone"
-
                         android:background="@drawable/oval"
-                        android:padding="6dp">
+
+                        android:padding="6dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/public_"
@@ -107,7 +110,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
 
@@ -117,13 +119,13 @@
                         android:background="@color/white"
                         android:orientation="vertical">
 
-
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="10dp"
                             android:layout_below="@+id/categorySpinner"
-
-                            android:layout_marginTop="11dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:textColorHint="@color/textcolorgray"
                             app:passwordToggleTint="#000">
 
@@ -134,10 +136,10 @@
                                 android:backgroundTint="@color/textcolorgray"
                                 android:drawableTint="@color/textcolorgray"
                                 android:hint="Title/Question:"
+
                                 android:inputType="text|textNoSuggestions|textMultiLine"
-                                android:maxLines="1"
-                                android:paddingBottom="15dp"
-                                android:textColor="@color/black"
+                                android:maxLines="3"
+                                android:paddingBottom="14dp"                                android:textColor="@color/black"
                                 android:textColorHint="@color/textcolorgray"
                                 android:textSize="16dp" />
                         </android.support.design.widget.TextInputLayout>
@@ -156,7 +158,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/categorySpinner"
-
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginTop="11dp"
                             android:textColorHint="@color/textcolorgray"
                             app:passwordToggleTint="#000">
@@ -164,15 +167,12 @@
                             <EditText
                                 android:id="@+id/editTextMessage"
                                 android:layout_width="fill_parent"
-                                android:layout_height="60dp"
-                                android:backgroundTint="@color/textcolorgray"
+                                android:layout_height="wrap_content"
                                 android:drawableTint="@color/textcolorgray"
                                 android:hint="Description"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
-                                android:maxLines="1"
-                                android:padding="10dp"
-                                android:paddingBottom="15dp"
-                                android:textColor="@color/black"
+                                android:maxLines="3"
+                                android:paddingBottom="14dp"                                android:textColor="@color/black"
 
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
@@ -193,7 +193,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/categorySpinner"
-
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginTop="11dp"
                             android:textColorHint="@color/textcolorgray"
                             app:passwordToggleTint="#000">
@@ -201,15 +202,13 @@
                             <EditText
                                 android:id="@+id/edit_text_field"
                                 android:layout_width="fill_parent"
-                                android:layout_height="60dp"
+                                android:layout_height="wrap_content"
                                 android:backgroundTint="@color/textcolorgray"
                                 android:drawableTint="@color/textcolorgray"
-                                android:hint="Tags"
+                                android:hint="Tags (Optional)"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="1"
-                                android:padding="10dp"
-                                android:paddingBottom="15dp"
-                                android:textColor="@color/black"
+                                android:paddingBottom="14dp"                                android:textColor="@color/black"
 
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
@@ -232,7 +231,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/categorySpinner"
-
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginTop="11dp"
                             android:textColorHint="@color/textcolorgray"
                             app:passwordToggleTint="#000">
@@ -240,15 +240,13 @@
                             <EditText
                                 android:id="@+id/refernce"
                                 android:layout_width="match_parent"
-                                android:layout_height="60dp"
+                                android:layout_height="wrap_content"
                                 android:backgroundTint="@color/textcolorgray"
                                 android:drawableTint="@color/textcolorgray"
                                 android:hint="Refrence (Optional)"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
-                                android:maxLines="1"
-                                android:padding="10dp"
-                                android:paddingBottom="15dp"
-
+                                android:maxLines="3"
+                                android:paddingBottom="14dp"
                                 android:textColor="@color/black"
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
@@ -267,6 +265,9 @@
                         <RelativeLayout
                             android:id="@+id/imagelay"
                             android:layout_width="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             android:layout_height="match_parent"
                             android:background="@color/white">
 
@@ -275,8 +276,7 @@
                                 android:id="@+id/imgView"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginTop="13dp"
+                                android:layout_marginLeft="5dp"
                                 android:background="@color/white"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/add_"></ImageView>
@@ -285,6 +285,8 @@
                                 android:id="@+id/recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
                                 android:orientation="horizontal"
                                 android:visibility="gone"></android.support.v7.widget.RecyclerView>
 
@@ -321,6 +323,10 @@
                             android:id="@+id/linkLay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
+
                             android:background="@color/white"
                             android:visibility="gone">
 
@@ -347,10 +353,8 @@
                                 android:id="@+id/title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="30dp"
-                                android:layout_marginLeft="6dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
+                                android:layout_margin="5dp"
+                                android:layout_marginRight="10dp"
                                 android:layout_toRightOf="@+id/linkImage"
                                 android:maxLines="1"
                                 android:paddingRight="10dp"
@@ -383,14 +387,12 @@
                         android:id="@+id/Enable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="20dp"
                         android:buttonTint="@color/buttonBackground"
                         android:checked="true"
-                        android:layoutDirection="rtl"
+                        android:layout_marginLeft="10dp"
                         android:text="Enable Commenting :"
-                        android:textColor="#636163"
-                        />
+                        android:textColor="#636163" />
                 </LinearLayout>
 
 

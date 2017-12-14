@@ -132,6 +132,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     private int CAMERA_PERMISSION_CODE = 1;
 
     private int SELECT_FILE = 999;
+    TextView title_side_left;
     SesstionManager sesstionManager;
 
     @Override
@@ -146,6 +147,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        title_side_left=(TextView)findViewById(R.id.title_side_left);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(title_side_left,CreateDrProfile.this);
         editTextemail = (EditText) findViewById(R.id.email);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {

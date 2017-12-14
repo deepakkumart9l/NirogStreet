@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -9,8 +12,8 @@
         android:background="@color/cardbluebackground">
 
         <RelativeLayout
-            android:layout_width="match_parent"
             android:id="@+id/lay"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
@@ -29,12 +32,12 @@
                 android:id="@+id/title_side_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="70dp"
+                android:layout_toRightOf="@id/back"
                 android:paddingBottom="@dimen/padding_10"
-                android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
-
-                android:paddingTop="@dimen/padding_10"
+                android:paddingLeft="7dp"
+                android:layout_marginRight="40dp"
+                android:paddingTop="@dimen/padding_15"
                 android:text=""
                 android:textColor="@color/white"
 
@@ -57,13 +60,38 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
-
+<ImageView
+    android:layout_width="30dp"
+    android:src="@drawable/dw"
+    android:layout_alignParentRight="true"
+    android:layout_marginRight="10dp"
+    android:padding="4dp"
+    android:layout_marginTop="10dp"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/download"
+    android:layout_height="30dp" />
 
         </RelativeLayout>
 
     </RelativeLayout>
-<WebView
-    android:layout_width="match_parent"
-    android:id="@+id/web"
-    android:layout_height="match_parent"></WebView>
-</LinearLayout>
+
+    <WebView
+        android:id="@+id/web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header"></WebView>
+
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/circularProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+        android:visibility="visible"
+        app:cpb_colors="@array/gplus_colors" />
+
+</RelativeLayout>

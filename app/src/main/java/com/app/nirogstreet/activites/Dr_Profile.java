@@ -789,6 +789,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
 
         }
+        if (!UserId.equalsIgnoreCase("")) {
+            SpecilizationsevicesTextView.setText("Services & Specialization");
+
+        }
     }
 
     private void updateExperience() {
@@ -1171,7 +1175,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
                         year.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_year());
-                        degreename.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_registration_number());
+                        degreename.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_name());
                         TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_registration_number());
                         v.setLayoutParams(params);

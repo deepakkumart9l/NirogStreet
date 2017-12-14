@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
+            android:layout_marginRight="10dp"
             android:lineSpacingExtra="1.2dp"
             android:text=""
 
@@ -177,7 +178,8 @@
                     android:id="@+id/subcommnt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
+android:paddingRight="10dp"
                     android:text="gfgh"
 
                     android:textColor="#000" />

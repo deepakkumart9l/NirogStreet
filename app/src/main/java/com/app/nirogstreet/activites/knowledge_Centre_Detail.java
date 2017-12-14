@@ -203,7 +203,7 @@ public class Knowledge_Centre_Detail extends Activity {
         main_LinearLayout = (LinearLayout) findViewById(R.id.mainCrad);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         TypeFaceMethods.setRegularTypeBoldFaceTextView(title_side_Tv, this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(dr_name_TV, this);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_name_TV, this);
         TypeFaceMethods.setRegularTypeFaceForTextView(viewTv, this);
         if (isHide) {
             addQualificationTextView.setVisibility(View.GONE);
@@ -410,11 +410,11 @@ public class Knowledge_Centre_Detail extends Activity {
                         auth_imageCircleImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(context, Dr_Profile.class);
+                                Intent intent = new Intent(Knowledge_Centre_Detail.this, Dr_Profile.class);
                                 if (!course_detail_model.getAuthor_detail_module().getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
 
                                     intent.putExtra("UserId", course_detail_model.getAuthor_detail_module().getId());
-                                context.startActivity(intent);
+                                startActivity(intent);
                             }
                         });
                         update();
@@ -455,7 +455,7 @@ public class Knowledge_Centre_Detail extends Activity {
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(titleTextView, Knowledge_Centre_Detail.this);
                     TypeFaceMethods.setRegularTypeFaceForTextView(descriptionTextView, Knowledge_Centre_Detail.this);
                     if (descriptionTextView.getText().length() > 170)
-                        makeTextViewResizable(descriptionTextView, 3, "view more", true);
+                        makeTextViewResizable(descriptionTextView, 4, "view more", true);
                     else {
                         descriptionTextView.setText(course_detail_model.getModulesModels().get(k).getDescription());
                     }
@@ -472,14 +472,13 @@ public class Knowledge_Centre_Detail extends Activity {
                                     for (int j = 0; j < course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().size(); j++) {
                                         View v1 = LayoutInflater.from(Knowledge_Centre_Detail.this).inflate(R.layout.module_item_check, null);
                                         TextView fileName = (TextView) v1.findViewById(R.id.txt);
-                                        CheckBox checkBox = (CheckBox) v1.findViewById(R.id.checkbox);
-                                        checkBox.setClickable(false);
+                                        ImageView checkBox = (ImageView) v1.findViewById(R.id.checkbox);
                                         TypeFaceMethods.setRegularTypeFaceForTextView(fileName, Knowledge_Centre_Detail.this);
                                         String filename = course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().get(j).getName();
-
                                         String doc_Type = course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().get(j).getDoc_type();
-
+                                        ImageView src = (ImageView) v1.findViewById(R.id.image);
                                         if (doc_Type.equalsIgnoreCase("3")) {
+                                            src.setImageResource(R.drawable.kc_vdo);
                                             final int finalI = i;
                                             final int finalJ = j;
                                             final int finalK = k;
@@ -510,7 +509,16 @@ public class Knowledge_Centre_Detail extends Activity {
                                                     if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains("\\.")) {
                                                         //feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
                                                     }
-                                                    verifyStoragePermissions(Knowledge_Centre_Detail.this);
+                                                    Intent intent = new Intent(Knowledge_Centre_Detail.this, DocumentWebView.class);
+                                                    intent.putExtra("id", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId());
+                                                    intent.putExtra("title", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
+                                                    intent.putExtra("course_detail_model", course_detail_model);
+                                                    intent.putExtra("module_pos", finalK);
+                                                    intent.putExtra("topic_pos", finalI);
+                                                    intent.putExtra("file_pos", finalJ);
+                                                    intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
+                                                    startActivity(intent);
+                                                 /*   verifyStoragePermissions(Knowledge_Centre_Detail.this);
 
                                                     String extntion = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1);
                                                     String filename1 = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf("/") + 1);
@@ -521,14 +529,15 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         knwledgeCompleteAsynctask.execute();
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
-                                                    }
+                                                    }*/
                                                 }
                                             });
                                         }
-                                        if (course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().get(j).getUser_completed() == 0) {
-                                            checkBox.setChecked(false);
+                                        if (course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().get(j).getUser_completed()
+                                                == 1) {
+                                            checkBox.setVisibility(View.VISIBLE);
                                         } else {
-                                            checkBox.setChecked(false);
+                                            checkBox.setVisibility(View.GONE);
 
                                         }
                                         fileName.setText(filename);

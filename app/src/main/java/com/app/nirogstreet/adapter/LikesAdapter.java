@@ -47,7 +47,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
         final LikesModel rowItem = likesModels.get(position);
         if (rowItem.getFname() != null) {
             if (rowItem.getLname() != null)
-                holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());
+                holder.name.setText("Dr. "+rowItem.getFname() + " " + rowItem.getLname());
             else
                 holder.name.setText(rowItem.getFname());
         }
@@ -65,8 +65,8 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
 
         Picasso.with(context)
                 .load(rowItem.getUserProfile_pic())
-                .placeholder(R.drawable.default_)
-                .error(R.drawable.default_)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
                 .into(holder.imageView);
         TypeFaceMethods.setRegularTypeFaceForTextView(holder.name,context);
     }

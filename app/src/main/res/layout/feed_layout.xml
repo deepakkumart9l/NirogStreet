@@ -65,12 +65,12 @@
                         android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="65dp"
+                        android:layout_marginRight="17dp"
                         android:layout_marginTop="5dp"
                         android:gravity="left"
                         android:lineSpacingExtra="4dp"
                         android:text=""
-                        android:textColor="@color/cardbluebackground"
+                        android:textColor="@color/black"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -191,6 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
+                    android:layout_marginTop="10dp"
                     android:visibility="gone">
 
                     <RelativeLayout
@@ -775,7 +776,7 @@
 
                         <ImageView
                             android:id="@+id/feedlikeimg"
-                            android:layout_width="20dp"
+                            android:layout_width="21dp"
                             android:layout_height="20dp"
                             android:padding="2dp"
                             android:scaleType="centerCrop"

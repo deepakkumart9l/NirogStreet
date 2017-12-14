@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
     <uses-permission-sdk-23 android:name="android.permission.CAPTURE_SECURE_VIDEO_OUTPUT" />
@@ -28,11 +30,11 @@
         android:name=".uttil.ApplicationSingleton"
 
         android:allowBackup="true"
-        android:largeHeap="true"
-        android:supportsRtl="true"
-
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+
+        android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
         <activity android:name=".activites.Splash">
             <intent-filter>
@@ -41,11 +43,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.Module_Detail_Activity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".activites.Knowledge_Centre_Detail"
+        <activity
+            android:name=".activites.Module_Detail_Activity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activites.Knowledge_Centre_Detail"
             android:screenOrientation="portrait" />
-
+<activity android:name=".activites.YoutubeVideo_Play"
+    android:screenOrientation="landscape"/>
         <activity
             android:name=".activites.MemberListing"
             android:screenOrientation="portrait" />
@@ -62,6 +67,11 @@
         <activity
             android:name=".activites.FullScreenImage"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.DocumentWebView"
+
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activites.CommunitySearchActivity"
             android:screenOrientation="portrait" />
