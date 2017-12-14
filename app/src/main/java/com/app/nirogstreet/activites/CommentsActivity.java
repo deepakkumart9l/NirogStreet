@@ -1,5 +1,6 @@
 package com.app.nirogstreet.activites;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -300,8 +302,13 @@ public class CommentsActivity extends AppCompatActivity{
                         JSONObject response = jo.getJSONObject("responce");
                         int totalLikes = 0;
                         boolean isuserLiked = false;
+                        InputMethodManager inputMethodManager =
+                                (InputMethodManager) CommentsActivity.this.getSystemService(
+                                        Activity.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(
+                                CommentsActivity.this.getCurrentFocus().getWindowToken(), 0);
                         ArrayList<CommentsModel> subComment = new ArrayList<>();
-
+                        Toast.makeText(CommentsActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
                         String commentId = null, message = null, createdOn = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null;
                         if (response.has("comment") && !response.isNull("comment")) {
                             JSONObject jsonObject = response.getJSONObject("comment");

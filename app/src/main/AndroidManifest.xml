@@ -41,7 +41,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.Module_Detail_Activity"/>
+        <activity android:name=".activites.Module_Detail_Activity"
+            android:screenOrientation="landscape"/>
         <activity android:name=".activites.Knowledge_Centre_Detail"
             android:screenOrientation="portrait" />
 

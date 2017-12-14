@@ -20,13 +20,13 @@
             android:paddingTop="5dp"
             android:text="Pratyush like your Post"
             android:textColor="@color/textcolorgray"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/normalFeedLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
+            android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -35,8 +35,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@color/white"
-                android:paddingTop="5dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:paddingTop="5dp">
 
                 <RelativeLayout
                     android:id="@+id/profileimg"
@@ -70,44 +70,48 @@
                         android:layout_marginTop="5dp"
                         android:gravity="left"
                         android:lineSpacingExtra="4dp"
+                        android:text=""
                         android:textColor="@color/cardbluebackground"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/name"
                         android:layout_marginRight="50dp"
-                        android:maxLines="1"
                         android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@+id/name"
                         android:gravity="center"
-                        android:visibility="gone"
                         android:lineSpacingExtra="4dp"
+                        android:maxLines="1"
                         android:textColor="#8d8d8d"
                         android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
                         android:id="@+id/del"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/more_dots" />
+                        android:padding="4dp"
+                        android:src="@drawable/etc" />
 
                     <TextView
                         android:id="@+id/timeStamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
                         android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="3dp"
-                        android:layout_below="@+id/name"
                         android:gravity="center"
                         android:paddingRight="5dp"
                         android:paddingTop="0dp"
-                        android:text="24 hr"
-                        android:textColor="#979797"
-                        android:textSize="11sp" />
+                        android:text=""
+                        android:textColor="#696969"
+                        android:textSize="13.5sp" />
 
                     <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/flow"
@@ -144,13 +148,13 @@
                 <TextView
                     android:id="@+id/Question"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:paddingBottom="10dp"
+                    android:lineSpacingExtra="4sp"
                     android:paddingRight="15dp"
                     android:text="here is Question"
                     android:textColor="@color/black"
-                    android:textSize="17sp"
+                    android:textSize="16.5sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -161,9 +165,9 @@
                     android:background="@color/white"
                     android:gravity="center|left"
                     android:lineSpacingExtra="7sp"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="10dp"
+                    android:paddingTop="10dp"
                     android:text="This is Status Text"
                     android:textColor="#333333"
                     android:textColorLink="@color/cardbluebackground"
@@ -187,7 +191,8 @@
                     android:id="@+id/relativeLayout1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -450,18 +455,18 @@
                         android:id="@+id/weblink"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
                         android:layout_marginBottom="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
 
                         <ImageView
                             android:id="@+id/linkImage"
                             android:layout_width="match_parent"
                             android:layout_height="250dp"
-                            android:visibility="gone"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_" />
+                            android:src="@drawable/default_"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -472,30 +477,30 @@
                                 android:id="@+id/left_view"
                                 android:layout_width="1dp"
                                 android:layout_height="120dp"
-                                android:visibility="gone"
-                                android:background="@color/textcolorgray"></View>
+                                android:background="@color/textcolorgray"
+                                android:visibility="gone"></View>
 
                             <LinearLayout
                                 android:id="@+id/link_title_des_lay"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="gone"
                                 android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
                                 <TextView
                                     android:id="@+id/title"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
                                     android:lineSpacingExtra="2dp"
-                                    android:visibility="gone"
                                     android:paddingLeft="15dp"
                                     android:paddingRight="10dp"
-                                    android:layout_marginTop="10dp"
                                     android:text="deepak kumar "
                                     android:textColor="#000"
                                     android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
 
                                 <TextView
                                     android:id="@+id/description"
@@ -503,31 +508,31 @@
                                     android:layout_height="wrap_content"
                                     android:lineSpacingExtra="2dp"
                                     android:maxLines="3"
-                                    android:text="texting"
                                     android:paddingBottom="15dp"
-                                    android:visibility="gone"
                                     android:paddingLeft="15dp"
                                     android:paddingRight="10dp"
+                                    android:text="texting"
                                     android:textColor="@color/black"
                                     android:textSize="14sp"
-                                    android:textStyle="normal" />
+                                    android:textStyle="normal"
+                                    android:visibility="gone" />
 
                             </LinearLayout>
 
                             <View
                                 android:id="@+id/right_view"
                                 android:layout_width="1dp"
-                                android:visibility="gone"
                                 android:layout_height="120dp"
-                                android:background="@color/textcolorgray"></View>
+                                android:background="@color/textcolorgray"
+                                android:visibility="gone"></View>
                         </LinearLayout>
 
                         <View
                             android:id="@+id/bottom_view"
                             android:layout_width="match_parent"
-                            android:visibility="gone"
                             android:layout_height="1dp"
-                            android:background="@color/textcolorgray"></View>
+                            android:background="@color/textcolorgray"
+                            android:visibility="gone"></View>
 
                     </LinearLayout>
 
@@ -598,7 +603,6 @@
                 android:id="@+id/CommentSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -648,7 +652,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="#fff"
-
                         android:paddingLeft="5dp">
 
                         <TextView
@@ -695,8 +698,59 @@
                             android:scaleType="centerInside"
                             android:src="@drawable/more_dots" />
 
-
                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="9dp"
+                    android:gravity="right|center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:id="@+id/likes"
+                        android:text="0 Like"
+                        android:textColor="#9d9d9d" />
+
+                    <TextView
+                        android:layout_width="3.5dp"
+                        android:layout_height="3.5dp"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp"
+                        android:background="@drawable/round_dot"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:id="@+id/commnts"
+
+                        android:text="0 Comment"
+                        android:textColor="#9d9d9d" />
+
+                    <TextView
+                        android:layout_width="3.5dp"
+                        android:layout_height="3.5dp"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp"
+                        android:background="@drawable/round_dot"
+                        android:gravity="center"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="11 Share"
+                        android:textColor="#9d9d9d"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <View
@@ -706,7 +760,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -722,8 +776,8 @@
 
                         <ImageView
                             android:id="@+id/feedlikeimg"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:padding="2dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/like_unlike" />
@@ -737,9 +791,9 @@
                             android:gravity="left|center"
                             android:padding="5dp"
                             android:singleLine="true"
-                            android:text="0 Like"
-                            android:textColor="#8d8d8d"
-                            android:textSize="13sp" />
+                            android:text="Like"
+                            android:textColor="#cc000000"
+                            android:textSize="13.5sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -753,10 +807,10 @@
 
                         <ImageView
                             android:id="@+id/imageViewfavattr"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:scaleType="centerCrop"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:padding="2dp"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/comments" />
 
                         <TextView
@@ -768,8 +822,8 @@
                             android:gravity="left|center"
                             android:padding="5dp"
                             android:singleLine="true"
-                            android:text="0 Comment"
-                            android:textColor="#8d8d8d"
+                            android:text="Comment"
+                            android:textColor="#cc000000"
                             android:textSize="13sp" />
                     </LinearLayout>
 
@@ -784,10 +838,10 @@
 
                         <ImageView
                             android:id="@+id/imagedelete"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:scaleType="centerCrop"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:padding="2dp"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/share" />
 
                         <TextView
@@ -800,7 +854,7 @@
                             android:padding="5dp"
                             android:singleLine="true"
                             android:text="Share"
-                            android:textColor="#8d8d8d"
+                            android:textColor="#cc000000"
                             android:textSize="13sp" />
                     </LinearLayout>
 

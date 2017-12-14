@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,9 +26,9 @@
             android:layout_marginRight="60dp"
             android:layout_toRightOf="@+id/pro"
             android:text="Post an Article/Question"
-            android:textColor="#77000000"
+            android:textColor="#b3000000"
 
-            android:textSize="13sp"
+            android:textSize="15.3sp"
             android:textStyle="bold" />
 
         <ImageView

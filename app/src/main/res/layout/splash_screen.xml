@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardbluebackground"
+    android:background="@drawable/splash"
   >
 
     <ImageView
@@ -11,6 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="180dp"
         android:layout_height="80dp"
+        android:visibility="gone"
        android:src="@drawable/app_icon" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:text="Think Ayurveda"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="28dp"
         android:textStyle="bold" />
@@ -30,6 +32,7 @@
         android:id="@+id/nirog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_below="@+id/think"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -25,6 +26,7 @@ import com.app.nirogstreet.adapter.GroupListingAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.CoursesModel;
 import com.app.nirogstreet.model.GroupModel;
+import com.app.nirogstreet.parser.Courses_Parser;
 import com.app.nirogstreet.parser.Group_Listing_Parser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
@@ -100,7 +102,7 @@ public class Courses_Fragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (ApplicationSingleton.isGroupCreated() || ApplicationSingleton.isGroupUpdated()) {
+        if (ApplicationSingleton.isCourseSubscribe() ) {
             userView.setSelected(true);
             allView.setSelected(false);
             page = 1;
@@ -108,10 +110,11 @@ public class Courses_Fragment extends Fragment {
             groupModelsTotal = new ArrayList<CoursesModel>();
             recyclerView.setVisibility(View.GONE);
             myGroupTextView.setTextColor(getResources().getColor(R.color.black));
-
+            TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
             otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
             if (NetworkUtill.isNetworkAvailable(context)) {
-                String url = AppUrl.BaseUrl + "group/index";
+                String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
                 groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                 groupsOfUserAsyncTask.execute();
@@ -119,8 +122,7 @@ public class Courses_Fragment extends Fragment {
             } else {
                 NetworkUtill.showNoInternetDialog(context);
             }
-            ApplicationSingleton.setIsGroupCreated(false);
-            ApplicationSingleton.setIsGroupUpdated(false);
+            ApplicationSingleton.setCourseSubscribe(false);
         }
 
     }
@@ -128,7 +130,7 @@ public class Courses_Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.communities_listing, container, false);
+        view = inflater.inflate(R.layout.courses_listing_new, container, false);
 
         sessionManager = new SesstionManager(context);
         linearLayout1 = (LinearLayout) view.findViewById(R.id.linearLayout1);
@@ -138,10 +140,10 @@ public class Courses_Fragment extends Fragment {
         logedinuserId = userDetails.get(SesstionManager.USER_ID);
         userId = userDetails.get(SesstionManager.USER_ID);
         myGroupTextView = (TextView) view.findViewById(R.id.myGroup);
-        myGroupTextView.setText("MY COURSES");
+        myGroupTextView.setText("My Courses");
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
         otherGroupTextView = (TextView) view.findViewById(R.id.otherGroup);
-        otherGroupTextView.setText("ALL COURSES");
+        otherGroupTextView.setText("All Courses");
         userView = (View) view.findViewById(R.id.userview);
         allView = (View) view.findViewById(R.id.allview);
         userView.setSelected(true);
@@ -149,11 +151,13 @@ public class Courses_Fragment extends Fragment {
         myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
         otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
         TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
         myGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerView.removeAllViews();
+                TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+                TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
                 otherGroupTextView.setClickable(false);
                 userView.setSelected(true);
                 allView.setSelected(false);
@@ -166,7 +170,7 @@ public class Courses_Fragment extends Fragment {
                 myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    String url = AppUrl.BaseUrl + "group/index";
+                    String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                     groupsOfUserAsyncTask.execute();
@@ -179,6 +183,8 @@ public class Courses_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 page = 1;
+                TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 groupModelsTotal = new ArrayList<CoursesModel>();
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
@@ -191,7 +197,7 @@ public class Courses_Fragment extends Fragment {
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    String url = AppUrl.BaseUrl + "group/all-groups";
+                    String url = AppUrl.BaseUrl + "knowledge/all-courses";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTask.execute();
@@ -206,10 +212,15 @@ public class Courses_Fragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerView.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        DividerItemDecoration      mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+        linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
+
         recyclerView.setLayoutManager(linearLayoutManager);
         if (logedinuserId.equals(userId))
             if (NetworkUtill.isNetworkAvailable(context)) {
-                String url = AppUrl.BaseUrl + "group/index";
+                String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
                 groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                 groupsOfUserAsyncTask.execute();
@@ -218,7 +229,7 @@ public class Courses_Fragment extends Fragment {
             }
         else {
             if (NetworkUtill.isNetworkAvailable(context)) {
-                String url = AppUrl.BaseUrl + "group/all-groups";
+                String url = AppUrl.BaseUrl + "knowledge/all-courses";
 
                 groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTask.execute();
@@ -297,19 +308,15 @@ public class Courses_Fragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             circularProgressBar.setVisibility(View.GONE);
-            ArrayList<GroupModel> groupModels = new ArrayList<>();
-            groupModels = Group_Listing_Parser.groupListingParser(jo);
+            ArrayList<CoursesModel> groupModels = new ArrayList<>();
+            groupModels = Courses_Parser.groupListingParser(jo);
             otherGroupTextView.setClickable(true);
             myGroupTextView.setClickable(true);
-           // groupModelsTotal.addAll(groupModels);
-            groupModelsTotal.add(new CoursesModel("1","Lorem Ipsum is simply dummy text","of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum","2 h 58 min",
-                   "https://www.nirogstreet.com/images/profiles/1512367406.jpg",null));
-            groupModelsTotal.add(new CoursesModel("1","Lorem Ipsum is simply dummy text","of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum","2 h 58 min",
-                    "https://www.nirogstreet.com/images/profiles/1512367406.jpg",null));
+           groupModelsTotal.addAll(groupModels);
+
             super.onPostExecute(aVoid);
             try {
                 if (jo != null)
-
                 {
                     recyclerView.setVisibility(View.VISIBLE);
 

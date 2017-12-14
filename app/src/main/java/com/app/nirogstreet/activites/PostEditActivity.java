@@ -38,6 +38,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -154,6 +155,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         setContentView(R.layout.post_edit);
         if (getIntent().hasExtra("feedId")) {
             feedId = getIntent().getStringExtra("feedId");

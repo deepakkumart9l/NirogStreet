@@ -10,6 +10,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:id="@+id/lay"
             android:layout_height="match_parent">
 
             <ImageView
@@ -18,7 +19,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="7dp"
                 android:padding="8dp"
 
                 android:src="@drawable/back"
@@ -28,51 +29,41 @@
                 android:id="@+id/title_side_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="45dp"
+                android:layout_marginLeft="70dp"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
+
                 android:paddingTop="@dimen/padding_10"
-                android:text="Award"
+                android:text=""
                 android:textColor="@color/white"
 
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/addualification"
-                android:layout_width="wrap_content"
+
+                android:id="@+id/title_side"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="45dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="left"
+
                 android:paddingBottom="@dimen/padding_10"
-                android:paddingLeft="@dimen/padding_10"
-                android:paddingRight="18dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="@dimen/padding_10"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Qualifications"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
 
-                android:visibility="gone" />
 
         </RelativeLayout>
+
     </RelativeLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_gravity="fill_horizontal"
-
-        android:layout_height="match_parent">
-    <VideoView
-        android:id="@+id/VideoView"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/tool"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
-    </FrameLayout>
-
+<WebView
+    android:layout_width="match_parent"
+    android:id="@+id/web"
+    android:layout_height="match_parent"></WebView>
 </LinearLayout>

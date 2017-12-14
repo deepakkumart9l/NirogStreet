@@ -3,6 +3,7 @@ package com.app.nirogstreet.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -52,7 +53,9 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -294,14 +297,29 @@ public class About_Fragment extends Fragment {
                                 banner = groupDetailJsonObject.getString("banner");
                                 if (banner != null && !banner.equalsIgnoreCase("")) {
 
+
+                                    Transformation transformation = new RoundedTransformationBuilder()
+                                            .borderColor(Color.BLACK)
+                                            .borderWidthDp(3)
+                                            .cornerRadiusDp(30)
+                                            .oval(false)
+                                            .build();
+
+
                                     Picasso.with(context)
-                                            .load(banner)
+                                            .load(banner).transform(transformation)
                                             .placeholder(R.drawable.default_)
                                             .error(R.drawable.default_)
-                                            .into(CommunitiesDetails.circleImageView);
+                                            .into(CommunitiesDetails.proo);
+                                    CommunitiesDetails.proo.setVisibility(View.VISIBLE);
+                                    CommunitiesDetails.circleImageView.setVisibility(View.GONE);
+
+
                                     // imageLoader1.getInstance().displayImage(groupModel.getGroupBanner(),  holder.groupIconImageView, defaultOptions);
                                 } else {
                                     try {
+                                        CommunitiesDetails.proo.setVisibility(View.GONE);
+                                        CommunitiesDetails.circleImageView.setVisibility(View.VISIBLE);
                                         CommunitiesDetails.circleImageView.setImageBitmap(mLetterTileProvider.getLetterTile(name));
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -310,6 +328,8 @@ public class About_Fragment extends Fragment {
 
                             } else {
                                 try {
+                                    CommunitiesDetails.proo.setVisibility(View.GONE);
+                                    CommunitiesDetails.circleImageView.setVisibility(View.VISIBLE);
                                     CommunitiesDetails.circleImageView.setImageBitmap(mLetterTileProvider.getLetterTile(name));
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -339,6 +359,16 @@ public class About_Fragment extends Fragment {
                                             context.startActivity(intent);
                                         }
                                     });
+                                    circleImageView.setOnClickListener(new View.OnClickListener() {
+                                                                           @Override
+                                                                           public void onClick(View v) {
+                                                                               Intent intent = new Intent(context, Dr_Profile.class);
+                                                                               if (!finalCreatedBy_id1.equalsIgnoreCase(userId))
+                                                                                   intent.putExtra("UserId", finalCreatedBy_id);
+                                                                               context.startActivity(intent);
+                                                                           }
+                                                                       }
+                                    );
                                 }
                                 if (created_ByObject.has("name") && !created_ByObject.isNull("name")) {
                                     createdBy_name = created_ByObject.getString("name");
@@ -352,6 +382,8 @@ public class About_Fragment extends Fragment {
                                             .placeholder(R.drawable.user)
                                             .error(R.drawable.user)
                                             .into(circleImageView);
+                                    final String finalCreatedBy_id2 = createdBy_id;
+
                                 }
 
                             }
@@ -388,7 +420,7 @@ public class About_Fragment extends Fragment {
                                                 TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
                                                 nameTv.setText("View All");
                                                 CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memthreeimg);
-                                                view.setOnClickListener(new View.OnClickListener() {
+                                                imageView.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
                                                         Intent intent = new Intent(context, MemberListing.class);
@@ -434,16 +466,22 @@ public class About_Fragment extends Fragment {
                                                                 context.startActivity(intent);
                                                             }
                                                         });
-                                                        if (userDetailModels.get(i).getProfile_pic() != null && !userDetailModels.get(i).getProfile_pic().equalsIgnoreCase(""))
+                                                        if (userDetailModels.get(i).getProfile_pic() != null && !userDetailModels.get(i).getProfile_pic().equalsIgnoreCase("")) {
+                                                            Transformation transformation = new RoundedTransformationBuilder()
+                                                                    .borderColor(Color.BLACK)
+                                                                    .borderWidthDp(3)
+                                                                    .cornerRadiusDp(30)
+                                                                    .oval(false)
+                                                                    .build();
 
 
                                                             Picasso.with(context)
-                                                                    .load(userDetailModels.get(i).getProfile_pic())
+                                                                    .load(userDetailModels.get(i).getProfile_pic()).transform(transformation)
                                                                     .placeholder(R.drawable.user)
                                                                     .error(R.drawable.user)
                                                                     .into(imageView);
 
-                                                    }
+                                                        } }
                                                     if (i == 1) {
                                                         TextView nameTv = (TextView) view.findViewById(R.id.membertwoname);
 

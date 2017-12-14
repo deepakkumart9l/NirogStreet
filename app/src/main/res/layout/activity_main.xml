@@ -29,7 +29,7 @@
                 android:layout_marginLeft="10dp"
                 android:text=""
                 android:textColor="@color/white"
-                android:textSize="18dp"
+                android:textSize="16.5sp"
                 android:textStyle="normal"
                 android:visibility="gone" />
 

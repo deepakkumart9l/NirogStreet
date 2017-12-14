@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -132,7 +133,6 @@ public class OtpActivity extends AppCompatActivity {
             editTextOtpFour.setText(String.valueOf(arr[3]));*/
         }
 
-        editPhone.setEnabled(false);
         editPhone.setText(phone);
         TypeFaceMethods.setRegularTypeFaceForTextView(VerifyTv, OtpActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(resendOtp, OtpActivity.this);
@@ -243,17 +243,32 @@ public class OtpActivity extends AppCompatActivity {
         VerifyTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetworkUtill.isNetworkAvailable(OtpActivity.this)) {
-                    if (phone != null && otp != null) {
-                        registrationAsyncTask = new RegistrationAsyncTask(fname, lname, email, pass, phone, otp);
-                        registrationAsyncTask.execute();
-                    }
+                if (validate()) {
+                    phone = editPhone.getText().toString();
+                    if (NetworkUtill.isNetworkAvailable(OtpActivity.this)) {
+                        if (phone != null && otp != null) {
+                            registrationAsyncTask = new RegistrationAsyncTask(fname, lname, email, pass, phone, otp);
+                            registrationAsyncTask.execute();
+                        }
 
-                } else {
-                    NetworkUtill.showNoInternetDialog(OtpActivity.this);
+                    } else {
+                        NetworkUtill.showNoInternetDialog(OtpActivity.this);
+                    }
                 }
             }
         });
+    }
+
+    private boolean validate() {
+        if (editPhone.getText().toString().length() == 0) {
+            Toast.makeText(OtpActivity.this, "Enter mobile number.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (!Methods.isValidPhoneNumber(editPhone.getText().toString())) {
+            Toast.makeText(OtpActivity.this, "Enter valid mobile number.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+
     }
 
     @Override
@@ -404,7 +419,7 @@ public class OtpActivity extends AppCompatActivity {
                                         }
                                         sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
                                         Intent intent = new Intent(OtpActivity.this, CreateDrProfile.class);
-                                        intent.putExtra("isSkip",true);
+                                        intent.putExtra("isSkip", true);
                                         startActivity(intent);
                                         finish();
                                     }

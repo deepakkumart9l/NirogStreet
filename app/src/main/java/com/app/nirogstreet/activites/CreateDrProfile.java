@@ -32,6 +32,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -136,6 +137,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         setContentView(R.layout.create_dr_profile);
         if (getIntent().hasExtra("isSkip")) {
             isSkip = getIntent().getBooleanExtra("isSkip", false);
@@ -247,6 +250,14 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         editTextDob.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
+
+                return false;
+            }
+        });
+        editTextDob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(editTextAbout.getWindowToken(), 0);
                 InputMethodManager imm1 = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -256,8 +267,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
                     isVisible = false;
                 }
-
-                return false;
             }
         });
         TypeFaceMethods.setRegularTypeFaceForTextView(editTextDob, CreateDrProfile.this);

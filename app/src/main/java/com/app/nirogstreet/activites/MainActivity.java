@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
         textViewTab = (TextView) findViewById(R.id.textTab);
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(textViewTab,MainActivity.this);
         logout = (ImageView) findViewById(R.id.logout);
         sesstionManager = new SesstionManager(MainActivity.this);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         searchgroupImageView.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
-                        setTabText("Knowlwdge centre");
+                        setTabText("Knowledge Centre");
                         break;
                     case 2:
                         searchImageView.setVisibility(View.GONE);
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         searchImageView.setVisibility(View.GONE);
                         setTabText("You");*/
                         break;
-                    case  3:
+                    case 3:
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.GONE);
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabOneknwledge.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImglnw = (ImageView) tabLinearLayout1.findViewById(R.id.icon);
-        oneImglnw.setImageResource(R.drawable.comm);
+        oneImglnw.setImageResource(R.drawable.knwoledge);
         tabLayout.getTabAt(1).setCustomView(tabLinearLayout1);
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
@@ -301,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
     public static int selectedFragment() {
         return viewPager.getCurrentItem();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -488,11 +490,10 @@ public class MainActivity extends AppCompatActivity {
                                         } catch (ShortcutBadgeException e) {
                                             e.printStackTrace();
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
                                         try {
-                                         ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
+                                            ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
 
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -526,6 +527,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     public void cancelNotificationOnLogout() {
         try {
             ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
@@ -616,7 +618,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        count=1;
+        count = 1;
         HashMap<String, String> userDetails = sesstionManager.getUserDetails();
         String userId = userDetails.get(SesstionManager.USER_ID);
         if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {

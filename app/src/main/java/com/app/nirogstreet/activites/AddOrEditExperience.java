@@ -72,7 +72,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class AddOrEditExperience extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static boolean isVisible = true;
     public static int year;
-CheckBox checkBox;
+    CheckBox checkBox;
 
     ImageView backImageView;
 
@@ -95,7 +95,7 @@ CheckBox checkBox;
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.add_edit_experience);
-        checkBox=(CheckBox)findViewById(R.id.checkbox);
+        checkBox = (CheckBox) findViewById(R.id.checkbox);
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
         checkBox.setTypeface(tf);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -241,10 +241,10 @@ CheckBox checkBox;
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 System.out.print(year);
                 isVisible = true;
-if(isFromDate)
-    fromEt.setText(year+"");
+                if (isFromDate)
+                    fromEt.setText(year + "");
                 else
-    toEt.setText(year+"");
+                    toEt.setText(year + "");
 
                 // yearEditText.setText(year + "");
             }
@@ -426,10 +426,9 @@ if(isFromDate)
                 pairs.add(new BasicNameValuePair("Experience[start_time]", startTime));
                 pairs.add(new BasicNameValuePair("Experience[address]", city));
                 pairs.add(new BasicNameValuePair("Experience[org_name]", qrganisation_name));
-                if(checkBox.isChecked()) {
-                    pairs.add(new BasicNameValuePair("Experience[currently_working]","1"));
-                }else
-                {
+                if (checkBox.isChecked()) {
+                    pairs.add(new BasicNameValuePair("Experience[currently_working]", "1"));
+                } else {
                     pairs.add(new BasicNameValuePair("Experience[end_time]", endTime));
 
                 }
@@ -506,7 +505,7 @@ if(isFromDate)
             Toast.makeText(AddOrEditExperience.this, R.string.start_year, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!checkBox.isChecked()&&toEt.getText().toString().length() == 0) {
+        if (!checkBox.isChecked() && toEt.getText().toString().length() == 0) {
             Toast.makeText(AddOrEditExperience.this, R.string.end_year, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -514,8 +513,7 @@ if(isFromDate)
             Toast.makeText(AddOrEditExperience.this, R.string.address, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(!checkBox.isChecked()&&Integer.parseInt(fromEt.getText().toString())>Integer.parseInt(toEt.getText().toString()))
-        {
+        if (!checkBox.isChecked() && Integer.parseInt(fromEt.getText().toString()) > Integer.parseInt(toEt.getText().toString())) {
             Toast.makeText(AddOrEditExperience.this, "Invalid Year", Toast.LENGTH_SHORT).show();
             return false;
         }

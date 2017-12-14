@@ -61,9 +61,9 @@ public class GroupListingAdapter extends
     SesstionManager sessionManager;
 
 
-    public GroupListingAdapter(ArrayList<GroupModel> groupModels, Context context, boolean hide, String userId,boolean showJoin) {
+    public GroupListingAdapter(ArrayList<GroupModel> groupModels, Context context, boolean hide, String userId, boolean showJoin) {
         this.groupModels = groupModels;
-        this.showJoin=showJoin;
+        this.showJoin = showJoin;
         this.context = context;
         this.ishHide = hide;
 
@@ -95,7 +95,7 @@ public class GroupListingAdapter extends
         holder.joinTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupModel.getGroupId(), userId, authToken, 1,position);
+                AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupModel.getGroupId(), userId, authToken, 1, position);
                 acceptDeclineJoinAsyncTask.execute();
             }
         });
@@ -108,7 +108,7 @@ public class GroupListingAdapter extends
                 holder.linearLayoutbuttons.setVisibility(View.GONE);
             }
         }
-        if (groupModel.getGroupBanner() != null&&!groupModel.getGroupBanner().contains("banner-default")&&!groupModel.getGroupBanner().contains("tempimages")) {
+        if (groupModel.getGroupBanner() != null && !groupModel.getGroupBanner().contains("banner-default") && !groupModel.getGroupBanner().contains("tempimages")) {
             Glide.with(context)
                     .load(groupModel.getGroupBanner()).placeholder(R.drawable.default_).centerCrop() // Uri of the picture
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -143,7 +143,7 @@ public class GroupListingAdapter extends
                 intent.putExtra("status", groupModel.getStatus());
                 ((Activity) context).startActivityForResult(intent, REQUEST_FOR_ACTIVITY_CODE);*/
                 Intent intent = new Intent(context, CommunitiesDetails.class);
-               intent.putExtra("groupId",groupModel.getGroupId());
+                intent.putExtra("groupId", groupModel.getGroupId());
                 context.startActivity(intent);
             }
         });
@@ -177,6 +177,20 @@ public class GroupListingAdapter extends
             groupIconImageView = (RoundedImageView) itemView.findViewById(R.id.groupImage);
         }
     }
+
+    @Override
+    public void onBindViewHolder(MyHolderView holder, int position, List<Object> payloads) {
+
+        if (!payloads.isEmpty()) {
+
+            if (payloads.get(0) instanceof String) {
+                holder.joinTextView.setText("Joined");
+            }
+        } else {
+            super.onBindViewHolder(holder, position, payloads);
+        }
+    }
+
     public class AcceptDeclineJoinAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -187,11 +201,11 @@ public class GroupListingAdapter extends
         int pos;
         private String responseBody;
 
-        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status,int pos) {
+        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos) {
             this.groupId = groupId;
             this.status1 = status;
             this.authToken = authToken;
-            this.pos=pos;
+            this.pos = pos;
             this.userId = userId;
         }
 
@@ -216,13 +230,12 @@ public class GroupListingAdapter extends
                             JSONObject jsonObject = jsonObjectresponse.getJSONObject("message");
                             if (jsonObject.has("message") && !jsonObject.isNull("message")) {
                                 Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                                groupModels.remove(pos);
+                             /*   groupModels.remove(pos);
                                 notifyItemRemoved(pos);
-                                notifyItemRangeChanged(pos, groupModels.size());
+                                notifyItemRangeChanged(pos, groupModels.size());*/
+                                notifyItemChanged(pos, new String("joined"));
+
                             }
-
-
-
 
 
                         }
@@ -255,7 +268,7 @@ public class GroupListingAdapter extends
                 pairs.add(new BasicNameValuePair("invited_to", userId));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
-                pairs.add(new BasicNameValuePair("addedType",1+""));
+                pairs.add(new BasicNameValuePair("addedType", 1 + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));

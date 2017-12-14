@@ -113,7 +113,7 @@ public class MoreFragment extends Fragment {
                 ApplicationSingleton.setNoOfComment(-1);
             }
             if (ApplicationSingleton.getTotalLike() != -1) {
-                totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getTotalLike() + "");
+                totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_likes(ApplicationSingleton.getTotalLike() + "");
 
                 if (ApplicationSingleton.isCurruntUserLiked())
                     totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(1);
@@ -193,7 +193,7 @@ public class MoreFragment extends Fragment {
                     NetworkUtill.showNoInternetDialog(context);
                 }
                 if (totalFeeds.size() > 0) {
-                    recyclerView.scrollToPosition(0);
+                  //  recyclerView.scrollToPosition(0);
                 }
             }
 

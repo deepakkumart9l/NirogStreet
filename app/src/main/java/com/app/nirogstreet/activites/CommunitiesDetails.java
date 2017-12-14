@@ -42,11 +42,13 @@ public class CommunitiesDetails extends AppCompatActivity {
     static LetterTileProvider mLetterTileProvider;
     public static RoundedImageView circleImageView;
     ImageView backImageView;
+    public  static CircleImageView proo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.communication_detail);
+        proo=(CircleImageView)findViewById(R.id.proo);
         textTab = (TextView) findViewById(R.id.textTab);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {

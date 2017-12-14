@@ -170,7 +170,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case TYPE_HEADER:
                 HeaderView myViewHolder = (HeaderView) holder;
@@ -217,6 +217,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     viewHolder.left_view.setVisibility(View.GONE);
                                     viewHolder.right_view.setVisibility(View.GONE);
                                     viewHolder.bottom_view.setVisibility(View.GONE);
+                                    viewHolder.relativeLayout1.setVisibility(View.GONE);
                                     viewHolder.playicon.setVisibility(View.GONE);
                                     viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
                                     viewHolder.linkImageView.setVisibility(View.GONE);
@@ -286,6 +287,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     viewHolder.left_view.setVisibility(View.VISIBLE);
                                     viewHolder.right_view.setVisibility(View.VISIBLE);
                                     viewHolder.bottom_view.setVisibility(View.VISIBLE);
+                                    viewHolder.relativeLayout1.setVisibility(View.GONE);
+
                                     viewHolder.videoView.setVisibility(View.GONE);
                                     viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                                     viewHolder.linkImageView.setVisibility(View.VISIBLE);
@@ -344,6 +347,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.linkTitleTextView.setVisibility(View.GONE);
                             viewHolder.link_title_des_lay.setVisibility(View.GONE);
                             viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+
                             viewHolder.right_view.setVisibility(View.GONE);
                             viewHolder.bottom_view.setVisibility(View.GONE);
 
@@ -462,6 +467,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.linkTitleTextView.setVisibility(View.GONE);
                             viewHolder.feedImageView.setVisibility(View.VISIBLE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.GONE);
+
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                             viewHolder.link_title_des_lay.setVisibility(View.GONE);
@@ -497,6 +504,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.link_title_des_lay.setVisibility(View.GONE);
                             viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.GONE);
+
                             viewHolder.right_view.setVisibility(View.GONE);
                             viewHolder.bottom_view.setVisibility(View.GONE);
                             viewHolder.linkTitleTextView.setVisibility(View.GONE);
@@ -529,6 +538,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                             String extntion = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf(".") + 1);
                                             String filename = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("/") + 1);
+                                            viewHolder.docNameTextView.setText(filename);
                                             Methods.downloadFile(feedModel.getFeed_source(), activity, extntion, feedModel.getDoc_name());
                                             Methods.showProgress(feedModel.getFeed_source(), activity);
                                         }
@@ -544,6 +554,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.linkImageView.setVisibility(View.GONE);
                             viewHolder.link_title_des_lay.setVisibility(View.GONE);
                             viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.GONE);
+
                             viewHolder.right_view.setVisibility(View.GONE);
                             viewHolder.bottom_view.setVisibility(View.GONE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
@@ -599,17 +611,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                     if (feedModel.getTotal_likes() != null) {
                         if (feedModel.getTotal_likes().equalsIgnoreCase("0") || feedModel.getTotal_likes().equalsIgnoreCase("1"))
-                            viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Like");
+                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
                         else
-                            viewHolder.noOfLikeTextView.setText(feedModel.getTotal_likes() + " Like");
+                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
 
                     }
                     if (feedModel.getTotal_comments() != null) {
                         if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
 
-                            viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comment");
+                            viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comment");
                         else
-                            viewHolder.noOfCommentTextView.setText(feedModel.getTotal_comments() + " Comments");
+                            viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comments");
 
                     }
                     final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
@@ -720,6 +732,23 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.GONE);
 
                     }
+                    viewHolder.likesTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, LikesDisplayActivity.class);
+                            intent.putExtra("feedId", feedModel.getFeed_id());
+                            context.startActivity(intent);                        }
+                    });
+                    viewHolder.commntsTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, CommentsActivity.class);
+                            intent.putExtra("feedId", feedModel.getFeed_id());
+                            ApplicationSingleton.setPost_position(position);
+
+                            context.startActivity(intent);
+                        }
+                    });
                     viewHolder.feedcommentlistingLinearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -751,7 +780,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         @Override
                                         public void updateDrawState(TextPaint ds) {
                                             ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                             ds.setUnderlineText(false);// this remove the underline
                                         }
 
@@ -775,7 +804,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         @Override
                                         public void updateDrawState(TextPaint ds) {
                                             ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                             ds.setUnderlineText(false);// this remove the underline
                                         }
 
@@ -801,7 +830,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         @Override
                                         public void updateDrawState(TextPaint ds) {
                                             ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                             ds.setUnderlineText(false);// this remove the underline
                                         }
 
@@ -826,7 +855,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             @Override
                                             public void updateDrawState(TextPaint ds) {
                                                 ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                                ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                                ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                                 ds.setUnderlineText(false);// this remove the underline
                                             }
 
@@ -853,7 +882,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         @Override
                                         public void updateDrawState(TextPaint ds) {
                                             ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                             ds.setUnderlineText(false);// this remove the underline
                                         }
 
@@ -881,7 +910,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     @Override
                                     public void updateDrawState(TextPaint ds) {
                                         ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                         ds.setUnderlineText(false);// this remove the underline
                                     }
 
@@ -968,9 +997,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             if (payloads.get(0) instanceof String) {
                 if (String.valueOf(payloads.get(0)).equalsIgnoreCase("0") || String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
-                    viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Like");
+                    viewHolder.likesTextView.setText(String.valueOf(payloads.get(0)) + " Like");
                 else
-                    viewHolder.noOfLikeTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
+                    viewHolder.likesTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
 
                 if (!viewHolder.feedlikeimg.isSelected())
                     viewHolder.feedlikeimg.setSelected(true);
@@ -986,6 +1015,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView playicon;
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
+        TextView likesTextView,commntsTextView;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
@@ -1005,10 +1035,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View basicAnnouncemet_view;
         LinearLayout moreLinearLayout, two_or_moreLinearLayout;
         ImageView imageFirstImageView, imageSecImageView;
-
+RelativeLayout relativeLayout1;
         public MyViewHolder(View itemView) {
             super(itemView);
+            relativeLayout1=(RelativeLayout)itemView.findViewById(R.id.relativeLayout1);
             left_view = (View) itemView.findViewById(R.id.left_view);
+            likesTextView=(TextView)itemView.findViewById(R.id.likes) ;
+            commntsTextView=(TextView)itemView.findViewById(R.id.commnts);
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
             txtTextView = (TextView) itemView.findViewById(R.id.txt);

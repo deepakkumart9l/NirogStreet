@@ -25,6 +25,7 @@ import com.app.nirogstreet.uttil.WordUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -44,6 +45,7 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Preeti on 11-12-2017.
@@ -65,7 +67,7 @@ public class Courses_Listing_Adapter extends
 
     public Courses_Listing_Adapter(ArrayList<CoursesModel> coursesModels, Context context, boolean hide, String userId, boolean showJoin) {
         this.coursesModels = coursesModels;
-        this.showJoin=showJoin;
+        this.showJoin = showJoin;
         this.context = context;
         this.ishHide = hide;
 
@@ -88,29 +90,42 @@ public class Courses_Listing_Adapter extends
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final CoursesModel coursesModel = coursesModels.get(position);
-        holder.time.setText(coursesModel.getTime());
-        if(coursesModel.getUserDetailModel()!=null) {
-            holder.dr_name_csv.setText(coursesModel.getUserDetailModel().getName());
-        }
-        holder.course_name.setText(coursesModel.getCourses_name());
-        holder.descriptionTextView.setText(coursesModel.getCourses_description());
-        if (coursesModel.getCourses_name() != null&&!coursesModel.getCourses_name().contains("banner-default")&&!coursesModel.getCourses_name().contains("tempimages")) {
-            Glide.with(context)
-                    .load(coursesModel.getCourses_name()).placeholder(R.drawable.default_).centerCrop() // Uri of the picture
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .crossFade()
-                    .override(100, 100)
-                    .into(holder.groupIconImageView);
+        holder.time.setText(coursesModel.getCreated_at());
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.time, context);
+        if (coursesModel.getAuthor_detail_module() != null) {
+            holder.dr_name_csv.setText("by " + coursesModel.getAuthor_detail_module().getName());
+            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.dr_name_csv, context);
+            if (coursesModel.getAuthor_detail_module().getProfile_pic() != null) {
 
+                Picasso.with(context)
+                        .load(coursesModel.getAuthor_detail_module().getProfile_pic())
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into(holder.circleImageView);
+            }
+        }
+        holder.course_name.setText(coursesModel.getName());
+        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.course_name, context);
+        holder.descriptionTextView.setText(coursesModel.getDescription().trim().toString());
+        TypeFaceMethods.setRegularTypeFaceForTextView(holder.descriptionTextView, context);
+        if (coursesModel.getBanner() != null && !coursesModel.getBanner().contains("banner-default") && !coursesModel.getBanner().contains("tempimages")) {
+
+            Picasso.with(context)
+                    .load(coursesModel.getBanner())
+                    .placeholder(R.drawable.default_)
+                    .error(R.drawable.default_)
+                    .into(holder.groupIconImageView);
             // imageLoader1.getInstance().displayImage(groupModel.getGroupBanner(),  holder.groupIconImageView, defaultOptions);
         } else {
-            holder.groupIconImageView.setImageBitmap(mLetterTileProvider.getLetterTile(coursesModel.getCourses_name()));
+            holder.groupIconImageView.setImageBitmap(mLetterTileProvider.getLetterTile(coursesModel.getName()));
 
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, Knowledge_Centre_Detail.class);
+                Intent intent = new Intent(context, Knowledge_Centre_Detail.class);
+                intent.putExtra("courseID", coursesModel.getId());
+                intent.putExtra("isHide", ishHide);
                 context.startActivity(intent);
             }
         });
@@ -124,19 +139,21 @@ public class Courses_Listing_Adapter extends
 
     public class MyHolderView extends RecyclerView.ViewHolder {
         RoundedImageView groupIconImageView;
-        TextView course_name,descriptionTextView;
+        TextView course_name, descriptionTextView;
         RelativeLayout relativeLayout;
-        TextView dr_name_csv,time;
+        TextView dr_name_csv, time;
         LinearLayout linearLayoutbuttons;
+        CircleImageView circleImageView;
 
         public MyHolderView(View itemView) {
             super(itemView);
-            groupIconImageView=(RoundedImageView)itemView.findViewById(R.id.groupImage) ;
+            groupIconImageView = (RoundedImageView) itemView.findViewById(R.id.groupImage);
             descriptionTextView = (TextView) itemView.findViewById(R.id.description);
             relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout1);
             course_name = (TextView) itemView.findViewById(R.id.course_name);
-            dr_name_csv=(TextView)itemView.findViewById(R.id.dr_name_csv);
-            time=(TextView)itemView.findViewById(R.id.duration);
+            dr_name_csv = (TextView) itemView.findViewById(R.id.dr_name_csv);
+            time = (TextView) itemView.findViewById(R.id.duration);
+            circleImageView = (CircleImageView) itemView.findViewById(R.id.pro_image);
 
         }
     }

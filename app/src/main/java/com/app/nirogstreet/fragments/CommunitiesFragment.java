@@ -102,6 +102,8 @@ public class CommunitiesFragment extends Fragment {
             userView.setSelected(true);
             allView.setSelected(false);
             page = 1;
+            TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+            TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
             groupListingAdapter = null;
             groupModelsTotal = new ArrayList<GroupModel>();
             recyclerView.setVisibility(View.GONE);
@@ -144,13 +146,16 @@ public class CommunitiesFragment extends Fragment {
         myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
         otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
         TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+        TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+
         myGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerView.removeAllViews();
                 otherGroupTextView.setClickable(false);
                 userView.setSelected(true);
+                TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+                TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
                 allView.setSelected(false);
                 page = 1;
                 isLoading = false;
@@ -178,6 +183,8 @@ public class CommunitiesFragment extends Fragment {
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
                 isLoading = false;
+                TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 myGroupTextView.setClickable(false);
                 allView.setSelected(true);
                 groupListingAdapter = null;

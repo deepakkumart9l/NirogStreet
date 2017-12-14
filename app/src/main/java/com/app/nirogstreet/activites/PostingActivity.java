@@ -38,6 +38,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -148,6 +149,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         setContentView(R.layout.post);
         backImageView = (ImageView) findViewById(R.id.back);
         cancelImageView = (ImageView) findViewById(R.id.cancel);

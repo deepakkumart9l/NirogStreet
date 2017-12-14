@@ -13,6 +13,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:id="@+id/lay"
             android:layout_height="match_parent">
 
             <ImageView
@@ -62,20 +63,27 @@
 
 
         </RelativeLayout>
-    </RelativeLayout>
 
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.08dp"
+        android:layout_below="@+id/header"
+        android:id="@+id/view1"
+        android:background="@color/black" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
-        android:layout_marginBottom="50dp">
+        android:layout_below="@+id/view1"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <RelativeLayout
+                android:id="@+id/rel"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:background="@color/cardbluebackground">
@@ -101,7 +109,6 @@
                         android:id="@+id/dr_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dr Preeti (Bams,)"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
@@ -125,79 +132,32 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card"
+
+            <LinearLayout
+                android:id="@+id/mainCrad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="90dp"
-                android:background="@color/white"
-                app:cardCornerRadius="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="18dp"
-
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="1. Lorem ipsum dolor sit"
-                        android:textColor="@color/cardbluebackground"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id malesuada ex, aliquam elementum mauris. Suspendisse condimentum a nibh at mollis. Pellentesque fringilla orci sit amet velit mattis, vel maximus ante tempus. Sed nec luctus nulla. Cras accumsan, leo sed aliquam tempor"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/card1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="16dp"
-                android:layout_below="@+id/card"
-                android:layout_marginRight="16dp"
-                android:background="@color/white"
-                app:cardCornerRadius="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:id="@+id/main_lay"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="18dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical">
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
+                android:layout_marginTop="120dp"
+                android:orientation="vertical"></LinearLayout>
 
 
         </RelativeLayout>
 
     </ScrollView>
 
+    <TextView
+        android:id="@+id/addQualification"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
+        android:background="#e82351"
+        android:gravity="center"
+        android:text="Enroll Now"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#fff" />
 
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"

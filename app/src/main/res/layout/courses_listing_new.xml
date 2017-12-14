@@ -32,7 +32,7 @@
                 android:layout_height="48dp"
                 android:background="@color/tabbackground"
                 android:gravity="center"
-                android:text="My Communities"
+                android:text="My CommunitI"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
                     android:layout_weight="1"
                     android:background="@color/tabbackground"
                     android:gravity="center"
-                    android:text="Discover Communities"
+                    android:text="DISCOVER COMMUNITIES"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 

@@ -52,7 +52,7 @@
                 android:paddingLeft="18dp"
                 android:paddingRight="@dimen/padding_10"
                 android:paddingTop="@dimen/padding_10"
-                android:text="OTP Varification"
+                android:text="OTP Verification"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -116,12 +116,12 @@
                             android:layout_marginBottom="20dip"
 
                             android:backgroundTint="@color/textcolorgray"
-                            android:clickable="false"
-                            android:editable="false"
+
 
                             android:hint="Your mobile number"
                             android:inputType="number|textNoSuggestions"
                             android:maxLines="1"
+                            android:maxLength="10"
                             android:textColor="@color/black"
                             android:textColorHint="@color/textcolorgray" />
                     </android.support.design.widget.TextInputLayout>

@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="testing"
+
         android:textColor="@color/cardbluebackground"
         android:textSize="15sp" />
 
@@ -17,4 +18,10 @@
         android:orientation="vertical"
         android:id="@+id/lay"
         android:layout_height="wrap_content"></LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/textcolorgray" />
 </LinearLayout>

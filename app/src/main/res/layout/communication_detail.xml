@@ -33,52 +33,57 @@
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/proo"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_margin="0dp"
                 android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/back"
-                android:visibility="gone"
                 android:src="@drawable/default_"
+                android:visibility="gone"
                 mk:border_color="@color/textcolorgray"
                 mk:border_width="1dp" />
+
             <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/pro"
                 android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:visibility="gone"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/back"
-
-                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/default_"
                 app:riv_border_color="#333333"
                 app:riv_border_width="0dip"
-                android:layout_marginRight="2dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="5dp"
-                app:riv_corner_radius="20dip"
+
+                app:riv_corner_radius="50dip"
                 app:riv_mutate_background="true"
-          app:riv_tile_mode="clamp" />
+                app:riv_oval="true"
+                app:riv_tile_mode="clamp" />
 
             <TextView
                 android:id="@+id/textTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:layout_toRightOf="@+id/pro"
-                android:layout_marginTop="8dp"
-                android:text=""
-                android:maxLines="2"
+                android:layout_marginLeft="80dp"
                 android:layout_marginRight="35dp"
+                android:layout_marginTop="8dp"
+                android:maxLines="2"
+                android:text=""
                 android:textColor="@color/white"
-                android:layout_marginLeft="5dp"
                 android:textSize="16dp"
                 android:textStyle="normal" />
-<ImageView
-    android:layout_width="30dp"
-    android:layout_alignParentRight="true"
-    android:src="@drawable/more"
-    android:id="@+id/more"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="10dp"
-    android:layout_height="23dp" />
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="30dp"
+                android:layout_height="23dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/more" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -89,12 +94,12 @@
         android:background="#fff"
         android:paddingTop="5dp"
         app:tabGravity="fill"
-        app:tabSelectedTextColor="@color/buttonBackground"
-        app:tabTextColor="@color/selctor_red_color"
-
         app:tabIndicatorColor="@color/buttonBackground"
         app:tabIndicatorHeight="2dp"
-        app:tabMode="fixed" />
+
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/buttonBackground"
+        app:tabTextColor="@color/selctor_red_color" />
 
     <View
         android:layout_width="match_parent"

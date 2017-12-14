@@ -1,46 +1,15 @@
 package com.app.nirogstreet.model;
 
+import java.io.Serializable;
+
 /**
- * Created by Preeti on 11-12-2017.
+ * Created by Preeti on 12-12-2017.
  */
 
-public class CoursesModel {
-    public String getBanner() {
-        return banner;
-    }
-
-    public void setBanner(String banner) {
-        this.banner = banner;
-    }
-
-    public CoursesModel(String id, String parent_id, String name, String description, String created_by, String created_at, String updated_by, String updated_at, String status, String type, String doc_type, Author_detail_Module author_detail_module,String banner) {
-        this.id = id;
-        this.parent_id = parent_id;
-        this.name = name;
-        this.banner=banner;
-        this.description = description;
-        this.created_by = created_by;
-        this.created_at = created_at;
-        this.updated_by = updated_by;
-        this.updated_at = updated_at;
-        this.status = status;
-        this.type = type;
-        this.doc_type = doc_type;
-        this.author_detail_module = author_detail_module;
-    }
-
-    String id,parent_id,name,description,created_by,created_at,updated_by,updated_at,status,type,doc_type;
-    Author_detail_Module author_detail_module;
-    String banner;
+public class File_Under_Topic implements Serializable{
 
 
-    public Author_detail_Module getAuthor_detail_module() {
-        return author_detail_module;
-    }
 
-    public void setAuthor_detail_module(Author_detail_Module author_detail_module) {
-        this.author_detail_module = author_detail_module;
-    }
 
     public String getId() {
         return id;
@@ -72,6 +41,22 @@ public class CoursesModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
+    }
+
+    public String getKc_file() {
+        return kc_file;
+    }
+
+    public void setKc_file(String kc_file) {
+        this.kc_file = kc_file;
     }
 
     public String getCreated_by() {
@@ -130,4 +115,43 @@ public class CoursesModel {
         this.doc_type = doc_type;
     }
 
+    public int getUser_completed() {
+        return user_completed;
+    }
+
+    public void setUser_completed(int user_completed) {
+        this.user_completed = user_completed;
+    }
+
+    int user_completed;
+    public File_Under_Topic(String id,int user_completed, String parent_id, String name, String description, String banner, String kc_file, String created_by, String created_at, String updated_by, String updated_at, String status, String type, String doc_type) {
+        this.id = id;
+        this.parent_id = parent_id;
+        this.user_completed=user_completed;
+        this.name = name;
+        this.description = description;
+        this.banner = banner;
+        this.kc_file = kc_file;
+        this.created_by = created_by;
+        this.created_at = created_at;
+        this.updated_by = updated_by;
+        this.updated_at = updated_at;
+        this.status = status;
+        this.type = type;
+        this.doc_type = doc_type;
+    }
+
+    String id;
+    String parent_id;
+    String name;
+    String description;
+    String banner;
+    String kc_file;
+    String created_by;
+    String created_at;
+    String updated_by;
+    String updated_at;
+    String status;
+    String type;
+    String doc_type;
 }

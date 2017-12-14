@@ -160,7 +160,7 @@
                         android:layout_marginBottom="20dp"
                         android:gravity="right"
 
-                        android:text="Forgot Password "
+                        android:text="Forgot Password ?"
                         android:textColor="@color/cardbluebackground" />
 
                 </LinearLayout>

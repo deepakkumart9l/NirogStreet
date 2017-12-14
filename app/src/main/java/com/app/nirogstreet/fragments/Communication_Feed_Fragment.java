@@ -119,7 +119,7 @@ public class Communication_Feed_Fragment extends Fragment {
                     ApplicationSingleton.setNoOfComment(-1);
                 }
                 if (ApplicationSingleton.getTotalLike() != -1) {
-                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getTotalLike() + "");
+                    totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_likes(ApplicationSingleton.getTotalLike() + "");
 
                     if (ApplicationSingleton.isCurruntUserLiked())
                         totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setUser_has_liked(1);

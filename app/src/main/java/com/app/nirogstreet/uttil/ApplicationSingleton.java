@@ -2,6 +2,7 @@ package com.app.nirogstreet.uttil;
 
 import android.app.Application;
 
+import com.app.nirogstreet.model.Course_Detail_model;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
 
@@ -13,6 +14,15 @@ public class ApplicationSingleton extends Application {
     public static boolean isGroupUpdated() {
         return isGroupUpdated;
     }
+public static Course_Detail_model course_detail_model;
+
+    public static Course_Detail_model getCourse_detail_model() {
+        return course_detail_model;
+    }
+
+    public static void setCourse_detail_model(Course_Detail_model course_detail_model) {
+        ApplicationSingleton.course_detail_model = course_detail_model;
+    }
 
     public static FeedModel getFeedModelPostEdited() {
         return feedModelPostEdited;
@@ -21,6 +31,16 @@ public class ApplicationSingleton extends Application {
     public static void setFeedModelPostEdited(FeedModel feedModelPostEdited) {
         ApplicationSingleton.feedModelPostEdited = feedModelPostEdited;
     }
+
+    public static boolean isCourseSubscribe() {
+        return courseSubscribe;
+    }
+
+    public static void setCourseSubscribe(boolean courseSubscribe) {
+        ApplicationSingleton.courseSubscribe = courseSubscribe;
+    }
+
+    public static boolean courseSubscribe=false;
 
     public static FeedModel feedModelPostEdited;
     public static boolean isClinicUpdated() {

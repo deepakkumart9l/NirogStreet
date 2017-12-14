@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="#e7e7e7"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+
         android:layout_height="wrap_content"
         android:padding="15dp">
 
@@ -22,8 +25,8 @@
                 android:layout_width="70dp"
                 android:layout_height="60dp"
                 android:scaleType="center"
-                app:riv_border_color="#333333"
-                app:riv_border_width="0dip"
+                app:riv_border_color="#19000000"
+                app:riv_border_width="0.5dip"
                 app:riv_corner_radius="5dip"
                 app:riv_mutate_background="true"
                 app:riv_oval="false"
@@ -35,6 +38,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/rel"
             android:layout_marginTop="-4dp"
             android:layout_toRightOf="@+id/roundimg"
             android:gravity="center|left"
@@ -58,27 +62,32 @@
                         android:layout_alignParentLeft="true"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="15dp"
+                        android:textSize="16.5sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:id="@+id/course_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/course_name">
+                        android:layout_below="@+id/course_name"
+                        android:layout_marginTop="3dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/pro_image"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_marginTop="3dp"
+                            android:src="@drawable/user" />
 
                         <TextView
                             android:id="@+id/dr_name_csv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-
-                            android:textSize="13dp" />
+                            android:layout_marginTop="1dp"
+                            android:text="ghgh"
+                            android:textColor="@color/cardbluebackground"
+                            android:textSize="13.5sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -87,35 +96,39 @@
                         android:layout_below="@+id/course_lay">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp" />
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_marginTop="7dp"
+                            android:src="@drawable/clock" />
 
                         <TextView
                             android:id="@+id/duration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
+                            android:layout_marginTop="4dp"
 
-                            android:textSize="13dp" />
+                            android:textColor="#696969"
+                            android:textSize="13.5sp" />
                     </LinearLayout>
                 </RelativeLayout>
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="4dp"
-                android:letterSpacing="0.02"
-                android:lineSpacingExtra="1dp"
-                android:maxLines="2"
-                android:textColor="@color/textcolorgray"
-                android:textSize="12sp" />
 
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_below="@+id/rel"
+            android:layout_marginTop="7dp"
+            android:maxLines="3" android:textSize="15sp"
+            android:textColor="#000000"
+            android:lineSpacingExtra="4sp"
+            />
 
     </RelativeLayout>
 

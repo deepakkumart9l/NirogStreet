@@ -1,5 +1,6 @@
 package com.app.nirogstreet.activites;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -197,6 +199,12 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                         int totalLikes = 0;
                         boolean isuserLiked = false;
                         ArrayList<CommentsModel> subComment = new ArrayList<>();
+                        InputMethodManager inputMethodManager =
+                                (InputMethodManager) CommentsRepilesActivity.this.getSystemService(
+                                        Activity.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(
+                                CommentsRepilesActivity.this.getCurrentFocus().getWindowToken(), 0);
+                        Toast.makeText(CommentsRepilesActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
 
                         String commentId = null, message = null, createdOn = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null;
                         if (response.has("comment") && !response.isNull("comment")) {
