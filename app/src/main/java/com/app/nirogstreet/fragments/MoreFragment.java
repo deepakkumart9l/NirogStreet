@@ -336,7 +336,12 @@ public class MoreFragment extends Fragment {
     }
 
     private void updateContactInfo() {
-        feedsAdapter.notifyDataSetChanged();
+        try {
+            feedsAdapter.notifyDataSetChanged();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public class UserFeedsAsyncTask extends AsyncTask<Void, Void, Void> {

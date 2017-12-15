@@ -573,8 +573,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.linkImageView.setVisibility(View.GONE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                             viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                            viewHolder.relativeLayout1.setVisibility(View.GONE);
-
+                            viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
                             viewHolder.left_view.setVisibility(View.GONE);
                             viewHolder.right_view.setVisibility(View.GONE);
                             viewHolder.bottom_view.setVisibility(View.GONE);
@@ -742,13 +741,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                           /* positionat = position;
+                            positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
                                 likePostAsynctask.execute();
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
-                            }*/
+                            }
                         }
                     });
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

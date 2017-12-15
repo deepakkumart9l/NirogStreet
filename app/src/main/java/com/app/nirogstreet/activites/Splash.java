@@ -67,7 +67,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sesstionManager = new SesstionManager(Splash.this);
 
-        Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
+        //Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
 
 
         if (Build.VERSION.SDK_INT < 16) {

@@ -10,6 +10,7 @@
     <string name="enter_City">Please enter City</string>
     <string name="Experience">Please enter your Experience</string>
     <string name="DOB">Please select your DOB</string>
+    <string name="already_present">This file has been already downloaded</string>
     <string name="About_you">Tell us something about yourself</string>
     <string name="blog">Enter link to your website or blog (optional)</string>
     <string name="qualification">Select your qualification</string>

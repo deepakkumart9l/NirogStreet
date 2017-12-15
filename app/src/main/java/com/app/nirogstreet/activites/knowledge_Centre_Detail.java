@@ -263,6 +263,7 @@ public class Knowledge_Centre_Detail extends Activity {
                         JSONObject jsonObjectresponse = jo.getJSONObject("response");
                         if (jsonObjectresponse.has("message") && !jsonObjectresponse.isNull("message")) {
                             ApplicationSingleton.setCourseSubscribe(true);
+                            isHide=false;
                             Toast.makeText(Knowledge_Centre_Detail.this, jsonObjectresponse.getString("message"), Toast.LENGTH_LONG).show();
                             addQualificationTextView.setVisibility(View.GONE);
 
@@ -454,7 +455,7 @@ public class Knowledge_Centre_Detail extends Activity {
                     descriptionTextView.setText(course_detail_model.getModulesModels().get(k).getDescription());
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(titleTextView, Knowledge_Centre_Detail.this);
                     TypeFaceMethods.setRegularTypeFaceForTextView(descriptionTextView, Knowledge_Centre_Detail.this);
-                    if (descriptionTextView.getText().length() > 170)
+                    if (descriptionTextView!=null&&descriptionTextView.getText().length() > 170)
                         makeTextViewResizable(descriptionTextView, 4, "view more", true);
                     else {
                         descriptionTextView.setText(course_detail_model.getModulesModels().get(k).getDescription());
@@ -485,15 +486,17 @@ public class Knowledge_Centre_Detail extends Activity {
                                             v1.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    Intent intent = new Intent(Knowledge_Centre_Detail.this, Module_Detail_Activity.class);
-                                                    intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
-                                                    intent.putExtra("id", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId());
-                                                    intent.putExtra("title", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
-                                                    intent.putExtra("course_detail_model", course_detail_model);
-                                                    intent.putExtra("module_pos", finalK);
-                                                    intent.putExtra("topic_pos", finalI);
-                                                    intent.putExtra("file_pos", finalJ);
-                                                    startActivity(intent);
+                                                    if(isHide) {
+                                                        Intent intent = new Intent(Knowledge_Centre_Detail.this, Module_Detail_Activity.class);
+                                                        intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
+                                                        intent.putExtra("id", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId());
+                                                        intent.putExtra("title", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
+                                                        intent.putExtra("course_detail_model", course_detail_model);
+                                                        intent.putExtra("module_pos", finalK);
+                                                        intent.putExtra("topic_pos", finalI);
+                                                        intent.putExtra("file_pos", finalJ);
+                                                        startActivity(intent);
+                                                    }
                                                 }
                                             });
                                         }
@@ -504,6 +507,7 @@ public class Knowledge_Centre_Detail extends Activity {
                                             v1.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
+                                                    if(isHide){
                                                     String s[] = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().split("documents/");
                                                     String s1[] = s[1].split("\\.");
                                                     if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains("\\.")) {
@@ -517,7 +521,7 @@ public class Knowledge_Centre_Detail extends Activity {
                                                     intent.putExtra("topic_pos", finalI);
                                                     intent.putExtra("file_pos", finalJ);
                                                     intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
-                                                    startActivity(intent);
+                                                    startActivity(intent);}
                                                  /*   verifyStoragePermissions(Knowledge_Centre_Detail.this);
 
                                                     String extntion = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1);

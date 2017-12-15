@@ -735,13 +735,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       /* positionat = position;
+                        positionat = position;
                         if (NetworkUtill.isNetworkAvailable(context)) {
                             LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
                             likePostAsynctask.execute();
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
-                        }*/
+                        }
                     }
                 });
                 try {

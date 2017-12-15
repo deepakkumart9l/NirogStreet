@@ -72,6 +72,7 @@ public class DocumentWebView extends Activity {
     ImageView backImageView;
     int module_pos, topic_pos, file_pos;
     TextView title_side_left;
+
     public class KnwledgeCompleteAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -154,16 +155,18 @@ public class DocumentWebView extends Activity {
             super.onPreExecute();
         }
     }
-    public void showPDFUrl( final String pdfUrl) {
+
+    public void showPDFUrl(final String pdfUrl) {
 
         if (isPDFSupported()) {
-            downloadAndOpenPDF( pdfUrl);
+            downloadAndOpenPDF(pdfUrl);
 
         } else {
 
         }
         //askToOpenPDFThroughGoogleDrive( context, pdfUrl );
     }
+
     public static File getAvailableFile(String pdfUrl, Context context) {
         // Get filename
         final String filename = pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1);
@@ -171,6 +174,7 @@ public class DocumentWebView extends Activity {
         File tempFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), filename);
         return tempFile;
     }
+
     public void downloadAndOpenPDF(final String pdfUrl) {
         final String filename = pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1);
         // The place where the downloaded PDF file will be put
@@ -178,7 +182,7 @@ public class DocumentWebView extends Activity {
         if (tempFile.exists()) {
             // If we have downloaded the file before, just go ahead and show it.
 
-
+            Toast.makeText(DocumentWebView.this, R.string.already_present, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -208,7 +212,7 @@ public class DocumentWebView extends Activity {
                 progress.dismiss();
 
 
-            ;
+                ;
 
                 long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
@@ -218,7 +222,7 @@ public class DocumentWebView extends Activity {
                     int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         ///btnguidelisting.setText("Open guide for tablet/iPad");
-                     //   openPDF(context, Uri.fromFile(tempFile));
+                        //   openPDF(context, Uri.fromFile(tempFile));
                     }
                 }
                 c.close();
@@ -233,10 +237,11 @@ public class DocumentWebView extends Activity {
 
     public boolean isPDFSupported() {
         Intent i = new Intent(Intent.ACTION_VIEW);
-         File tempFile = new File(DocumentWebView.this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "test.pdf");
+        File tempFile = new File(DocumentWebView.this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "test.pdf");
         i.setDataAndType(Uri.fromFile(tempFile), PDF_MIME_TYPE);
         return getPackageManager().queryIntentActivities(i, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -272,7 +277,7 @@ public class DocumentWebView extends Activity {
             }
         });
 
-        downloadImageView=(ImageView)findViewById(R.id.download);
+        downloadImageView = (ImageView) findViewById(R.id.download);
         downloadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,7 +298,7 @@ public class DocumentWebView extends Activity {
         if (getIntent().hasExtra("id")) {
             id = getIntent().getStringExtra("id");
         }
-        circularProgressBar=(CircularProgressBar)findViewById(R.id.circularProgressBar);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circularProgressBar.setVisibility(View.VISIBLE);
         mwebView = (WebView) findViewById(R.id.web);
         mwebView.setWebViewClient(new AppWebViewClients());
