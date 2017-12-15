@@ -696,6 +696,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 viewHolder.likeFeedLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        positionat = position;
+                        if (NetworkUtill.isNetworkAvailable(context)) {
+                            LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
+                            likePostAsynctask.execute();
+                        } else {
+                            NetworkUtill.showNoInternetDialog(context);
+                        }
 
                     }
                 });
@@ -712,14 +719,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     /*    Intent intent = new Intent(context, LikesDisplayActivity.class);
                         intent.putExtra("feedId", feedModel.getFeed_id());
                         context.startActivity(intent);*/
-                        positionat = position;
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                            likePostAsynctask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
-                        }
-                    }
+                           }
                 });
                 viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
                     @Override

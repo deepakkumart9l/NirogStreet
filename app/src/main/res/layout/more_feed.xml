@@ -778,7 +778,7 @@
 
                         <ImageView
                             android:id="@+id/feedlikeimg"
-                            android:layout_width="21dp"
+                            android:layout_width="22dp"
                             android:layout_height="20dp"
                             android:padding="2dp"
                             android:scaleType="centerCrop"

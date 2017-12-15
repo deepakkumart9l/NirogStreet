@@ -38,19 +38,19 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:gravity="left"
+                android:paddingRight="10dp"
                 android:paddingLeft="10dp"
                 android:text=""
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/depart"
-                android:layout_width="0dp"
+                android:layout_width="1dp"
                 android:layout_height="50dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="5dp"
 
                 android:layout_toLeftOf="@+id/name"
-                android:layout_weight="1"
                 android:gravity="right"
                 android:maxLines="2"
                 android:text="" />

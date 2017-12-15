@@ -87,8 +87,7 @@
 
                                 android:layout_marginTop="50dp"
                                 android:background="@drawable/camera"
-                                android:padding="10dp"
-                                 />
+                                android:padding="10dp" />
                         </RelativeLayout>
 
 
@@ -770,7 +769,7 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:title="">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -790,13 +789,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@+id/backimg"
 
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/logout"
+                    android:layout_width="30dp"
+                    android:visibility="gone"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="14dp"
+                    android:padding="5dp"
+                    android:src="@drawable/more" />
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
         <RelativeLayout

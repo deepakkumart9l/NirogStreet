@@ -143,7 +143,7 @@ public class Courses_Fragment extends Fragment {
         myGroupTextView.setText("My Courses");
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
         otherGroupTextView = (TextView) view.findViewById(R.id.otherGroup);
-        otherGroupTextView.setText("All Courses");
+        otherGroupTextView.setText("Discover");
         userView = (View) view.findViewById(R.id.userview);
         allView = (View) view.findViewById(R.id.allview);
         userView.setSelected(true);

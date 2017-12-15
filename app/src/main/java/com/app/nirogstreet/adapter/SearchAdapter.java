@@ -62,7 +62,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final SearchModel rowItem = rowItems.get(position);
-        holder.txtTitle.setText(rowItem.getFname().trim() + " " + rowItem.getLname());
+        holder.txtTitle.setText("Dr. "+rowItem.getFname().trim() + " " + rowItem.getLname());
         holder.department.setText(rowItem.getDeprtment());
         //ImageLoader imageLoader=new ImageLoader(context);
         String imgUrl = rowItem.getProfileimage();

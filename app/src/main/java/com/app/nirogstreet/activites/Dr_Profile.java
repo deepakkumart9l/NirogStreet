@@ -23,9 +23,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -40,6 +43,7 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.fragments.About_Fragment;
 import com.app.nirogstreet.model.ClinicDetailModel;
 import com.app.nirogstreet.model.Image;
 import com.app.nirogstreet.model.UserDetailModel;
@@ -88,7 +92,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
-
+ LogoutAsyncTask logoutAsyncTask;
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.5f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.5f;
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
@@ -111,6 +115,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
     private FrameLayout framelayoutTitle;
+    ImageView logout;
     private RelativeLayout linearlayoutTitle;
     private TextView textviewTitle;
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
@@ -133,8 +138,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
             if (!mIsTheTitleVisible) {
                 startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+
                 mIsTheTitleVisible = true;
                 backimg.setVisibility(View.VISIBLE);
+                logOutHideGone();
 
                 textviewTitle.setText(nameTv.getText().toString());
 
@@ -144,6 +152,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
             if (mIsTheTitleVisible) {
                 startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
 
                 mIsTheTitleVisible = false;
             }
@@ -163,12 +172,23 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             if (!mIsTheTitleContainerVisible) {
                 textviewTitle.setText(nameTv.getText().toString());
                 backimg.setVisibility(View.VISIBLE);
+              logOutHideGone();
+                startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+
                 startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleContainerVisible = true;
             }
         }
     }
+private void logOutHideGone()
+{
+    if (!UserId.equalsIgnoreCase("")) {
+        logout.setVisibility(View.GONE);
+    } else {
+        logout.setVisibility(View.VISIBLE);
 
+    }
+}
     public static void startAlphaAnimation(View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
                 ? new AlphaAnimation(0f, 1f)
@@ -346,6 +366,13 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         textviewTitle = (TextView) findViewById(R.id.textview_title);
         backimg = (ImageView) findViewById(R.id.backimg);
+        logout = (ImageView) findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMoreMenu(0);
+            }
+        });
     }
 
     public void checkPermission() {
@@ -768,6 +795,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             if (userDetailModel.getSpecializationModels().size() == 0 && userDetailModel.getServicesModels().size() == 0) {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
 
+            }else {
+                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
+                SpecilizationsevicesTextView.setText("Services & Specialization");
+
             }
             if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
                 spcilizationCsv.setText(getSelectedNameCsv());
@@ -794,6 +825,28 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
         }
     }
+    private void setMoreMenu(int i) {
+        PopupMenu popup = new PopupMenu(Dr_Profile.this,logout);
+
+        popup.getMenuInflater().inflate(R.menu.logout, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.logout:
+                      if(NetworkUtill.isNetworkAvailable(Dr_Profile.this))
+                      {
+                          logoutAsyncTask=new LogoutAsyncTask("");
+                          logoutAsyncTask.execute();
+                      }else {
+                          NetworkUtill.showNoInternetDialog(Dr_Profile.this);
+                      }
+                        break;
+      }    return false;
+            }
+        });
+        popup.show();}
 
     private void updateExperience() {
 
@@ -1200,6 +1253,81 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         super.onPause();
         if (userDetailAsyncTask != null && !userDetailAsyncTask.isCancelled()) {
             userDetailAsyncTask.cancelAsyncTask();
+        }
+    }
+
+    public class LogoutAsyncTask extends AsyncTask<Void, Void, Void> {
+        JSONObject jo;
+        String feedId;
+
+
+        private String responseBody;
+        HttpClient client;
+        Context context;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public LogoutAsyncTask(String feedId) {
+            this.feedId = feedId;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                if (jo != null) {
+                    if (jo.has("status") && !jo.isNull("status")) {
+                        boolean status = jo.getBoolean("status");
+                        if (status) {
+                            sesstionManager.logoutUser();
+
+                            Intent intent = new Intent(Dr_Profile.this, LoginActivity.class);
+                            intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String url = AppUrl.AppBaseUrl + "user/logout";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                httppost.setHeader("authorization", "Nirogstreet " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
     }
 
