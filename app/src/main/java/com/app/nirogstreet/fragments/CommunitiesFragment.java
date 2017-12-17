@@ -218,6 +218,8 @@ public class CommunitiesFragment extends Fragment {
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
                 isLoading = false;
+                no_list.setVisibility(View.GONE);
+
                 //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
                 // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 myGroupTextView.setClickable(false);

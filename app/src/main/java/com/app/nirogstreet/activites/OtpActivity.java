@@ -449,7 +449,7 @@ public class OtpActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(OtpActivity.this, R.string.wrong, Toast.LENGTH_LONG).show();
+               // Toast.makeText(OtpActivity.this, R.string.wrong, Toast.LENGTH_LONG).show();
 
             }
 

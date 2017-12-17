@@ -192,6 +192,7 @@ public class Courses_Fragment extends Fragment {
                 TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 groupModelsTotal = new ArrayList<CoursesModel>();
                 userView.setSelected(false);
+                no_list.setVisibility(View.GONE);
                 recyclerView.removeAllViews();
                 isLoading = false;
                 myGroupTextView.setClickable(false);

@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomPagerAdapter customPagerAdapter;
     ImageView searchgroupImageView;
+    CircularProgressBar circularProgressBar;
     ImageView logout;
     SesstionManager sesstionManager;
     MenuItem item1, item;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
         // frameLayoutview_alert_red_circle.setVisibility(View.VISIBLE);
@@ -259,31 +261,21 @@ public class MainActivity extends AppCompatActivity {
         notiframe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(NetworkUtill.isNetworkAvailable(MainActivity.this))
-            {
-                HashMap<String, String> userDetails = sesstionManager.getUserDetails();
-                String userId = userDetails.get(SesstionManager.USER_ID);
-                NotificationAsyncTaskNew notificationAsyncTaskNew=new NotificationAsyncTaskNew(userId,"","");
-                notificationAsyncTaskNew.execute();
-            }
-                else {
-                NetworkUtill.showNoInternetDialog(MainActivity.this);
-            }
+                if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
+                    HashMap<String, String> userDetails = sesstionManager.getUserDetails();
+                    String userId = userDetails.get(SesstionManager.USER_ID);
+                    NotificationAsyncTaskNew notificationAsyncTaskNew = new NotificationAsyncTaskNew(userId, "", "");
+                    notificationAsyncTaskNew.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(MainActivity.this);
+                }
             }
         });
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(NetworkUtill.isNetworkAvailable(MainActivity.this))
-                {
-                    HashMap<String, String> userDetails = sesstionManager.getUserDetails();
-                    String userId = userDetails.get(SesstionManager.USER_ID);
-                    NotificationAsyncTaskNew notificationAsyncTaskNew=new NotificationAsyncTaskNew(userId,"","");
-                    notificationAsyncTaskNew.execute();
-                }
-                else {
-                    NetworkUtill.showNoInternetDialog(MainActivity.this);
-                }
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -428,6 +420,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
             //  bar = (ProgressBar) findViewById(R.id.progressBar);
             //   bar.setVisibility(View.VISIBLE);
             super.onPreExecute();
@@ -473,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             try {
-
+                circularProgressBar.setVisibility(View.GONE);
                 if (jo != null) {
                     frameLayoutview_alert_red_circle.setVisibility(View.GONE);
                     try {

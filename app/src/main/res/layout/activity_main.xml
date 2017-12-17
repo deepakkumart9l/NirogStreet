@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/cardbluebackground">
 
@@ -49,6 +49,7 @@
                     android:layout_marginRight="15dp"
                     android:src="@drawable/search"
                     android:visibility="visible" />
+
                 <ImageView
                     android:id="@+id/logout"
                     android:layout_width="20dp"
@@ -57,6 +58,7 @@
                     android:layout_marginRight="15dp"
                     android:src="@drawable/logout"
                     android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/searchgroup"
                     android:layout_width="20dp"
@@ -140,9 +142,10 @@
                     android:layout_height="25dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
+                    android:background="@drawable/c_icon"
                     android:gravity="center"
                     android:textColor="@color/white"
-android:background="@drawable/c_icon"                    android:textSize="16sp"
+                    android:textSize="16sp"
                     android:visibility="gone" />
 
                 <TextView
@@ -171,16 +174,32 @@ android:background="@drawable/c_icon"                    android:textSize="16sp"
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_below="@+id/actionbar"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+       />
+
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/circularProgressBar"
+        app:cpb_colors="@array/gplus_colors"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+android:layout_above="@+id/tablayout"
         android:background="@color/textcolorgray" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tablayout"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
@@ -190,4 +209,4 @@ android:background="@drawable/c_icon"                    android:textSize="16sp"
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed" />
 
-</LinearLayout>
+</RelativeLayout>

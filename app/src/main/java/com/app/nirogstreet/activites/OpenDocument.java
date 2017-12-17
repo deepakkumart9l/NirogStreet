@@ -13,6 +13,7 @@ import android.graphics.Path;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -30,6 +31,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Handler;
 
 /**
  * Created by Preeti on 17-12-2017.
@@ -106,6 +108,19 @@ public class OpenDocument extends Activity {
 
         mwebView.loadUrl("http://docs.google.com/gview?embedded=true&url="
                 + url);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        circularProgressBar.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+        }, 5000);
+
     }
 
     public void showPDFUrl(final String pdfUrl) {
@@ -207,16 +222,7 @@ public class OpenDocument extends Activity {
         public void onPageFinished(WebView view, String url) {
             // TODO Auto-generated method stub
             super.onPageFinished(view, url);
-            circularProgressBar.setVisibility(View.GONE);
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-
-
-
-                }
-            }, 3000);
 
 
         }
