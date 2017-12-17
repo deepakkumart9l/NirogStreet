@@ -91,10 +91,10 @@ public class Courses_Listing_Adapter extends
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final CoursesModel coursesModel = coursesModels.get(position);
         holder.time.setText(coursesModel.getCreated_at());
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.time, context);
+       // TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.time, context);
         if (coursesModel.getAuthor_detail_module() != null) {
             holder.dr_name_csv.setText("by " + coursesModel.getAuthor_detail_module().getName());
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.dr_name_csv, context);
+          //  TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.dr_name_csv, context);
             if (coursesModel.getAuthor_detail_module().getProfile_pic() != null) {
 
                 Picasso.with(context)
@@ -105,9 +105,9 @@ public class Courses_Listing_Adapter extends
             }
         }
         holder.course_name.setText(coursesModel.getName());
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.course_name, context);
+       // TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.course_name, context);
         holder.descriptionTextView.setText(coursesModel.getDescription().trim().toString());
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.descriptionTextView, context);
+       // TypeFaceMethods.setRegularTypeFaceForTextView(holder.descriptionTextView, context);
         if (coursesModel.getBanner() != null && !coursesModel.getBanner().contains("banner-default") && !coursesModel.getBanner().contains("tempimages")) {
 
             Picasso.with(context)

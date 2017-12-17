@@ -41,12 +41,14 @@ import android.widget.VideoView;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AlbumGallary;
+import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommentsActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.OpenDocument;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
@@ -183,17 +185,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 TypeFaceMethods.setRegularTypeBoldFaceTextView(myViewHolder.nameTv, context);
                 TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.view_detail, context);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.emailTv, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.phoneTv, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.QualificationTv, context);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.
-                        WebTv, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.yearOfBirthTv, context);
-
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.yearOfExperienceTv, context);
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(myViewHolder.myActivitiesTextView, context);
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(myViewHolder.aboutTextView, context);
                 try {
                     SesstionManager sesstionManager = new SesstionManager(context);
                     String name = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
@@ -207,7 +199,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         sesstionManager.updateProfile(userDetailModel1.getProfile_pic());
 
                     }
-
+                    myViewHolder.card.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, AppointmentActivity.class);
+                            context.startActivity(intent);
+                        }
+                    });
                     if (name != null)
                         myViewHolder.nameTv.setText("Dr. " + name);
                     if (userDetailModel1.getEmail() != null)
@@ -217,7 +215,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (userDetailModel1.getDob() != null)
                         myViewHolder.yearOfBirthTv.setText(userDetailModel1.getDob());
                     if (userDetailModel1.getExperience() != null)
-                        myViewHolder.yearOfExperienceTv.setText(userDetailModel1.getExperience() + " years experince");
+                        myViewHolder.view_detail.setText(userDetailModel1.getExperience() + " years experince");
                     if (userDetailModel1 != null && userDetailModel1.getSpecializationModels() != null) {
                         myViewHolder.QualificationTv.setText(getSelectedNameCsv(userDetailModel1));
                     }
@@ -598,18 +596,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            String s[] = feedModel.getFeed_source().split("documents/");
-                                            String s1[] = s[1].split("\\.");
-                                            if (feedModel.getDoc_name().contains("\\.")) {
-                                                feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
-                                            }
-
-                                            String extntion = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf(".") + 1);
-                                            String filename = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("/") + 1);
-                                            viewHolder.docNameTextView.setText(filename);
-
-                                            Methods.downloadFile(feedModel.getFeed_source(), activity, extntion, feedModel.getDoc_name());
-                                            Methods.showProgress(feedModel.getFeed_source(), activity);
+                                            Intent intent=new Intent(context,OpenDocument.class);
+                                            intent.putExtra("url",feedModel.getFeed_source());
+                                            context.startActivity(intent);
                                         }
                                     });
                                 }
@@ -729,15 +718,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             sharePopup(viewHolder.feeddeletelistingLinearLayout, feedModel);
                         }
                     });
-                    viewHolder.noOfLikeTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                          /*  Intent intent = new Intent(context, LikesDisplayActivity.class);
-                            intent.putExtra("feedId", feedModel.getFeed_id());
-                            context.startActivity(intent);*/
-
-                        }
-                    });
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -806,7 +786,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View v) {
                             Intent intent = new Intent(context, LikesDisplayActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            context.startActivity(intent);                        }
+                            context.startActivity(intent);
+                        }
                     });
                     viewHolder.commntsTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -829,9 +810,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     });
                     viewHolder.sectionTv.setVisibility(View.VISIBLE);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
 
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
                     if (userDetailModel != null && userDetailModel.getName() != null) {
                         String name = "Dr. " + userDetailModel.getName();
                         builder = new SpannableStringBuilder();
@@ -1056,10 +1035,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     } else {
                         viewHolder.sectionTv.setText("You posted in " + feedModel.getCommunity_name());
                     }
-                    TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
-                    TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.timeStampTextView, context);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.statusTextView, context);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1167,9 +1143,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", "140"));
+                pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
-                httppost.setHeader("Authorization", "Basic " + "aKE5EOwUCNO9y3xaip5leMU1wWqcZadv");
+                httppost.setHeader("Authorization", "Basic " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
@@ -1238,12 +1214,14 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class HeaderView extends RecyclerView.ViewHolder {
         CircleImageView circleImageView;
         ImageView editInfo, webSite_icon;
+        RelativeLayout card;
         TextView QualificationTv, yearOfBirthTv, yearOfExperienceTv, WebTv, emailTv, phoneTv, view_detail, nameTv, myActivitiesTextView;
         TextView postAn, aboutTextView;
         RelativeLayout profileRelativeLayout;
 
         public HeaderView(View itemView) {
             super(itemView);
+            card = (RelativeLayout) itemView.findViewById(R.id.card);
             webSite_icon = (ImageView) itemView.findViewById(R.id.webSite_icon);
             profileRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.profile);
             view_detail = (TextView) itemView.findViewById(R.id.view_detail);
@@ -1267,7 +1245,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView txtTextView;
         RelativeLayout relativeLayout1;
 
-        TextView likesTextView,commntsTextView;
+        TextView likesTextView, commntsTextView;
 
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
@@ -1293,7 +1271,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            relativeLayout1=(RelativeLayout)itemView.findViewById(R.id.relativeLayout1);
+            relativeLayout1 = (RelativeLayout) itemView.findViewById(R.id.relativeLayout1);
 
             left_view = (View) itemView.findViewById(R.id.left_view);
             delImageView = (ImageView) itemView.findViewById(R.id.del);
@@ -1302,8 +1280,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             right_view = (View) itemView.findViewById(R.id.right_view);
             sectionTv = (TextView) itemView.findViewById(R.id.section);
             txtTextView = (TextView) itemView.findViewById(R.id.txt);
-            likesTextView=(TextView)itemView.findViewById(R.id.likes) ;
-            commntsTextView=(TextView)itemView.findViewById(R.id.commnts);
+            likesTextView = (TextView) itemView.findViewById(R.id.likes);
+            commntsTextView = (TextView) itemView.findViewById(R.id.commnts);
             link_title_des_lay = (LinearLayout) itemView.findViewById(R.id.link_title_des_lay);
             webView = (WebView) itemView.findViewById(R.id.webview);
             QuestionTextView = (TextView) itemView.findViewById(R.id.Question);

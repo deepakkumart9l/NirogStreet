@@ -12,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,8 +55,9 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class OtpActivity extends AppCompatActivity {
     BroadcastReceiver receiver;
     ImageView backImageView;
-    String fname, lname, email, pass, phone, otp = null;
-    TextView loginHeader, VerifyTv, resendOtp;
+    String fname, email, pass, phone, otp = null;
+    TextView loginHeader, resendOtp;
+    Button VerifyTv;
     SesstionManager sesstionManager;
     RegistrationAsyncTask registrationAsyncTask;
     EditText editTextOtpOne, editTextOtpTwo, editTextOtpThree, editTextOtpFour, editPhone;
@@ -65,7 +68,7 @@ public class OtpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.otp_activity);
+        setContentView(R.layout.new_otp_activity);
         sesstionManager = new SesstionManager(OtpActivity.this);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +80,7 @@ public class OtpActivity extends AppCompatActivity {
         if (getIntent().hasExtra("fname")) {
             fname = getIntent().getStringExtra("fname");
         }
-        if (getIntent().hasExtra("lname")) {
-            lname = getIntent().getStringExtra("lname");
-        }
+
         if (getIntent().hasExtra("email")) {
             email = getIntent().getStringExtra("email");
         }
@@ -114,7 +115,7 @@ public class OtpActivity extends AppCompatActivity {
                 }
             }
         };
-        VerifyTv = (TextView) findViewById(R.id.loginTv);
+        VerifyTv = (Button) findViewById(R.id.loginTvotp);
         loginHeader = (TextView) findViewById(R.id.title_side);
         resendOtp = (TextView) findViewById(R.id.resendOtp);
         editTextOtpOne = (EditText) findViewById(R.id.otpEtOne);
@@ -122,6 +123,15 @@ public class OtpActivity extends AppCompatActivity {
         editTextOtpThree = (EditText) findViewById(R.id.otpEtThree);
         editTextOtpFour = (EditText) findViewById(R.id.otpEtFour);
         editPhone = (EditText) findViewById(R.id.editPhone);
+       editPhone.setOnTouchListener(new View.OnTouchListener() {
+           @Override
+           public boolean onTouch(View v, MotionEvent event) {
+               editPhone.setFocusable(true);
+               return false;
+           }
+       });
+        editTextOtpOne.requestFocus();
+
         if (otp != null) {
           /*  char arr[] = new char[4];
             for (int i = 0; i < otp.length(); i++) {
@@ -134,16 +144,7 @@ public class OtpActivity extends AppCompatActivity {
         }
 
         editPhone.setText(phone);
-        TypeFaceMethods.setRegularTypeFaceForTextView(VerifyTv, OtpActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(resendOtp, OtpActivity.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(editPhone, OtpActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextOtpOne, OtpActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextOtpTwo, OtpActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextOtpThree, OtpActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextOtpFour, OtpActivity.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(loginHeader, OtpActivity.this);
 
         editTextOtpOne.addTextChangedListener(new TextWatcher() {
             @Override
@@ -244,10 +245,11 @@ public class OtpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validate()) {
+                    String str = editTextOtpOne.getText().toString() + editTextOtpTwo.getText().toString() + editTextOtpThree.getText().toString() + editTextOtpFour.getText().toString();
                     phone = editPhone.getText().toString();
                     if (NetworkUtill.isNetworkAvailable(OtpActivity.this)) {
                         if (phone != null && otp != null) {
-                            registrationAsyncTask = new RegistrationAsyncTask(fname, lname, email, pass, phone, otp);
+                            registrationAsyncTask = new RegistrationAsyncTask(fname, email, pass, phone, str);
                             registrationAsyncTask.execute();
                         }
 
@@ -261,12 +263,16 @@ public class OtpActivity extends AppCompatActivity {
 
     private boolean validate() {
         if (editPhone.getText().toString().length() == 0) {
-            Toast.makeText(OtpActivity.this, "Enter mobile number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OtpActivity.this, "Enter mobile number", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!Methods.isValidPhoneNumber(editPhone.getText().toString())) {
-            Toast.makeText(OtpActivity.this, "Enter valid mobile number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OtpActivity.this, "Enter valid mobile number", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (editTextOtpOne.getText().length() == 0 || editTextOtpTwo.getText().length() == 0 || editTextOtpThree.getText().length() == 0 || editTextOtpFour.getText().length() == 0) {
+            Toast.makeText(OtpActivity.this, "Enter  Otp ", Toast.LENGTH_SHORT).show();
             return false;
         }
+
         return true;
 
     }
@@ -303,11 +309,10 @@ public class OtpActivity extends AppCompatActivity {
             }
         }
 
-        public RegistrationAsyncTask(String fname, String lname, String email, String password, String mobile, String otp) {
+        public RegistrationAsyncTask(String fname, String email, String password, String mobile, String otp) {
             this.email = email;
             this.fname = fname;
             this.otp = otp;
-            this.lname = lname;
             this.password = password;
             this.mobile = mobile;
         }
@@ -374,7 +379,19 @@ public class OtpActivity extends AppCompatActivity {
                     String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
+                        try {
+                            if (dataJsonObject.has("status") && !dataJsonObject.isNull("status")) {
 
+                                boolean check = dataJsonObject.getBoolean("status");
+                                if (!check)
+                                    if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
+                                        Toast.makeText(OtpActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                    }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
 
                         {
@@ -432,6 +449,8 @@ public class OtpActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(OtpActivity.this, R.string.wrong, Toast.LENGTH_LONG).show();
+
             }
 
 
@@ -490,7 +509,6 @@ public class OtpActivity extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("device_token", refreshedToken));
                 pairs.add(new BasicNameValuePair("type", "android"));
                 pairs.add(new BasicNameValuePair("User[fname]", fname));
-                pairs.add(new BasicNameValuePair("User[lname]", lname));
                 pairs.add(new BasicNameValuePair("User[email]", email));
                 pairs.add(new BasicNameValuePair("User[password]", pass));
                 pairs.add(new BasicNameValuePair("is_registration", "1"));

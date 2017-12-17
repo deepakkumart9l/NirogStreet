@@ -257,8 +257,11 @@ public class FeedParser {
                         user_has_liked = jsonObject.getInt("user_hasLiked");
 
                     }
+                    if (jsonObject.has("docName") && !jsonObject.isNull("docName")) {
+                        docName = jsonObject.getString("docName");
 
-                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name,activity_detail);
+                    }
+                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "",community_name,activity_detail);
                 }
 
 
@@ -517,8 +520,11 @@ public class FeedParser {
                                     user_has_liked = jsonObject.getInt("user_hasLiked");
 
                                 }
+                                if (jsonObject.has("docName") && !jsonObject.isNull("docName")) {
+                                    docName = jsonObject.getString("docName");
 
-                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name,activity_detail));
+                                }
+                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "",community_name,activity_detail));
                             }
                         }
                     }
@@ -777,8 +783,12 @@ public class FeedParser {
                     user_has_liked = jsonObject.getInt("user_hasLiked");
 
                 }
+                if (jsonObject.has("docName") && !jsonObject.isNull("docName")) {
+                    docName = jsonObject.getString("docName");
 
-                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, "", "",community_name,activity_detail));
+                }
+
+                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "",community_name,activity_detail));
 
 
             }

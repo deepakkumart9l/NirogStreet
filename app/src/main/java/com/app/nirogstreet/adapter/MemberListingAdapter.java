@@ -32,11 +32,12 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
 
     ArrayList<UserList> rowItems;
 
-SesstionManager sesstionManager;
+    SesstionManager sesstionManager;
+
     public MemberListingAdapter(Context context, ArrayList<UserList> items) {
         this.context = context;
         this.rowItems = items;
-        sesstionManager=new SesstionManager(context);
+        sesstionManager = new SesstionManager(context);
     }
 
 
@@ -47,6 +48,7 @@ SesstionManager sesstionManager;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            department=(TextView)itemView.findViewById(R.id.depart) ;
             txtTitle = (TextView) itemView.findViewById(R.id.name);
             imageView = (CircleImageView) itemView.findViewById(R.id.img);
         }
@@ -63,24 +65,37 @@ SesstionManager sesstionManager;
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final UserList rowItem = rowItems.get(position);
-        holder.txtTitle.setText(rowItem.getName() );
+        holder.txtTitle.setText(rowItem.getName());
         //ImageLoader imageLoader=new ImageLoader(context);
-        String imgUrl = rowItem.getProfile_pic();
-        if(imgUrl!=null&&!imgUrl.equalsIgnoreCase(""))
+        if(position==0)
+        {
+            holder.department.setVisibility(View.VISIBLE);
+        }else {
+            holder.department.setVisibility(View.GONE);
 
-        Picasso.with(context)
-                .load(imgUrl)
-                .placeholder(R.drawable.user)
-                .error(R.drawable.user)
-                .into(holder.imageView);
+        }
+        String imgUrl = rowItem.getProfile_pic();
+        if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
+
+            Picasso.with(context)
+                    .load(imgUrl)
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
+                    .into(holder.imageView);
+        else
+            Picasso.with(context)
+                    .load(R.drawable.user)
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
+                    .into(holder.imageView);
         // imageLoader.DisplayImage(context,imgUrl,holder.imageView,null,150,150,R.drawable.profile_default);
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, Dr_Profile.class);
-                if(!rowItem.getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                if (!rowItem.getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
 
-                    intent.putExtra("UserId",rowItem.getId());
+                    intent.putExtra("UserId", rowItem.getId());
                 context.startActivity(intent);
 
             }

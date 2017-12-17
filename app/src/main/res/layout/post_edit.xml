@@ -33,8 +33,10 @@
 
     </RelativeLayout>
 
-    <ScrollView
+    <com.app.nirogstreet.uttil.MyScrollView
         android:layout_width="match_parent"
+        android:id="@+id/scrol"
+
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -391,7 +393,7 @@
                         android:buttonTint="@color/buttonBackground"
                         android:checked="true"
                         android:layout_marginLeft="10dp"
-                        android:text="Enable Commenting :"
+                        android:text="Enable Commenting"
                         android:textColor="#636163" />
                 </LinearLayout>
 
@@ -409,5 +411,5 @@
                     app:cpb_colors="@array/gplus_colors" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.app.nirogstreet.uttil.MyScrollView>
 </LinearLayout>

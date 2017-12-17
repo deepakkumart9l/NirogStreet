@@ -143,7 +143,7 @@ public class AllClinicListing extends  Activity {
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.consultaionFees, context);
             holder.clinic_Name.setText(allClinicModel.getName());
             holder.address.setText(allClinicModel.getAddress());
-            holder.fees.setText(allClinicModel.getConsultation_fee());
+            holder.fees.setText("Rs. "+allClinicModel.getConsultation_fee());
             holder.services_txt.setText(getSelectedNameCsv(allClinicModel));
             /*holder.clgNameTv.setText(allClinicModel.get());
             holder.degreeNameTv.setText(experinceModel.getAddress());

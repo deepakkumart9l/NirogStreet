@@ -191,7 +191,7 @@ public class Methods {
     }
 
     public static boolean isValidPassword(String s) {
-        if (s.length() < 5)
+        if (s.length() < 6)
             return false;
         return true;
     }

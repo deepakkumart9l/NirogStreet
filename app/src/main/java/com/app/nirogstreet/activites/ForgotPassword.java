@@ -10,8 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,33 +58,21 @@ public class ForgotPassword
     ImageView backImageView;
     LoginAsync loginAsync;
     CircularProgressBar circularProgressBar;
-    TextView loginHeader, loginTv, registerHere;
+    TextView loginHeader, registerHere;
+    Button loginTv;
     SesstionManager sesstionManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.forgot_pass);
+        setContentView(R.layout.new_forgot_pass);
         emailEt = (EditText) findViewById(R.id.emailEt);
         loginHeader = (TextView) findViewById(R.id.title_side);
-        loginTv = (TextView) findViewById(R.id.loginTv);
-        backImageView = (ImageView) findViewById(R.id.back);
-        backImageView.setVisibility(View.VISIBLE);
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        registerHere = (TextView) findViewById(R.id.registerHere);
-        TypeFaceMethods.setRegularTypeFaceEditText(emailEt, ForgotPassword.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(loginHeader, ForgotPassword.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(loginTv, ForgotPassword.this);
+        loginTv = (Button) findViewById(R.id.loginTv);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(registerHere, ForgotPassword.this);
-        registerHere.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ForgotPassword.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
+
         loginTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,26 +87,25 @@ public class ForgotPassword
                 }
                 username = emailEt.getText().toString();
 
-                if (username == null || username.equals("") || username.trim().isEmpty()) {
-                    Toast.makeText(ForgotPassword.this, "Username is Empty", Toast.LENGTH_LONG).show();
-                } else {
-                    if (Methods.isValidEmailAddress(username))
+                if (username == null || username.equals("") || username.trim().isEmpty()){
+                    Toast.makeText(ForgotPassword.this, "Email is Empty", Toast.LENGTH_LONG).show();
+                }else{
+
+                    if (Methods.isValidEmailAddress(username.trim())) {
                         if (NetworkUtill.isNetworkAvailable(ForgotPassword.this)) {
                             loginAsync = new LoginAsync();
                             loginAsync.execute();
                         } else
                             NetworkUtill.showNoInternetDialog(ForgotPassword.this);
+                    }else {
+                        Toast.makeText(ForgotPassword.this, "Invalid Email", Toast.LENGTH_LONG).show();
+
+                    }
                 }
         /*      Intent intent=new Intent(LoginActivity.this,PostingActivity.class);
                 startActivity(intent);
 */
 
-            }
-        });
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
     }
@@ -201,8 +190,8 @@ public class ForgotPassword
                         {
                             status = dataJsonObject.getJSONObject(0).getInt("result");
                             if (status != 1) {
-
-                                Toast.makeText(ForgotPassword.this, "Invalid Email", Toast.LENGTH_SHORT).show();
+                                if (dataJsonObject.getJSONObject(0).has("message") && !dataJsonObject.getJSONObject(0).isNull("message"))
+                                    Toast.makeText(ForgotPassword.this, dataJsonObject.getJSONObject(0).getString("message"), Toast.LENGTH_SHORT).show();
 
 
                             } else {

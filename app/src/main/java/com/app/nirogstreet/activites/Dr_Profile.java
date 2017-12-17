@@ -304,37 +304,7 @@ private void logOutHideGone()
         consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
         allTaxes = (TextView) findViewById(R.id.allTaxes);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesTextView, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(sevicesCsvTextView, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(spcilizationCsv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(emailTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(phoneTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(WebTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(yearOfBirthTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(yearOfExperienceTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(QualificationTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(nameTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(placeTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(fee, Dr_Profile.this);
-
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(ExperienceSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilizationTv, Dr_Profile.this);
-
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(sepcilizationDetailTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(QualificationSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(AwardSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(MemberShipSectionTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecilizationsevicesTextView, Dr_Profile.this);
-
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(SpecializationSectionHeadingTv, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(consultationFeesHeading, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(RegistrationSectionHeadingTv, Dr_Profile.this);
-
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(aboutHeading, Dr_Profile.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(clinicAddressHeading, Dr_Profile.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(aboutDetail, Dr_Profile.this);
-        sesstionManager = new SesstionManager(Dr_Profile.this);
+              sesstionManager = new SesstionManager(Dr_Profile.this);
 
         if (sesstionManager.isUserLoggedIn() && UserId.equalsIgnoreCase("")) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -873,15 +843,13 @@ private void logOutHideGone()
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+
                         if (userDetailModel.getExperinceModels().get(i).getEnd_time() == null) {
                             year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - Currently Working");
 
                         } else
                             year.setText(userDetailModel.getExperinceModels().get(i).getStart_time() + " - " + userDetailModel.getExperinceModels().get(i).getEnd_time());
                         degreename.setVisibility(View.GONE);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getExperinceModels().get(i).getOrganizationName());
                         v.setLayoutParams(params);
 
@@ -927,7 +895,6 @@ private void logOutHideGone()
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
                         degreename.setVisibility(View.GONE);
                         year.setVisibility(View.GONE);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getMemberShipModels().get(i).getMembership());
                         v.setLayoutParams(params);
 
@@ -974,11 +941,9 @@ private void logOutHideGone()
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+
                         year.setText(userDetailModel.getQualificationModels().get(i).getPassingYear());
                         degreename.setText(userDetailModel.getQualificationModels().get(i).getClgName());
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getQualificationModels().get(i).getDegreeName());
                         v.setLayoutParams(params);
 
@@ -1023,11 +988,9 @@ private void logOutHideGone()
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+
                         year.setText(userDetailModel.getAwardsModels().get(i).getYear());
                         degreename.setVisibility(View.GONE);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getAwardsModels().get(i).getAwardName());
                         v.setLayoutParams(params);
 
@@ -1114,25 +1077,21 @@ private void logOutHideGone()
                     View v = LayoutInflater.from(this).inflate(R.layout.clinic_profile_layout, null);
                     TextView consultaionFeesTv = (TextView) v.findViewById(R.id.consultaionFees);
                     TextView feeTv = (TextView) v.findViewById(R.id.fee);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(feeTv, Dr_Profile.this);
 
-                    TypeFaceMethods.setRegularTypeFaceForTextView(consultaionFeesTv, Dr_Profile.this);
                     TextView allTaxesTv = (TextView) v.findViewById(R.id.allTaxes);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(allTaxesTv, Dr_Profile.this);
                     TextView serviceTv = (TextView) v.findViewById(R.id.service);
                     serviceTv.setText(getSelectedClinicService(userDetailModel.getClinicDetailModels().get(i)));
-                    TypeFaceMethods.setRegularTypeFaceForTextView(serviceTv, Dr_Profile.this);
                     serviceTv.setText(getSelectedClinicService(userDetailModel.getClinicDetailModels().get(i)));
                     TextView textView = (TextView) v.findViewById(R.id.clgName);
                     TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                     TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
-                    year.setText("Pin Code :" + userDetailModel.getClinicDetailModels().get(i).getPincode());
+
+                    if(userDetailModel.getClinicDetailModels().get(i).getPincode()!=null&&!userDetailModel.getClinicDetailModels().get(i).getPincode().equalsIgnoreCase("null")) {
+                        year.setText("Pin Code :" + userDetailModel.getClinicDetailModels().get(i).getPincode());
+                    }
                     degreename.setText(userDetailModel.getClinicDetailModels().get(i).getAddress() + " " + userDetailModel.getClinicDetailModels().get(i).getCity());
-                    TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                     textView.setText(userDetailModel.getClinicDetailModels().get(i).getName());
-                    feeTv.setText(userDetailModel.getClinicDetailModels().get(i).getConsultation_fee());
+                    feeTv.setText("Rs. "+userDetailModel.getClinicDetailModels().get(i).getConsultation_fee());
                     v.setLayoutParams(params);
 
                     clinicLay.addView(v);
@@ -1204,13 +1163,13 @@ private void logOutHideGone()
 
         if (userDetailModel != null) {
             if (userDetailModel.getRegistrationAndDocumenModels() == null || userDetailModel.getRegistrationAndDocumenModels().size() == 0) {
-                RegistrationSectionHeadingTv.setText("Add a registration & documents");
+                RegistrationSectionHeadingTv.setText("Add a registration");
                 RegistrationSectionEdit.setImageResource(R.drawable.add);
                 regisrtaionLay.removeAllViews();
 
             } else {
                 regisrtaionLay.removeAllViews();
-                RegistrationSectionHeadingTv.setText("Registration & Documents");
+                RegistrationSectionHeadingTv.setText("Registration");
                 RegistrationSectionEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -1225,11 +1184,9 @@ private void logOutHideGone()
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
-                        TypeFaceMethods.setRegularTypeFaceForTextView(year, Dr_Profile.this);
+
                         year.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_year());
                         degreename.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_name());
-                        TypeFaceMethods.setRegularTypeFaceForTextView(textView, Dr_Profile.this);
                         textView.setText(userDetailModel.getRegistrationAndDocumenModels().get(i).getCouncil_registration_number());
                         v.setLayoutParams(params);
 
@@ -1243,7 +1200,7 @@ private void logOutHideGone()
             }
         }
         if (!UserId.equalsIgnoreCase("")) {
-            RegistrationSectionHeadingTv.setText("Registration & documents");
+            RegistrationSectionHeadingTv.setText("Registration ");
 
         }
     }

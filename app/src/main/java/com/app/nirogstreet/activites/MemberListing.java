@@ -42,8 +42,8 @@ public class MemberListing extends Activity {
     private String text = "";
     private String query = "";
     SesstionManager sessionManager;
-    private  String authToken, userId;
-MemberListingAdapter memberListingAdapter;
+    private String authToken, userId;
+    MemberListingAdapter memberListingAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,18 +55,18 @@ MemberListingAdapter memberListingAdapter;
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
-        searchModels=new ArrayList<>();
-        if(getIntent().hasExtra("userList"))
-        {
-            searchModels= (ArrayList<UserList>) getIntent().getSerializableExtra("userList");
+        searchModels = new ArrayList<>();
+        if (getIntent().hasExtra("userList")) {
+            searchModels = (ArrayList<UserList>) getIntent().getSerializableExtra("userList");
         }
         sessionManager = new SesstionManager(MemberListing.this);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(MemberListing.this);
         mRecyclerView.setLayoutManager(llm);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);        HashMap<String, String> userDetails = sessionManager.getUserDetails();
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
         searchET = (EditText) findViewById(R.id.searchET);
@@ -78,7 +78,7 @@ MemberListingAdapter memberListingAdapter;
                 finish();
             }
         });
-        if(searchModels.size()>0) {
+        if (searchModels.size() > 0) {
             memberListingAdapter = new MemberListingAdapter(MemberListing.this, searchModels);
             mRecyclerView.setAdapter(memberListingAdapter);
         }

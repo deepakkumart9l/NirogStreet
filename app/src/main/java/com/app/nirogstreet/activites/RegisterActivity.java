@@ -18,15 +18,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,15 +70,19 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class RegisterActivity extends AppCompatActivity {
     SendOtpAsyncTask sendOtpAsyncTask;
-    CheckBox checkbox;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
     private int CONTACT_PERMISSION_CODE = 1;
     String email = null;
+    boolean clickEnamble=true;
     String fname = null, lname = null;
-    EditText firstNameEt, lastNameEt, phoneEt, emailEt, confirmpassEt, setPass;
-    ImageView backImageView;
+    EditText firstNameEt, phoneEt, emailEt, setPass;
     String phoneNumber = null;
-    TextView registerHeader, registerAs, AllreadyhaveAccount, signIn, sentTv;
+    LinearLayout signIn;
+    TextView registerHeader;
+    LinearLayout registerAs;
+    Button sentTv;
+    private int passwordNotVisible=1;
+
     CircularProgressBar circularProgressBar;
 
     @Override
@@ -159,9 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (fname != null) {
             firstNameEt.setText(fname);
         }
-        if (lname != null) {
-            lastNameEt.setText(lname);
-        }
+
         if (phoneNumber != null) {
             phoneEt.setText(phoneNumber);
         }
@@ -171,33 +177,42 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        setContentView(R.layout.register);
-       /* ArrayList<HashMap<String, Object>> contactList = getContacts();
-        System.out.println("Contact List : " +contactList);*/
-        checkbox = (CheckBox) findViewById(R.id.checkbox);
+        setContentView(R.layout.new_register);
+
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         registerHeader = (TextView) findViewById(R.id.title_side);
-        sentTv = (TextView) findViewById(R.id.sentTv);
-        backImageView = (ImageView) findViewById(R.id.back);
-        AllreadyhaveAccount = (TextView) findViewById(R.id.alreadyTv);
-        signIn = (TextView) findViewById(R.id.signIn);
-        registerAs = (TextView) findViewById(R.id.registerAs);
+        sentTv = (Button) findViewById(R.id.sentTv1);
+        signIn = (LinearLayout) findViewById(R.id.signIn);
         firstNameEt = (EditText) findViewById(R.id.firstNameEt);
         phoneEt = (EditText) findViewById(R.id.phoneEt);
-        lastNameEt = (EditText) findViewById(R.id.lastNameEt);
-        confirmpassEt = (EditText) findViewById(R.id.confirmpassEt);
         emailEt = (EditText) findViewById(R.id.emailEt);
         setPass = (EditText) findViewById(R.id.passEt);
+        setPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText paswword = (EditText) findViewById(R.id.passEt);
+                if (passwordNotVisible == 1) {
+                    paswword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    passwordNotVisible = 0;
+                } else {
+
+                    paswword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    passwordNotVisible = 1;
+                }
+
+
+                paswword.setSelection(paswword.length());
+
+            }
+        });
         if (email != null) {
             emailEt.setText(email);
         }
         if (fname != null) {
             firstNameEt.setText(fname);
         }
-        if (lname != null) {
-            lastNameEt.setText(lname);
-        }
+
         if (phoneNumber != null) {
             phoneEt.setText(phoneNumber);
         }
@@ -207,33 +222,12 @@ public class RegisterActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        TypeFaceMethods.setRegularTypeFaceForTextView(registerAs, RegisterActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(registerHeader, RegisterActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(sentTv, RegisterActivity.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(AllreadyhaveAccount, RegisterActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(signIn, RegisterActivity.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(phoneEt, RegisterActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(setPass, RegisterActivity.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(emailEt, RegisterActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(confirmpassEt, RegisterActivity.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(lastNameEt, RegisterActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(firstNameEt, RegisterActivity.this);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,8 +242,11 @@ public class RegisterActivity extends AppCompatActivity {
                 if (NetworkUtill.isNetworkAvailable(RegisterActivity.this)) {
                     if (validation()) {
                         if (checkWriteExternalPermission()) {
-                            sendOtpAsyncTask = new SendOtpAsyncTask(phoneEt.getText().toString(), setPass.getText().toString(), lastNameEt.getText().toString(), firstNameEt.getText().toString(), emailEt.getText().toString());
-                            sendOtpAsyncTask.execute();
+                            if(clickEnamble) {
+                                clickEnamble=false;
+                                sendOtpAsyncTask = new SendOtpAsyncTask(phoneEt.getText().toString(), setPass.getText().toString(), firstNameEt.getText().toString(), emailEt.getText().toString());
+                                sendOtpAsyncTask.execute();
+                            }
                         } else {
                             checkPermissionGeneral();
                         }
@@ -294,10 +291,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
 
-        public SendOtpAsyncTask(String mobile, String password, String lname, String fname, String email) {
+        public SendOtpAsyncTask(String mobile, String password, String fname, String email) {
             this.email = email;
             this.fname = fname;
-            this.lname = lname;
             this.password = password;
             this.mobile = mobile;
             this.mobile = mobile;
@@ -362,6 +358,7 @@ public class RegisterActivity extends AppCompatActivity {
                     JSONArray errorArray;
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
+                        clickEnamble=true;
 
                         if (dataJsonObject.has("status") && !dataJsonObject.isNull("status")) {
                             status = dataJsonObject.getBoolean("status");
@@ -374,7 +371,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                                 Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
                                 intent.putExtra("fname", firstNameEt.getText().toString());
-                                intent.putExtra("lname", lastNameEt.getText().toString());
                                 intent.putExtra("otp", otp);
                                 intent.putExtra("email", emailEt.getText().toString().trim());
                                 intent.putExtra("phone", phoneEt.getText().toString());
@@ -396,6 +392,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(RegisterActivity.this,R.string.wrong,Toast.LENGTH_LONG).show();
             }
 
 
@@ -404,43 +401,27 @@ public class RegisterActivity extends AppCompatActivity {
 
     protected boolean validation() {
         if (firstNameEt.getText().toString().length() == 0) {
-            Toast.makeText(RegisterActivity.this, "Enter first name.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Enter name", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (lastNameEt.getText().toString().length() == 0) {
-            Toast.makeText(RegisterActivity.this, "Enter last name.", Toast.LENGTH_SHORT).show();
-            return false;
-
         } else if (phoneEt.getText().toString().length() == 0) {
-            Toast.makeText(RegisterActivity.this, "Enter mobile number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Enter mobile number", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!Methods.isValidPhoneNumber(phoneEt.getText().toString())) {
-            Toast.makeText(RegisterActivity.this, "Enter valid mobile number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Enter valid mobile number", Toast.LENGTH_SHORT).show();
             return false;
         } else if (emailEt.getText().toString().length() == 0) {
-            Toast.makeText(RegisterActivity.this, "Enter email address.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Enter email address", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!Methods.isValidEmailAddress(emailEt.getText().toString().trim())) {
-            Toast.makeText(RegisterActivity.this, "Enter valid email address.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Enter valid email address", Toast.LENGTH_SHORT).show();
             return false;
         } else if (setPass.getText().toString().length() == 0) {
-            Toast.makeText(RegisterActivity.this, "Enter password.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!Methods.isValidPassword(setPass.getText().toString())) {
-            Toast.makeText(RegisterActivity.this, "Enter valid password.", Toast.LENGTH_SHORT).show();
+        } /*else if (!Methods.isValidPassword(setPass.getText().toString())) {
+            Toast.makeText(RegisterActivity.this, "Enter valid password", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (confirmpassEt.getText().toString().length() == 0) {
-            Toast.makeText(RegisterActivity.this, "Confirm password.", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (!confirmpassEt.getText().toString().equalsIgnoreCase(setPass.getText().toString())) {
-            Toast.makeText(RegisterActivity.this, "Wrong confirm password.", Toast.LENGTH_SHORT).show();
-
-            return false;
-
-        } else if (!checkbox.isChecked()) {
-            Toast.makeText(RegisterActivity.this, "Accept all terms and conditions.", Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
+        }*/
         return true;
     }
 

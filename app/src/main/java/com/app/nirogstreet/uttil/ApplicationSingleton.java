@@ -16,6 +16,15 @@ public class ApplicationSingleton extends Application {
     }
 public static Course_Detail_model course_detail_model;
 
+    public static boolean isPostDeleted() {
+        return isPostDeleted;
+    }
+
+    public static void setIsPostDeleted(boolean isPostDeleted) {
+        ApplicationSingleton.isPostDeleted = isPostDeleted;
+    }
+
+    public static boolean isPostDeleted=false;
     public static Course_Detail_model getCourse_detail_model() {
         return course_detail_model;
     }

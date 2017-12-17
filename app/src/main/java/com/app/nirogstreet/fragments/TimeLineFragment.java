@@ -103,6 +103,15 @@ public class TimeLineFragment extends Fragment {
                 ApplicationSingleton.setPostEditPosition(-1);
                 ApplicationSingleton.setFeedModelPostEdited(null);
             }
+            if(ApplicationSingleton.getPostEditPosition()!=-1)
+            {
+                if(ApplicationSingleton.isPostDeleted())
+                {
+                    totalFeeds.remove(ApplicationSingleton.getPostEditPosition());
+                    feedsAdapter.notifyDataSetChanged();
+
+                }
+            }
             if (ApplicationSingleton.getPostSelectedPostion() != -1) {
                 if (ApplicationSingleton.getNoOfComment() != -1) {
                     totalFeeds.get(ApplicationSingleton.getPostSelectedPostion()).setTotal_comments(ApplicationSingleton.getNoOfComment() + "");

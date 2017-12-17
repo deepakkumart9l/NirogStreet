@@ -52,6 +52,7 @@ import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.OpenDocument;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
@@ -67,7 +68,6 @@ import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
-import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
@@ -185,7 +185,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             .into(myViewHolder.circleImageView);
                 }
                 //   Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
+              //  TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
 
                 myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -575,7 +575,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            String s[] = feedModel.getFeed_source().split("documents/");
+                                          /*  String s[] = feedModel.getFeed_source().split("documents/");
                                             String s1[] = s[1].split("\\.");
                                             if (feedModel.getDoc_name().contains("\\.")) {
                                                 feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
@@ -584,9 +584,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                             String extntion = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf(".") + 1);
                                             String filename = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("/") + 1);
-                                            viewHolder.docNameTextView.setText(filename);
                                             Methods.downloadFile(feedModel.getFeed_source(), activity, extntion, feedModel.getDoc_name());
-                                            Methods.showProgress(feedModel.getFeed_source(), activity);
+                                            Methods.showProgress(feedModel.getFeed_source(), activity);*/
+                                            Intent intent=new Intent(context,OpenDocument.class);
+                                            intent.putExtra("url",feedModel.getFeed_source());
+                                            context.startActivity(intent);
                                         }
                                     });
                                 }
@@ -733,15 +735,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             sharePopup(viewHolder.feeddeletelistingLinearLayout, feedModel);
                         }
                     });
-                    viewHolder.noOfLikeTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                           /* Intent intent = new Intent(context, LikesDisplayActivity.class);
-                            intent.putExtra("feedId", feedModel.getFeed_id());
-                            context.startActivity(intent);*/
 
-                        }
-                    });
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -805,7 +799,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.startActivity(intent);
                         }
                     });
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
+                 //   TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
                     if (userDetailModel != null && userDetailModel.getName() != null) {
                         String name = "Dr. " + userDetailModel.getName();
                         builder = new SpannableStringBuilder();
@@ -1007,10 +1001,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                    TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
+               /*     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.QuestionTextView, context);
                     TypeFaceMethods.setRegularTypeBoldFaceTextView(viewHolder.nameTextView, context);
                     TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.timeStampTextView, context);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.statusTextView, context);
+                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.statusTextView, context);*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1446,7 +1440,7 @@ RelativeLayout relativeLayout1;
                         notifyItemInserted(1);
 
                         notifyItemRangeChanged(1, feedModels.size());
-
+                       // ApplicationSingleton.setIsProfilePostExecuted(true);
                     }
                 }
             } catch (Exception e) {
@@ -1559,9 +1553,9 @@ RelativeLayout relativeLayout1;
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", "140"));
+                pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
-                httppost.setHeader("Authorization", "Basic " + "aKE5EOwUCNO9y3xaip5leMU1wWqcZadv");
+                httppost.setHeader("Authorization", "Basic " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

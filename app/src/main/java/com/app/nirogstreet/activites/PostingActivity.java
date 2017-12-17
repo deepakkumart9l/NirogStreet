@@ -36,6 +36,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -44,6 +45,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +60,7 @@ import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.GridSpacingItemDecoration;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
+import com.app.nirogstreet.uttil.MyScrollView;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.PathUtil;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -141,6 +144,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
     TextView textViewpost;
+    MyScrollView scrollView;
     TextView descriptionTextView, titleTextView;
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
     CheckBox checkBox;
@@ -152,6 +156,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.post);
+        scrollView=(MyScrollView) findViewById(R.id.scrol);
         backImageView = (ImageView) findViewById(R.id.back);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +183,21 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         }
         linkLay = (RelativeLayout) findViewById(R.id.linkLay);
         imagelay = (RelativeLayout) findViewById(R.id.imagelay);
+        imagelay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scrollView.setScrolling(true);
+                return false;
+            }
+        });
+        linkLay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scrollView.setScrolling(true);
+
+                return false;
+            }
+        });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
 
@@ -188,10 +208,49 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
         }
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
-        dr_nameTextView.setText("Dr. "+sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
+        dr_nameTextView.setText("Dr. " + sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
         publicTextView = (TextView) findViewById(R.id.public_);
         title_QuestionEditText = (EditText) findViewById(R.id.title_Question);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scrollView.setScrolling(true);
+
+                return false;
+            }
+        });
+        editTextMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.editTextMessage) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+
+                    scrollView.setScrolling(false);
+                   return false;
+
+                    // v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                }
+                return false;
+            }
+        });
+        title_QuestionEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.title_Question) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+
+                    scrollView.setScrolling(false);
+                    return false;
+
+                    // v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                }
+                return false;
+            }
+        });
+
         editTextMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -226,12 +285,31 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             }
         });
         refernceEditText = (EditText) findViewById(R.id.refernce);
+        refernceEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.refernce) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+
+                    scrollView.setScrolling(false);
+                    return false;
+
+                    // v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                }
+                return false;
+            }
+        });
+
+
+/*
         TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView, PostingActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView, PostingActivity.this);
         TypeFaceMethods.setRegularTypeFaceEditText(title_QuestionEditText, PostingActivity.this);
         TypeFaceMethods.setRegularTypeFaceEditText(editTextMessage, PostingActivity.this);
 
         TypeFaceMethods.setRegularTypeFaceEditText(refernceEditText, PostingActivity.this);
+*/
 
 /*
         Glide.with(PostingActivity.this).load("https://www.google.com/search?q=nature+image+url&hl=en-US&tbm=isch&source=iu&pf=m&ictx=1&fir=L8qB97yhUQFCnM%253A%252CwMEPW2TZnfw3vM%252C_&usg=__tdpx9ET1W2b6i6SjlmIvIkJYDmo%3D&sa=X&ved=0ahUKEwib7eScsovXAhUFtI8KHYIxCyUQ9QEIPjAE#imgrc=BOuufLthHd4NKM:").into(circleImageView);
@@ -239,16 +317,18 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
         enableCheckBox = (CheckBox) findViewById(R.id.Enable);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
-        enableCheckBox.setTypeface(tf);
+      /*  Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
+        enableCheckBox.setTypeface(tf);*/
 
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
         mEditTextView.setFocusable(false);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
+       // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scrollView.setScrolling(true);
+
                 Intent intent = new Intent(PostingActivity.this, Multi_Select_Search_specialization.class);
                 intent.putExtra("list", servicesMultipleSelectedModels);
 
@@ -317,7 +397,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         imageViewSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                scrollView.setScrolling(true);
                 checkPermission();
+
             }
         });
         char[] additionalSymbols = new char[]{
@@ -498,20 +580,20 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         }
         if (requestCode == REQUEST_CAMERA) {
             try {
-                    Uri uri = Uri.fromFile(photoFile);
-                    selectedVideoPath = null;
-                    docpath = null;
-                    ImageProcess obj = new ImageProcess(PostingActivity.this);
-                    mCurrentPhotoPath = obj.getPath(uri);
-                    selectedImagePath = mCurrentPhotoPath;
-                    File fff = new File(selectedImagePath);
-                    Glide.with(PostingActivity.this)
-                            .load(fff) // Uri of the picture
-                            .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .crossFade()
-                            .override(100, 100)
-                            .into(imageViewSelected);
+                Uri uri = Uri.fromFile(photoFile);
+                selectedVideoPath = null;
+                docpath = null;
+                ImageProcess obj = new ImageProcess(PostingActivity.this);
+                mCurrentPhotoPath = obj.getPath(uri);
+                selectedImagePath = mCurrentPhotoPath;
+                File fff = new File(selectedImagePath);
+                Glide.with(PostingActivity.this)
+                        .load(fff) // Uri of the picture
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .crossFade()
+                        .override(100, 100)
+                        .into(imageViewSelected);
 
             } catch (Exception e) {
             }
@@ -917,7 +999,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
     @Override
     public void onHashTagClicked(String hashTag) {
-        Toast.makeText(PostingActivity.this, hashTag, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(PostingActivity.this, hashTag, Toast.LENGTH_SHORT).show();
     }
 
 

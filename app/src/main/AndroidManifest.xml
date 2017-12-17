@@ -43,14 +43,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activites.OpenDocument"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activites.LoadHtmlPageActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.AppointmentActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Module_Detail_Activity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activites.Knowledge_Centre_Detail"
             android:screenOrientation="portrait" />
-<activity android:name=".activites.YoutubeVideo_Play"
-    android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activites.YoutubeVideo_Play"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activites.MemberListing"
             android:screenOrientation="portrait" />

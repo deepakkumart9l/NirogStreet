@@ -35,7 +35,6 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.CustomPagerAdapter;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
-import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.app.nirogstreet.uttil.Utils2;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.cast.framework.SessionManager;
@@ -107,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
         frameLayoutview_alert_red_circle.setVisibility(View.GONE);
         textViewTab = (TextView) findViewById(R.id.textTab);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(textViewTab,MainActivity.this);
         logout = (ImageView) findViewById(R.id.logout);
         sesstionManager = new SesstionManager(MainActivity.this);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutHeader = (LinearLayout) findViewById(R.id.actionbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         createTextView = (TextView) findViewById(R.id.create);
-        TypeFaceMethods.setRegularTypeFaceForTextView(createTextView, MainActivity.this);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager.setOffscreenPageLimit(3);
 
@@ -179,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         searchgroupImageView.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
-                        setTabText("You");
+                        setTabText("Profile");
                         break;
 
                 }
@@ -211,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tabOneTimeline = (TextView) tabLinearLayoutTimeline.findViewById(R.id.tab);
         tabOneTimeline.setText("HOME");
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOneTimeline, MainActivity.this);
 
         tabOneTimeline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);
@@ -221,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tabOneknwledge = (TextView) tabLinearLayout1.findViewById(R.id.tab);
         tabOneknwledge.setText("KNOWLEDGE CENTRE");
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOneknwledge, MainActivity.this);
 
         tabOneknwledge.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImglnw = (ImageView) tabLinearLayout1.findViewById(R.id.icon);
@@ -232,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tabOne = (TextView) tabLinearLayout.findViewById(R.id.tab);
         tabOne.setText("COMMUNITIES");
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOne, MainActivity.this);
 
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImg = (ImageView) tabLinearLayout.findViewById(R.id.icon);
@@ -241,8 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout tabtwo = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
         TextView tabtwoText = (TextView) tabtwo.findViewById(R.id.tab);
-        tabtwoText.setText("YOU");
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabtwoText, MainActivity.this);
+        tabtwoText.setText("Profile");
 
         tabtwoText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView TwoImg = (ImageView) tabtwo.findViewById(R.id.icon);
@@ -266,16 +259,31 @@ public class MainActivity extends AppCompatActivity {
         notiframe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                frameLayoutview_alert_red_circle.setVisibility(View.GONE);
-                Intent intent = new Intent(MainActivity.this, NotificationListing.class);
-                startActivity(intent);
+            if(NetworkUtill.isNetworkAvailable(MainActivity.this))
+            {
+                HashMap<String, String> userDetails = sesstionManager.getUserDetails();
+                String userId = userDetails.get(SesstionManager.USER_ID);
+                NotificationAsyncTaskNew notificationAsyncTaskNew=new NotificationAsyncTaskNew(userId,"","");
+                notificationAsyncTaskNew.execute();
+            }
+                else {
+                NetworkUtill.showNoInternetDialog(MainActivity.this);
+            }
             }
         });
         searchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivityForResult(intent, 4);
+                if(NetworkUtill.isNetworkAvailable(MainActivity.this))
+                {
+                    HashMap<String, String> userDetails = sesstionManager.getUserDetails();
+                    String userId = userDetails.get(SesstionManager.USER_ID);
+                    NotificationAsyncTaskNew notificationAsyncTaskNew=new NotificationAsyncTaskNew(userId,"","");
+                    notificationAsyncTaskNew.execute();
+                }
+                else {
+                    NetworkUtill.showNoInternetDialog(MainActivity.this);
+                }
             }
         });
     }
@@ -393,6 +401,102 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
     }
 
+    public class NotificationAsyncTaskNew extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String email, password;
+        CircularProgressBar bar;
+        String lang, authToken;
+        String userId;
+
+        //PlayServiceHelper regId;
+        public NotificationAsyncTaskNew(String userId, String lang, String authToken) {
+            this.userId = userId;
+            this.lang = lang;
+            this.authToken = authToken;
+
+        }
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //  bar = (ProgressBar) findViewById(R.id.progressBar);
+            //   bar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.BaseUrl + "feed/notificationseen-new";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+                String credentials = email + ":" + password;
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                pairs.add(new BasicNameValuePair("userID", userId));
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils
+                        .toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+
+                if (jo != null) {
+                    frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+                    try {
+                        ShortcutBadger.with(getApplicationContext()).remove();  //for 1.1.3
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+                    Intent intent = new Intent(MainActivity.this, NotificationListing.class);
+                    startActivity(intent);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //  bar.setVisibility(View.GONE);
+
+        }
+
+    }
 
     public class NotificationAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
@@ -477,8 +581,8 @@ public class MainActivity extends AppCompatActivity {
                                 int msg;
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
 
-                                if (jsonObject1.has("totalUnreadmsg") && !jsonObject1.isNull("totalUnreadmsg")) {
-                                    totalUnReadCount = jsonObject1.getInt("totalUnreadmsg");
+                                if (jsonObject1.has("totalUnseenmsg") && !jsonObject1.isNull("totalUnseenmsg")) {
+                                    totalUnReadCount = jsonObject1.getInt("totalUnseenmsg");
                                     if (totalUnReadCount > 0) {
 
                                         frameLayoutview_alert_red_circle.setVisibility(View.VISIBLE);

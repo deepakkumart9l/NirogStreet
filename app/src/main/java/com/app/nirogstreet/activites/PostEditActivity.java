@@ -36,6 +36,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -59,6 +60,7 @@ import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.GridSpacingItemDecoration;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
+import com.app.nirogstreet.uttil.MyScrollView;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.PathUtil;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -145,6 +147,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     private HashTagHelper mEditTextHashTagHelper;
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
+    MyScrollView myScrollView;
     TextView textViewpost;
     TextView descriptionTextView, titleTextView;
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
@@ -172,6 +175,34 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         } else {
             NetworkUtill.showNoInternetDialog(PostEditActivity.this);
         }
+        myScrollView=(MyScrollView)findViewById(R.id.scrol);
+        myScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                myScrollView.setScrolling(true);
+
+                return false;
+            }
+        });
+
+        editTextMessage = (EditText) findViewById(R.id.editTextMessage);
+
+        editTextMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.editTextMessage) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+
+                    myScrollView.setScrolling(false);
+                    return false;
+
+                    // v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                }
+                return false;
+            }
+        });
+
         backImageView = (ImageView) findViewById(R.id.back);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +229,21 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         }
         linkLay = (RelativeLayout) findViewById(R.id.linkLay);
         imagelay = (RelativeLayout) findViewById(R.id.imagelay);
+        imagelay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                myScrollView.setScrolling(true);
+                return false;
+            }
+        });
+        linkLay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                myScrollView.setScrolling(true);
+
+                return false;
+            }
+        });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
 
@@ -211,7 +257,21 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         dr_nameTextView.setText("Dr. " + sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
         publicTextView = (TextView) findViewById(R.id.public_);
         title_QuestionEditText = (EditText) findViewById(R.id.title_Question);
-        editTextMessage = (EditText) findViewById(R.id.editTextMessage);
+        title_QuestionEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.title_Question) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+
+                    myScrollView.setScrolling(false);
+                    return false;
+
+                    // v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                }
+                return false;
+            }
+        });
         editTextMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -246,12 +306,22 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             }
         });
         refernceEditText = (EditText) findViewById(R.id.refernce);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView, PostEditActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView, PostEditActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(title_QuestionEditText, PostEditActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(editTextMessage, PostEditActivity.this);
+        refernceEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.refernce) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(refernceEditText, PostEditActivity.this);
+                    myScrollView.setScrolling(false);
+                    return false;
+
+                    // v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                }
+                return false;
+            }
+        });
+
 
 /*
         Glide.with(PostingActivity.this).load("https://www.google.com/search?q=nature+image+url&hl=en-US&tbm=isch&source=iu&pf=m&ictx=1&fir=L8qB97yhUQFCnM%253A%252CwMEPW2TZnfw3vM%252C_&usg=__tdpx9ET1W2b6i6SjlmIvIkJYDmo%3D&sa=X&ved=0ahUKEwib7eScsovXAhUFtI8KHYIxCyUQ9QEIPjAE#imgrc=BOuufLthHd4NKM:").into(circleImageView);
@@ -259,13 +329,20 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
 
         enableCheckBox = (CheckBox) findViewById(R.id.Enable);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
-        enableCheckBox.setTypeface(tf);
+      /*  Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
+        enableCheckBox.setTypeface(tf);*/
 
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
         mEditTextView.setFocusable(false);
-        TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostEditActivity.this);
+        mEditTextView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                myScrollView.setScrolling(true);
+                return false;
+            }
+        });
+       // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostEditActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,6 +415,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             @Override
             public void onClick(View view) {
                 checkPermission();
+                myScrollView.setScrolling(true);
             }
         });
         char[] additionalSymbols = new char[]{
@@ -1076,7 +1154,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
 
     @Override
     public void onHashTagClicked(String hashTag) {
-        Toast.makeText(PostEditActivity.this, hashTag, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(PostEditActivity.this, hashTag, Toast.LENGTH_SHORT).show();
     }
 
 

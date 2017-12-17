@@ -90,7 +90,7 @@ public class GroupListingAdapter extends
             holder.joinTextView.setVisibility(View.GONE);
         } else {
             holder.joinTextView.setVisibility(View.VISIBLE);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.joinTextView, context);
+          //  TypeFaceMethods.setRegularTypeFaceForTextView(holder.joinTextView, context);
         }
         holder.joinTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,11 +125,11 @@ public class GroupListingAdapter extends
         holder.groupMembers.setText(groupModel.getTotalMembers() + " " + "Members");
         //holder.groupName.setText(groupModel.getGroupName());
         holder.groupName.setText(WordUtils.capitalize(groupModel.getGroupName()));
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.groupName, context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.groupMembers, context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.descriptionTextView, context);
+      //  TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.groupName, context);
+      //  TypeFaceMethods.setRegularTypeFaceForTextView(holder.groupMembers, context);
+      //  TypeFaceMethods.setRegularTypeFaceForTextView(holder.descriptionTextView, context);
         holder.descriptionTextView.setText(groupModel.getGroupDescription());
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.noticountTextView, context);
+      //  TypeFaceMethods.setRegularTypeFaceForTextView(holder.noticountTextView, context);
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,10 +161,12 @@ public class GroupListingAdapter extends
         TextView acceptTextView, declineTextView;
         RelativeLayout relativeLayout;
         TextView joinTextView;
+        TextView join1;
         LinearLayout linearLayoutbuttons;
 
         public MyHolderView(View itemView) {
             super(itemView);
+            join1=(TextView)itemView.findViewById(R.id.join1);
             joinTextView = (TextView) itemView.findViewById(R.id.join);
             noticountTextView = (TextView) itemView.findViewById(R.id.noticount);
             descriptionTextView = (TextView) itemView.findViewById(R.id.description);
@@ -184,7 +186,14 @@ public class GroupListingAdapter extends
         if (!payloads.isEmpty()) {
 
             if (payloads.get(0) instanceof String) {
-                holder.joinTextView.setText("Joined");
+                try {
+                    holder.joinTextView.setVisibility(View.GONE);
+                    holder.join1.setVisibility(View.VISIBLE);
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         } else {
             super.onBindViewHolder(holder, position, payloads);

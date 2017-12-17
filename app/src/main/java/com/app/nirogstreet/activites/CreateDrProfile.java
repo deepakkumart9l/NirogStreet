@@ -860,6 +860,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
             } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(CreateDrProfile.this,R.string.wrong,Toast.LENGTH_LONG).show();
+
             }
 
 

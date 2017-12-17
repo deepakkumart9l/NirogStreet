@@ -1,185 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f8f9fb"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/first"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <TextView
-            android:id="@+id/info"
+        android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
+            android:id="@+id/first"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp" />
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/sec"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/first"
-        android:layout_marginTop="15dp"
-        android:background="@color/white">
-
-        <TextView
-            android:id="@+id/titleAdmin"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:text="Group Admin"
-            android:textColor="@color/cardbluebackground"
-            android:textSize="15sp" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/AdminImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/user"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/adminname"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="100dp"
-            android:text="preeti saini"
-            android:textColor="@color/black"
-            android:textSize="13sp" />
-    </android.support.v7.widget.CardView>
+            android:background="@color/white">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sec"
-        android:layout_marginTop="15dp">
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lineSpacingExtra="4sp"
+                android:padding="15dp"
+                android:textColor="@color/black" />
+        </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/titleMembers"
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:text="Group Members"
-            android:textColor="@color/cardbluebackground"
+            android:layout_height="50dp"
+            android:layout_below="@+id/first"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:gravity="bottom"
+            android:lineSpacingExtra="10.5sp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
+            android:text="Group Member"
+            android:textColor="#000000"
             android:textSize="15sp" />
 
-       >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title"
+            android:scrollbars="vertical"
+            android:visibility="visible"
 
-            <LinearLayout
-                android:id="@+id/llGallery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:scrollbars="vertical">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_height="wrap_content">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/memoneimg"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+            />
+</LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-                    android:layout_gravity="center_vertical|center_horizontal"    android:layout_marginBottom="15dp"
-                        android:layout_marginTop="40dp"
-                        android:src="@drawable/user"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/memberonename"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:text=""
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_height="wrap_content">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/memtwoimg"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="15dp"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_marginTop="40dp"
-                        android:src="@drawable/user"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/membertwoname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:text=""
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_vertical|center_horizontal"
-
-                    android:layout_height="wrap_content">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/memthreeimg"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="15dp"
-
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:layout_marginTop="40dp"
-                        android:src="@drawable/user"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/memberthreename"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:text="View All"
-                        android:layout_gravity="center_vertical|center_horizontal"
-
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
-        android:id="@+id/circularProgressBar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/cir"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:cpb_colors="@array/gplus_colors" />
-
+        <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+            android:id="@+id/circularProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/cir"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:cpb_colors="@array/gplus_colors" />
 </RelativeLayout>

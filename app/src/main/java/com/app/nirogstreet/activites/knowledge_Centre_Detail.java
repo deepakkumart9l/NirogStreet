@@ -20,6 +20,7 @@ import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Knowledge_Centre_Detail extends Activity {
     TextView title_side_Tv;
+    RelativeLayout relativeLayout;
     CorseDetailAsynctask corseDetailAsynctask;
     TextView addQualificationTextView;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -183,6 +185,7 @@ public class Knowledge_Centre_Detail extends Activity {
         title_side_Tv = (TextView) findViewById(R.id.title_side);
         dr_name_TV = (TextView) findViewById(R.id.dr_name);
         backImageView = (ImageView) findViewById(R.id.back);
+        relativeLayout=(RelativeLayout)findViewById(R.id.rel);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,7 +266,7 @@ public class Knowledge_Centre_Detail extends Activity {
                         JSONObject jsonObjectresponse = jo.getJSONObject("response");
                         if (jsonObjectresponse.has("message") && !jsonObjectresponse.isNull("message")) {
                             ApplicationSingleton.setCourseSubscribe(true);
-                            isHide=false;
+                            isHide=true;
                             Toast.makeText(Knowledge_Centre_Detail.this, jsonObjectresponse.getString("message"), Toast.LENGTH_LONG).show();
                             addQualificationTextView.setVisibility(View.GONE);
 
@@ -401,6 +404,7 @@ public class Knowledge_Centre_Detail extends Activity {
                     if (course_detail_model != null) {
                         ApplicationSingleton.setCourse_detail_model(course_detail_model);
                         title_side_Tv.setText(course_detail_model.getName());
+
                         if (course_detail_model.getAuthor_detail_module().getProfile_pic() != null)
                             Picasso.with(Knowledge_Centre_Detail.this)
                                     .load(course_detail_model.getAuthor_detail_module().getProfile_pic())
@@ -408,6 +412,16 @@ public class Knowledge_Centre_Detail extends Activity {
                                     .error(R.drawable.user)
                                     .into(auth_imageCircleImageView);
                         dr_name_TV.setText(course_detail_model.getAuthor_detail_module().getName());
+                        relativeLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Knowledge_Centre_Detail.this, Dr_Profile.class);
+                                if (!course_detail_model.getAuthor_detail_module().getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+
+                                    intent.putExtra("UserId", course_detail_model.getAuthor_detail_module().getId());
+                                startActivity(intent);
+                            }
+                        });
                         auth_imageCircleImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -499,6 +513,41 @@ public class Knowledge_Centre_Detail extends Activity {
                                                     }
                                                 }
                                             });
+                                        }
+                                        if(doc_Type.equalsIgnoreCase("1"))
+                                        {
+                                            final int finalI = i;
+                                            final int finalJ = j;
+                                            final int finalK = k;
+                                            v1.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if(isHide){
+
+                                                        Intent intent = new Intent(Knowledge_Centre_Detail.this, LoadHtmlPageActivity.class);
+                                                        intent.putExtra("id", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId());
+                                                        intent.putExtra("title", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
+                                                        intent.putExtra("course_detail_model", course_detail_model);
+                                                        intent.putExtra("module_pos", finalK);
+                                                        intent.putExtra("topic_pos", finalI);
+                                                        intent.putExtra("file_pos", finalJ);
+                                                        intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
+                                                        startActivity(intent);}
+                                                 /*   verifyStoragePermissions(Knowledge_Centre_Detail.this);
+
+                                                    String extntion = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1);
+                                                    String filename1 = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf("/") + 1);
+                                                    Methods.downloadFile(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file(), Knowledge_Centre_Detail.this, extntion, course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
+                                                    Methods.showProgress(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file(), Knowledge_Centre_Detail.this);
+                                                    if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
+                                                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId(), finalK, finalI, finalJ);
+                                                        knwledgeCompleteAsynctask.execute();
+                                                    } else {
+                                                        NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
+                                                    }*/
+                                                }
+                                            });
+
                                         }
                                         if (doc_Type.equalsIgnoreCase("2")) {
                                             final int finalI = i;

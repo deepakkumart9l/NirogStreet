@@ -46,6 +46,7 @@ import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.FullScreenImage;
 import com.app.nirogstreet.activites.LikesDisplayActivity;
 import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.OpenDocument;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
@@ -95,7 +96,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private String authToken, userId;
     SpannableString span;
-    SpannableString span2,str3;
+    SpannableString span2, str3;
 
     private View mCustomView;
 
@@ -543,21 +544,14 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if (feedModel.getDoc_Type() != null) {
                                     viewHolder.docTypeTextView.setText(feedModel.getDoc_Type());
                                 }
+                                viewHolder.docNameTextView.setVisibility(View.VISIBLE);
+
                                 viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        String s[] = feedModel.getFeed_source().split("documents/");
-                                        String s1[] = s[1].split("\\.");
-                                        if (feedModel.getDoc_name().contains("\\.")) {
-                                            feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
-                                        }
-
-                                        String extntion = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf(".") + 1);
-                                        String filename = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("/") + 1);
-                                        viewHolder.docNameTextView.setText(filename);
-
-                                        Methods.downloadFile(feedModel.getFeed_source(), activity, extntion, feedModel.getDoc_name());
-                                        Methods.showProgress(feedModel.getFeed_source(), activity);
+                                        Intent intent=new Intent(context,OpenDocument.class);
+                                        intent.putExtra("url",feedModel.getFeed_source());
+                                        context.startActivity(intent);
                                     }
                                 });
                             }
@@ -616,7 +610,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     public void onClick(View v) {
                         Intent intent = new Intent(context, LikesDisplayActivity.class);
                         intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);                        }
+                        context.startActivity(intent);
+                    }
                 });
                 viewHolder.commntsTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -628,7 +623,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         context.startActivity(intent);
                     }
                 });
-                if(feedModel.getParentFeedDetail()!=null&&feedModel.getUserDetailModel_creator()!=null) {
+                if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
                     if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
                         if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
                             viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
@@ -640,7 +635,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                     }
-                }else {
+                } else {
                     viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                 }
@@ -713,14 +708,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 });
-                viewHolder.noOfLikeTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    /*    Intent intent = new Intent(context, LikesDisplayActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);*/
-                           }
-                });
+
                 viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1075,14 +1063,14 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout docTypeLayout, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
-        TextView likesTextView,commntsTextView;
+        TextView likesTextView, commntsTextView;
         RelativeLayout relativeLayout1;
 
         RelativeLayout profileSectionLinearLayout, basicAnnouncemetLinearLayout, sayCongratsRelativeLayout, anniversaryLinearLayout, hetrogenousAnnouncementLinearLayout;
         Button buttondownload;
         VideoView videoView;
         TextView txtTextView;
-ImageView delImageView;
+        ImageView delImageView;
         WebView webView;
         View left_view, right_view, bottom_view;
         LinearLayout link_title_des_lay;
@@ -1093,10 +1081,10 @@ ImageView delImageView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            relativeLayout1=(RelativeLayout)itemView.findViewById(R.id.relativeLayout1) ;
+            relativeLayout1 = (RelativeLayout) itemView.findViewById(R.id.relativeLayout1);
             delImageView = (ImageView) itemView.findViewById(R.id.del);
-            likesTextView=(TextView)itemView.findViewById(R.id.likes) ;
-            commntsTextView=(TextView)itemView.findViewById(R.id.commnts);
+            likesTextView = (TextView) itemView.findViewById(R.id.likes);
+            commntsTextView = (TextView) itemView.findViewById(R.id.commnts);
             left_view = (View) itemView.findViewById(R.id.left_view);
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
@@ -1461,6 +1449,7 @@ ImageView delImageView;
             return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
         }
     }
+
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
@@ -1532,11 +1521,8 @@ ImageView delImageView;
             super.onPostExecute(aVoid);
             try {
                 if (jo != null) {
-
-                    feedModels.remove(positionat);
-                    notifyItemRemoved(positionat);
-                    notifyItemRangeChanged(positionat, feedModels.size());
-
+                    ApplicationSingleton.setIsProfilePostExecuted(true);
+                    ((Activity) context).finish();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1560,9 +1546,9 @@ ImageView delImageView;
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", "140"));
+                pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
-                httppost.setHeader("Authorization", "Basic " + "aKE5EOwUCNO9y3xaip5leMU1wWqcZadv");
+                httppost.setHeader("Authorization", "Basic " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

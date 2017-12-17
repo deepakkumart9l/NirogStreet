@@ -18,7 +18,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="Pratyush like your Post"
+            android:text=""
             android:textColor="@color/textcolorgray"
             android:visibility="visible" />
 
@@ -293,7 +293,7 @@
                             android:layout_width="150dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:background="@color/textcolorgray"
+                            android:background="#f5f5f5"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -333,7 +333,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Download" />
+                                android:text="Open" />
                         </LinearLayout>
                     </LinearLayout>
 

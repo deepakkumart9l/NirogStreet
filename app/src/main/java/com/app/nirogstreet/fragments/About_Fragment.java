@@ -10,7 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -40,6 +42,7 @@ import com.app.nirogstreet.activites.MemberListing;
 import com.app.nirogstreet.activites.Multiple_select_invite_search;
 import com.app.nirogstreet.activites.UpdateCommunity;
 import com.app.nirogstreet.adapter.CommentsRecyclerAdapter;
+import com.app.nirogstreet.adapter.MemberListingAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.model.UserDetailModel;
@@ -84,6 +87,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class About_Fragment extends Fragment {
     View view;
     TextView infoTextView;
+    ArrayList<UserList> userLists=new ArrayList<>();
     boolean isMemberOfGroup = false;
     private LetterTileProvider mLetterTileProvider;
 
@@ -93,10 +97,9 @@ public class About_Fragment extends Fragment {
     ArrayList<LikesModel> membersModel = new ArrayList<>();
     Context context;
     boolean createdBy = false;
-    CircleImageView circleImageView;
+    RecyclerView mRecyclerView;
     CircularProgressBar circularProgressBar;
     String groupId, authToken, userId;
-    TextView andminTextView;
     GetCommunityDetailAsyncTask getCommunityDetailAsyncTask;
     SesstionManager sesstionManager;
     String str = "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n";
@@ -143,14 +146,18 @@ public class About_Fragment extends Fragment {
         infoTextView = (TextView) view.findViewById(R.id.info);
         sesstionManager = new SesstionManager(context);
         mLetterTileProvider = new LetterTileProvider(context);
+        mRecyclerView = (RecyclerView)view. findViewById(R.id.recyclerview);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        mRecyclerView.setLayoutManager(llm);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        circleImageView = (CircleImageView) view.findViewById(R.id.AdminImage);
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
-        TypeFaceMethods.setRegularTypeFaceForTextView(infoTextView, context);
-        andminTextView = (TextView) view.findViewById(R.id.adminname);
-        TypeFaceMethods.setRegularTypeFaceForTextView(andminTextView, context);
+       // TypeFaceMethods.setRegularTypeFaceForTextView(infoTextView, context);
+       // andminTextView = (TextView) view.findViewById(R.id.adminname);
+        //TypeFaceMethods.setRegularTypeFaceForTextView(andminTextView, context);
 
 
         if (NetworkUtill.isNetworkAvailable(context)) {
@@ -349,42 +356,18 @@ public class About_Fragment extends Fragment {
                                     createdBy_id = created_ByObject.getString("id");
                                     final String finalCreatedBy_id = createdBy_id;
                                     final String finalCreatedBy_id1 = createdBy_id;
-                                    andminTextView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
 
-                                            Intent intent = new Intent(context, Dr_Profile.class);
-                                            if (!finalCreatedBy_id1.equalsIgnoreCase(userId))
-                                                intent.putExtra("UserId", finalCreatedBy_id);
-                                            context.startActivity(intent);
-                                        }
-                                    });
-                                    circleImageView.setOnClickListener(new View.OnClickListener() {
-                                                                           @Override
-                                                                           public void onClick(View v) {
-                                                                               Intent intent = new Intent(context, Dr_Profile.class);
-                                                                               if (!finalCreatedBy_id1.equalsIgnoreCase(userId))
-                                                                                   intent.putExtra("UserId", finalCreatedBy_id);
-                                                                               context.startActivity(intent);
-                                                                           }
-                                                                       }
-                                    );
                                 }
                                 if (created_ByObject.has("name") && !created_ByObject.isNull("name")) {
                                     createdBy_name = created_ByObject.getString("name");
-                                    andminTextView.setText(createdBy_name);
                                 }
                                 if (created_ByObject.has("profile_pic") && !created_ByObject.isNull("profile_pic")) {
                                     created_profile = created_ByObject.getString("profile_pic");
 
-                                    Picasso.with(context)
-                                            .load(created_profile)
-                                            .placeholder(R.drawable.user)
-                                            .error(R.drawable.user)
-                                            .into(circleImageView);
-                                    final String finalCreatedBy_id2 = createdBy_id;
+
 
                                 }
+                                userLists.add(new UserList(createdBy_id,createdBy_name,created_profile));
 
                             }
                             final ArrayList<UserList> userDetailModels = new ArrayList<>();
@@ -407,11 +390,17 @@ public class About_Fragment extends Fragment {
                                             if (userDetail.has("profile_pic") && !userDetail.isNull("profile_pic")) {
                                                 profile_pic = userDetail.getString("profile_pic");
                                             }
+                                            if(!userId.equalsIgnoreCase(createdBy_id))
+                                            userLists.add(new UserList(userId, userName, profile_pic));
                                             userDetailModels.add(new UserList(userId, userName, profile_pic));
                                         }
                                     }
-                                    if (userDetailModels.size() > 0)
-                                        for (int i = 0; i < userDetailModels.size() + 1; i++) {
+                                    if (userDetailModels.size() > 0) {
+                                        MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userLists);
+                                        mRecyclerView.setAdapter(memberListingAdapter);
+                                    }
+
+                                        /*for (int i = 0; i < userDetailModels.size() + 1; i++) {
                                             if (i == 3)
                                                 break;
 
@@ -541,7 +530,7 @@ public class About_Fragment extends Fragment {
                                                     e.printStackTrace();
                                                 }
                                             }
-                                        }
+                                        }*/
 
                                 }
 

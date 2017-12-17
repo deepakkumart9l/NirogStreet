@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +56,10 @@ public class LoginActivity extends AppCompatActivity {
     ImageView backImageView;
     LoginAsync loginAsync;
     CircularProgressBar circularProgressBar;
-    TextView loginHeader, loginTv, registerHere;
+    TextView loginHeader, loginTv;
+    LinearLayout registerHere;
+    private int passwordNotVisible=1;
+
     SesstionManager sesstionManager;
     TextView forgot;
 
@@ -64,23 +69,36 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        setContentView(R.layout.login);
+        setContentView(R.layout.new_login);
         sesstionManager = new SesstionManager(LoginActivity.this);
         emailEt = (EditText) findViewById(R.id.emailEt);
         forgot=(TextView)findViewById(R.id.forgot) ;
-        TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
+       // TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
         setPass = (EditText) findViewById(R.id.passEt);
+        setPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText paswword = (EditText) findViewById(R.id.passEt);
+                if (passwordNotVisible == 1) {
+                    paswword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    passwordNotVisible = 0;
+                } else {
+
+                    paswword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    passwordNotVisible = 1;
+                }
+
+
+                paswword.setSelection(paswword.length());
+
+            }
+        });
+
         loginHeader = (TextView) findViewById(R.id.title_side);
         loginTv = (TextView) findViewById(R.id.loginTv);
-        backImageView = (ImageView) findViewById(R.id.back);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        registerHere = (TextView) findViewById(R.id.registerHere);
-        TypeFaceMethods.setRegularTypeFaceEditText(setPass, LoginActivity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(emailEt, LoginActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(loginHeader, LoginActivity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(loginTv, LoginActivity.this);
+        registerHere = (LinearLayout) findViewById(R.id.registerHere);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(registerHere, LoginActivity.this);
         registerHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,16 +140,8 @@ public class LoginActivity extends AppCompatActivity {
                     } else
                         NetworkUtill.showNoInternetDialog(LoginActivity.this);
                 }
-        /*      Intent intent=new Intent(LoginActivity.this,PostingActivity.class);
-                startActivity(intent);
-*/
 
-            }
-        });
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+
             }
         });
     }

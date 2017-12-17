@@ -32,7 +32,8 @@
 
     </RelativeLayout>
 
-    <ScrollView
+    <com.app.nirogstreet.uttil.MyScrollView
+        android:id="@+id/scrol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -46,8 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="25dp"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/dr_profile"
@@ -70,8 +71,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="Dr. Saini"
-                        android:visibility="gone"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="70dp"
@@ -121,10 +122,10 @@
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
                             android:layout_below="@+id/categorySpinner"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             android:textColorHint="@color/textcolorgray"
                             app:passwordToggleTint="#000">
 
@@ -138,7 +139,8 @@
 
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="3"
-                                android:paddingBottom="14dp"                                android:textColor="@color/black"
+                                android:paddingBottom="14dp"
+                                android:textColor="@color/black"
                                 android:textColorHint="@color/textcolorgray"
                                 android:textSize="16dp" />
                         </android.support.design.widget.TextInputLayout>
@@ -168,11 +170,14 @@
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:drawableTint="@color/textcolorgray"
+
                                 android:hint="Description"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="3"
-                                android:paddingBottom="14dp"                                android:textColor="@color/black"
-
+                                android:overScrollMode="always"
+                                android:paddingBottom="14dp"
+                                android:scrollbarStyle="insideInset"
+                                android:textColor="@color/black"
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
                                 android:textSize="15sp" />
@@ -207,7 +212,8 @@
                                 android:hint="Tags (Optional)"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="1"
-                                android:paddingBottom="14dp"                                android:textColor="@color/black"
+                                android:paddingBottom="14dp"
+                                android:textColor="@color/black"
 
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
@@ -264,10 +270,10 @@
                         <RelativeLayout
                             android:id="@+id/imagelay"
                             android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="10dp"
-                            android:layout_height="match_parent"
                             android:background="@color/white">
 
 
@@ -386,11 +392,11 @@
                         android:id="@+id/Enable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="20dp"
                         android:buttonTint="@color/buttonBackground"
                         android:checked="true"
-                        android:layout_marginLeft="10dp"
-                        android:text="Enable Commenting :"
+                        android:text="Enable Commenting"
                         android:textColor="#636163" />
                 </LinearLayout>
 
@@ -408,5 +414,5 @@
                     app:cpb_colors="@array/gplus_colors" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.app.nirogstreet.uttil.MyScrollView>
 </LinearLayout>

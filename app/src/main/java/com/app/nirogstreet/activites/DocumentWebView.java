@@ -285,7 +285,6 @@ public class DocumentWebView extends Activity {
 
             }
         });
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(title_side_left, DocumentWebView.this);
         sesstionManager = new SesstionManager(DocumentWebView.this);
         if (getIntent().hasExtra("url")) {
             url = getIntent().getStringExtra("url");

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,6 +57,9 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class CommunitiesFragment extends Fragment {
     int page = 1;
     RecyclerView recyclerView;
+    Button button;
+    LinearLayout no_list;
+
     ImageView imageViewback;
     private static final int REQUEST_FOR_ACTIVITY_CODE = 6;
     private static final int REQUEST_FOR_UPDAED = 7;
@@ -102,8 +106,8 @@ public class CommunitiesFragment extends Fragment {
             userView.setSelected(true);
             allView.setSelected(false);
             page = 1;
-            TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+            //  TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+            // TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
             groupListingAdapter = null;
             groupModelsTotal = new ArrayList<GroupModel>();
             recyclerView.setVisibility(View.GONE);
@@ -131,7 +135,38 @@ public class CommunitiesFragment extends Fragment {
 
         sessionManager = new SesstionManager(context);
         linearLayout1 = (LinearLayout) view.findViewById(R.id.linearLayout1);
+        no_list = (LinearLayout) view.findViewById(R.id.no_list);
+        button=(Button)view.findViewById(R.id.join_com);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page = 1;
+                groupModelsTotal = new ArrayList<GroupModel>();
+                userView.setSelected(false);
+                recyclerView.removeAllViews();
+                recyclerView.setVisibility(View.VISIBLE);
+                no_list.setVisibility(View.GONE);
+                isLoading = false;
+                //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+                // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
+                myGroupTextView.setClickable(false);
+                allView.setSelected(true);
+                groupListingAdapter = null;
+                recyclerView.setVisibility(View.GONE);
+                otherGroupTextView.setSelected(true);
+                otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+                myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    String url = AppUrl.BaseUrl + "group/all-groups";
 
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
+                }
+
+            }
+        });
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         logedinuserId = userDetails.get(SesstionManager.USER_ID);
@@ -145,8 +180,8 @@ public class CommunitiesFragment extends Fragment {
         imageViewback = (ImageView) view.findViewById(R.id.back);
         myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
         otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+        //   TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+        //   TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
 
         myGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,8 +189,8 @@ public class CommunitiesFragment extends Fragment {
                 recyclerView.removeAllViews();
                 otherGroupTextView.setClickable(false);
                 userView.setSelected(true);
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+                //   TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
+                //  TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
                 allView.setSelected(false);
                 page = 1;
                 isLoading = false;
@@ -183,8 +218,8 @@ public class CommunitiesFragment extends Fragment {
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
                 isLoading = false;
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
+                //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+                // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 myGroupTextView.setClickable(false);
                 allView.setSelected(true);
                 groupListingAdapter = null;
@@ -325,7 +360,10 @@ public class CommunitiesFragment extends Fragment {
                         recyclerView.setVisibility(View.VISIBLE);
 
                     }
-
+                    if (isHide && groupModels.size() == 0) {
+                        recyclerView.setVisibility(View.GONE);
+                        no_list.setVisibility(View.VISIBLE);
+                    }
                     if (groupListingAdapter == null && groupModelsTotal != null && groupModelsTotal.size() > 0) {
                         groupListingAdapter = new GroupListingAdapter(groupModelsTotal, context, isHide, userId, showJoin);
                         recyclerView.setAdapter(groupListingAdapter);

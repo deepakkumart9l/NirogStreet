@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -76,6 +77,9 @@ public class Courses_Fragment extends Fragment {
     GroupsOfUserAsyncTask groupsOfUserAsyncTask;
     TextView createTextView;
     String logedinuserId;
+    Button button;
+    LinearLayout no_list;
+
     LinearLayout linearLayout1;
     Courses_Listing_Adapter groupListingAdapter;
     TextView myGroupTextView, otherGroupTextView;
@@ -134,7 +138,8 @@ public class Courses_Fragment extends Fragment {
 
         sessionManager = new SesstionManager(context);
         linearLayout1 = (LinearLayout) view.findViewById(R.id.linearLayout1);
-
+        no_list = (LinearLayout) view.findViewById(R.id.no_list);
+        button=(Button)view.findViewById(R.id.join_com);
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         logedinuserId = userDetails.get(SesstionManager.USER_ID);
@@ -188,6 +193,35 @@ public class Courses_Fragment extends Fragment {
                 groupModelsTotal = new ArrayList<CoursesModel>();
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
+                isLoading = false;
+                myGroupTextView.setClickable(false);
+                allView.setSelected(true);
+                groupListingAdapter = null;
+                recyclerView.setVisibility(View.GONE);
+                otherGroupTextView.setSelected(true);
+                otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+                myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    String url = AppUrl.BaseUrl + "knowledge/all-courses";
+
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
+                }
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page = 1;
+                TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
+                groupModelsTotal = new ArrayList<CoursesModel>();
+                userView.setSelected(false);
+                recyclerView.removeAllViews();
+                recyclerView.setVisibility(View.VISIBLE);
+                no_list.setVisibility(View.GONE);
                 isLoading = false;
                 myGroupTextView.setClickable(false);
                 allView.setSelected(true);
@@ -333,6 +367,11 @@ public class Courses_Fragment extends Fragment {
                     } else {
                         recyclerView.setVisibility(View.VISIBLE);
 
+                    }
+                    if(isHide&&groupModelsTotal.size()==0)
+                    {
+                        recyclerView.setVisibility(View.GONE);
+                        no_list.setVisibility(View.VISIBLE);
                     }
 
                     if (groupListingAdapter == null && groupModelsTotal != null && groupModelsTotal.size() > 0) {
