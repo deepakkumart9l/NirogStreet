@@ -137,11 +137,7 @@ public class AllClinicSearch extends Activity {
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        TypeFaceMethods.setRegularTypeFaceEditText(searchET, AllClinicSearch.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, AllClinicSearch.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, AllClinicSearch.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, AllClinicSearch.this);
         textViewDone.setVisibility(View.GONE);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +163,7 @@ public class AllClinicSearch extends Activity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AllClinicSearch.this, LinearLayoutManager.HORIZONTAL, false);
 
 
-        searchET.addTextChangedListener(new TextWatcher() {
+       /* searchET.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
@@ -191,7 +187,6 @@ public class AllClinicSearch extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 // TODO Auto-generated method stub
-                addQualificationTextView.setVisibility(View.VISIBLE);
 
 
                 timer.cancel();
@@ -227,12 +222,33 @@ public class AllClinicSearch extends Activity {
                 );
             }
         });
-
+*/
 
         searchET.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        addQualificationTextView.setVisibility(View.GONE);
+                        text = s.toString();
+                        query = text;
+                        if (allClinicModels1 != null) {
+                            recyclerViewsearchData.setAdapter(null);
+                        }
+                        if (searchAsync != null)
+                            searchAsync.cancel(true);
+                        // setVisibilty(0);
+                        if (NetworkUtill.isNetworkAvailable(AllClinicSearch.this)) {
+                            if (searchET.getText().toString().length() == 0) {
+                                searchAsync = new SearchAsync("");
+                                searchAsync.execute();
+                            } else {
+                                searchAsync = new SearchAsync(searchET.getText().toString());
+                                searchAsync.execute();
+                            }
+                        } else {
+                            NetworkUtill.showNoInternetDialog(AllClinicSearch.this);
+                        }
+
 
                     }
 
@@ -372,7 +388,6 @@ public class AllClinicSearch extends Activity {
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
-            recyclerViewsearchData.setVisibility(View.GONE);
             //  bar = (ProgressBar) findViewById(R.id.progressBar);
             //   bar.setVisibility(View.VISIBLE);
             super.onPreExecute();
@@ -431,6 +446,7 @@ public class AllClinicSearch extends Activity {
 
                         if (jsonObject.has("allClinics") && !jsonObject.isNull("allClinics")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("allClinics");
+recyclerViewsearchData.setVisibility(View.VISIBLE);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 ArrayList<SpecializationModel> specializationModels = new ArrayList<>();
                                 String fname = "", state = "", slug = "", profile_pic = "",created_by="", department = "", id = "", address = "", pincode = "", city = "", locality = "";
@@ -467,6 +483,7 @@ public class AllClinicSearch extends Activity {
                             }
 
                         }else {
+
                             addQualificationTextView.setText("+Add "+"("+searchET.getText().toString()+")");
                             addQualificationTextView.setVisibility(View.VISIBLE);
                         }
@@ -484,6 +501,7 @@ public class AllClinicSearch extends Activity {
                                 }
                             }
                             //    mRecyclerView.setAdapter(new SearchAdapter(Multi_Select_Search.this, searchModels));
+
                             searchAdapterMultiSelect = new SearchAdapterMultiSelect(AllClinicSearch.this, allClinicModels1);
                             recyclerViewsearchData.setAdapter(searchAdapterMultiSelect);
                         }

@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -50,7 +51,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = "";
         //  Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         Iterator myVeryOwnIterator = bundle.keySet().iterator();
-        String msg = "", url = "", postId = "", groupId = "", forumId = "", eventId = "";
+        String msg = "", url = "", postId = "", groupId = "", forumId = "", eventId = "", appointment_id = "";
         while (myVeryOwnIterator.hasNext()) {
             String key = (String) myVeryOwnIterator.next();
             if (key.equalsIgnoreCase("default")) {
@@ -81,9 +82,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 if (msgObject.has("forum_id") && !msgObject.isNull("forum_id")) {
                                     forumId = msgObject.getString("forum_id");
                                 }
+                                if (msgObject.has("appointment_id") && !msgObject.isNull("appointment_id")) {
+                                    appointment_id = msgObject.getString("appointment_id");
+                                }
                                 if (msgObject.has("message") && !msgObject.isNull("message")) {
                                     msg = msgObject.getString("message");
-                                    sendNotification(msg, url, forumId, eventId, groupId, postId);
+                                    sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id);
 
                                 }
 
@@ -94,26 +98,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     e.printStackTrace();
                 }
                 //  Toast.makeText(ctx, "Key: "+key+" Value: "+value, Toast.LENGTH_LONG).show();
-                 // sendNotification(value);
+                // sendNotification(value);
             } else {
                 myVeryOwnIterator.next();
             }
         }
     }
 
-    private void sendNotification(String messageBody, String url, String forum, String event, String group, String post) {
+    private void sendNotification(String messageBody, String url, String forum, String event, String group, String post, String appointment_id) {
         Intent intent = null;
         SesstionManager sessionManager = new SesstionManager(this);
         HashMap<String, String> user = sessionManager.getUserDetails();
         String authToken = user.get(SesstionManager.AUTH_TOKEN);
         String userId = user.get(SesstionManager.USER_ID);
-     if (!group.equalsIgnoreCase("")) {
+        if (!group.equalsIgnoreCase("")) {
             intent = new Intent(this, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
             intent.putExtra("groupId", group);
-        } else {
+        } else if(!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
             intent.putExtra("feedId", post);
+        }else {
+            intent = new Intent(this, AppointmentActivity.class);
         }
         Bundle bundle = new Bundle();
         bundle.putString("notificationUrl", url);

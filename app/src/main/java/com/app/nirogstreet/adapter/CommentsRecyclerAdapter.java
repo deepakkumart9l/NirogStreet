@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.CommentsRepilesActivity;
 import com.app.nirogstreet.activites.CreateDrProfile;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.model.CommentsModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -82,16 +83,15 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                     .placeholder(R.drawable.user)
                     .error(R.drawable.user)
                     .into(holder.imageView);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (rowItem.getFname() != null) {
             if (rowItem.getLname() != null)
-                holder.name.setText("Dr. "+rowItem.getFname() + " " + rowItem.getLname());
+                holder.name.setText("Dr. " + rowItem.getFname() + " " + rowItem.getLname());
             else
-                holder.name.setText("Dr. "+rowItem.getFname());
+                holder.name.setText("Dr. " + rowItem.getFname());
         }
         if (commentsModels.get(position).isUserLiked()) {
             holder.like.setText("Unlike");
@@ -99,6 +99,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
             holder.like.setText("Like");
 
         }
+
         holder.numberOfReplies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,15 +120,15 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         });
         if (commentsModels.get(position).getCommentsModels() != null && commentsModels.get(position).getCommentsModels().size() >= 1) {
             holder.subComment.setVisibility(View.VISIBLE);
-            holder.subCommntName.setText("Dr. "+rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+            holder.subCommntName.setText("Dr. " + rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
             Glide.with(context)
                     .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()).placeholder(R.drawable.user) // Uri of the picture
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .crossFade()
                     .override(100, 100)
-                    .into( holder.subcommentimg);
-           // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
+                    .into(holder.subcommentimg);
+            // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
             holder.subcommnt.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment());
             if (commentsModels.get(position).getCommentsModels().size() > 1) {
                 holder.numberOfReplies.setVisibility(View.VISIBLE);
@@ -137,7 +138,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                 holder.numberOfReplies.setVisibility(View.GONE);
 
             }
-        }else {
+        } else {
             holder.subComment.setVisibility(View.GONE);
 
         }
@@ -146,22 +147,23 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         } else {
             holder.likeslayout.setVisibility(View.GONE);
         }
+
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* Intent resultIntent = new Intent(context, ProfileActivity.class);
+                Intent resultIntent = new Intent(context, Dr_Profile.class);
                 CommentsModel likesModel = commentsModels.get(position);
                 resultIntent.putExtra("userId", likesModel.getUserId());
-                context.startActivity(resultIntent);*/
+                context.startActivity(resultIntent);
             }
         });
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              /*  Intent resultIntent = new Intent(context, ProfileActivity.class);
+                Intent resultIntent = new Intent(context, Dr_Profile.class);
                 CommentsModel likesModel = commentsModels.get(position);
                 resultIntent.putExtra("userId", likesModel.getUserId());
-                context.startActivity(resultIntent);*/
+                context.startActivity(resultIntent);
             }
         });
         //  holder.name.setText(rowItem.getName());
@@ -175,7 +177,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         holder.time.setText(rowItem.getTimeStamp());
         holder.totalLike.setText(commentsModels.get(position).getTotalLikes() + "");
         holder.message.setText(rowItem.getComment());
-       // imageLoader.DisplayImage(context, rowItem.getProfile_pic_url(), holder.imageView, null, 150, 150, R.drawable.profile_default);
+        // imageLoader.DisplayImage(context, rowItem.getProfile_pic_url(), holder.imageView, null, 150, 150, R.drawable.profile_default);
         holder.subComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,7 +221,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 
         public MyHolderView(View convertView) {
             super(convertView);
-            subCommntName=(TextView)convertView.findViewById(R.id.subCommntName) ;
+            subCommntName = (TextView) convertView.findViewById(R.id.subCommntName);
             subcommentimg = (CircleImageView) convertView.findViewById(R.id.subcommentimg);
             subcommnt = (TextView) convertView.findViewById(R.id.subcommnt);
             name = (TextView) convertView.findViewById(R.id.name);

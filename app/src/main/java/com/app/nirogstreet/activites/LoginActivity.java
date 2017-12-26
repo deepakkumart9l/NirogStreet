@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,8 +59,8 @@ public class LoginActivity extends AppCompatActivity {
     CircularProgressBar circularProgressBar;
     TextView loginHeader, loginTv;
     LinearLayout registerHere;
-    private int passwordNotVisible=1;
-
+    private int passwordNotVisible = 1;
+    ImageButton img_lock;
     SesstionManager sesstionManager;
     TextView forgot;
 
@@ -71,19 +72,21 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.new_login);
         sesstionManager = new SesstionManager(LoginActivity.this);
+        img_lock = (ImageButton) findViewById(R.id.img_lock);
         emailEt = (EditText) findViewById(R.id.emailEt);
-        forgot=(TextView)findViewById(R.id.forgot) ;
-       // TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
+        forgot = (TextView) findViewById(R.id.forgot);
+        // TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
         setPass = (EditText) findViewById(R.id.passEt);
-        setPass.setOnClickListener(new View.OnClickListener() {
+        img_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText paswword = (EditText) findViewById(R.id.passEt);
                 if (passwordNotVisible == 1) {
+                    img_lock.setBackgroundResource(R.drawable.unlock);
                     paswword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     passwordNotVisible = 0;
                 } else {
-
+                    img_lock.setBackgroundResource(R.drawable.lock);
                     paswword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     passwordNotVisible = 1;
                 }
@@ -109,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         forgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(LoginActivity.this,ForgotPassword.class);
+                Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
                 startActivity(intent);
             }
         });
@@ -230,7 +233,7 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             status = dataJsonObject.getBoolean("status");
                             if (!status) {
-                                      Toast.makeText(LoginActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
 
 
                             } else {
@@ -248,7 +251,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                                             id = userJsonObject.getString("id");
                                         }
-                                        if (userJsonObject.has("email") &&!userJsonObject.isNull("email")) {
+                                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
                                             email = userJsonObject.getString("email");
                                         }
                                         if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
@@ -272,14 +275,12 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
                         }
-                    }else {
-                        if(jo.has("message")&&!jo.isNull("message"))
-                        {
-                            if(jo.getString("message").equalsIgnoreCase("OK"))
-                            {
+                    } else {
+                        if (jo.has("message") && !jo.isNull("message")) {
+                            if (jo.getString("message").equalsIgnoreCase("OK")) {
                                 if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {
-                                        loginAsync = new LoginAsync();
-                                        loginAsync.execute();
+                                    loginAsync = new LoginAsync();
+                                    loginAsync.execute();
 
                                 } else
                                     NetworkUtill.showNoInternetDialog(LoginActivity.this);

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         createTextView = (TextView) findViewById(R.id.create);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
 
         customPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), tabLayout, this);
         // increase this limit if you have more tabs!

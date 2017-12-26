@@ -5,6 +5,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="55dp"
         android:background="@color/cardbluebackground">
 

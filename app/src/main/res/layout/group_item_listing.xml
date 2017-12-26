@@ -87,7 +87,7 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:paddingTop="4dp"
-                        android:text="Join"
+                        android:text="Joined"
                         android:textColor="#818181"
                         android:textSize="11sp"
                         android:visibility="gone" />

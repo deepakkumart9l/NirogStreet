@@ -72,8 +72,8 @@ public class ShareOnFriendsTimeline extends Activity {
         if (intent.hasExtra("shareOnGroup")) {
             shareOnGroup = intent.getBooleanExtra("shareOnGroup", false);
             if (shareOnGroup) {
-                textTab.setText("Share on group timeline");
-                group_friends.setText("Groups");
+                textTab.setText("Share in community ");
+                group_friends.setText("Select community :");
             }
         }
         final String userId = intent.getStringExtra("userId");
@@ -87,7 +87,7 @@ public class ShareOnFriendsTimeline extends Activity {
                         shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
                         shareOnFriendsTimeLineAsyncTask.execute();
                     } else {
-                        Toast.makeText(ShareOnFriendsTimeline.this, "Select friends", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ShareOnFriendsTimeline.this, "Select community", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(ShareOnFriendsTimeline.this);

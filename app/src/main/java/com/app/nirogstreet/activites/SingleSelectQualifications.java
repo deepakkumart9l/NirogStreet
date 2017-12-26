@@ -110,11 +110,7 @@ public class SingleSelectQualifications extends Activity
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        TypeFaceMethods.setRegularTypeFaceEditText(searchET, SingleSelectQualifications.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, SingleSelectQualifications.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, SingleSelectQualifications.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, SingleSelectQualifications.this);
         textViewDone.setVisibility(View.GONE);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -110,8 +110,8 @@ public class MultipleSelectGroup extends Activity
         specilization = (TextView) findViewById(R.id.specilization);
         searchET = (EditText) findViewById(R.id.searchET);
 
-        specilization.setText("Select Groups");
-        searchET.setHint("Search Group");
+        specilization.setText("Select Community");
+        searchET.setHint("Search Community");
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
 
@@ -157,10 +157,7 @@ public class MultipleSelectGroup extends Activity
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        TypeFaceMethods.setRegularTypeFaceEditText(searchET, MultipleSelectGroup.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, MultipleSelectGroup.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, MultipleSelectGroup.this);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -576,7 +573,6 @@ public class MultipleSelectGroup extends Activity
 
                 }
             });
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);
             holder.textViewName.setText(multipleSelectedItemModel.getUserName());
         }
 

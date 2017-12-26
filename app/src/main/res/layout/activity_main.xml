@@ -30,7 +30,7 @@
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="16.5sp"
-                android:textStyle="normal"
+                android:textStyle="bold"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -92,7 +92,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginRight="15dp">
+                    android:layout_marginRight="5dp">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -177,7 +177,7 @@
         android:layout_below="@+id/actionbar"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
-       />
+        />
 
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"
@@ -194,7 +194,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-android:layout_above="@+id/tablayout"
+        android:layout_above="@+id/tablayout"
         android:background="@color/textcolorgray" />
 
     <android.support.design.widget.TabLayout

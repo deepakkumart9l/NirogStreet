@@ -7,6 +7,9 @@
 
     <item
         android:id="@+id/groupstimeline"
-        android:title="Share on Group"
+        android:title="Share in Community"
         />
+    <item
+        android:id="@+id/share_exteraly"
+        android:title="Share Externally"/>
 </menu>

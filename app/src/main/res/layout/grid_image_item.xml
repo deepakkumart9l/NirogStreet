@@ -13,16 +13,21 @@
  -->
     <android.support.percent.PercentFrameLayout
         android:id="@+id/toplayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="80dp"
+        android:layout_height="80dp">
 
         <ImageView
             android:id="@+id/gallaryimages"
-            android:cropToPadding="true"
-            android:scaleType="centerCrop"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="100%"
-            tools:background="#efdbed" />
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/white"
+            android:scaleType="fitXY"></ImageView>
+        <!-- <ImageView
+             android:cropToPadding="true"
+             android:scaleType="centerCrop"
+             app:layout_aspectRatio="100%"
+             app:layout_widthPercent="100%"
+             tools:background="#efdbed" />-->
 
         <ImageView
             android:id="@+id/cancel"

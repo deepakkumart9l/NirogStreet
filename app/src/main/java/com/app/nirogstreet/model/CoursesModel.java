@@ -12,13 +12,23 @@ public class CoursesModel {
     public void setBanner(String banner) {
         this.banner = banner;
     }
+String time_duration;
 
-    public CoursesModel(String id, String parent_id, String name, String description, String created_by, String created_at, String updated_by, String updated_at, String status, String type, String doc_type, Author_detail_Module author_detail_module,String banner) {
+    public String getTime_duration() {
+        return time_duration;
+    }
+
+    public void setTime_duration(String time_duration) {
+        this.time_duration = time_duration;
+    }
+
+    public CoursesModel(String id, String parent_id, String name, String description, String created_by, String created_at, String updated_by, String updated_at, String status, String type, String doc_type, Author_detail_Module author_detail_module, String banner,String time_duration) {
         this.id = id;
         this.parent_id = parent_id;
         this.name = name;
         this.banner=banner;
         this.description = description;
+        this.time_duration=time_duration;
         this.created_by = created_by;
         this.created_at = created_at;
         this.updated_by = updated_by;

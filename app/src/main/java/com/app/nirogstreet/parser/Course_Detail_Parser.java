@@ -138,8 +138,8 @@ public class Course_Detail_Parser {
                                 if (moduleJsonObject.has("banner") && !moduleJsonObject.isNull("banner")) {
                                     modulebanner = moduleJsonObject.getString("banner");
                                 }
-                                if (moduleJsonObject.has("topics") && !moduleJsonObject.isNull("topics")) {
-                                    JSONArray topicJsonArray = moduleJsonObject.getJSONArray("topics");
+                                if (moduleJsonObject.has("moduleData") && !moduleJsonObject.isNull("moduleData")) {
+                                    JSONArray topicJsonArray = moduleJsonObject.getJSONArray("moduleData");
                                     for (int k = 0; k < topicJsonArray.length(); k++) {
                                         int topicuser_completed = -1;
                                         String topicParent_id = null, topic_name = null, topic_description = null, topic_banner = null, topic_created_by = null, topic_created_at = null, topic_updated_by = null, topic_updated_at = null, topic_status = null, topic_doc_type = null, topic_type = null;
@@ -187,8 +187,8 @@ public class Course_Detail_Parser {
                                             topic_doc_type = topicJsonObject.getString("doc_type");
                                         }
                                         ArrayList<File_Under_Topic> file_under_topics = new ArrayList<>();
-                                        if (topicJsonObject.has("files") && !topicJsonObject.isNull("files")) {
-                                            JSONArray filesJsonArray = topicJsonObject.getJSONArray("files");
+                                        if (topicJsonObject.has("moduleData") && !topicJsonObject.isNull("moduleData")) {
+                                            JSONArray filesJsonArray = topicJsonObject.getJSONArray("moduleData");
                                             for (int l = 0; l < filesJsonArray.length(); l++) {
                                                 String file_id = null, file_parent_id = null, file_name = null, file_description = null, file_banner = null, file_kc_file = null, filecreated_by = null, filecreated_at = null, fileupdated_by = null, fileupdated_at = null, filestatus = null, filetype = null, filedoc_type = null;
                                                 int fileuser_completed=-1;

@@ -2,14 +2,18 @@ package com.app.nirogstreet.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -22,6 +26,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +57,7 @@ import com.app.nirogstreet.activites.OpenDocument;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
+import com.app.nirogstreet.activites.PublicShare;
 import com.app.nirogstreet.activites.ShareOnFriendsTimeline;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
 import com.app.nirogstreet.activites.YoutubeVideo_Play;
@@ -97,6 +103,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     int positionat;
     SpannableString span2, str3;
+    String text, videourl, title;
+
 
     FrameLayout customViewContainer;
     private WebChromeClient.CustomViewCallback customViewCallback;
@@ -127,7 +135,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     CircularProgressBar circularProgressBar;
     String groupId = "";
     private SpannableStringBuilder builder;
-    SpannableString str2;
+    SpannableString str2,str4;
 
     public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar) {
         this.context = context;
@@ -550,6 +558,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
 
                             viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
+
                             viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -596,8 +605,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent intent=new Intent(context,OpenDocument.class);
-                                            intent.putExtra("url",feedModel.getFeed_source());
+                                            Intent intent = new Intent(context, OpenDocument.class);
+                                            intent.putExtra("url", feedModel.getFeed_source());
                                             context.startActivity(intent);
                                         }
                                     });
@@ -630,11 +639,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
                         viewHolder.statusTextView.setText(feedModel.getMessage());
+                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
 
                         if (feedModel.getMessage().length() > 170)
                             makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true, context, feedModel, position);
                         else {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
+
                         }
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
@@ -646,6 +657,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         else
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
 
+                    } else {
+                        viewHolder.likesTextView.setText("0 Likes");
+
                     }
                     if (feedModel.getTotal_comments() != null) {
                         if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
@@ -653,6 +667,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comment");
                         else
                             viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comments");
+
+                    } else {
+                        viewHolder.commntsTextView.setText("0 Comments");
 
                     }
                     final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
@@ -811,6 +828,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     });
                     viewHolder.sectionTv.setVisibility(View.VISIBLE);
 
+
                     if (userDetailModel != null && userDetailModel.getName() != null) {
                         String name = "Dr. " + userDetailModel.getName();
                         builder = new SpannableStringBuilder();
@@ -837,9 +855,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
                                     String thirdspan = str2.toString();
@@ -847,10 +865,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                     viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
                                 }
                                 if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
-                                    str2 = new SpannableString(" shared an post ");
+                                    str2 = new SpannableString(" shared a post ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
                                     ClickableSpan clickSpan1 = new ClickableSpan() {
@@ -863,9 +880,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                          /*  Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
 
@@ -891,9 +908,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
                                     String thirdspan = str2.toString();
@@ -918,9 +935,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                             @Override
                                             public void onClick(View textView) {
-                                                Intent intent = new Intent(context, CommunitiesDetails.class);
+                                               /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                                 intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                                context.startActivity(intent);
+                                                context.startActivity(intent);*/
                                             }
                                         };
                                         String thirdspan = str2.toString();
@@ -947,9 +964,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
 
@@ -963,15 +980,19 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         } else {
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                                str3 = new SpannableString(" posted in a " + " " + feedModel.getCommunity_name());
+                                str3 = new SpannableString(" posted in " );
                                 str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
                                 builder.append(str3);
+
+                                str4 = new SpannableString(feedModel.getCommunity_name());
+                                str4.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str4.length(), 0);
+                                builder.append(str4);
 
                                 ClickableSpan clickSpan1 = new ClickableSpan() {
                                     @Override
                                     public void updateDrawState(TextPaint ds) {
-                                        ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
                                         ds.setUnderlineText(false);// this remove the underline
                                     }
 
@@ -983,9 +1004,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     }
                                 };
 
-                                String thirdspan = str3.toString();
+                                String thirdspan = str4.toString();
                                 int third = builder.toString().indexOf(thirdspan);
-                                builder.setSpan(clickSpan1, third, third + str3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                builder.setSpan(clickSpan1, third, third + str4.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -1012,7 +1033,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
                     TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.sectionTv, context);
                     if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
                         if (feedModel.getActivity_detail() != null) {
@@ -1043,16 +1063,37 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     }
+    public void setDialog(final FeedModel feedModel) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                    deletepostAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
+                    //feedId
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
+        AlertDialog dialog = builder.create();
+    }
 
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-                //  int index = info.position;
-                //  System.out.print(index);
+            ;
                 switch (item.getItemId()) {
                     case R.id.edit:
 
@@ -1063,13 +1104,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         context.startActivity(intent);
                         break;
                     case R.id.del:
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
-                            deletepostAsyncTask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
-                            //feedId
-                        }
+                        setDialog(feedModel);
                         break;
                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
@@ -1433,14 +1468,17 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 //  System.out.print(index);
                 switch (item.getItemId()) {
                     case R.id.publicshare:
+                        Intent intent = new Intent(context, PublicShare.class);
+                        intent.putExtra("feedId",feedModel.getFeed_id());
+                        intent.putExtra("userId",userId);
+                        context.startActivity(intent);
 
-
-                        if (NetworkUtill.isNetworkAvailable(context)) {
+                        /*if (NetworkUtill.isNetworkAvailable(context)) {
                             SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
                             sharePublicAsyncTask.execute();
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
-                        }
+                        }*/
                         break;
                     case R.id.groupstimeline:
                         Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
@@ -1450,6 +1488,45 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         intent1.putExtra("shareOnGroup", true);
                         context.startActivity(intent1);
                         break;
+                    case R.id.share_exteraly:
+                        try {
+                            if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                text = feedModel.getMessage();
+                            }
+       /* if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
+            if (feedModel.getFeedSourceArrayList().get(0) != null && feedModel.getFeedSourceArrayList().get(0).length() > 0) {
+                shareText = feedModel.getFeedSourceArrayList().get(0);
+            }
+        }*/
+                            if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
+                                title = feedModel.getTitleQuestion();
+                            }
+                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+
+                                videourl = feedModel.getFeed_source();
+                            }
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.setType("text/plain");
+                            if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0) {
+                                if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
+                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
+                                } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
+                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text);
+                                } else if (title != null && title.length() > 0) {
+                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
+                                } else if (text != null && text.length() > 0) {
+                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+                                }
+                                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
+                                context.startActivity(Intent.createChooser(shareIntent,
+                                        context.getResources().getString(R.string.share_with)));
+                            }
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            e.printStackTrace();
+                        }
+                        break;
+
                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
 

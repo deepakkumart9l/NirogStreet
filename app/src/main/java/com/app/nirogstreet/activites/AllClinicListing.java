@@ -76,13 +76,10 @@ public class AllClinicListing extends  Activity {
                 startActivity(intent);
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, AllClinicListing.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
         titileText.setText("Clinics ");
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, AllClinicListing.this);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, AllClinicListing.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +140,7 @@ public class AllClinicListing extends  Activity {
             TypeFaceMethods.setRegularTypeFaceForTextView(holder.consultaionFees, context);
             holder.clinic_Name.setText(allClinicModel.getName());
             holder.address.setText(allClinicModel.getAddress());
-            holder.fees.setText("Rs. "+allClinicModel.getConsultation_fee());
+            holder.fees.setText(allClinicModel.getConsultation_fee());
             holder.services_txt.setText(getSelectedNameCsv(allClinicModel));
             /*holder.clgNameTv.setText(allClinicModel.get());
             holder.degreeNameTv.setText(experinceModel.getAddress());

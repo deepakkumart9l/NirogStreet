@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -74,6 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
     private int CONTACT_PERMISSION_CODE = 1;
     String email = null;
     boolean clickEnamble=true;
+    ImageButton img_lock;
+
     String fname = null, lname = null;
     EditText firstNameEt, phoneEt, emailEt, setPass;
     String phoneNumber = null;
@@ -178,7 +181,27 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.new_register);
+        img_lock = (ImageButton) findViewById(R.id.img_lock);
 
+        img_lock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText paswword = (EditText) findViewById(R.id.passEt);
+                if (passwordNotVisible == 1) {
+                    img_lock.setBackgroundResource(R.drawable.unlock);
+                    paswword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    passwordNotVisible = 0;
+                } else {
+                    img_lock.setBackgroundResource(R.drawable.lock);
+                    paswword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    passwordNotVisible = 1;
+                }
+
+
+                paswword.setSelection(paswword.length());
+
+            }
+        });
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         registerHeader = (TextView) findViewById(R.id.title_side);
@@ -188,7 +211,7 @@ public class RegisterActivity extends AppCompatActivity {
         phoneEt = (EditText) findViewById(R.id.phoneEt);
         emailEt = (EditText) findViewById(R.id.emailEt);
         setPass = (EditText) findViewById(R.id.passEt);
-        setPass.setOnClickListener(new View.OnClickListener() {
+      /*  setPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText paswword = (EditText) findViewById(R.id.passEt);
@@ -205,7 +228,7 @@ public class RegisterActivity extends AppCompatActivity {
                 paswword.setSelection(paswword.length());
 
             }
-        });
+        });*/
         if (email != null) {
             emailEt.setText(email);
         }

@@ -36,7 +36,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-        <activity android:name=".activites.Splash">
+        <activity android:name=".onboard.OnBoardingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,6 +45,11 @@
         </activity>
         <activity android:name=".activites.OpenDocument"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activites.Splash"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activites.PublicShare"
+            android:screenOrientation="portrait"/>
+
 
         <activity android:name=".activites.LoadHtmlPageActivity"
             android:screenOrientation="portrait"/>
@@ -104,7 +109,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.VideoPlay_Activity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activites.Multi_Select_Search"
             android:screenOrientation="portrait" />
@@ -153,12 +158,17 @@
         <activity
             android:name=".activites.RegistrationAndDocuments"
             android:screenOrientation="portrait" />
+        <activity android:name=".activites.SelectCouncilName"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.AddOrEditExperience"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Experience"
             android:screenOrientation="portrait" />
+        <activity android:name=".activites.SelectSingleCity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activites.AddOrEditMemberShip"
             android:screenOrientation="portrait" />

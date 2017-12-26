@@ -39,7 +39,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/back"
                 android:src="@drawable/default_"
-                android:visibility="gone"
+
                 mk:border_color="@color/textcolorgray"
                 mk:border_width="1dp" />
 
@@ -64,13 +64,14 @@
 
             <TextView
                 android:id="@+id/textTab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="left|center_vertical"
                 android:layout_marginLeft="80dp"
                 android:layout_marginRight="35dp"
-                android:layout_marginTop="8dp"
                 android:maxLines="2"
+                android:ellipsize="end"
+                android:gravity="center|left"
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="16dp"

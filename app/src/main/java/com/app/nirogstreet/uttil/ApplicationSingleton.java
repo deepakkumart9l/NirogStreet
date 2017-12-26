@@ -15,7 +15,25 @@ public class ApplicationSingleton extends Application {
         return isGroupUpdated;
     }
 public static Course_Detail_model course_detail_model;
+public static boolean isJoinedCommunity=false;
 
+    public static boolean isJoinedCommunity() {
+        return isJoinedCommunity;
+    }
+
+    public static void setIsJoinedCommunity(boolean isJoinedCommunity) {
+        ApplicationSingleton.isJoinedCommunity = isJoinedCommunity;
+    }
+
+    public static boolean isEnrolledNow() {
+        return enrolledNow;
+    }
+
+    public static void setEnrolledNow(boolean enrolledNow) {
+        ApplicationSingleton.enrolledNow = enrolledNow;
+    }
+
+    public static boolean enrolledNow=false;
     public static boolean isPostDeleted() {
         return isPostDeleted;
     }

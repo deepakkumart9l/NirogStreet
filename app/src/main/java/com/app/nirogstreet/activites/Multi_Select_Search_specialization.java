@@ -122,9 +122,7 @@ public class Multi_Select_Search_specialization extends Activity
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Multi_Select_Search_specialization.this);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
         ChipCloudConfig deleteableConfig = new ChipCloudConfig()
                 .selectMode(ChipCloud.SelectMode.multi)
                 .checkedChipColor(Color.parseColor("#ddaa00"))
@@ -132,7 +130,6 @@ public class Multi_Select_Search_specialization extends Activity
                 .uncheckedChipColor(Color.parseColor("#e0e0e0"))
                 .showClose(Color.parseColor("#a6a6a6"))
                 .useInsetPadding(true)
-                .typeface(tf)
                 .uncheckedTextColor(Color.parseColor("#000000"));
 
         horizontalScroll = (LinearLayout) findViewById(R.id.horizontal_layout);
@@ -162,10 +159,7 @@ public class Multi_Select_Search_specialization extends Activity
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        TypeFaceMethods.setRegularTypeFaceEditText(searchET, Multi_Select_Search_specialization.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, Multi_Select_Search_specialization.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, Multi_Select_Search_specialization.this);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

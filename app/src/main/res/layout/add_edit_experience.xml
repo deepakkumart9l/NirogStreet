@@ -59,11 +59,25 @@
     </RelativeLayout>
 
 
+
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/circularProgressBar"
+        app:cpb_colors="@array/gplus_colors"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+        android:visibility="gone" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/header"
-        android:layout_marginBottom="50dp">
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp">
 
 
         <LinearLayout
@@ -71,6 +85,43 @@
             android:orientation="vertical"
             android:layout_margin="20dp"
             android:layout_height="match_parent">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/hospital_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleTint="#000">
+                <EditText
+                    android:id="@+id/hospital"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Hospital or Clinic"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/year_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleTint="#000">
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="City"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+            </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/clg_lay"
                 android:layout_width="match_parent"
@@ -134,43 +185,7 @@
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/year_lay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
-                <EditText
-                    android:id="@+id/city"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="City"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/hospital_lay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
-                <EditText
-                    android:id="@+id/hospital"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Hospital or Clinic"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -186,9 +201,8 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
     <LinearLayout
-        android:id="@+id/sendOtp"
+        android:id="@+id/saveTv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -199,8 +213,7 @@
 
 
         <TextView
-            android:id="@+id/saveTv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
@@ -209,17 +222,5 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#fff" />
     </LinearLayout>
-
-    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
-        android:id="@+id/circularProgressBar"
-        app:cpb_colors="@array/gplus_colors"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/cir"
-        android:padding="8dp"
-        android:visibility="gone" />
 
 </RelativeLayout>

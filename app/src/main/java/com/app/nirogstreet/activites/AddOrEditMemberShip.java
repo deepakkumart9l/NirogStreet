@@ -357,6 +357,10 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("membership") && !dataJsonObject.isNull("membership")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
@@ -475,6 +479,10 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("membership") && !dataJsonObject.isNull("membership")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 

@@ -40,7 +40,8 @@ public class UserDetailModel implements Serializable {
         this.servicesModels = servicesModels;
     }
 
-    private ArrayList<SpecializationModel> servicesModels=new ArrayList<>();
+    private ArrayList<SpecializationModel> servicesModels = new ArrayList<>();
+
     public void setSpecializationModels(ArrayList<SpecializationModel> specializationModels) {
         this.specializationModels = specializationModels;
     }
@@ -206,16 +207,27 @@ public class UserDetailModel implements Serializable {
     ArrayList<ClinicDetailModel> clinicDetailModels = new ArrayList<>();
     String about;
     String title;
-public UserDetailModel()
-{
 
-}
-    public UserDetailModel(String userId,String name, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels,ArrayList<SpecializationModel> servicesModels)
-    {
+    public int getProfile_complete() {
+        return profile_complete;
+    }
+
+    public void setProfile_complete(int profile_complete) {
+        this.profile_complete = profile_complete;
+    }
+
+    int profile_complete;
+
+    public UserDetailModel() {
+
+    }
+
+    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels) {
         this.name = name;
-        this.userId=userId;
+        this.userId = userId;
+        this.profile_complete = profile_complete;
         this.specializationModels = specializationModels;
-        this.servicesModels=servicesModels;
+        this.servicesModels = servicesModels;
         this.memberShipModels = memberShipModels;
         this.clinicDetailModels = clinicDetailModels;
         this.registrationAndDocumenModels = registrationAndDocumenModels;

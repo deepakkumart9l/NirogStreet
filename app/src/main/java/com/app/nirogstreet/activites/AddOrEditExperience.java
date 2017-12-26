@@ -22,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,7 +83,8 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
     boolean isFromDate = false;
     ImageView deleteImageView;
     EditText fromEt, toEt, cityEt, clinicOrhospital;
-    TextView title_side_left, saveTv;
+    TextView title_side_left;
+    LinearLayout saveTv;
     AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask;
     DeleteQualificationAsynctask deleteQualificationAsynctask;
     CircularProgressBar circularProgressBar;
@@ -131,7 +133,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
         toEt = (EditText) findViewById(R.id.to);
         cityEt = (EditText) findViewById(R.id.city);
         clinicOrhospital = (EditText) findViewById(R.id.hospital);
-        saveTv = (TextView) findViewById(R.id.saveTv);
+        saveTv = (LinearLayout) findViewById(R.id.saveTv);
         fromEt.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -153,19 +155,18 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                 return false;
             }
         });
-        TypeFaceMethods.setRegularTypeFaceEditText(fromEt, AddOrEditExperience.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(toEt, AddOrEditExperience.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(cityEt, AddOrEditExperience.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(clinicOrhospital, AddOrEditExperience.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, AddOrEditExperience.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, AddOrEditExperience.this);
         if (getIntent().hasExtra("pos")) {
             position = getIntent().getIntExtra("pos", -1);
 
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0 && position != -1)
 
         {
@@ -176,6 +177,11 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             fromEt.setText(experinceModel.getStart_time());
             toEt.setText(experinceModel.getEnd_time());
             cityEt.setText(experinceModel.getAddress());
+            if (experinceModel.getEnd_time() == null) {
+                checkBox.setChecked(true);
+                toEt.setVisibility(View.GONE);
+            }
+
             saveTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -217,12 +223,6 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                 }
             });
         }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void show() {
@@ -473,6 +473,10 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("experiences") && !dataJsonObject.isNull("experiences")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
@@ -614,6 +618,10 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 

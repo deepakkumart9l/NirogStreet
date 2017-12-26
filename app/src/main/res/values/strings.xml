@@ -1,9 +1,18 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-<string name="app_name">NirogStreet</string>
+    <string name="app_name">NirogStreet</string>
     <string name="no_internet">No internet</string>
+    <string name="ob_get_started">GET STARTED</string>
+    <string name="ob_header1">Welcome to NirogStreet</string>
+    <string name="ob_header2">Knowledge Centre</string>
+    <string name="ob_header3">Community Engagement</string>
+    <string name="ob_header4">Connect and Share</string>
 
-        <!-- Label for button to confirm chosen date or time [CHAR LIMIT=30] -->
-        <string name="mdtp_done_label">Done</string>
+    <string name="ob_des1">India’s largest Ayurveda ecosystem for qualified and registered practitioners!</string>
+    <string name="ob_des2">Get the recognition you deserve by sharing interesting case studies.</string>
+    <string name="ob_des3">Interact and engage with like-minded practitioners through specialised communities.</string>
+    <string name="ob_des4">Stay updated on the latest trends in Ayurveda and learn from the best.</string>
+    <!-- Label for button to confirm chosen date or time [CHAR LIMIT=30] -->
+    <string name="mdtp_done_label">Done</string>
     <string name="seletct_title">Please select Title</string>
     <string name="select_gender">Please select Gender</string>
     <string name="select_category">Please select Category</string>
@@ -39,50 +48,50 @@
     <string name="Award_name">Enter Award name</string>
     <string name="membership">Enter your Membership details</string>
     <string name="HospitalorClinic">Select Hospital or Clinic.</string>
-        <string name="mdtp_ok">@android:string/ok</string>
-        <string name="mdtp_cancel">@android:string/cancel</string>
-        <!--
-             Content description for the hour selector in the time picker, which displays
-             selectable hours of the day along the inside edge of a circle, as in an analog clock.
-             [CHAR LIMIT=50]
-        -->
-        <string name="mdtp_hour_picker_description">Hours circular slider</string>
-        <!--
-             Content description for the minute selector in the time picker, which displays
-             selectable five-minute intervals along the inside edge of a circle, as in an analog clock.
-             [CHAR LIMIT=50]
-        -->
-        <string name="mdtp_minute_picker_description">Minutes circular slider</string>
-        <!-- Accessibility announcement for hour circular picker [CHAR LIMIT=NONE] -->
-        <string name="mdtp_select_hours">Select hours</string>
-        <!-- Accessibility announcement for minute circular picker [CHAR LIMIT=NONE] -->
-        <string name="mdtp_select_minutes">Select minutes</string>
+    <string name="mdtp_ok">@android:string/ok</string>
+    <string name="mdtp_cancel">@android:string/cancel</string>
+    <!--
+         Content description for the hour selector in the time picker, which displays
+         selectable hours of the day along the inside edge of a circle, as in an analog clock.
+         [CHAR LIMIT=50]
+    -->
+    <string name="mdtp_hour_picker_description">Hours circular slider</string>
+    <!--
+         Content description for the minute selector in the time picker, which displays
+         selectable five-minute intervals along the inside edge of a circle, as in an analog clock.
+         [CHAR LIMIT=50]
+    -->
+    <string name="mdtp_minute_picker_description">Minutes circular slider</string>
+    <!-- Accessibility announcement for hour circular picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_hours">Select hours</string>
+    <!-- Accessibility announcement for minute circular picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_minutes">Select minutes</string>
 
-        <!--
-            Content description for the month and day selector in the date picker, which displays
-            a selectable grid of days laid out by month.
-            [CHAR LIMIT=50]
-         -->
-        <string name="mdtp_day_picker_description">Month grid of days</string>
-        <!--
-            Content description for the year selector in the date picker, which displays
-            a scrolling, vertical list of years.
-            [CHAR LIMIT=50]
-         -->
-        <string name="mdtp_year_picker_description">Year list</string>
-        <!-- Accessibility announcement for the day picker [CHAR LIMIT=NONE] -->
-        <string name="mdtp_select_day">Select month and day</string>
-        <!-- Accessibility announcement for the year picker [CHAR LIMIT=NONE] -->
-        <string name="mdtp_select_year">Select year</string>
-        <!-- Accessibility description for the item that is currently selected. -->
-        <string name="mdtp_item_is_selected"><xliff:g id="item" example="2013">%1$s</xliff:g> selected</string>
-        <!-- Accessibility announcement when a number that had been typed in is deleted [CHAR_LIMIT=NONE] -->
-        <string name="mdtp_deleted_key"><xliff:g id="key" example="4">%1$s</xliff:g> deleted</string>
+    <!--
+        Content description for the month and day selector in the date picker, which displays
+        a selectable grid of days laid out by month.
+        [CHAR LIMIT=50]
+     -->
+    <string name="mdtp_day_picker_description">Month grid of days</string>
+    <!--
+        Content description for the year selector in the date picker, which displays
+        a scrolling, vertical list of years.
+        [CHAR LIMIT=50]
+     -->
+    <string name="mdtp_year_picker_description">Year list</string>
+    <!-- Accessibility announcement for the day picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_day">Select month and day</string>
+    <!-- Accessibility announcement for the year picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_year">Select year</string>
+    <!-- Accessibility description for the item that is currently selected. -->
+    <string name="mdtp_item_is_selected"><xliff:g example="2013" id="item">%1$s</xliff:g> selected</string>
+    <!-- Accessibility announcement when a number that had been typed in is deleted [CHAR_LIMIT=NONE] -->
+    <string name="mdtp_deleted_key"><xliff:g example="4" id="key">%1$s</xliff:g> deleted</string>
 
-        <!-- DO NOT TRANSLATE -->
-        <string name="mdtp_time_placeholder" translatable="false">--</string>
-        <!-- DO NOT TRANSLATE -->
-        <string name="mdtp_time_separator" translatable="false">:</string>
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_time_placeholder" translatable="false">--</string>
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_time_separator" translatable="false">:</string>
     <string name="error_null_cursor">Oops, something went wrong!</string>
     <string name="permission_info">App requires permission to Storage to view images.</string>
     <string name="permission_force">App requires permission to Storage to view images. Tap Settings and go to Permissions to grant permission.</string>
@@ -91,14 +100,15 @@
     <string name="permission_package">package</string>
 
     <!-- DO NOT TRANSLATE -->
-        <string name="mdtp_radial_numbers_typeface" translatable="false">sans-serif</string>
-        <!-- DO NOT TRANSLATE -->
-        <string name="mdtp_sans_serif" translatable="false">sans-serif</string>
+    <string name="mdtp_radial_numbers_typeface" translatable="false">sans-serif</string>
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_sans_serif" translatable="false">sans-serif</string>
 
-        <!-- DO NOT TRANSLATE -->
-        <string name="mdtp_day_of_week_label_typeface" translatable="false">sans-serif</string>
-        <string name="mdtp_from">FROM</string>
-        <string name="mdtp_to">TO</string>
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_day_of_week_label_typeface" translatable="false">sans-serif</string>
+    <string name="mdtp_from">FROM</string>
+    <string name="mdtp_to">TO</string>
     <string name="post" />
     <string name="wrong">Something went wrong</string>
+    <string name="share_with">Share with</string>
 </resources>

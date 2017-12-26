@@ -113,9 +113,20 @@ public class NotificationModel {public String getEventId() {
     int unread;
     String id;
 
-    public NotificationModel(String profile_pic, String message, String link_url, String name, String slug, String time, String postId, String groupId, String eventId, String fourumId, String id, int unread) {
+    public String getAppointment_id() {
+        return appointment_id;
+    }
+
+    public void setAppointment_id(String appointment_id) {
+        this.appointment_id = appointment_id;
+    }
+
+    String appointment_id;
+
+    public NotificationModel(String profile_pic, String message, String link_url, String name, String slug, String time, String postId, String groupId, String eventId, String fourumId, String id, int unread,String appointment_id) {
         this.profile_pic = profile_pic;
         this.message = message;
+        this.appointment_id=appointment_id;
         this.time = time;
         this.postId = postId;
         this.groupId = groupId;

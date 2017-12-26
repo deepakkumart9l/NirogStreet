@@ -370,4 +370,12 @@ public class TimeLineFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(userFeedsAsyncTask!=null&&!userFeedsAsyncTask.isCancelled())
+        {
+            userFeedsAsyncTask.cancelAsyncTask();
+        }
+    }
 }

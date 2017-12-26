@@ -169,8 +169,28 @@ public class AppointmentModel {
     String fee;
     String total;
 
-    public AppointmentModel(Patient_detail patient_detail, String appointment_id, String id, String doctor_id, String clinic_detail, String coupon_id, String date, String time, String status, String createdOn, String updatedOn, String appointment_with, String otp_verification, String is_verified, String reschedule_appointment_id, String discount, String fee, String total) {
+    public String getPayment_method() {
+        return payment_method;
+    }
+
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
+    }
+
+    String payment_method;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    String title;
+    public AppointmentModel(Patient_detail patient_detail, String appointment_id, String id, String doctor_id, String clinic_detail, String coupon_id, String date, String time, String status, String createdOn, String updatedOn, String appointment_with, String otp_verification, String is_verified, String reschedule_appointment_id, String discount, String fee, String total,String payment_method,String title) {
         this.patient_detail = patient_detail;
+        this.title=title;
         this.appointment_id = appointment_id;
         this.id = id;
         this.doctor_id = doctor_id;
@@ -188,6 +208,7 @@ public class AppointmentModel {
         this.discount = discount;
         this.fee = fee;
         this.total = total;
+        this.payment_method=payment_method;
     }
 
 

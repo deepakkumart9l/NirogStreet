@@ -328,6 +328,10 @@ public class SpecilizationAndService extends Activity {
                                     ArrayList<SpecializationModel> specializationModels = SpecialitiesParser.specilities(dataJsonObject);
                                     userDetailModel.setSpecializationModels(specializationModels);
                                 }
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
                                 ApplicationSingleton.setServicesAndSpecializationUpdated(true);
                                 if(isSkip)

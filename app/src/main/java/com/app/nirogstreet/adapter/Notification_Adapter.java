@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.model.NotificationModel;
@@ -85,7 +86,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         MyViewHolder genericViewHolder = (MyViewHolder) holder;
         final NotificationModel item = notificationModels.get(position);
         try {
-            genericViewHolder.name.setText(Html.fromHtml("<b>" + item.getName() + "</b>" + " " + item.getMessage()));
+            genericViewHolder.name.setText(Html.fromHtml("<b>" + "Dr. " + item.getName() + "</b>" + " " + item.getMessage()));
             TypeFaceMethods.setRegularTypeFaceForTextView(genericViewHolder.name, context);
             genericViewHolder.time.setText(item.getTime());
             TypeFaceMethods.setRegularTypeFaceForTextView(genericViewHolder.time, context);
@@ -134,7 +135,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
 
                     } else {
 
-                         openNotification(notificationModel);
+                        openNotification(notificationModel);
                     }
                 }
             });
@@ -249,7 +250,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private void openNotification(NotificationModel notificationModel) {
-     if (notificationModel.getGroupId() != null && !notificationModel.getGroupId().equals("")) {
+        if (notificationModel.getGroupId() != null && !notificationModel.getGroupId().equals("")) {
             Intent intent = new Intent(context, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
             intent.putExtra("groupId", notificationModel.getGroupId());
@@ -257,6 +258,10 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         } else if (notificationModel.getPostId() != null && !notificationModel.getPostId().equals("")) {
             Intent intent = new Intent(context, PostDetailActivity.class);
             intent.putExtra("feedId", notificationModel.getPostId());
+            context.startActivity(intent);
+        }else if(notificationModel.getAppointment_id()!=null&&!notificationModel.getAppointment_id().equalsIgnoreCase(""))
+        {
+            Intent intent = new Intent(context, AppointmentActivity.class);
             context.startActivity(intent);
         }
     }

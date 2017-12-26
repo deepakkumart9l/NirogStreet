@@ -148,9 +148,16 @@ public class MoreFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(userDetailAsyncTask!=null&&!userDetailAsyncTask.isCancelled())
+        try {
+            if (userDetailAsyncTask != null && !userDetailAsyncTask.isCancelled()) {
+                userDetailAsyncTask.cancelAsyncTask();
+            }
+            if (userDetailAsyncTask != null && !userFeedsAsyncTask.isCancelled()) {
+                userFeedsAsyncTask.cancelAsyncTask();
+            }
+        }catch (Exception e)
         {
-            userDetailAsyncTask.cancelAsyncTask();
+            e.printStackTrace();
         }
     }
 
@@ -193,7 +200,7 @@ public class MoreFragment extends Fragment {
                     NetworkUtill.showNoInternetDialog(context);
                 }
                 if (totalFeeds.size() > 0) {
-                  //  recyclerView.scrollToPosition(0);
+                    //  recyclerView.scrollToPosition(0);
                 }
             }
 
@@ -310,7 +317,7 @@ public class MoreFragment extends Fragment {
                             } else {
                                 userDetailModel = UserDetailPaser.userDetailParser(dataJsonObject);
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
-                               // updateContactInfo();
+                                // updateContactInfo();
                                 totalFeeds = new ArrayList<>();
                                 feedsAdapter = null;
                                 page = 1;
@@ -338,8 +345,7 @@ public class MoreFragment extends Fragment {
     private void updateContactInfo() {
         try {
             feedsAdapter.notifyDataSetChanged();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -432,7 +438,7 @@ public class MoreFragment extends Fragment {
                 if (feedsAdapter == null && totalFeeds.size() > 0) {
                     // appBarLayout.setExpanded(true);
 
-                    feedsAdapter = new MoreAdapter(context, totalFeeds, getActivity(), "", customViewContainer,circularProgressBar);
+                    feedsAdapter = new MoreAdapter(context, totalFeeds, getActivity(), "", customViewContainer, circularProgressBar);
                     recyclerView.setAdapter(feedsAdapter);
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

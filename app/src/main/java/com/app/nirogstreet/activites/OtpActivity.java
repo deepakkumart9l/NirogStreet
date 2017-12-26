@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,7 @@ public class OtpActivity extends AppCompatActivity {
     BroadcastReceiver receiver;
     ImageView backImageView;
     String fname, email, pass, phone, otp = null;
-    TextView loginHeader, resendOtp;
+    TextView loginHeader, resendOtp, timerTextView;
     Button VerifyTv;
     SesstionManager sesstionManager;
     RegistrationAsyncTask registrationAsyncTask;
@@ -71,6 +72,8 @@ public class OtpActivity extends AppCompatActivity {
         setContentView(R.layout.new_otp_activity);
         sesstionManager = new SesstionManager(OtpActivity.this);
         backImageView = (ImageView) findViewById(R.id.back);
+        timerTextView = (TextView) findViewById(R.id.timerTextView);
+
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,13 +126,13 @@ public class OtpActivity extends AppCompatActivity {
         editTextOtpThree = (EditText) findViewById(R.id.otpEtThree);
         editTextOtpFour = (EditText) findViewById(R.id.otpEtFour);
         editPhone = (EditText) findViewById(R.id.editPhone);
-       editPhone.setOnTouchListener(new View.OnTouchListener() {
-           @Override
-           public boolean onTouch(View v, MotionEvent event) {
-               editPhone.setFocusable(true);
-               return false;
-           }
-       });
+        editPhone.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                editPhone.setFocusable(true);
+                return false;
+            }
+        });
         editTextOtpOne.requestFocus();
 
         if (otp != null) {
@@ -233,6 +236,20 @@ public class OtpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(OtpActivity.this)) {
+                    resendOtp.setVisibility(View.GONE);
+                    timerTextView.setVisibility(View.VISIBLE);
+                    new CountDownTimer(15000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+
+                            timerTextView.setText("00:" + millisUntilFinished / 1000 +" sec");
+                        }
+
+                        public void onFinish() {
+                            timerTextView.setVisibility(View.GONE);
+                            resendOtp.setVisibility(View.VISIBLE);
+                        }
+                    }.start();
                     sendOtpAsyncTask = new SendOtpAsyncTask(phone);
                     sendOtpAsyncTask.execute();
 
@@ -435,8 +452,7 @@ public class OtpActivity extends AppCompatActivity {
                                             createdOn = userJsonObject.getString("createdOn");
                                         }
                                         sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
-                                        Intent intent = new Intent(OtpActivity.this, CreateDrProfile.class);
-                                        intent.putExtra("isSkip", true);
+                                        Intent intent = new Intent(OtpActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -449,7 +465,7 @@ public class OtpActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-               // Toast.makeText(OtpActivity.this, R.string.wrong, Toast.LENGTH_LONG).show();
+                // Toast.makeText(OtpActivity.this, R.string.wrong, Toast.LENGTH_LONG).show();
 
             }
 
@@ -479,7 +495,7 @@ public class OtpActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            circularProgressBar.setVisibility(View.VISIBLE);
+            circularProgressBar.setVisibility(View.GONE);
             super.onPreExecute();
         }
 

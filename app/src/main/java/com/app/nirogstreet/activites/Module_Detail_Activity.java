@@ -122,7 +122,9 @@ public class Module_Detail_Activity extends Activity {
             public void onCompletion(MediaPlayer mp) {
                 // not playVideo
                 // playVideo();
-                if (NetworkUtill.isNetworkAvailable(Module_Detail_Activity.this)) {
+                if(course_detail_model.getModulesModels().get(module_pos).getTopic_under_modules().get(topic_pos).getFile_under_topics().get(file_pos).getUser_completed()==0)
+
+                    if (NetworkUtill.isNetworkAvailable(Module_Detail_Activity.this)) {
                     knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask();
                     knwledgeCompleteAsynctask.execute();
                 } else {

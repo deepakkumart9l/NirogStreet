@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -38,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,7 +94,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
- LogoutAsyncTask logoutAsyncTask;
+    LogoutAsyncTask logoutAsyncTask;
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.5f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.5f;
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
@@ -115,8 +117,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
     private FrameLayout framelayoutTitle;
+    RelativeLayout phonelay, emaillay;
     ImageView logout;
     private RelativeLayout linearlayoutTitle;
+    TextView profile_complete_txt;
     private TextView textviewTitle;
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
     CircularProgressBar circularProgressBar;
@@ -131,6 +135,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     UserDetailModel userDetailModel;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
+    SeekBar seekBar;
     private String selectedImagePath = null;
 
     private void handleToolbarTitleVisibility(float percentage) {
@@ -172,7 +177,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             if (!mIsTheTitleContainerVisible) {
                 textviewTitle.setText(nameTv.getText().toString());
                 backimg.setVisibility(View.VISIBLE);
-              logOutHideGone();
+                logOutHideGone();
                 startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
 
                 startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
@@ -180,15 +185,16 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
         }
     }
-private void logOutHideGone()
-{
-    if (!UserId.equalsIgnoreCase("")) {
-        logout.setVisibility(View.GONE);
-    } else {
-        logout.setVisibility(View.VISIBLE);
 
+    private void logOutHideGone() {
+        if (!UserId.equalsIgnoreCase("")) {
+            logout.setVisibility(View.GONE);
+        } else {
+            logout.setVisibility(View.VISIBLE);
+
+        }
     }
-}
+
     public static void startAlphaAnimation(View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
                 ? new AlphaAnimation(0f, 1f)
@@ -210,6 +216,8 @@ private void logOutHideGone()
 
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+        phonelay = (RelativeLayout) findViewById(R.id.phonelay);
+        emaillay = (RelativeLayout) findViewById(R.id.emaillay);
 
         backimg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,6 +288,13 @@ private void logOutHideGone()
                 SpecilizationsevicesEdit.setVisibility(View.GONE);
             }
         }
+        if (!UserId.equalsIgnoreCase("")) {
+            emaillay.setVisibility(View.GONE);
+            phonelay.setVisibility(View.GONE);
+        } else {
+            emaillay.setVisibility(View.VISIBLE);
+            phonelay.setVisibility(View.VISIBLE);
+        }
         qualifictionLinearLayout = (LinearLayout) findViewById(R.id.QualificatonLinearLayout);
         regisrtaionLay = (LinearLayout) findViewById(R.id.regisrtaionLay);
         clinicLay = (LinearLayout) findViewById(R.id.clinicLay);
@@ -304,7 +319,7 @@ private void logOutHideGone()
         consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
         allTaxes = (TextView) findViewById(R.id.allTaxes);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-              sesstionManager = new SesstionManager(Dr_Profile.this);
+        sesstionManager = new SesstionManager(Dr_Profile.this);
 
         if (sesstionManager.isUserLoggedIn() && UserId.equalsIgnoreCase("")) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -341,6 +356,15 @@ private void logOutHideGone()
             @Override
             public void onClick(View v) {
                 setMoreMenu(0);
+            }
+        });
+        profile_complete_txt=(TextView)findViewById(R.id.profile_complete_txt);
+        seekBar=(SeekBar)findViewById(R.id.seekBar_luminosite);
+        seekBar.setClickable(false);
+        seekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
     }
@@ -765,7 +789,7 @@ private void logOutHideGone()
             if (userDetailModel.getSpecializationModels().size() == 0 && userDetailModel.getServicesModels().size() == 0) {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
 
-            }else {
+            } else {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
                 SpecilizationsevicesTextView.setText("Services & Specialization");
 
@@ -795,8 +819,9 @@ private void logOutHideGone()
 
         }
     }
+
     private void setMoreMenu(int i) {
-        PopupMenu popup = new PopupMenu(Dr_Profile.this,logout);
+        PopupMenu popup = new PopupMenu(Dr_Profile.this, logout);
 
         popup.getMenuInflater().inflate(R.menu.logout, popup.getMenu());
 
@@ -805,22 +830,29 @@ private void logOutHideGone()
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.logout:
-                      if(NetworkUtill.isNetworkAvailable(Dr_Profile.this))
-                      {
-                          logoutAsyncTask=new LogoutAsyncTask("");
-                          logoutAsyncTask.execute();
-                      }else {
-                          NetworkUtill.showNoInternetDialog(Dr_Profile.this);
-                      }
+                        if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
+                            logoutAsyncTask = new LogoutAsyncTask("");
+                            logoutAsyncTask.execute();
+                        } else {
+                            NetworkUtill.showNoInternetDialog(Dr_Profile.this);
+                        }
                         break;
-      }    return false;
+                }
+                return false;
             }
         });
-        popup.show();}
+        popup.show();
+    }
 
     private void updateExperience() {
 
         if (userDetailModel != null) {
+            if(userDetailModel.getProfile_complete()!=1)
+            {
+                seekBar.setProgress(userDetailModel.getProfile_complete());
+                profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+            }
+
             if (userDetailModel.getExperinceModels() == null || userDetailModel.getExperinceModels().size() == 0) {
                 ExperienceSectionTv.setText("Add a Experience");
                 ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
@@ -871,6 +903,12 @@ private void logOutHideGone()
     private void updateMemberShip() {
 
         if (userDetailModel != null) {
+            if(userDetailModel.getProfile_complete()!=1)
+            {
+                seekBar.setProgress(userDetailModel.getProfile_complete());
+                profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+            }
+
             if (userDetailModel.getMemberShipModels() == null || userDetailModel.getMemberShipModels().size() == 0) {
                 MemberShipSectionTv.setText("Add a Membership");
                 memberLay.removeAllViews();
@@ -917,6 +955,12 @@ private void logOutHideGone()
     private void updateQualification() {
 
         if (userDetailModel != null) {
+            if(userDetailModel.getProfile_complete()!=1)
+            {
+                seekBar.setProgress(userDetailModel.getProfile_complete());
+                profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+            }
+
             if (userDetailModel.getQualificationModels() == null || userDetailModel.getQualificationModels().size() == 0) {
                 qualifictionLinearLayout.removeAllViews();
 
@@ -965,6 +1009,12 @@ private void logOutHideGone()
     private void updateAwards() {
 
         if (userDetailModel != null) {
+            if(userDetailModel.getProfile_complete()!=1)
+            {
+                seekBar.setProgress(userDetailModel.getProfile_complete());
+                profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+            }
+
             if (userDetailModel.getAwardsModels() == null || userDetailModel.getAwardsModels().size() == 0) {
                 AwardSectionTv.setText("Add a Award");
                 AwardEdit.setImageResource(R.drawable.add);
@@ -1013,6 +1063,11 @@ private void logOutHideGone()
 
     private void updateContactInfo() {
         if (userDetailModel != null) {
+            if(userDetailModel.getProfile_complete()!=1)
+            {
+                seekBar.setProgress(userDetailModel.getProfile_complete());
+                profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+            }
             if (userDetailModel.getExperience() != null && !userDetailModel.getExperience().equalsIgnoreCase("")) {
                 yearOfExperienceTv.setText(userDetailModel.getExperience() + " " + "years experience");
             }
@@ -1055,6 +1110,11 @@ private void logOutHideGone()
     }
 
     private void updateClinicInfo() {
+        if(userDetailModel.getProfile_complete()!=1)
+        {
+            seekBar.setProgress(userDetailModel.getProfile_complete());
+            profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+        }
 
         if (userDetailModel.getClinicDetailModels() == null || userDetailModel.getClinicDetailModels().size() == 0) {
             clinicAddressHeading.setText("Add a Clinic");
@@ -1086,12 +1146,12 @@ private void logOutHideGone()
                     TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                     TextView year = (TextView) v.findViewById(R.id.year_of_passing);
 
-                    if(userDetailModel.getClinicDetailModels().get(i).getPincode()!=null&&!userDetailModel.getClinicDetailModels().get(i).getPincode().equalsIgnoreCase("null")) {
+                    if (userDetailModel.getClinicDetailModels().get(i).getPincode() != null && !userDetailModel.getClinicDetailModels().get(i).getPincode().equalsIgnoreCase("null")) {
                         year.setText("Pin Code :" + userDetailModel.getClinicDetailModels().get(i).getPincode());
                     }
                     degreename.setText(userDetailModel.getClinicDetailModels().get(i).getAddress() + " " + userDetailModel.getClinicDetailModels().get(i).getCity());
                     textView.setText(userDetailModel.getClinicDetailModels().get(i).getName());
-                    feeTv.setText("Rs. "+userDetailModel.getClinicDetailModels().get(i).getConsultation_fee());
+                    feeTv.setText(userDetailModel.getClinicDetailModels().get(i).getConsultation_fee());
                     v.setLayoutParams(params);
 
                     clinicLay.addView(v);
@@ -1099,7 +1159,7 @@ private void logOutHideGone()
                     e.printStackTrace();
                 }
 
-                fee.setText("Rs " + userDetailModel.getClinicDetailModels().get(0).getConsultation_fee());
+                fee.setText(userDetailModel.getClinicDetailModels().get(0).getConsultation_fee());
 
             }
         }
@@ -1162,8 +1222,14 @@ private void logOutHideGone()
 
 
         if (userDetailModel != null) {
+            if(userDetailModel.getProfile_complete()!=1)
+            {
+                seekBar.setProgress(userDetailModel.getProfile_complete());
+                profile_complete_txt.setText(userDetailModel.getProfile_complete()+"%");
+            }
+
             if (userDetailModel.getRegistrationAndDocumenModels() == null || userDetailModel.getRegistrationAndDocumenModels().size() == 0) {
-                RegistrationSectionHeadingTv.setText("Add a registration");
+                RegistrationSectionHeadingTv.setText("Add a Registration");
                 RegistrationSectionEdit.setImageResource(R.drawable.add);
                 regisrtaionLay.removeAllViews();
 
@@ -1242,7 +1308,7 @@ private void logOutHideGone()
                         boolean status = jo.getBoolean("status");
                         if (status) {
                             sesstionManager.logoutUser();
-
+                            sesstionManager.languageLogOut();
                             Intent intent = new Intent(Dr_Profile.this, LoginActivity.class);
                             intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

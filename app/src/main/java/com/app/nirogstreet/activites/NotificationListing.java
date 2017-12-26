@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
@@ -51,16 +52,17 @@ public class NotificationListing extends AppCompatActivity {
     RecyclerView listView;
     CircularProgressBar circularProgressBar;
     TextView searchButtonTextView;
-
     NotificationAsyncTask notificationAsyncTask;
     private ImageView backImageView;
     String userId;
+    LinearLayout no_notifications;
     RecyclerView rv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification_listing);
+        setContentView(R.layout.noti_list);
+        no_notifications=(LinearLayout)findViewById(R.id.no_list);
         searchButtonTextView = (TextView) findViewById(R.id.searchButton);
         searchButtonTextView.setText("Notification");
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -185,6 +187,7 @@ public class NotificationListing extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", forum_id = "";
                                 int unread = 0;
+                                String appointment_id="";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 if (jsonObject1.has("profile_pic") && !jsonObject1.isNull("profile_pic")) {
                                     profile_pic = jsonObject1.getString("profile_pic");
@@ -210,6 +213,9 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("post_id") && !jsonObject1.isNull("post_id")) {
                                     post_id = jsonObject1.getString("post_id");
                                 }
+                                if (jsonObject1.has("appointment_id") && !jsonObject1.isNull("appointment_id")) {
+                                    appointment_id = jsonObject1.getString("appointment_id");
+                                }
                                 if (jsonObject1.has("event_id") && !jsonObject1.isNull("event_id")) {
                                     event_id = jsonObject1.getString("event_id");
                                 }
@@ -223,8 +229,10 @@ public class NotificationListing extends AppCompatActivity {
                                     unread = jsonObject1.getInt("unread");
                                 }
 
-                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread));
+                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread,appointment_id));
                             }
+                        }else {
+                           no_notifications.setVisibility(View.VISIBLE);
                         }
                     }
                 }

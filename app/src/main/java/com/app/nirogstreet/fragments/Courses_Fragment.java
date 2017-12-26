@@ -204,7 +204,6 @@ public class Courses_Fragment extends Fragment {
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
-
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTask.execute();
                 } else {

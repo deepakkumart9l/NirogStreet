@@ -727,6 +727,10 @@ public class Timings extends Activity {
                 if (jo != null) {
                     if (jo.has("data") && !jo.isNull("data")) {
                         JSONObject jsonObject = jo.getJSONObject("data");
+                        if(jsonObject.has("profile_complete")&&!jsonObject.isNull("profile_complete"))
+                        {
+                            ApplicationSingleton.getUserDetailModel().setProfile_complete(jsonObject.getInt("profile_complete"));
+                        }
                         if (jsonObject.has("status") && !jsonObject.isNull("status")) {
                             boolean check = jsonObject.getBoolean("status");
                             if (check) {
@@ -1004,6 +1008,10 @@ public class Timings extends Activity {
                 if (jo != null) {
                     if (jo.has("data") && !jo.isNull("data")) {
                         JSONObject jsonObject = jo.getJSONObject("data");
+                        if(jsonObject.has("profile_complete")&&!jsonObject.isNull("profile_complete"))
+                        {
+                            ApplicationSingleton.getUserDetailModel().setProfile_complete(jsonObject.getInt("profile_complete"));
+                        }
                         if (jsonObject.has("status") && !jsonObject.isNull("status")) {
                             boolean check = jsonObject.getBoolean("status");
                             if (check) {

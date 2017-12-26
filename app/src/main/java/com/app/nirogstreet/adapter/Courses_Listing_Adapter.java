@@ -90,7 +90,7 @@ public class Courses_Listing_Adapter extends
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final CoursesModel coursesModel = coursesModels.get(position);
-        holder.time.setText(coursesModel.getCreated_at());
+        holder.time.setText(coursesModel.getTime_duration());
        // TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.time, context);
         if (coursesModel.getAuthor_detail_module() != null) {
             holder.dr_name_csv.setText("by " + coursesModel.getAuthor_detail_module().getName());

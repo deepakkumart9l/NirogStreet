@@ -87,14 +87,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="right"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/fee"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
+                android:drawablePadding="5dp"
                 android:text=""
+                android:drawableLeft="@drawable/rupee"
+
                 android:textColor="@color/black"
                 android:textSize="16sp" />
         </LinearLayout>

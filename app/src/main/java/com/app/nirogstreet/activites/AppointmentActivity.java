@@ -126,16 +126,17 @@ public class AppointmentActivity extends Activity {
                                     notverified.setVisibility(View.VISIBLE);
                                 }
                             }
-                            if (jsonObject1.has("old") && !jsonObject1.isNull("old")) {
-                                JSONArray jsonArray = jsonObject1.getJSONArray("old");
-                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray);
+
+                            if (jsonObject1.has("new") && !jsonObject1.isNull("new")) {
+                                JSONArray jsonArray = jsonObject1.getJSONArray("new");
+                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray,"Upcoming");
                                 if (appointmentModels != null && appointmentModels.size() > 0) {
                                     appointmentModelsTotal.addAll(appointmentModels);
                                 }
                             }
-                            if (jsonObject1.has("new") && !jsonObject1.isNull("new")) {
-                                JSONArray jsonArray = jsonObject1.getJSONArray("new");
-                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray);
+                            if (jsonObject1.has("old") && !jsonObject1.isNull("old")) {
+                                JSONArray jsonArray = jsonObject1.getJSONArray("old");
+                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray,"Previous");
                                 if (appointmentModels != null && appointmentModels.size() > 0) {
                                     appointmentModelsTotal.addAll(appointmentModels);
                                 }

@@ -77,7 +77,7 @@ public class Group_Listing_Parser {
                                 if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                     slug = userDetail.getString("slug");
                                 }
-                                userDetails = new UserDetailModel(user_id, name, "", "", "", "", profile_pic, "", "", "", "", "", "", null, null, null, null, null, null, null, null);
+                                userDetails = new UserDetailModel(user_id, name,1, "", "", "", "", profile_pic, "", "", "", "", "", "", null, null, null, null, null, null, null, null);
                             }
                             groupModels.add(new GroupModel(id, created, name, description, totalMembers, privacy, banner, userDetails, updated, status, updated_by));
                         }

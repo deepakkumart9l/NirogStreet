@@ -89,6 +89,8 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     CircularProgressBar circularProgressBar;
     private String authToken, userId;
     MaterialSpinner spinnerCouncilType;
+    private static final int RESULT_CODE = 1;
+
     int REQUEST_CODE = 4;
     String type;
     private static final String[] councilType = {"Center", "State"};
@@ -105,6 +107,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     private SesstionManager sesstionManager;
     private DeleteRegistrationAsynctask deleteQualificationAsynctask;
     private ImageView deleteImageView;
+    private boolean isQualificationTouched=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,16 +143,6 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
         clgEt = (EditText) findViewById(R.id.clgEt);
         sepcialization = (EditText) findViewById(R.id.sepcialization);
         saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(uploadDoctv, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(docNameTv, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(degree_name, EditRegistrationAndDocuments.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(clgEt, EditRegistrationAndDocuments.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, EditRegistrationAndDocuments.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, EditRegistrationAndDocuments.this);
         updateDocLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,6 +180,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
         }
         initSpinnerScrollingCategory();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -195,6 +189,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
             openFile();
         }
     }
+
     private void initSpinnerScrollingCategory() {
         spinnerCouncilType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -237,11 +232,36 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
         spinnerCouncilType.setAdapter(adapter);
         spinnerCouncilType.setHint("Select Council Type");
         spinnerCouncilType.setPaddingSafe(0, 0, 0, 0);
+degree_name.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        if (type.equalsIgnoreCase("-1")) {
+            Toast.makeText(EditRegistrationAndDocuments.this, "Select Council Type first.", Toast.LENGTH_LONG).show();
+        } else {
+            if (type.equalsIgnoreCase("1")) {
+                if (!isQualificationTouched) {
+                    isQualificationTouched = true;
+                    Intent intent = new Intent(EditRegistrationAndDocuments.this, SelectCouncilName.class);
+                    intent.putExtra("type","central");
 
+                    startActivityForResult(intent, RESULT_CODE);
+                }
+            } else if(type.equalsIgnoreCase("2")){
+                if (!isQualificationTouched) {
+                    isQualificationTouched = true;
+                    Intent intent = new Intent(EditRegistrationAndDocuments.this, SelectCouncilName.class);
+                    intent.putExtra("type","state");
+                    startActivityForResult(intent, RESULT_CODE);
+                }
+            }
+        }
+    }
+});
     }
 
     @Override
     protected void onResume() {
+        isQualificationTouched=false;
         super.onResume();
         if (userDetailModel != null && userDetailModel.getRegistrationAndDocumenModels() != null && userDetailModel.getRegistrationAndDocumenModels().size() > 0 && position != -1)
 
@@ -275,7 +295,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                     if (NetworkUtill.isNetworkAvailable(EditRegistrationAndDocuments.this)) {
 
 
-                        deleteQualificationAsynctask= new DeleteRegistrationAsynctask( registrationAndDocumenModel.getId());
+                        deleteQualificationAsynctask = new DeleteRegistrationAsynctask(registrationAndDocumenModel.getId());
                         deleteQualificationAsynctask.execute();
 
 
@@ -299,7 +319,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                 }
             });
         } else {
-            title_side_left.setText("Add Registartion & Documentaion");
+            title_side_left.setText("Add Registartion ");
             deleteImageView.setVisibility(View.GONE);
             saveTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -321,18 +341,14 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     public void show() {
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-
-
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         MonthYearPickerDialog newFragment = new MonthYearPickerDialog();
         newFragment.setCancelable(false);
-
         newFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 System.out.print(year);
                 isVisible = true;
-
                 yearEditText.setText(year + "");
             }
         });
@@ -357,10 +373,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
 
     @SuppressLint("ValidFragment")
     public static class TimePickerFragment extends DialogFragment {
-
-
         private DatePickerDialog.OnDateSetListener listener;
-
         public TimePickerFragment(DatePickerDialog.OnDateSetListener listener) {
             this.listener = listener;
         }
@@ -540,6 +553,9 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                                     }
                                 }
                             } else {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("registrations") && !dataJsonObject.isNull("registrations")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
@@ -625,8 +641,17 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
             }
 
         }
+        if (requestCode == RESULT_CODE) {
+            if (data != null) {
+                String s = data.getStringExtra("friendsCsv");
+
+                degree_name.setText(s);
+                System.out.print(s);
+            }
+        }
 
     }
+
     public class DeleteRegistrationAsynctask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String university, year, qualification, id;
@@ -717,6 +742,9 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                                     }
                                 }
                             } else {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("registrations") && !dataJsonObject.isNull("registrations")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
@@ -725,7 +753,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                                     userDetailModel.setRegistrationAndDocumenModels(registrationAndDocumenModels);
                                     ApplicationSingleton.setUserDetailModel(userDetailModel);
                                     ApplicationSingleton.setRegistrationUpdated(true);
-                                }else {
+                                } else {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
                                     ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels = null;

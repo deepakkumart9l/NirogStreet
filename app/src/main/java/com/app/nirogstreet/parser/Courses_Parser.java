@@ -23,6 +23,7 @@ public class Courses_Parser {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         String id = null, parent_id = null, name = null, banner = null, description = null, created_by = null, created_at = null, updated_by = null, updated_at = null, status = null, type = null, doc_type = null;
                         Author_detail_Module author_detail_module = null;
+                        String time_duration=null;
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                         if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
                             id = jsonObject1.getString("id");
@@ -44,6 +45,9 @@ public class Courses_Parser {
                         }
                         if (jsonObject1.has("created_at") && !jsonObject1.isNull("created_at")) {
                             created_at = jsonObject1.getString("created_at");
+                        }
+                        if (jsonObject1.has("time_duration") && !jsonObject1.isNull("time_duration")) {
+                            time_duration = jsonObject1.getString("time_duration");
                         }
                         if (jsonObject1.has("updated_by") && !jsonObject1.isNull("updated_by")) {
                             updated_by = jsonObject1.getString("updated_by");
@@ -108,7 +112,7 @@ public class Courses_Parser {
                             }
                             author_detail_module = new Author_detail_Module(auth_id, auth_name, auth_email, auth_mobile, auth_alternateMobile, auth_gender, auth_experience, auth_profile_pic, auth_category, auth_dob, auth_website);
                         }
-                        coursesModels.add(new CoursesModel(id, parent_id, name, description, created_by, created_at, updated_by, updated_at, status, type, doc_type, author_detail_module, banner));
+                        coursesModels.add(new CoursesModel(id, parent_id, name, description, created_by, created_at, updated_by, updated_at, status, type, doc_type, author_detail_module, banner,time_duration));
                     }
                 }
 

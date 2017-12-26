@@ -17,6 +17,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.model.GroupModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -242,6 +243,7 @@ public class GroupListingAdapter extends
                              /*   groupModels.remove(pos);
                                 notifyItemRemoved(pos);
                                 notifyItemRangeChanged(pos, groupModels.size());*/
+                                ApplicationSingleton.setIsJoinedCommunity(true);
                                 notifyItemChanged(pos, new String("joined"));
 
                             }

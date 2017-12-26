@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
-import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.model.AppointmentModel;
 import com.app.nirogstreet.model.CoursesModel;
 import com.app.nirogstreet.uttil.LetterTileProvider;
@@ -67,6 +66,35 @@ public class AppointmentAdapter extends
         holder.mobile.setText(coursesModel.getPatient_detail().getPhone());
         holder.time.setText(coursesModel.getTime());
         holder.day.setText(coursesModel.getDate());
+        if(coursesModel.getPayment_method().equalsIgnoreCase("0"))
+        {
+            holder.mode.setText("Card");
+        }else if(coursesModel.getPayment_method().equalsIgnoreCase("1"))
+        {
+            holder.mode.setText("Net Banking");
+
+        }else if(coursesModel.getPayment_method().equalsIgnoreCase("2"))
+        {
+            holder.mode.setText("Wallet");
+        }else if(coursesModel.getPayment_method().equalsIgnoreCase("3"))
+        {
+            holder.mode.setText("Upi");
+        }else if(coursesModel.getPayment_method().equalsIgnoreCase("4")){
+            holder.mode.setText("Cash on Consultation");
+
+        }
+        if(coursesModel.getTitle()!=null&&!coursesModel.getTitle().equalsIgnoreCase(""))
+        {
+            holder.title.setVisibility(View.VISIBLE);
+            holder.title_lay.setVisibility(View.VISIBLE);
+            holder.title.setText(coursesModel.getTitle());
+        }
+        else {
+            holder.title.setVisibility(View.GONE);
+            holder.title_lay.setVisibility(View.GONE);
+
+        }
+     //   holder.mode.setText(coursesModel.get);
 
 
     }
@@ -77,12 +105,15 @@ public class AppointmentAdapter extends
     }
 
     public class MyHolderView extends RecyclerView.ViewHolder {
-        TextView appointment_id, feeTextView, patient_name, age, clinic, mobile, time, day;
-
+        TextView appointment_id, feeTextView, patient_name, age, clinic, mobile, time, day,mode,title;
+LinearLayout title_lay;
         public MyHolderView(View itemView) {
             super(itemView);
             appointment_id = (TextView) itemView.findViewById(R.id.appointmentId);
             feeTextView = (TextView) itemView.findViewById(R.id.fee);
+            title=(TextView)itemView.findViewById(R.id.title);
+            mode=(TextView)itemView.findViewById(R.id.mode) ;
+            title_lay=(LinearLayout)itemView.findViewById(R.id.title_lay);
             patient_name = (TextView) itemView.findViewById(R.id.patient_name);
             age = (TextView) itemView.findViewById(R.id.age);
             clinic = (TextView) itemView.findViewById(R.id.clinic);

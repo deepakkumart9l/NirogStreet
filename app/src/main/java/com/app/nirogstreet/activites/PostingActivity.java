@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,6 +33,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -381,7 +383,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                         } else {
                             if (!isposting) {
                                 isposting = true;
-                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernce);
+                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernceEditText.getText().toString());
                                 postAsyncTask.execute();
                             }
                         }
@@ -848,11 +850,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 entityBuilder.addTextBody("userID", userId);
                 Log.e("messageText", "inside" + messageText);
-                entityBuilder.addTextBody("Feed[title]", question);
-                entityBuilder.addTextBody("Feed[refrence]", refrence);
-                entityBuilder.addTextBody("Feed[message]", messageText);
+                entityBuilder.addTextBody("Feed[title]", question.trim().toString());
+                entityBuilder.addTextBody("Feed[refrence]", refrence.trim().toString());
+                entityBuilder.addTextBody("Feed[message]", messageText.trim().toString());
                 entityBuilder.addTextBody("Feed[feed_type]", feedType());
-                entityBuilder.addTextBody("Feed[feed_source]", linkUrl);
+                entityBuilder.addTextBody("Feed[feed_source]", linkUrl.trim().toString());
                 entityBuilder.addTextBody("Feed[enable_comment]", isCommented);
                 if (!groupId.equalsIgnoreCase("")) {
                     entityBuilder.addTextBody("Feed[community_id]", groupId);
@@ -867,8 +869,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 } else {
                     entityBuilder.addTextBody("Feed[link_type]", "");
                 }
-                entityBuilder.addTextBody("Feed[url_title]", linktitle);
-                entityBuilder.addTextBody("Feed[url_description]", linkDescription);
+                entityBuilder.addTextBody("Feed[url_title]", linktitle.trim().toString());
+                entityBuilder.addTextBody("Feed[url_description]", linkDescription.trim().toString());
                 entityBuilder.addTextBody("Feed[url_image]", linkImage);
                 if (strings != null && strings.size() > 0) {
                     for (int j = 0; j < strings.size(); j++) {
@@ -894,6 +896,14 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     file.getAbsolutePath();
                     ContentBody cbfile = new FileBody(file);
                     entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    Bitmap bmThumbnail;
+                    bmThumbnail = ThumbnailUtils.createVideoThumbnail(selectedVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
+                    bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] imageBytes = baos.toByteArray();
+                    String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                    entityBuilder.addTextBody("Feed[url_image]", encodedImage);
+
                 }
                 if (servicesMultipleSelectedModels != null && servicesMultipleSelectedModels.size() > 0) {
                     for (int i = 0; i < servicesMultipleSelectedModels.size(); i++) {

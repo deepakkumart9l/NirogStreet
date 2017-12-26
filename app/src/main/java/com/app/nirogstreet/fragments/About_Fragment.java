@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -29,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,7 +92,8 @@ public class About_Fragment extends Fragment {
     ArrayList<UserList> userLists=new ArrayList<>();
     boolean isMemberOfGroup = false;
     private LetterTileProvider mLetterTileProvider;
-
+TextView privacyTextView;
+    NestedScrollView scrollView;
     String privacyCheck;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
     String statusData = "";
@@ -148,6 +151,8 @@ public class About_Fragment extends Fragment {
         mLetterTileProvider = new LetterTileProvider(context);
         mRecyclerView = (RecyclerView)view. findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
+        scrollView=(NestedScrollView) view.findViewById(R.id.scrol);
+        privacyTextView=(TextView)view.findViewById(R.id.privacy);
         LinearLayoutManager llm = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -346,6 +351,14 @@ public class About_Fragment extends Fragment {
                             if (groupDetailJsonObject.has("privacy") && !groupDetailJsonObject.isNull("privacy")) {
                                 privacy = groupDetailJsonObject.getString("privacy");
                                 privacyCheck = privacy;
+                                if(privacyCheck.equalsIgnoreCase("0"))
+                                {
+                                    privacyTextView.setText("PUBLIC GROUP");
+                                }
+                                if(privacyCheck.equalsIgnoreCase("1"))
+                                {
+                                    privacyTextView.setText("PRIVATE GROUP");
+                                }
                             }
                             if (name != null && banner != null && !banner.contains("tempimages")) {
                                 CommunitiesDetails.setNameAndCoverPic(name, banner);
@@ -398,6 +411,8 @@ public class About_Fragment extends Fragment {
                                     if (userDetailModels.size() > 0) {
                                         MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userLists);
                                         mRecyclerView.setAdapter(memberListingAdapter);
+                                        scrollView.fullScroll(ScrollView.FOCUS_UP);
+
                                     }
 
                                         /*for (int i = 0; i < userDetailModels.size() + 1; i++) {

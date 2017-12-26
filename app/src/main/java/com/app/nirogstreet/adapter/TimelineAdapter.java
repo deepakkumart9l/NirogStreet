@@ -3,17 +3,22 @@ package com.app.nirogstreet.adapter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -26,6 +31,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.util.Linkify;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +49,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.app.nirogstreet.R;
@@ -56,6 +64,7 @@ import com.app.nirogstreet.activites.OpenDocument;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
+import com.app.nirogstreet.activites.PublicShare;
 import com.app.nirogstreet.activites.ShareOnFriendsTimeline;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
 import com.app.nirogstreet.activites.YoutubeVideo_Play;
@@ -100,6 +109,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     int positionat;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     SpannableString str2;
+    String text, videourl, title;
     SpannableString span;
 
     private static String[] PERMISSIONS_STORAGE = {
@@ -129,7 +139,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     ArrayList<FeedModel> feedModels;
     Context context;
     Activity activity;
-    SpannableString span2,str3;
+    SpannableString span2, str3, str4;
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
@@ -185,7 +195,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             .into(myViewHolder.circleImageView);
                 }
                 //   Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
-              //  TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
+                //  TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
 
                 myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -528,6 +538,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.feedImageView.setVisibility(View.VISIBLE);
                             viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
                             viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+                            String load = "data:image/jpeg;base64" + "," + feedModel.getUrl_image();
+                        /*    final byte[] decodedBytes = Base64.decode(feedModel.getUrl_image(), Base64.DEFAULT);
+                            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                            viewHolder.feedImageView.setImageBitmap(decodedBitmap);*/
+                            //Glide.with(context).load(decodedBytes).crossFade().fitCenter().into(viewHolder.feedImageView);
+                       /*   Bitmap bmThumbnail;
+                            bmThumbnail = ThumbnailUtils.createVideoThumbnail(feedModel.getUrl_image(), MediaStore.Video.Thumbnails.MINI_KIND);
+                            viewHolder.feedImageView.setImageBitmap(bmThumbnail);*/
+
                             viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -586,8 +605,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             String filename = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("/") + 1);
                                             Methods.downloadFile(feedModel.getFeed_source(), activity, extntion, feedModel.getDoc_name());
                                             Methods.showProgress(feedModel.getFeed_source(), activity);*/
-                                            Intent intent=new Intent(context,OpenDocument.class);
-                                            intent.putExtra("url",feedModel.getFeed_source());
+                                            Intent intent = new Intent(context, OpenDocument.class);
+                                            intent.putExtra("url", feedModel.getFeed_source());
                                             context.startActivity(intent);
                                         }
                                     });
@@ -619,12 +638,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
 
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
-                        viewHolder.statusTextView.setText(feedModel.getMessage());
+                        viewHolder.statusTextView.setText(feedModel.getMessage().trim().toString());
+                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
                         if (feedModel.getMessage().length() > 170)
                             makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true, context, feedModel, position);
                         else {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
+
                         }
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
@@ -663,13 +685,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         else
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
 
+                    } else {
+                        viewHolder.likesTextView.setText("0 Likes");
+
                     }
                     if (feedModel.getTotal_comments() != null) {
-                        if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
-
+                        if (feedModel.getTotal_comments().equalsIgnoreCase("1"))
                             viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comment");
                         else
                             viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comments");
+
+                    } else {
+                        viewHolder.commntsTextView.setText("0 Comments");
 
                     }
                     final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
@@ -694,7 +721,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         viewHolder.timeStampTextView.setText(feedModel.getCreated());
                     }
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
-                        viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
+                        viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion().trim().toString());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -712,7 +739,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
                             //ApplicationSingleton.setPost_position(position);
-
                             context.startActivity(intent);
 
                         }
@@ -777,7 +803,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         public void onClick(View v) {
                             Intent intent = new Intent(context, LikesDisplayActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            context.startActivity(intent);                        }
+                            context.startActivity(intent);
+                        }
                     });
                     viewHolder.commntsTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -799,7 +826,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             context.startActivity(intent);
                         }
                     });
-                 //   TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
+                    //   TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
                     if (userDetailModel != null && userDetailModel.getName() != null) {
                         String name = "Dr. " + userDetailModel.getName();
                         builder = new SpannableStringBuilder();
@@ -826,9 +853,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
                                     String thirdspan = str2.toString();
@@ -838,7 +865,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
                                 }
                                 if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
-                                    str2 = new SpannableString(" shared an post ");
+                                    str2 = new SpannableString(" shared a post ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
                                     ClickableSpan clickSpan1 = new ClickableSpan() {
@@ -851,9 +878,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                          /*  Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
 
@@ -879,9 +906,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
                                     String thirdspan = str2.toString();
@@ -906,9 +933,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                             @Override
                                             public void onClick(View textView) {
-                                                Intent intent = new Intent(context, CommunitiesDetails.class);
+                                               /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                                 intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                                context.startActivity(intent);
+                                                context.startActivity(intent);*/
                                             }
                                         };
                                         String thirdspan = str2.toString();
@@ -935,9 +962,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                         @Override
                                         public void onClick(View textView) {
-                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
                                         }
                                     };
 
@@ -951,15 +978,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }
                         } else {
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                                str3 = new SpannableString(" posted in a " + " " + feedModel.getCommunity_name());
+                                str3 = new SpannableString(" posted in ");
                                 str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
                                 builder.append(str3);
+
+                                str4 = new SpannableString(feedModel.getCommunity_name());
+                                str4.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str4.length(), 0);
+                                builder.append(str4);
 
                                 ClickableSpan clickSpan1 = new ClickableSpan() {
                                     @Override
                                     public void updateDrawState(TextPaint ds) {
-                                        ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
                                         ds.setUnderlineText(false);// this remove the underline
                                     }
 
@@ -971,9 +1002,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     }
                                 };
 
-                                String thirdspan = str3.toString();
+                                String thirdspan = str4.toString();
                                 int third = builder.toString().indexOf(thirdspan);
-                                builder.setSpan(clickSpan1, third, third + str3.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                builder.setSpan(clickSpan1, third, third + str4.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -1068,7 +1099,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView playicon;
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
-        TextView likesTextView,commntsTextView;
+        TextView likesTextView, commntsTextView;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
@@ -1088,13 +1119,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View basicAnnouncemet_view;
         LinearLayout moreLinearLayout, two_or_moreLinearLayout;
         ImageView imageFirstImageView, imageSecImageView;
-RelativeLayout relativeLayout1;
+        RelativeLayout relativeLayout1;
+
         public MyViewHolder(View itemView) {
             super(itemView);
-            relativeLayout1=(RelativeLayout)itemView.findViewById(R.id.relativeLayout1);
+            relativeLayout1 = (RelativeLayout) itemView.findViewById(R.id.relativeLayout1);
             left_view = (View) itemView.findViewById(R.id.left_view);
-            likesTextView=(TextView)itemView.findViewById(R.id.likes) ;
-            commntsTextView=(TextView)itemView.findViewById(R.id.commnts);
+            likesTextView = (TextView) itemView.findViewById(R.id.likes);
+            commntsTextView = (TextView) itemView.findViewById(R.id.commnts);
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
             txtTextView = (TextView) itemView.findViewById(R.id.txt);
@@ -1168,7 +1200,7 @@ RelativeLayout relativeLayout1;
 
         private String responseBody;
         HttpClient client;
-        Context context;
+
 
         public void cancelAsyncTask() {
             if (client != null && !isCancelled()) {
@@ -1323,31 +1355,73 @@ RelativeLayout relativeLayout1;
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                                             public boolean onMenuItemClick(MenuItem item) {
+                                                 //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-                //  int index = info.position;
-                //  System.out.print(index);
-                switch (item.getItemId()) {
-                    case R.id.publicshare:
+                                                 //  int index = info.position;
+                                                 //  System.out.print(index);
+                                                 switch (item.getItemId()) {
+                                                     case R.id.publicshare:
+                                                         Intent intent = new Intent(context, PublicShare.class);
+                                                         intent.putExtra("feedId",feedModel.getFeed_id());
+                                                         intent.putExtra("userId",userId);
+                                                         context.startActivity(intent);
 
+                                                       /*  if (NetworkUtill.isNetworkAvailable(context)) {
+                                                             SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                                                             sharePublicAsyncTask.execute();
+                                                         } else {
+                                                             NetworkUtill.showNoInternetDialog(context);
+                                                         }*/
+                                                         break;
+                                                     case R.id.groupstimeline:
+                                                         Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
 
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
-                            sharePublicAsyncTask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
-                        }
-                        break;
-                    case R.id.groupstimeline:
-                        Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
+                                                         intent1.putExtra("feedId", feedModel.getFeed_id());
+                                                         intent1.putExtra("userId", userId);
+                                                         intent1.putExtra("shareOnGroup", true);
+                                                         context.startActivity(intent1);
 
-                        intent1.putExtra("feedId", feedModel.getFeed_id());
-                        intent1.putExtra("userId", userId);
-                        intent1.putExtra("shareOnGroup", true);
-                        context.startActivity(intent1);
-                        break;
-                }
+                                                         break;
+                                                     case R.id.share_exteraly:
+                                                         try {
+                                                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                                                 text = feedModel.getMessage();
+                                                             }
+       /* if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
+            if (feedModel.getFeedSourceArrayList().get(0) != null && feedModel.getFeedSourceArrayList().get(0).length() > 0) {
+                shareText = feedModel.getFeedSourceArrayList().get(0);
+            }
+        }*/
+                                                             if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
+                                                                 title = feedModel.getTitleQuestion();
+                                                             }
+                                                             if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+
+                                                                 videourl = feedModel.getFeed_source();
+                                                             }
+                                                             Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                                             shareIntent.setType("text/plain");
+                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0) {
+                                                                 if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
+                                                                 } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text);
+                                                                 } else if (title != null && title.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
+                                                                 } else if (text != null && text.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+                                                                 }
+                                                                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
+                                                                 context.startActivity(Intent.createChooser(shareIntent,
+                                                                         context.getResources().getString(R.string.share_with)));
+                                                             }
+                                                         } catch (Exception e) {
+                                                             // TODO: handle exception
+                                                             e.printStackTrace();
+                                                         }
+                                                         break;
+                                                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
 
 
@@ -1356,9 +1430,11 @@ RelativeLayout relativeLayout1;
                 } else {
 
                 }*/
-                return true;
-            }
-        });
+                                                 return true;
+                                             }
+                                         }
+
+        );
 
         popup.show();//showing popup menu
     }
@@ -1382,13 +1458,7 @@ RelativeLayout relativeLayout1;
                         context.startActivity(intent);
                         break;
                     case R.id.del:
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
-                            deletepostAsyncTask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
-                            //feedId
-                        }
+                       setDialog(feedModel);
                         break;
                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
@@ -1405,6 +1475,33 @@ RelativeLayout relativeLayout1;
 
         popup.show();//showing popup menu
     }
+    public void setDialog(final FeedModel feedModel) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                if (NetworkUtill.isNetworkAvailable(context)) {
+                    DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                    deletepostAsyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(context);
+                    //feedId
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.cancel();
+            }
+        });
+        builder.show();
+// Set other dialog properties
+
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+    }
 
     public class SharePublicAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
@@ -1414,7 +1511,6 @@ RelativeLayout relativeLayout1;
 
         private String responseBody;
         HttpClient client;
-        Context context;
 
         public void cancelAsyncTask() {
             if (client != null && !isCancelled()) {
@@ -1426,6 +1522,8 @@ RelativeLayout relativeLayout1;
         public SharePublicAsyncTask(String feedId, String userId, String authToken) {
             this.feedId = feedId;
             this.authToken = authToken;
+            this.authToken = authToken;
+            this.authToken = authToken;
             this.userId = userId;
         }
 
@@ -1435,12 +1533,15 @@ RelativeLayout relativeLayout1;
             try {
                 if (jo != null) {
                     if (jo.has("responce") && !jo.isNull("responce")) {
+                        int responseerror = jo.getJSONObject("responce").getInt("error");
+                        if (responseerror == 0) {
+                            Toast.makeText(context, "Post shared successfully", Toast.LENGTH_LONG).show();
+                        }
                         FeedModel feedModel = FeedParser.singleFeed(jo.getJSONObject("responce"));
                         feedModels.add(1, feedModel);
                         notifyItemInserted(1);
-
                         notifyItemRangeChanged(1, feedModels.size());
-                       // ApplicationSingleton.setIsProfilePostExecuted(true);
+                        // ApplicationSingleton.setIsProfilePostExecuted(true);
                     }
                 }
             } catch (Exception e) {
@@ -1673,5 +1774,14 @@ RelativeLayout relativeLayout1;
 
     }
 
-
+    public Bitmap StringToBitMap(String encodedImage) {
+        try {
+            byte[] decodedString = Base64.decode("data:image/jpeg;base64," + encodedImage, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 }

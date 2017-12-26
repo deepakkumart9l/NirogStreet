@@ -202,16 +202,7 @@
                         android:layout_marginRight="12dp"
                         android:layout_marginTop="4dp" />
 
-                    <TextView
-                        android:id="@+id/timerTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:gravity="right|center"
-                        android:text="00:09"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:visibility="gone" />
+
 
                     <View
                         android:layout_width="1dp"
@@ -219,7 +210,6 @@
                         android:layout_marginLeft="15dp"
                         android:background="@color/black"
                         android:visibility="gone" />
-
 
                     <TextView
                         android:layout_width="match_parent"
@@ -230,8 +220,23 @@
                         android:paddingLeft="5dp"
                         android:id="@+id/resendOtp"
                         android:text="Resend OTP"
+
                         android:textColor="@color/cardbluebackground"
                         android:textSize="14sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="5dp"
+                        android:drawablePadding="-25dp"
+                        android:id="@+id/timerTextView"
+                        android:visibility="gone"
+                        android:drawableLeft="@drawable/timer"
+                        android:text=""
+                        android:textColor="#24acda"
+                        android:textSize="15.3sp" />
                 </LinearLayout>
             </LinearLayout>
 

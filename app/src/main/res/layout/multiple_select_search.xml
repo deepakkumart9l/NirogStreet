@@ -133,7 +133,7 @@
                 android:layout_below="@+id/horizontal_scroll"
                 android:background="@color/white"
                 android:scrollbars="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
 
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

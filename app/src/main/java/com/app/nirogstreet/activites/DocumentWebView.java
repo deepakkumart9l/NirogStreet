@@ -73,6 +73,17 @@ public class DocumentWebView extends Activity {
     int module_pos, topic_pos, file_pos;
     TextView title_side_left;
 
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("module",module_pos);
+        returnIntent.putExtra("topic",topic_pos);
+        returnIntent.putExtra("file",file_pos);
+        setResult( Activity.RESULT_OK,returnIntent);
+        finish();
+        super.onBackPressed();
+    }
+
     public class KnwledgeCompleteAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -258,8 +269,12 @@ public class DocumentWebView extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("module",module_pos);
+                returnIntent.putExtra("topic",topic_pos);
+                returnIntent.putExtra("file",file_pos);
+                setResult( Activity.RESULT_OK,returnIntent);
+                finish();            }
         });
         if (getIntent().hasExtra("module_pos")) {
             module_pos = getIntent().getIntExtra("module_pos", -1);
@@ -324,20 +339,6 @@ public class DocumentWebView extends Activity {
             // TODO Auto-generated method stub
             super.onPageFinished(view, url);
             circularProgressBar.setVisibility(View.GONE);
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-
-
-                    if (NetworkUtill.isNetworkAvailable(DocumentWebView.this)) {
-                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask();
-                        knwledgeCompleteAsynctask.execute();
-                    } else {
-                        NetworkUtill.showNoInternetDialog(DocumentWebView.this);
-                    }
-                }
-            }, 3000);
 
 
         }

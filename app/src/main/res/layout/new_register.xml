@@ -164,29 +164,38 @@
                     android:textSize="13sp"
                     android:textColor="#000" />
 
-                <EditText
-                    android:id="@+id/passEt"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="5dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:padding="13dp"
                     android:background="@drawable/round_edittext"
-                    android:cursorVisible="true"
-                    android:hint="Password"
-                    android:imeOptions="actionNext"
-                    android:textStyle="normal"
-                    android:inputType="textPassword"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true"
-                    android:drawableRight="@drawable/pass"
-                    android:text=""
-                    android:textColor="#000"
-                    android:textColorHint="#9d9d9d"
-                    android:textCursorDrawable="@drawable/blackpipe"
-                    android:textSize="14sp">
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/passEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:cursorVisible="true"
+                        android:background="@null"
+                        android:hint="Password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword|textNoSuggestions"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="#000"
+                        android:textColorHint="#9d9d9d"
+                        android:textCursorDrawable="@drawable/blackpipe"
+                        android:textSize="14sp"
+                        android:textStyle="normal" />
 
-                    <requestFocus />
-                </EditText>
+                    <ImageButton
+                        android:id="@+id/img_lock"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:scaleType="fitXY"
+                        android:background="@drawable/lock" />
+                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

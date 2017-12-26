@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -102,6 +103,34 @@ public class CommunitiesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(ApplicationSingleton.isJoinedCommunity())
+        {
+            page = 1;
+            groupModelsTotal = new ArrayList<GroupModel>();
+            userView.setSelected(false);
+            recyclerView.removeAllViews();
+            isLoading = false;
+            no_list.setVisibility(View.GONE);
+
+            //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+            // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
+            myGroupTextView.setClickable(false);
+            allView.setSelected(true);
+            groupListingAdapter = null;
+            recyclerView.setVisibility(View.GONE);
+            otherGroupTextView.setSelected(true);
+            otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+            myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+            if (NetworkUtill.isNetworkAvailable(context)) {
+                String url = AppUrl.BaseUrl + "group/all-groups";
+
+                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                groupsOfUserAsyncTask.execute();
+            } else {
+                NetworkUtill.showNoInternetDialog(context);
+            }
+            ApplicationSingleton.setIsJoinedCommunity(false);
+        }
         if (ApplicationSingleton.isGroupCreated() || ApplicationSingleton.isGroupUpdated()) {
             userView.setSelected(true);
             allView.setSelected(false);

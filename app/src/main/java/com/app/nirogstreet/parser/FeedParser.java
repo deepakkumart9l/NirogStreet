@@ -1,6 +1,7 @@
 package com.app.nirogstreet.parser;
 
 import com.app.nirogstreet.model.FeedModel;
+import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
 
 import org.json.JSONArray;
@@ -19,7 +20,7 @@ public class FeedParser {
 
             if (jo != null) {
 
-                String community_id = "",community_name="";
+                String community_id = "", community_name = "";
                 ArrayList<String> mediaList = new ArrayList<>();
                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
@@ -28,7 +29,10 @@ public class FeedParser {
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
                 int user_has_liked = 0, youcongratulated = 0;
                 UserDetailModel userDetailModel = null;
-                String activity_detail=null;
+                String feed_Tag_id = null;
+                String feed_tag_name = null;
+                ArrayList<SpecializationModel> specializationModelsForTags = new ArrayList<>();
+                String activity_detail = null;
                 UserDetailModel parentFeedDetail = null;
                 UserDetailModel cretedBy = null;
                 if (jo.has("feed") && !jo.isNull("feed")) {
@@ -37,9 +41,24 @@ public class FeedParser {
                     if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                         feed_id = jsonObject.getString("id");
                     }
-                    if(jsonObject.has("activity_detail")&&!jsonObject.isNull("activity_detail"))
-                    {
-                        activity_detail=jsonObject.getString("activity_detail");
+                    if (jsonObject.has("feed_tags") && !jsonObject.isNull("feed_tags")) {
+                        JSONArray jsonArrayFeed_Tags = jsonObject.getJSONArray("feed_tags");
+                        for (int l = 0; l < jsonArrayFeed_Tags.length(); l++) {
+                            if (jsonArrayFeed_Tags.getJSONObject(l).has("id") && !jsonArrayFeed_Tags.getJSONObject(l).isNull("id")) {
+                                feed_Tag_id = jsonArrayFeed_Tags.getJSONObject(l).getString("id");
+
+                            }
+
+                            if (jsonArrayFeed_Tags.getJSONObject(l).has("name") && !jsonArrayFeed_Tags.getJSONObject(l).isNull("name")) {
+                                feed_tag_name = jsonArrayFeed_Tags.getJSONObject(l).getString("name");
+
+                            }
+                            specializationModelsForTags.add(new SpecializationModel(feed_tag_name, feed_Tag_id, true));
+                        }
+                    }
+
+                    if (jsonObject.has("activity_detail") && !jsonObject.isNull("activity_detail")) {
+                        activity_detail = jsonObject.getString("activity_detail");
                     }
                     if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
@@ -84,20 +103,18 @@ public class FeedParser {
                         if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                             city = userJsonObject.getString("city");
                         }
-                        userDetailModel = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                        userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                     }
                     if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
                         community_id = jsonObject.getString("community_id");
 
                     }
-                    if(jsonObject.has("community detail")&&!jsonObject.isNull("community detail"))
-                    {
-                        JSONObject community=jsonObject.getJSONObject("community detail");
+                    if (jsonObject.has("community detail") && !jsonObject.isNull("community detail")) {
+                        JSONObject community = jsonObject.getJSONObject("community detail");
 
-                        if(community.has("name")&&!community.isNull("name"))
-                        {
-                            community_name=community.getString("name");
+                        if (community.has("name") && !community.isNull("name")) {
+                            community_name = community.getString("name");
                         }
                         if (community.has("community_id") && !community.isNull("community_id")) {
                             community_id = community.getString("community_id");
@@ -105,50 +122,51 @@ public class FeedParser {
                         }
                     }
                     if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                            String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
-                            JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
-                            if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
-                                id = userJsonObject.getString("user_id");
-                            } if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                                name = userJsonObject.getString("name");
-                            }
-                            if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
-                                experience = userJsonObject.getString("experience");
-                            }
-                            if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
-                                gender = userJsonObject.getString("gender");
-                            }
-                            if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                                email = userJsonObject.getString("email");
-                            }
-                            if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                                mobile = userJsonObject.getString("mobile");
-                            }
-                            if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
-                                profile_picuser = userJsonObject.getString("profile_pic");
-                            }
-                            if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
-                                category = userJsonObject.getString("category");
-                            }
-                            if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
-                                dob = userJsonObject.getString("dob");
-                            }
-                            if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
-                                website = userJsonObject.getString("website");
-                            }
-                            if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
-                                about = userJsonObject.getString("aboutus");
-                            }
-                            if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                                title = userJsonObject.getString("Title");
-                            }
-                            if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
-                                city = userJsonObject.getString("city");
-                            }
-                            parentFeedDetail = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
-
+                        JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
+                        if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
+                            id = userJsonObject.getString("user_id");
                         }
+                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                            name = userJsonObject.getString("name");
+                        }
+                        if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                            experience = userJsonObject.getString("experience");
+                        }
+                        if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                            gender = userJsonObject.getString("gender");
+                        }
+                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                            email = userJsonObject.getString("email");
+                        }
+                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                            mobile = userJsonObject.getString("mobile");
+                        }
+                        if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                            profile_picuser = userJsonObject.getString("profile_pic");
+                        }
+                        if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                            category = userJsonObject.getString("category");
+                        }
+                        if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                            dob = userJsonObject.getString("dob");
+                        }
+                        if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                            website = userJsonObject.getString("website");
+                        }
+                        if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                            about = userJsonObject.getString("aboutus");
+                        }
+                        if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                            title = userJsonObject.getString("Title");
+                        }
+                        if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                            city = userJsonObject.getString("city");
+                        }
+                        parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+
+                    }
 
                     if (jsonObject.has("parent_feed") && !jsonObject.isNull("parent_feed")) {
                         parent_feed = jsonObject.getString("parent_feed");
@@ -249,7 +267,7 @@ public class FeedParser {
                             if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                 city = userJsonObject.getString("city");
                             }
-                            cretedBy = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                            cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                         }
                     }
@@ -261,7 +279,7 @@ public class FeedParser {
                         docName = jsonObject.getString("docName");
 
                     }
-                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "",community_name,activity_detail);
+                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail,specializationModelsForTags,refrence);
                 }
 
 
@@ -283,9 +301,12 @@ public class FeedParser {
                         if (jo.has("feeds") && !jo.isNull("feeds")) {
                             JSONArray jsonArray = jo.getJSONArray("feeds");
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                String community_id = "",community_name="";
+                                String community_id = "", community_name = "";
                                 ArrayList<String> mediaList = new ArrayList<>();
-                                String activity_detail=null;
+                                String activity_detail = null;
+                                String feed_Tag_id = null;
+                                String feed_tag_name = null;
+                                ArrayList<SpecializationModel> specializationModelsForTags = new ArrayList<>();
                                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                                 UserDetailModel ParentFeedDetail = null;
@@ -299,9 +320,24 @@ public class FeedParser {
                                 if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                                     feed_id = jsonObject.getString("id");
                                 }
-                                if(jsonObject.has("activity_detail")&&!jsonObject.isNull("activity_detail"))
-                                {
-                                    activity_detail=jsonObject.getString("activity_detail");
+                                if (jsonObject.has("feed_tags") && !jsonObject.isNull("feed_tags")) {
+                                    JSONArray jsonArrayFeed_Tags = jsonObject.getJSONArray("feed_tags");
+                                    for (int l = 0; l < jsonArrayFeed_Tags.length(); l++) {
+                                        if (jsonArrayFeed_Tags.getJSONObject(l).has("id") && !jsonArrayFeed_Tags.getJSONObject(l).isNull("id")) {
+                                            feed_Tag_id = jsonArrayFeed_Tags.getJSONObject(l).getString("id");
+
+                                        }
+
+                                        if (jsonArrayFeed_Tags.getJSONObject(l).has("name") && !jsonArrayFeed_Tags.getJSONObject(l).isNull("name")) {
+                                            feed_tag_name = jsonArrayFeed_Tags.getJSONObject(l).getString("name");
+
+                                        }
+                                        specializationModelsForTags.add(new SpecializationModel(feed_tag_name, feed_Tag_id, true));
+                                    }
+                                }
+
+                                if (jsonObject.has("activity_detail") && !jsonObject.isNull("activity_detail")) {
+                                    activity_detail = jsonObject.getString("activity_detail");
                                 }
                                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
@@ -346,70 +382,69 @@ public class FeedParser {
                                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                         city = userJsonObject.getString("city");
                                     }
-                                    userDetailModel = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                                 }
                                 if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
                                     community_id = jsonObject.getString("community_id");
 
                                 }
-                                if(jsonObject.has("community detail")&&!jsonObject.isNull("community detail"))
-                                {
-                                    JSONObject community=jsonObject.getJSONObject("community detail");
+                                if (jsonObject.has("community detail") && !jsonObject.isNull("community detail")) {
+                                    JSONObject community = jsonObject.getJSONObject("community detail");
 
-                                 if(community.has("name")&&!community.isNull("name"))
-                                 {
-                                     community_name=community.getString("name");
-                                 }
+                                    if (community.has("name") && !community.isNull("name")) {
+                                        community_name = community.getString("name");
+                                    }
                                     if (community.has("community_id") && !community.isNull("community_id")) {
                                         community_id = community.getString("community_id");
 
                                     }
                                 }
                                 if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
-                                        JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
-                                        if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
-                                            id = userJsonObject.getString("user_id");
-                                        }                                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                                            name = userJsonObject.getString("name");
-                                        }
+                                    JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
+                                    if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
+                                        id = userJsonObject.getString("user_id");
+                                    }
+                                    if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                                        name = userJsonObject.getString("name");
+                                    }
 
-                                        if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
-                                            experience = userJsonObject.getString("experience");
-                                        }
-                                        if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
-                                            gender = userJsonObject.getString("gender");
-                                        }
-                                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                                            email = userJsonObject.getString("email");
-                                        }
-                                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                                            mobile = userJsonObject.getString("mobile");
-                                        }
-                                        if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
-                                            profile_picuser = userJsonObject.getString("profile_pic");
-                                        }
-                                        if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
-                                            category = userJsonObject.getString("category");
-                                        }
-                                        if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
-                                            dob = userJsonObject.getString("dob");
-                                        }
-                                        if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
-                                            website = userJsonObject.getString("website");
-                                        }
-                                        if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
-                                            about = userJsonObject.getString("aboutus");
-                                        }
-                                        if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                                            title = userJsonObject.getString("Title");
-                                        }
-                                        if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
-                                            city = userJsonObject.getString("city");
-                                        }
-                                        parentFeedDetail = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                                    if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                                        experience = userJsonObject.getString("experience");
+                                    }
+                                    if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                                        gender = userJsonObject.getString("gender");
+                                    }
+                                    if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                                        email = userJsonObject.getString("email");
+                                    }
+                                    if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                                        mobile = userJsonObject.getString("mobile");
+                                    }
+                                    if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                                        profile_picuser = userJsonObject.getString("profile_pic");
+                                    }
+                                    if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                                        category = userJsonObject.getString("category");
+                                    }
+                                    if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                                        dob = userJsonObject.getString("dob");
+                                    }
+                                    if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                                        website = userJsonObject.getString("website");
+                                    }
+                                    if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                                        about = userJsonObject.getString("aboutus");
+                                    }
+                                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                                        title = userJsonObject.getString("Title");
+                                    }
+                                    if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                                        city = userJsonObject.getString("city");
+                                    }
+                                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
 
                                 }
@@ -512,7 +547,7 @@ public class FeedParser {
                                         if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                             city = userJsonObject.getString("city");
                                         }
-                                        cretedBy = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                                     }
                                 }
@@ -524,7 +559,7 @@ public class FeedParser {
                                     docName = jsonObject.getString("docName");
 
                                 }
-                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "",community_name,activity_detail));
+                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail,specializationModelsForTags,refrence));
                             }
                         }
                     }
@@ -542,25 +577,41 @@ public class FeedParser {
         try {
             if (jsonObject != null) {
 
-                String community_id = "",community_name="";
+                String community_id = "", community_name = "";
                 ArrayList<String> mediaList = new ArrayList<>();
                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                 UserDetailModel ParentFeedDetail = null;
-                String activity_detail=null;
+                String activity_detail = null;
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
                 int user_has_liked = 0, youcongratulated = 0;
                 UserDetailModel userDetailModel = null;
                 UserDetailModel parentFeedDetail = null;
+                String feed_Tag_id = null;
+                String feed_tag_name = null;
+                ArrayList<SpecializationModel> specializationModelsForTags = new ArrayList<>();
                 UserDetailModel cretedBy = null;
                 if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                     feed_id = jsonObject.getString("id");
                 }
+                if (jsonObject.has("feed_tags") && !jsonObject.isNull("feed_tags")) {
+                    JSONArray jsonArrayFeed_Tags = jsonObject.getJSONArray("feed_tags");
+                    for (int i = 0; i < jsonArrayFeed_Tags.length(); i++) {
+                        if (jsonArrayFeed_Tags.getJSONObject(i).has("id") && !jsonArrayFeed_Tags.getJSONObject(i).isNull("id")) {
+                            feed_Tag_id = jsonArrayFeed_Tags.getJSONObject(i).getString("id");
 
-                if(jsonObject.has("activity_detail")&&!jsonObject.isNull("activity_detail"))
-                {
-                    activity_detail=jsonObject.getString("activity_detail");
+                        }
+
+                        if (jsonArrayFeed_Tags.getJSONObject(i).has("name") && !jsonArrayFeed_Tags.getJSONObject(i).isNull("name")) {
+                            feed_tag_name = jsonArrayFeed_Tags.getJSONObject(i).getString("name");
+
+                        }
+                        specializationModelsForTags.add(new SpecializationModel(feed_tag_name, feed_Tag_id, true));
+                    }
+                }
+                if (jsonObject.has("activity_detail") && !jsonObject.isNull("activity_detail")) {
+                    activity_detail = jsonObject.getString("activity_detail");
                 }
 
                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
@@ -606,20 +657,18 @@ public class FeedParser {
                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                         city = userJsonObject.getString("city");
                     }
-                    userDetailModel = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                 }
                 if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
                     community_id = jsonObject.getString("community_id");
 
                 }
-                if(jsonObject.has("community detail")&&!jsonObject.isNull("community detail"))
-                {
-                    JSONObject community=jsonObject.getJSONObject("community detail");
+                if (jsonObject.has("community detail") && !jsonObject.isNull("community detail")) {
+                    JSONObject community = jsonObject.getJSONObject("community detail");
 
-                    if(community.has("name")&&!community.isNull("name"))
-                    {
-                        community_name=community.getString("name");
+                    if (community.has("name") && !community.isNull("name")) {
+                        community_name = community.getString("name");
                     }
                     if (community.has("community_id") && !community.isNull("community_id")) {
                         community_id = community.getString("community_id");
@@ -627,49 +676,49 @@ public class FeedParser {
                     }
                 }
                 if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
 
-                        JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
-                        if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
-                            id = userJsonObject.getString("user_id");
-                        }
-                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                            name = userJsonObject.getString("name");
-                        }
-                        if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
-                            experience = userJsonObject.getString("experience");
-                        }
-                        if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
-                            gender = userJsonObject.getString("gender");
-                        }
-                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                            email = userJsonObject.getString("email");
-                        }
-                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                            mobile = userJsonObject.getString("mobile");
-                        }
-                        if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
-                            profile_picuser = userJsonObject.getString("profile_pic");
-                        }
-                        if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
-                            category = userJsonObject.getString("category");
-                        }
-                        if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
-                            dob = userJsonObject.getString("dob");
-                        }
-                        if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
-                            website = userJsonObject.getString("website");
-                        }
-                        if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
-                            about = userJsonObject.getString("aboutus");
-                        }
-                        if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                            title = userJsonObject.getString("Title");
-                        }
-                        if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
-                            city = userJsonObject.getString("city");
-                        }
-                        parentFeedDetail = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                    JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
+                    if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
+                        id = userJsonObject.getString("user_id");
+                    }
+                    if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                        name = userJsonObject.getString("name");
+                    }
+                    if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                        experience = userJsonObject.getString("experience");
+                    }
+                    if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                        gender = userJsonObject.getString("gender");
+                    }
+                    if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                        email = userJsonObject.getString("email");
+                    }
+                    if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                        mobile = userJsonObject.getString("mobile");
+                    }
+                    if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                        profile_picuser = userJsonObject.getString("profile_pic");
+                    }
+                    if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                        category = userJsonObject.getString("category");
+                    }
+                    if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                        dob = userJsonObject.getString("dob");
+                    }
+                    if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                        website = userJsonObject.getString("website");
+                    }
+                    if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                        about = userJsonObject.getString("aboutus");
+                    }
+                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                        title = userJsonObject.getString("Title");
+                    }
+                    if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                        city = userJsonObject.getString("city");
+                    }
+                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
 
                 }
@@ -775,7 +824,7 @@ public class FeedParser {
                         if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                             city = userJsonObject.getString("city");
                         }
-                        cretedBy = new UserDetailModel(id, name, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
+                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null);
 
                     }
                 }
@@ -788,7 +837,7 @@ public class FeedParser {
 
                 }
 
-                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "",community_name,activity_detail));
+                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail,specializationModelsForTags,refrence));
 
 
             }

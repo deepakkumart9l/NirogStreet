@@ -88,13 +88,33 @@ public class FeedModel {
         this.activity_detail = activity_detail;
     }
 
+    public ArrayList<SpecializationModel> getSpecializationModelsTags() {
+        return specializationModelsTags;
+    }
+
+    public void setSpecializationModelsTags(ArrayList<SpecializationModel> specializationModelsTags) {
+        this.specializationModelsTags = specializationModelsTags;
+    }
+
+    ArrayList<SpecializationModel> specializationModelsTags;
     private String activity_detail;
     public String community_name;
 
-    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name, String doc_Type, String community_name, String activity_detail) {
+    public String getRefernce() {
+        return refernce;
+    }
+
+    public void setRefernce(String refernce) {
+        this.refernce = refernce;
+    }
+
+    public String refernce=null;
+    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name, String doc_Type, String community_name, String activity_detail,ArrayList<SpecializationModel> specializationModelsTags,String refernce) {
         this.feed_id = feed_id;
         this.userDetailModel_creator = userDetailModel_creator;
         this.community_Id = community_Id;
+        this.refernce=refernce;
+        this.specializationModelsTags=specializationModelsTags;
         this.parentFeedDetail = parentFeedDetail;
         this.activity_detail = activity_detail;
         this.community_name = community_name;

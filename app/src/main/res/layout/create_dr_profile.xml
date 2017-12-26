@@ -256,15 +256,16 @@
                     android:id="@+id/cityEt"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/textcolorgray"
+                    android:textColorHint="@color/textcolorgray"
 
+                    android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="City"
+                    android:focusable="false"
                     android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:paddingBottom="14dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
                     android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
@@ -313,10 +314,10 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:focusable="false"
                     android:hint="DOB"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
+                    android:focusable="false"
                     android:paddingBottom="15dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray"

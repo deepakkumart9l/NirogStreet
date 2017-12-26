@@ -1,6 +1,7 @@
 package com.app.nirogstreet.activites;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -79,8 +80,12 @@ public class LoadHtmlPageActivity extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("module",module_pos);
+                returnIntent.putExtra("topic",topic_pos);
+                returnIntent.putExtra("file",file_pos);
+                setResult( Activity.RESULT_OK,returnIntent);
+                finish();            }
         });
         if (getIntent().hasExtra("module_pos")) {
             module_pos = getIntent().getIntExtra("module_pos", -1);
@@ -119,6 +124,16 @@ public class LoadHtmlPageActivity extends Activity {
         web.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         web.loadDataWithBaseURL("", data, "text/html", "UTF-8", "");
     }
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("module",module_pos);
+        returnIntent.putExtra("topic",topic_pos);
+        returnIntent.putExtra("file",file_pos);
+        setResult( Activity.RESULT_OK,returnIntent);
+        finish();
+        super.onBackPressed();
+    }
     public class AppWebViewClients extends WebViewClient {
 
 
@@ -135,19 +150,6 @@ public class LoadHtmlPageActivity extends Activity {
             super.onPageFinished(view, url);
             circularProgressBar.setVisibility(View.GONE);
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-
-
-                    if (NetworkUtill.isNetworkAvailable(LoadHtmlPageActivity.this)) {
-                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask();
-                        knwledgeCompleteAsynctask.execute();
-                    } else {
-                        NetworkUtill.showNoInternetDialog(LoadHtmlPageActivity.this);
-                    }
-                }
-            }, 3000);
 
 
         }

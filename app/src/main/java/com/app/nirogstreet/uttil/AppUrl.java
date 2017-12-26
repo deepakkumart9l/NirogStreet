@@ -6,10 +6,10 @@ package com.app.nirogstreet.uttil;
 
 public class AppUrl {
     public static String PLACES_API_KEY = "AIzaSyBs5DG6WdN3rDaCLj6aI6SumK6arLW4Kk0";
-/* public static String AppBaseUrl="http://nirogstreetapi.appstage.co/v1/";    //test
-    public static String BaseUrl="http://nirogstreetapi.appstage.co/v2/";      //test*/
-  public static String AppBaseUrl="http://api.nirogstreet.com/v1/";
-    public static String BaseUrl="http://api.nirogstreet.com/v2/";
+  public static String AppBaseUrl="http://nirogstreetapi.appstage.co/v1/";    //test
+        public static String BaseUrl="http://nirogstreetapi.appstage.co/v2/";     //test
+   /*public static String AppBaseUrl = "http://api.nirogstreet.com/v1/";
+    public static String BaseUrl = "http://api.nirogstreet.com/v2/";*/
     public static final String APP_ID_PARAM = "appID";
     public static final String APP_ID_VALUE_POST = "NRGSRT$(T(L5830FRU@!^AUSER";
 }

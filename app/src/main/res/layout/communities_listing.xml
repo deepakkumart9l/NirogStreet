@@ -133,7 +133,7 @@
         android:visibility="gone"
         app:cpb_colors="@array/gplus_colors" />
 
-    <pl.droidsonroids.gif.GifImageView
+   <!-- <pl.droidsonroids.gif.GifImageView
         android:layout_width="30dp"
         android:visibility="gone"
         android:layout_height="30dp"
@@ -141,5 +141,5 @@
         android:layout_centerInParent="true"
 
         android:src="@drawable/nirogloader"
-        />
+        />-->
 </RelativeLayout>

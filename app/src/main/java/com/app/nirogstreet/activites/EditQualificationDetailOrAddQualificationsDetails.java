@@ -217,17 +217,18 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             position = getIntent().getIntExtra("pos", -1);
 
         }
-clgEt.setOnTouchListener(new View.OnTouchListener() {
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if(!isQualificationTouched) {
-            isQualificationTouched=true;
-            Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, SingleSelectQualifications.class);
-            startActivityForResult(intent, RESULT_CODE);
-        }
-        return false;
-    }
-});
+        clgEt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isQualificationTouched) {
+                    isQualificationTouched=true;
+                    Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, SingleSelectQualifications.class);
+                    startActivityForResult(intent, RESULT_CODE);
+                }
+
+            }
+        });
+
 
         if (userDetailModel != null && userDetailModel.getQualificationModels() != null && userDetailModel.getQualificationModels().size() > 0 && position != -1)
 
@@ -638,6 +639,10 @@ clgEt.setOnTouchListener(new View.OnTouchListener() {
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
@@ -755,6 +760,10 @@ clgEt.setOnTouchListener(new View.OnTouchListener() {
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -49,15 +50,15 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
             if (rowItem.getLname() != null)
                 holder.name.setText("Dr. "+rowItem.getFname() + " " + rowItem.getLname());
             else
-                holder.name.setText(rowItem.getFname());
+                holder.name.setText("Dr. "+rowItem.getFname());
         }
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* Intent resultIntent = new Intent(context, ProfileActivity.class);
+                Intent resultIntent = new Intent(context, Dr_Profile.class);
                 LikesModel likesModel = likesModels.get(position);
-                resultIntent.putExtra("userId", likesModel.getUserId());
-                context.    startActivity(resultIntent);*/
+                resultIntent.putExtra("UserId", likesModel.getUserId());
+                context.    startActivity(resultIntent);
             }
         });
         //  holder.name.setText(rowItem.getName());

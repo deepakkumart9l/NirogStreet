@@ -231,18 +231,14 @@ public class AddOrEditAward extends AppCompatActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            // Get the layout inflater
             LayoutInflater inflater = getActivity().getLayoutInflater();
 
             Calendar cal = Calendar.getInstance();
 
             View dialog = inflater.inflate(R.layout.date_picker_dialog, null);
-            // final NumberPicker monthPicker = (NumberPicker) dialog.findViewById(R.id.picker_month);
             final NumberPicker yearPicker = (NumberPicker) dialog.findViewById(R.id.picker_year);
 
-           /* monthPicker.setMinValue(1);
-            monthPicker.setMaxValue(12);
-            monthPicker.setValue(cal.get(Calendar.MONTH) + 1);*/
+
 
             int year = cal.get(Calendar.YEAR);
             yearPicker.setMinValue(1917);
@@ -357,6 +353,10 @@ public class AddOrEditAward extends AppCompatActivity {
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("awards") && !dataJsonObject.isNull("awards")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
@@ -495,6 +495,10 @@ public class AddOrEditAward extends AppCompatActivity {
                                     }
                                 }
                             } else {
+                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
+                                {
+                                    ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
+                                }
                                 if (dataJsonObject.has("awards") && !dataJsonObject.isNull("awards")) {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 

@@ -333,6 +333,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         enableCheckBox.setTypeface(tf);*/
 
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
+        imageViewSelected.setVisibility(View.GONE);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
         mEditTextView.setFocusable(false);
         mEditTextView.setOnTouchListener(new View.OnTouchListener() {
@@ -348,7 +349,6 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             public void onClick(View v) {
                 Intent intent = new Intent(PostEditActivity.this, Multi_Select_Search_specialization.class);
                 intent.putExtra("list", servicesMultipleSelectedModels);
-
                 intent.putExtra("tags", true);
                 startActivityForResult(intent, RESULT_CODE);
 
@@ -398,7 +398,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                         } else {
                             if (!isposting) {
                                 isposting = true;
-                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernce);
+                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernceEditText.getText().toString());
                                 postAsyncTask.execute();
                             }
                         }
@@ -958,9 +958,9 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 entityBuilder.addTextBody("userID", userId);
                 Log.e("messageText", "inside" + messageText);
                 entityBuilder.addTextBody("feedID", feedId);
-                entityBuilder.addTextBody("Feed[title]", question);
-                entityBuilder.addTextBody("Feed[refrence]", refrence);
-                entityBuilder.addTextBody("Feed[message]", messageText);
+                entityBuilder.addTextBody("Feed[title]", question.trim().toString());
+                entityBuilder.addTextBody("Feed[refrence]", refrence.trim().toString());
+                entityBuilder.addTextBody("Feed[message]", messageText.trim().toString());
                 entityBuilder.addTextBody("Feed[feed_type]", feedType());
                 entityBuilder.addTextBody("Feed[feed_source]", linkUrl);
                 entityBuilder.addTextBody("Feed[enable_comment]", isCommented);
@@ -977,8 +977,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 } else {
                     entityBuilder.addTextBody("Feed[link_type]", "");
                 }
-                entityBuilder.addTextBody("Feed[url_title]", linktitle);
-                entityBuilder.addTextBody("Feed[url_description]", linkDescription);
+                entityBuilder.addTextBody("Feed[url_title]", linktitle.trim().toString());
+                entityBuilder.addTextBody("Feed[url_description]", linkDescription.trim().toString());
                 entityBuilder.addTextBody("Feed[url_image]", linkImage);
                 if (strings != null && strings.size() > 0) {
                     for (int j = 0; j < strings.size(); j++) {
@@ -1177,7 +1177,6 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             switch (viewType) {
                 case VIEW_TYPE_ADD_NEW:
                     View v1 = inflater.inflate(R.layout.add_image, parent, false);
-
                     viewHolder = new AddNewArtistHolder(v1);
                     break;
                 case VIEW_TYPE_LIST:
@@ -1424,8 +1423,32 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
             editTextMessage.setText(feedModel.getMessage());
         }
+        if(feedModel.getSpecializationModelsTags()!=null&&feedModel.getSpecializationModelsTags().size()>0)
+        {
+            mEditTextView.setText(getSelectedNameCsvTags(feedModel));
+            servicesMultipleSelectedModels=feedModel.getSpecializationModelsTags();
+        }
+        if(feedModel.getRefernce()!=null&&!feedModel.getRefernce().equalsIgnoreCase(""))
+        {
+            refernceEditText.setText(feedModel.getRefernce());
+        }
         return "";
 
+    }
+    public String getSelectedNameCsvTags(FeedModel feedModel) {
+        String languageCSV = "";
+        if (feedModel.getSpecializationModelsTags() != null && feedModel.getSpecializationModelsTags().size() > 0) {
+            for (int i = 0; i < feedModel.getSpecializationModelsTags().size(); i++) {
+                String language = feedModel.getSpecializationModelsTags().get(i).getSpecializationName();
+                if (language != null && !language.trim().isEmpty()
+                        && languageCSV != null && !languageCSV.trim().isEmpty())
+                    languageCSV = ""+languageCSV + " ";
+                String s="#"+language;
+                languageCSV = languageCSV + s;
+
+            }
+        }
+        return languageCSV;
     }
 
     public static String getFileName(URL extUrl) {

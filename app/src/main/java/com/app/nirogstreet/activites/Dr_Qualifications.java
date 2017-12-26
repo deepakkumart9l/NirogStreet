@@ -107,12 +107,9 @@ public class Dr_Qualifications extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, Dr_Qualifications.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, Dr_Qualifications.this);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Dr_Qualifications.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,12 +162,19 @@ public class Dr_Qualifications extends AppCompatActivity {
         @Override
         public void onBindViewHolder(QualificationAdapter.MyHolderView holder, final int position) {
             QualificationModel qualificationModel = qualificationModels.get(position);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
+
             holder.clgNameTv.setText(qualificationModel.getDegreeName());
             holder.degreeNameTv.setText(qualificationModel.getClgName());
             holder.passinYearTv.setText(qualificationModel.getPassingYear());
+            if(qualificationModel.getUpladedDoc()!=null&&!qualificationModel.getUpladedDoc().equalsIgnoreCase(""))
+            {
+                String s[] = qualificationModel.getUpladedDoc().split("documents/");
+                String s1[] = s[1].split("\\.");
+                holder.docTextView.setText(s[1]);
+
+            }else {
+                holder.docTextView.setVisibility(View.GONE);
+            }
             holder.editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -188,11 +192,12 @@ public class Dr_Qualifications extends AppCompatActivity {
         }
 
         public class MyHolderView extends RecyclerView.ViewHolder {
-            TextView clgNameTv, degreeNameTv, passinYearTv;
+            TextView clgNameTv, degreeNameTv, passinYearTv,docTextView;
             ImageView editImageView;
 
             public MyHolderView(View itemView) {
                 super(itemView);
+                docTextView=(TextView)itemView.findViewById(R.id.doc);
                 clgNameTv = (TextView) itemView.findViewById(R.id.clgName);
                 degreeNameTv = (TextView) itemView.findViewById(R.id.degree_name);
                 passinYearTv = (TextView) itemView.findViewById(R.id.year_of_passing);
