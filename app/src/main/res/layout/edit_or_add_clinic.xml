@@ -122,12 +122,31 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="Address"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/locality_la"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleTint="#000">
 
+                <EditText
+                    android:id="@+id/locality"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:drawableTint="@color/textcolorgray"
+                    android:hint="Locality"
+                    android:focusable="false"
+                    android:inputType="textCapWords|textCapSentences"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray" />
+            </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/sepcialization_la"
                 android:layout_width="match_parent"
@@ -142,7 +161,7 @@
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
                     android:hint="City"
-                    android:inputType="text|textNoSuggestions"
+                    android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />

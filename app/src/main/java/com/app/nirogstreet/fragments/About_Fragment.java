@@ -411,7 +411,6 @@ TextView privacyTextView;
                                     if (userDetailModels.size() > 0) {
                                         MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userLists);
                                         mRecyclerView.setAdapter(memberListingAdapter);
-                                        scrollView.fullScroll(ScrollView.FOCUS_UP);
 
                                     }
 

@@ -46,8 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="@dimen/padding_10"
                 android:layout_marginLeft="45dp"
+                android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
 
                 android:paddingRight="@dimen/padding_10"
@@ -90,10 +90,10 @@
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Services"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
                     android:focusable="false"
+                    android:hint="Services"
+                    android:inputType="text|textNoSuggestions|textMultiLine"
+                    android:maxLines="4"
 
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
@@ -102,8 +102,8 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/sepcialization_la"
                 android:layout_width="match_parent"
-                android:visibility="visible"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 app:passwordToggleTint="#000">
 
                 <EditText
@@ -113,17 +113,13 @@
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Specialization"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
                     android:focusable="false"
-
+                    android:hint="Specialization"
+                    android:inputType="text|textNoSuggestions|textMultiLine"
+                    android:maxLines="4"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
-
-
-
 
 
         </LinearLayout>

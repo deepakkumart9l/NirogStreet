@@ -273,20 +273,41 @@
                             android:layout_height="match_parent"
                             android:background="@color/white">
 
-
+                            <TextView
+                                android:id="@+id/attacment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:textColor="#636163"
+                                android:text="Add Attachment :" />
                             <ImageView
                                 android:id="@+id/imgView"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
+                                android:layout_marginTop="10dp"
+
                                 android:layout_marginLeft="5dp"
+                                android:layout_below="@id/attacment"
+
                                 android:background="@color/white"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/add_"></ImageView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:id="@+id/docName"
+                                android:visibility="gone"
+                                android:layout_marginTop="10dp"
+                                android:layout_below="@id/imgView"
+                                android:textColor="#636163"
+                                android:layout_marginLeft="5dp"
+
+                                android:layout_height="wrap_content" />
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:orientation="horizontal"
@@ -389,7 +410,7 @@
                         android:id="@+id/Enable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:buttonTint="@color/buttonBackground"
                         android:checked="true"
                         android:layout_marginLeft="10dp"

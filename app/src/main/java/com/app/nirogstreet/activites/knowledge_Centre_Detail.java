@@ -19,12 +19,14 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,8 @@ import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
@@ -89,12 +93,10 @@ public class Knowledge_Centre_Detail extends Activity {
     boolean isHide = false;
 
     ImageView backImageView;
-    TextView viewTv;
+    TextView viewTv,profile_complete_txt;
     CircularProgressBar circularProgressBar;
+    SeekBar seekBar_luminosite;
 
-    TextView titleTv;
-
-    TextView descriptionTv;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
 
@@ -183,11 +185,20 @@ public class Knowledge_Centre_Detail extends Activity {
         title_side_Tv = (TextView) findViewById(R.id.title_side);
         dr_name_TV = (TextView) findViewById(R.id.dr_name);
         backImageView = (ImageView) findViewById(R.id.back);
+        profile_complete_txt=(TextView)findViewById(R.id.profile_complete_txt);
         relativeLayout = (RelativeLayout) findViewById(R.id.rel);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        seekBar_luminosite = (SeekBar) findViewById(R.id.seekBar_luminosite);
+        seekBar_luminosite.setClickable(false);
+        seekBar_luminosite.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
         viewTv = (TextView) findViewById(R.id.view);
@@ -207,8 +218,11 @@ public class Knowledge_Centre_Detail extends Activity {
         TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_name_TV, this);
         TypeFaceMethods.setRegularTypeFaceForTextView(viewTv, this);
         if (isHide) {
+
             addQualificationTextView.setVisibility(View.GONE);
         } else {
+            seekBar_luminosite.setVisibility(View.GONE);
+            profile_complete_txt.setVisibility(View.GONE);
             addQualificationTextView.setVisibility(View.VISIBLE);
         }
         if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
@@ -267,7 +281,10 @@ public class Knowledge_Centre_Detail extends Activity {
                             isHide = true;
                             Toast.makeText(Knowledge_Centre_Detail.this, jsonObjectresponse.getString("message"), Toast.LENGTH_LONG).show();
                             addQualificationTextView.setVisibility(View.GONE);
-
+                            seekBar_luminosite.setVisibility(View.VISIBLE);
+                            profile_complete_txt.setVisibility(View.VISIBLE);
+                            seekBar_luminosite.setProgress(0);
+                            profile_complete_txt.setText("0 %");
 
                         }
 
@@ -398,16 +415,25 @@ public class Knowledge_Centre_Detail extends Activity {
             try {
                 if (jo != null) {
                     course_detail_model = Course_Detail_Parser.course_detail_Parser(jo);
-
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if (jsonObject.has("completed") && !jsonObject.isNull("completed")) {
+                            seekBar_luminosite.setProgress(jsonObject.getInt("completed"));
+                            profile_complete_txt.setText(jsonObject.getInt("completed")+" %");
+                        }
+                    }
                     if (course_detail_model != null) {
                         ApplicationSingleton.setCourse_detail_model(course_detail_model);
                         title_side_Tv.setText(course_detail_model.getName());
 
                         if (course_detail_model.getAuthor_detail_module().getProfile_pic() != null)
-                            Picasso.with(Knowledge_Centre_Detail.this)
-                                    .load(course_detail_model.getAuthor_detail_module().getProfile_pic())
-                                    .placeholder(R.drawable.user)
-                                    .error(R.drawable.user)
+
+                            Glide.with(Knowledge_Centre_Detail.this)
+                                    .load(course_detail_model.getAuthor_detail_module().getProfile_pic()).placeholder(R.drawable.user)
+                                    .centerCrop()
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .crossFade()
+                                    .override(100, 100)
                                     .into(auth_imageCircleImageView);
                         dr_name_TV.setText(course_detail_model.getAuthor_detail_module().getName());
                         relativeLayout.setOnClickListener(new View.OnClickListener() {
@@ -532,16 +558,7 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         startActivityForResult(intent, 1);
                                                     }
 
-                                                    String extntion = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1);
-                                                    String filename1 = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf("/") + 1);
-                                                   /* Methods.downloadFile(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file(), Knowledge_Centre_Detail.this, extntion, course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
-                                                    Methods.showProgress(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file(), Knowledge_Centre_Detail.this);*/
-                                                   /* if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
-                                                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId(), finalK, finalI, finalJ);
-                                                        knwledgeCompleteAsynctask.execute();
-                                                    } else {
-                                                        NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
-                                                    }*/
+
                                                 }
                                             });
 
@@ -570,11 +587,7 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         startActivityForResult(intent, 1);
                                                     }
 
-                                                  /*  String extntion = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1);
-                                                    String filename1 = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf("/") + 1);
-                                                    Methods.downloadFile(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file(), Knowledge_Centre_Detail.this, extntion, course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
-                                                    Methods.showProgress(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file(), Knowledge_Centre_Detail.this);
-*/
+
                                                 }
                                             });
                                         }
@@ -617,19 +630,6 @@ public class Knowledge_Centre_Detail extends Activity {
         }
     }
 
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
-    }
 
     public class KnwledgeCompleteAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
@@ -639,13 +639,15 @@ public class Knowledge_Centre_Detail extends Activity {
         int module_pos, topic_pos, file_pos;
         HttpClient client;
         int pos;
+        String rootID;
         private String responseBody;
 
-        public KnwledgeCompleteAsynctask(String id, int module_pos, int topic_pos, int file_pos) {
+        public KnwledgeCompleteAsynctask(String id, int module_pos, int topic_pos, int file_pos,String rootID) {
             this.id = id;
             this.module_pos = module_pos;
             this.topic_pos = topic_pos;
             this.file_pos = file_pos;
+            this.rootID=rootID;
 
         }
 
@@ -666,6 +668,11 @@ public class Knowledge_Centre_Detail extends Activity {
 
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObjectresponse = jo.getJSONObject("response");
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if (jsonObject.has("completed") && !jsonObject.isNull("completed")) {
+                            seekBar_luminosite.setProgress(jsonObject.getInt("completed"));
+                            profile_complete_txt.setText(jsonObject.getInt("completed")+" %");
+                        }
                         if (jsonObjectresponse.has("message") && !jsonObjectresponse.isNull("message")) {
                             Toast.makeText(Knowledge_Centre_Detail.this, jsonObjectresponse.getString("message"), Toast.LENGTH_LONG).show();
                             // addQualificationTextView.setVisibility(View.GONE);
@@ -701,6 +708,7 @@ public class Knowledge_Centre_Detail extends Activity {
                 pairs.add(new BasicNameValuePair("courseID", id));
                 pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID) + ""));
                 pairs.add(new BasicNameValuePair("status", "1"));
+                pairs.add(new BasicNameValuePair("rootID",rootID));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
@@ -731,14 +739,13 @@ public class Knowledge_Centre_Detail extends Activity {
                 int file = data.getIntExtra("file", -1);
                 if (course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getUser_completed() != 1)
                     if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
-                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getId(), module, topic, file);
+                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getId(), module, topic, file,course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getRoot_id());
                         knwledgeCompleteAsynctask.execute();
                     } else {
                         NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
                     }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
             }
         }
     }

@@ -100,7 +100,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
     final Uri imageUri = Uri.parse("http://i.imgur.com/VIlcLfg.jpg");
     String mCurrentPhotoPath;
-
+RelativeLayout experince_rel;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
     private int CAMERA_PERMISSION_CODE = 1;
     private boolean mIsTheTitleVisible = false;
@@ -117,8 +117,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
     private FrameLayout framelayoutTitle;
-    RelativeLayout phonelay, emaillay;
+    RelativeLayout phonelay, emaillay,birth_rel;
     ImageView logout;
+    ImageView imgPublic_icon;
     private RelativeLayout linearlayoutTitle;
     TextView profile_complete_txt;
     private TextView textviewTitle;
@@ -231,7 +232,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         collapsingToolbarLayout.setTitle("My App Title");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         edtImage = (ImageView) findViewById(R.id.edtImage);
-
+        experince_rel=(RelativeLayout)findViewById(R.id.experince_rel);
+imgPublic_icon=(ImageView)findViewById(R.id.imgPublic_icon);
+        birth_rel=(RelativeLayout)findViewById(R.id.birth_rel);
         webSite_icon = (ImageView) findViewById(R.id.webSite_icon);
         editInfo = (ImageView) findViewById(R.id.editInfo);
         circleImageView = (CircleImageView) findViewById(R.id.pro);
@@ -1070,6 +1073,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
             if (userDetailModel.getExperience() != null && !userDetailModel.getExperience().equalsIgnoreCase("")) {
                 yearOfExperienceTv.setText(userDetailModel.getExperience() + " " + "years experience");
+                experince_rel.setVisibility(View.VISIBLE);
+            }else {
+                experince_rel.setVisibility(View.GONE);
             }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
                 nameTv.setText("Dr. " + userDetailModel.getName());
@@ -1089,13 +1095,29 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
             if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
                 yearOfBirthTv.setText(userDetailModel.getDob());
+                birth_rel.setVisibility(View.VISIBLE);
+            }else {
+                birth_rel.setVisibility(View.GONE);
+
             }
             if (userDetailModel.getAbout() != null && !userDetailModel.getAbout().equalsIgnoreCase("")) {
                 aboutDetail.setText(userDetailModel.getAbout());
+                aboutHeading.setVisibility(View.VISIBLE);
+                aboutDetail.setVisibility(View.VISIBLE);
             }
-            if (userDetailModel != null && userDetailModel.getSpecializationModels() != null) {
+            else {
+                aboutHeading.setVisibility(View.GONE);
+                aboutDetail.setVisibility(View.GONE);
+            }
+            if (userDetailModel != null && userDetailModel.getSpecializationModels() != null&&userDetailModel.getServicesModels().size()>0) {
                 QualificationTv.setText(getSelectedNameCsv());
+                imgPublic_icon.setVisibility(View.VISIBLE);
+
+
+            }else {
+                imgPublic_icon.setVisibility(View.GONE);
             }
+
 
             if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
                 Picasso.with(Dr_Profile.this)

@@ -93,14 +93,21 @@ public class Courses_Listing_Adapter extends
         holder.time.setText(coursesModel.getTime_duration());
        // TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.time, context);
         if (coursesModel.getAuthor_detail_module() != null) {
-            holder.dr_name_csv.setText("by " + coursesModel.getAuthor_detail_module().getName());
+            holder.dr_name_csv.setText("by Dr. " + coursesModel.getAuthor_detail_module().getName());
           //  TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.dr_name_csv, context);
             if (coursesModel.getAuthor_detail_module().getProfile_pic() != null) {
-
+/*
                 Picasso.with(context)
                         .load(coursesModel.getAuthor_detail_module().getProfile_pic())
                         .placeholder(R.drawable.user)
                         .error(R.drawable.user)
+                        .into(holder.circleImageView);*/
+                Glide.with(context)
+                        .load(coursesModel.getAuthor_detail_module().getProfile_pic()) .placeholder(R.drawable.user)// Uri of the picture
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .crossFade()
+                        .override(100, 100)
                         .into(holder.circleImageView);
             }
         }

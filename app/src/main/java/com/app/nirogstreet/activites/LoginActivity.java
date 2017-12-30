@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -57,10 +58,11 @@ public class LoginActivity extends AppCompatActivity {
     ImageView backImageView;
     LoginAsync loginAsync;
     CircularProgressBar circularProgressBar;
-    TextView loginHeader, loginTv;
+    TextView loginHeader, loginTv, loginWithOtp;
     LinearLayout registerHere;
     private int passwordNotVisible = 1;
     ImageButton img_lock;
+    LoginViaOTPAsync loginViaOTPAsync;
     SesstionManager sesstionManager;
     TextView forgot;
 
@@ -75,6 +77,26 @@ public class LoginActivity extends AppCompatActivity {
         img_lock = (ImageButton) findViewById(R.id.img_lock);
         emailEt = (EditText) findViewById(R.id.emailEt);
         forgot = (TextView) findViewById(R.id.forgot);
+        loginWithOtp = (TextView) findViewById(R.id.loginWithOtp);
+        loginWithOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (emailEt.getText().length() == 0) {
+                    Toast.makeText(LoginActivity.this, "Email/Phone is Empty", Toast.LENGTH_LONG).show();
+                } else if (!Methods.validCellPhone(emailEt.getText().toString())||!Methods.isValidPhoneNumber(emailEt.getText().toString())) {
+                    Toast.makeText(LoginActivity.this, "Enter valid Phone No", Toast.LENGTH_LONG).show();
+
+                }else {
+                    if(NetworkUtill.isNetworkAvailable(LoginActivity.this))
+                    {
+                        loginViaOTPAsync=new LoginViaOTPAsync();
+                        loginViaOTPAsync.execute();
+                    }else {
+                        NetworkUtill.showNoInternetDialog(LoginActivity.this);
+                    }
+                }
+            }
+        });
         // TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
         setPass = (EditText) findViewById(R.id.passEt);
         img_lock.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 password = setPass.getText().toString();
 
                 if (username == null || username.equals("") || username.trim().isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Username is Empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Email/Phone is Empty", Toast.LENGTH_LONG).show();
                 } else if (password == null || password.equals("") || password.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Password is Empty", Toast.LENGTH_LONG).show();
                 } else {
@@ -287,6 +309,113 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
 
+                    }
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+    public class LoginViaOTPAsync extends AsyncTask<Void, Void, Void> {
+        String responseBody;
+        String phone, password;
+        CircularProgressBar bar;
+        //PlayServiceHelper regId;
+
+        JSONObject jo;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            circularProgressBar.setVisibility(View.VISIBLE);
+            phone = emailEt.getText().toString();
+            password = setPass.getText().toString();
+            //  bar = (ProgressBar) findViewById(R.id.progressBar);
+            //   bar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                String url = AppUrl.AppBaseUrl + "user/login-via-otp";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+
+
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                pairs.add(new BasicNameValuePair("mobile",phone ));
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+                responseBody = EntityUtils.toString(response.getEntity());
+                jo = new JSONObject(responseBody);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+         /*   Intent intent=new Intent(LoginActivity.this,OtpActivity.class);
+            startActivity(intent);*/
+            circularProgressBar.setVisibility(View.GONE);
+
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                if (jo != null) {
+                    JSONArray errorArray;
+                    JSONObject dataJsonObject;
+                    boolean status = false;
+
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    if (jo.has("data") && !jo.isNull("data")) {
+                        dataJsonObject = jo.getJSONObject("data");
+
+                        if (dataJsonObject.has("status") && !dataJsonObject.isNull("status"))
+
+                        {
+                            status = dataJsonObject.getBoolean("status");
+                            if (!status) {
+                                Toast.makeText(LoginActivity.this, dataJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                if (dataJsonObject.has("userID") && !dataJsonObject.isNull("userID")) {
+
+                                    String userId=dataJsonObject.getString("userID");
+                                    Intent intent=new Intent(LoginActivity.this,LoginWithOTP.class);
+                                    intent.putExtra("UserId",userId);
+                                    intent.putExtra("phone",phone);
+                                    startActivity(intent);
+                                }
+
+                            }
+                        }
                     }
 
                 }

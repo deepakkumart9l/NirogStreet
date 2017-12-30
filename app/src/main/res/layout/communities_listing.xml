@@ -97,13 +97,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:lineSpacingExtra="3.4sp"
-            android:text="You haven’t join any community yet !"
+            android:text="You haven’t joined any community yet !"
             android:textColor="#b7b7b7"
             android:textSize="11.3sp" />
         <Button
             android:layout_width="150dp"
             android:layout_marginTop="20dp"
-            android:text="Join Community"
+            android:text="Join a Community"
             android:id="@+id/join_com"
             android:textColor="@color/white"
             android:background="@drawable/round_button"

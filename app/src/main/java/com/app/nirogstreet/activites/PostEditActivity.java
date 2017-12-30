@@ -153,7 +153,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
     CheckBox checkBox;
     private boolean albumupdate = false;
-
+TextView docName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +175,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         } else {
             NetworkUtill.showNoInternetDialog(PostEditActivity.this);
         }
+        docName=(TextView)findViewById(R.id.docName);
         myScrollView=(MyScrollView)findViewById(R.id.scrol);
         myScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -535,6 +536,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         if (requestCode == 2000 && resultCode == Activity.RESULT_OK
                 && null != data) {
             // Get the Image from data
+            docName.setVisibility(View.GONE);
             selectedImagePath = null;
             selectedVideoPath = null;
             docpath = null;
@@ -630,6 +632,10 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
 
                             if (extension.equalsIgnoreCase(".doc") || extension.equalsIgnoreCase(".pdf") || extension.equalsIgnoreCase(".docx") || extension.equalsIgnoreCase(".xlsx") || extension.equalsIgnoreCase(".xls") || extension.equalsIgnoreCase(".ppt") || extension.equalsIgnoreCase(".PPTX")) {
                                 docpath = path;
+                                docName.setVisibility(View.VISIBLE);
+                                String name[]=docpath.split("/");
+
+                                docName.setText(name[name.length-1]);
                                 imageViewSelected.setImageResource(R.drawable.pdf_image);
                                 imageViewSelected.setClickable(false);
                             } else {
@@ -1415,6 +1421,10 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         if (feedModel.getFeed_type().equalsIgnoreCase("6") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
             docpath = feedModel.getFeed_source();
             imageViewSelected.setImageResource(R.drawable.pdf_image);
+            docName.setVisibility(View.VISIBLE);
+            String name[]=docpath.split("/");
+imageViewSelected.setVisibility(View.VISIBLE);
+            docName.setText(name[name.length-1]);
 
         }
         if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {

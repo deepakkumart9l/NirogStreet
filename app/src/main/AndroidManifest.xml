@@ -43,16 +43,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.OpenDocument"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activites.Splash"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activites.PublicShare"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.OpenDocument"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.Splash"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.PublicShare"
+            android:screenOrientation="portrait" />
 
 
-        <activity android:name=".activites.LoadHtmlPageActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activites.LoadHtmlPageActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activites.AppointmentActivity"
             android:screenOrientation="portrait" />
@@ -64,9 +68,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.YoutubeVideo_Play"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activites.MemberListing"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activites.GroupNotificationListing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.ForgotPassword"
@@ -109,7 +116,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.VideoPlay_Activity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activites.Multi_Select_Search"
             android:screenOrientation="portrait" />
@@ -156,9 +163,14 @@
             android:name=".activites.EditRegistrationAndDocuments"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activites.LoginWithOTP"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activites.RegistrationAndDocuments"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.SelectCouncilName"
+        <activity
+            android:name=".activites.SelectCouncilName"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.AddOrEditExperience"
@@ -166,7 +178,8 @@
         <activity
             android:name=".activites.Experience"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.SelectSingleCity"
+        <activity
+            android:name=".activites.SelectSingleCity"
             android:screenOrientation="portrait" />
 
         <activity

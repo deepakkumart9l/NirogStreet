@@ -6,9 +6,7 @@ import java.io.Serializable;
  * Created by Preeti on 12-12-2017.
  */
 
-public class File_Under_Topic implements Serializable{
-
-
+public class File_Under_Topic implements Serializable {
 
 
     public String getId() {
@@ -123,11 +121,23 @@ public class File_Under_Topic implements Serializable{
         this.user_completed = user_completed;
     }
 
+    String root_id;
+
+    public String getRoot_id() {
+        return root_id;
+    }
+
+    public void setRoot_id(String root_id) {
+        this.root_id = root_id;
+    }
+
     int user_completed;
-    public File_Under_Topic(String id,int user_completed, String parent_id, String name, String description, String banner, String kc_file, String created_by, String created_at, String updated_by, String updated_at, String status, String type, String doc_type) {
+
+    public File_Under_Topic(String id, int user_completed, String parent_id, String name, String description, String banner, String kc_file, String created_by, String created_at, String updated_by, String updated_at, String status, String type, String doc_type, String root_id) {
         this.id = id;
         this.parent_id = parent_id;
-        this.user_completed=user_completed;
+        this.user_completed = user_completed;
+        this.root_id = root_id;
         this.name = name;
         this.description = description;
         this.banner = banner;

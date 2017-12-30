@@ -1,10 +1,12 @@
 package com.app.nirogstreet.activites;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -57,14 +59,18 @@ public class NotificationListing extends AppCompatActivity {
     String userId;
     LinearLayout no_notifications;
     RecyclerView rv;
+    TextView info;
+    CardView first;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.noti_list);
+        setContentView(R.layout.noti_list_one);
         no_notifications=(LinearLayout)findViewById(R.id.no_list);
+        first=(CardView)findViewById(R.id.first);
         searchButtonTextView = (TextView) findViewById(R.id.searchButton);
         searchButtonTextView.setText("Notification");
+        info=(TextView)findViewById(R.id.info);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -96,12 +102,7 @@ public class NotificationListing extends AppCompatActivity {
         } else {
             NetworkUtill.showNoInternetDialog(NotificationListing.this);
         }
-       /* listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//view.findViewById(R.id.img)
-            }
-        });*/
+
     }
 
     public class NotificationAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -180,8 +181,23 @@ public class NotificationListing extends AppCompatActivity {
                 notificationModels = new ArrayList<>();
 
                 if (jo != null) {
+                    int groupRquest=-1;
                     if (jo.has("notificationdetail") && !jo.isNull("notificationdetail")) {
                         JSONObject jsonObject = jo.getJSONObject("notificationdetail");
+                        if(jsonObject.has("groupRequest")&&!jsonObject.isNull("groupRequest"))
+                        {
+                           groupRquest=jsonObject.getInt("groupRequest");
+                            first.setVisibility(View.VISIBLE);
+                            info.setText(groupRquest+"");
+                            first.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent=new Intent(NotificationListing.this,GroupNotificationListing.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+
                         if (jsonObject.has("notification") && !jsonObject.isNull("notification")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("notification");
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -240,6 +256,9 @@ public class NotificationListing extends AppCompatActivity {
                 if (notificationModels != null && notificationModels.size() > 0) {
                     final Notification_Adapter adapter = new Notification_Adapter(NotificationListing.this, notificationModels, authToken);
                     rv.setAdapter(adapter);
+
+                }else {
+                    no_notifications.setVisibility(View.VISIBLE);
 
                 }
             } catch (Exception e) {

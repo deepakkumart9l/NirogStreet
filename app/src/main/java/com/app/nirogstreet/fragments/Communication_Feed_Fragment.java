@@ -87,7 +87,12 @@ public class Communication_Feed_Fragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity();
         Bundle bundle = getArguments();
-        groupId = bundle.getString("groupId");
+        try {
+            groupId = bundle.getString("groupId");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

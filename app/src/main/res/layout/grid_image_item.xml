@@ -36,8 +36,18 @@
             android:layout_gravity="right"
             android:padding="8dp"
             android:src="@drawable/cancel" />
-
     </android.support.percent.PercentFrameLayout>
 
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toplayout"
+        android:layout_marginTop="5dp"
+        android:id="@+id/name"
+        android:maxLines="1"
+        android:visibility="gone"
+
+        android:gravity="center_horizontal|center_vertical"
+        android:text="image.jpge" />
 
 </RelativeLayout>

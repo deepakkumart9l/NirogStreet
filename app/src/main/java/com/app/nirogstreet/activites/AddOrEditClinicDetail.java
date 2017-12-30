@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.TimingsModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -37,7 +40,7 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
     ArrayList<SpecializationModel> multipleSelectedItemModels = new ArrayList<>();
     AllClinicModel allClinicModel;
     ClinicDetailModel clinicDetailModel;
-    EditText addressEt, clinicName, city, pincode, feeEt, Services_nameEt, countryEt;
+    EditText addressEt, clinicName, city, pincode, feeEt, Services_nameEt, countryEt,locality;
     ArrayList<SpecializationModel> servicesMultipleSelectedModels = new ArrayList<>();
     String clinic_Name;
     private static final int RESULT_CODE = 1;
@@ -94,7 +97,7 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                     {
                         timingsModels=clinicDetailModel.getTimingsModels();
                     }
-                    ClinicDetailModel clinicDetailModel = new ClinicDetailModel(id, clinicName.getText().toString(), "", addressEt.getText().toString(), countryEt.getText().toString(), city.getText().toString(), pincode.getText().toString(), latitude, longitude, feeEt.getText().toString(), multipleSelectedItemModels, timingsModels, created_by, clinic_docID);
+                    ClinicDetailModel clinicDetailModel = new ClinicDetailModel(id, clinicName.getText().toString(),locality.getText().toString(), "", addressEt.getText().toString(), countryEt.getText().toString(), city.getText().toString(), pincode.getText().toString(), latitude, longitude, feeEt.getText().toString(), multipleSelectedItemModels, timingsModels, created_by, clinic_docID);
                     Intent intent = new Intent(AddOrEditClinicDetail.this, Timings.class);
                     intent.putExtra("ClinicModel", clinicDetailModel);
                     startActivity(intent);
@@ -104,8 +107,9 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
         sesstionManager = new SesstionManager(AddOrEditClinicDetail.this);
         userDetailModel = ApplicationSingleton.getUserDetailModel();
         addressEt = (EditText) findViewById(R.id.address);
-        addressEt.setFocusable(false);
         countryEt = (EditText) findViewById(R.id.country);
+        locality=(EditText)findViewById(R.id.locality);
+
         Services_nameEt = (EditText) findViewById(R.id.Services_name);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +126,8 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
             if (allClinicModel.getId() != null) {
 
             }
+            if(allClinicModel.getLocality()!=null)
+                locality.setText(allClinicModel.getLocality());
             if (allClinicModel.getClinic_name() != null)
                 clinicName.setText(allClinicModel.getClinic_name());
             if (allClinicModel.getAddress() != null)
@@ -156,11 +162,13 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                         return false;
                     }
                 });
-                addressEt.setOnClickListener(new View.OnClickListener() {
+                locality.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(AddOrEditClinicDetail.this, SearchLocationCity.class);
-                        startActivityForResult(intent, RESULT_CODE_LOCATION);
+                        if(NetworkUtill.isNetworkAvailable(AddOrEditClinicDetail.this)) {
+                            Intent intent = new Intent(AddOrEditClinicDetail.this, SearchLocationCity.class);
+                            startActivityForResult(intent, RESULT_CODE_LOCATION);
+                        }
 
                     }
                 });
@@ -169,6 +177,8 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                 city.setFocusable(false);
                 addressEt.setClickable(false);
                 addressEt.setFocusable(false);
+                locality.setClickable(false);
+                locality.setFocusable(false);
                 clinicName.setClickable(false);
                 clinicName.setFocusable(false);
                 countryEt.setClickable(false);
@@ -203,10 +213,15 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                 clinicName.setText(clinicDetailModel.getName());
             if (clinicDetailModel.getAddress() != null)
                 addressEt.setText(clinicDetailModel.getAddress());
+
             if (clinicDetailModel.getCity() != null)
                 city.setText(clinicDetailModel.getCity());
             if (clinicDetailModel.getState() != null)
                 countryEt.setText(clinicDetailModel.getState());
+            if(clinicDetailModel.getLocality()!=null)
+            {
+                locality.setText(clinicDetailModel.getLocality());
+            }
             if (clinicDetailModel.getPincode() != null)
                 pincode.setText(clinicDetailModel.getPincode());
             if (clinicDetailModel.getConsultation_fee() != null)
@@ -233,12 +248,14 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                         return false;
                     }
                 });
-                addressEt.setOnClickListener(new View.OnClickListener() {
+                locality.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(AddOrEditClinicDetail.this, SearchLocationCity.class);
-                        startActivityForResult(intent, RESULT_CODE_LOCATION);
 
+                        if(NetworkUtill.isNetworkAvailable(AddOrEditClinicDetail.this)) {
+                            Intent intent = new Intent(AddOrEditClinicDetail.this, SearchLocationCity.class);
+                            startActivityForResult(intent, RESULT_CODE_LOCATION);
+                        }
                     }
                 });
             } else {
@@ -249,11 +266,14 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                 clinicName.setClickable(false);
                 clinicName.setFocusable(false);
                 countryEt.setClickable(false);
+                locality.setClickable(false);
+                locality.setFocusable(false);
                 countryEt.setFocusable(false);
                 pincode.setClickable(false);
                 pincode.setFocusable(false);
             }
         } else {
+
             Services_nameEt.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -273,15 +293,16 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
             });
         }
         if(clinicDetailModel==null&&allClinicModel==null)
-        {
-            addressEt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        {locality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NetworkUtill.isNetworkAvailable(AddOrEditClinicDetail.this)) {
                     Intent intent = new Intent(AddOrEditClinicDetail.this, SearchLocationCity.class);
                     startActivityForResult(intent, RESULT_CODE_LOCATION);
-
                 }
-            });
+            }
+        });
+
         }
         if (getIntent().hasExtra("clinic_Name")) {
             clinic_Name = getIntent().getStringExtra("clinic_Name");
@@ -289,16 +310,7 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
         if (clinic_Name != null) {
             clinicName.setText(clinic_Name);
         }
-        TypeFaceMethods.setRegularTypeFaceEditText(feeEt, AddOrEditClinicDetail.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(Services_nameEt, AddOrEditClinicDetail.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(countryEt, AddOrEditClinicDetail.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(clinicName, AddOrEditClinicDetail.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(city, AddOrEditClinicDetail.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(pincode, AddOrEditClinicDetail.this);
-
-
-        TypeFaceMethods.setRegularTypeFaceEditText(addressEt, AddOrEditClinicDetail.this);
 
 
         if (getIntent().hasExtra("pos")) {
@@ -357,7 +369,7 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
                         countryEt.setText(country);
                     }
                     city.setText(location);
-                    addressEt.setText(address);
+                    locality.setText(address);
                     pincode.setText(pincodes);
 
                 }

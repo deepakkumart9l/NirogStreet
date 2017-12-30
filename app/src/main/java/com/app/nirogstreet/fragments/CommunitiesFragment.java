@@ -105,6 +105,7 @@ public class CommunitiesFragment extends Fragment {
         super.onResume();
         if(ApplicationSingleton.isJoinedCommunity())
         {
+
             page = 1;
             groupModelsTotal = new ArrayList<GroupModel>();
             userView.setSelected(false);
@@ -113,7 +114,6 @@ public class CommunitiesFragment extends Fragment {
             no_list.setVisibility(View.GONE);
 
             //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
-            // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
             myGroupTextView.setClickable(false);
             allView.setSelected(true);
             groupListingAdapter = null;
@@ -122,7 +122,7 @@ public class CommunitiesFragment extends Fragment {
             otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
             myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
             if (NetworkUtill.isNetworkAvailable(context)) {
-                String url = AppUrl.BaseUrl + "group/all-groups";
+                String url = AppUrl.BaseUrl + "group/all-groups-new";
 
                 groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTask.execute();
@@ -134,6 +134,7 @@ public class CommunitiesFragment extends Fragment {
         if (ApplicationSingleton.isGroupCreated() || ApplicationSingleton.isGroupUpdated()) {
             userView.setSelected(true);
             allView.setSelected(false);
+            no_list.setVisibility(View.GONE);
             page = 1;
             //  TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
             // TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
@@ -186,7 +187,7 @@ public class CommunitiesFragment extends Fragment {
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    String url = AppUrl.BaseUrl + "group/all-groups";
+                    String url = AppUrl.BaseUrl + "group/all-groups-new";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTask.execute();
@@ -259,7 +260,7 @@ public class CommunitiesFragment extends Fragment {
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    String url = AppUrl.BaseUrl + "group/all-groups";
+                    String url = AppUrl.BaseUrl + "group/all-groups-new";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTask.execute();
@@ -286,7 +287,7 @@ public class CommunitiesFragment extends Fragment {
             }
         else {
             if (NetworkUtill.isNetworkAvailable(context)) {
-                String url = AppUrl.BaseUrl + "group/all-groups";
+                String url = AppUrl.BaseUrl + "group/all-groups-new";
 
                 groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTask.execute();
@@ -366,7 +367,7 @@ public class CommunitiesFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             circularProgressBar.setVisibility(View.GONE);
             ArrayList<GroupModel> groupModels = new ArrayList<>();
-            groupModels = Group_Listing_Parser.groupListingParser(jo);
+            groupModels = Group_Listing_Parser.groupListingParser(jo,showJoin);
             otherGroupTextView.setClickable(true);
             myGroupTextView.setClickable(true);
             groupModelsTotal.addAll(groupModels);

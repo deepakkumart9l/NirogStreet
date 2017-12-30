@@ -35,7 +35,7 @@ public class IncomingSms extends BroadcastReceiver {
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
 
                     String senderNum = phoneNumber;
-                    if( currentMessage.getDisplayMessageBody().contains("NirogStreet")) {
+                    if (currentMessage.getDisplayMessageBody().contains("NirogStreet")) {
 
                         String message = currentMessage.getDisplayMessageBody().split(" ")[0];
 
@@ -46,12 +46,19 @@ public class IncomingSms extends BroadcastReceiver {
                         myIntent.putExtra("message", message);
                         LocalBroadcastManager.getInstance(context).sendBroadcast(myIntent);
                         // Show Alert
+                    } else if (currentMessage.getDisplayMessageBody().contains("OTP for online")) {
+                        String message = currentMessage.getDisplayMessageBody().split(",")[1];
+                        String otp1 = message.split(" ")[1];
+                        Intent myIntent = new Intent("otp");
+                        myIntent.putExtra("message", otp1);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(myIntent);
+                        break;
                     }
                 } // end for loop
             } // bundle is null
 
         } catch (Exception e) {
-            Log.e("SmsReceiver", "Exception smsReceiver" +e);
+            Log.e("SmsReceiver", "Exception smsReceiver" + e);
 
         }
     }

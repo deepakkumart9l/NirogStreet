@@ -12,6 +12,15 @@ public class ClinicDetailModel implements Serializable {
         return id;
     }
 
+    public String getLocality() {
+        return locality;
+    }
+
+    public void setLocality(String locality) {
+        this.locality = locality;
+    }
+
+    public String locality;
     public String getClinic_docID() {
         return clinic_docID;
     }
@@ -136,9 +145,10 @@ public class ClinicDetailModel implements Serializable {
     }
 
     ArrayList<TimingsModel> timingsModels=new ArrayList<>();
-    public ClinicDetailModel(String id, String name, String mobile, String address, String state, String city, String pincode, String at_lat, String at_long, String consultation_fee, ArrayList<SpecializationModel> servicesModels,ArrayList<TimingsModel>timingsModels,String created_by,String clinic_docID) {
+    public ClinicDetailModel(String id, String name,String locality,  String mobile, String address, String state, String city, String pincode, String at_lat, String at_long, String consultation_fee, ArrayList<SpecializationModel> servicesModels,ArrayList<TimingsModel>timingsModels,String created_by,String clinic_docID) {
         this.id = id;
         this.name = name;
+        this.locality=locality;
         this.mobile = mobile;
         this.address = address;
         this.timingsModels=timingsModels;

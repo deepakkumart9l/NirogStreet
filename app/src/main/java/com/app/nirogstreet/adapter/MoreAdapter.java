@@ -222,8 +222,10 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         myViewHolder.phoneTv.setText(userDetailModel1.getMobile());
                     if (userDetailModel1.getDob() != null)
                         myViewHolder.yearOfBirthTv.setText(userDetailModel1.getDob());
-                    if (userDetailModel1.getExperience() != null)
-                        myViewHolder.view_detail.setText(userDetailModel1.getExperience() + " years experince");
+                    if (userDetailModel1.getExperience() != null&&!userDetailModel1.getExperience().equalsIgnoreCase(""))
+                        myViewHolder.view_detail.setText(userDetailModel1.getExperience() + " years experience");
+                    else
+                    myViewHolder.view_detail.setVisibility(View.GONE);
                     if (userDetailModel1 != null && userDetailModel1.getSpecializationModels() != null) {
                         myViewHolder.QualificationTv.setText(getSelectedNameCsv(userDetailModel1));
                     }
@@ -254,71 +256,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         case FEED_TYPE_YOUTUBEVIDEO_LINK:
                             switch (link_type) {
                                 case LINK_TYPE_YOUTUBE_VIDEO:
-                                    /*viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                                    viewHolder.left_view.setVisibility(View.GONE);
-                                    viewHolder.right_view.setVisibility(View.GONE);
-                                    viewHolder.bottom_view.setVisibility(View.GONE);
-                                    viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
-
-                                    viewHolder.playicon.setVisibility(View.GONE);
-                                    viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                                    viewHolder.linkImageView.setVisibility(View.GONE);
-                                    viewHolder.linkTitleTextView.setVisibility(View.GONE);
-                                    viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
-                                    viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                                    viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                                    viewHolder.docTypeLayout.setVisibility(View.GONE);
-                                    viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                                    viewHolder.anniversaryLinearLayout.setVisibility(View.GONE);
-                                    viewHolder.anniverasaryLayoutImage.setVisibility(View.GONE);
-                                    viewHolder.videoView.setVisibility(View.GONE);
-                                    viewHolder.playicon.setVisibility(View.VISIBLE);
-                                    Glide.with(context)
-                                            .load(feedModel.getUrl_image()) // Uri of the picture
-                                            .centerCrop()
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .crossFade()
-                                            .override(100, 100)
-                                            .into(viewHolder.feedImageView);
-
-                                    String videoUrl[];
-                                    String frameVideo = null;
-                                    try {
-                                        if (feedModel.getFeed_source().contains("=")) {
-                                            videoUrl = feedModel.getFeed_source().split("=");
-                                        } else {
-                                            videoUrl = feedModel.getFeed_source().split("be/");
-                                        }
-                                        String video_id = videoUrl[1];
-                                        frameVideo = "<iframe width=\"100%\" height=" + "185" + " src=\"https://www.youtube.com/embed/" + video_id + "?" + "\" frameborder=\"0\" allowfullscreen></iframe>";
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    viewHolder.webView.setVisibility(View.VISIBLE);
-                                    viewHolder.webView.setWebViewClient(new WebViewClient() {
-                                        @Override
-                                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                                            return false;
-                                        }
-                                    });
-                                    WebSettings webSettings = viewHolder.webView.getSettings();
-                                    webSettings.setJavaScriptEnabled(true);
-                                    viewHolder.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                                    webView = (WebView) viewHolder.webView;
-                                    webView.setWebChromeClient(mWebChromeClient);
-                                    if (Build.VERSION.SDK_INT < 8) {
-                                        //webView.getSettings().setPluginsEnabled(true);
-                                    } else {
-                                        webView.getSettings().setPluginState(WebSettings.PluginState.ON);
-                                    }
-                                    viewHolder.webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-
-                                    viewHolder.webView.getSettings().setJavaScriptEnabled(true);
-                                    viewHolder.webView.getSettings().setAppCacheEnabled(true);
-                                    viewHolder.webView.getSettings().setSaveFormData(true);
-                                    viewHolder.webView.loadData(frameVideo, "text/html", "utf-8");
-
-*/
                                     viewHolder.link_title_des_lay.setVisibility(View.GONE);
                                     viewHolder.left_view.setVisibility(View.GONE);
                                     viewHolder.right_view.setVisibility(View.GONE);
@@ -647,6 +584,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
 
                         }
+                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
@@ -696,6 +635,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
+                        Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
 

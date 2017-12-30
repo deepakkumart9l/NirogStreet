@@ -75,10 +75,10 @@ public class Multiple_select_invite_search extends Activity
     private static final int RESULT_CODE = 1;
     private static final int RESULT_CODE_TAGS = 8;
     int page = 1;
-String groupId="";
+    String groupId = "";
     ImageView backImageView;
     private ArrayList<MultipleSelectedItemModel> list;
-  SearchAdapterMultiSelect searchAdapterMultiSelect;
+    SearchAdapterMultiSelect searchAdapterMultiSelect;
     EditText searchET;
     SesstionManager sessionManager;
     ArrayList<MultipleSelectedItemModel> searchModels = new ArrayList<>();
@@ -108,8 +108,8 @@ String groupId="";
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(getResources().getColor(R.color.statusbarcolor));
         }
-        if(getIntent().hasExtra("groupId")) {
-            groupId =getIntent().getStringExtra("groupId");
+        if (getIntent().hasExtra("groupId")) {
+            groupId = getIntent().getStringExtra("groupId");
         }
         specilization = (TextView) findViewById(R.id.specilization);
         searchET = (EditText) findViewById(R.id.searchET);
@@ -119,9 +119,7 @@ String groupId="";
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Multiple_select_invite_search.this);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
         ChipCloudConfig deleteableConfig = new ChipCloudConfig()
                 .selectMode(ChipCloud.SelectMode.multi)
                 .checkedChipColor(Color.parseColor("#ddaa00"))
@@ -129,7 +127,6 @@ String groupId="";
                 .uncheckedChipColor(Color.parseColor("#e0e0e0"))
                 .showClose(Color.parseColor("#a6a6a6"))
                 .useInsetPadding(true)
-                .typeface(tf)
                 .uncheckedTextColor(Color.parseColor("#000000"));
 
         horizontalScroll = (LinearLayout) findViewById(R.id.horizontal_layout);
@@ -168,13 +165,12 @@ String groupId="";
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-if(NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this))
-{
-    inviteAyncTask=new InviteAyncTask("");
-    inviteAyncTask.execute();
-}else {
-    NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
-}
+                if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
+                    inviteAyncTask = new InviteAyncTask("");
+                    inviteAyncTask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
+                }
             }
         });
 
@@ -191,7 +187,7 @@ if(NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this))
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 addQualificationTextView.setVisibility(View.GONE);
-page=1;
+                page = 1;
                 text = s.toString();
                 query = text;
                 if (searchModels != null) {
@@ -205,11 +201,11 @@ page=1;
                 // setVisibilty(0);
                 if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
                     if (searchET.getText().toString().length() == 0) {
-                        searchAdapterMultiSelect=null;
+                        searchAdapterMultiSelect = null;
                         searchAsync = new SearchAsync("");
                         searchAsync.execute();
                     } else {
-                        searchAdapterMultiSelect=null;
+                        searchAdapterMultiSelect = null;
 
                         searchAsync = new SearchAsync(searchET.getText().toString());
                         searchAsync.execute();
@@ -252,7 +248,7 @@ page=1;
 
                     @Override
                     public void afterTextChanged(final Editable s) {
-page=1;
+                        page = 1;
                         timer.cancel();
                         timer = new Timer();
                         timer.schedule(
@@ -267,7 +263,7 @@ page=1;
 
                                                 if (searchET.getText().toString().length() == 0) {
                                                     if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
-                                                        searchAdapterMultiSelect=null;
+                                                        searchAdapterMultiSelect = null;
 
                                                         searchAsync = new SearchAsync("");
 
@@ -277,7 +273,7 @@ page=1;
                                                     }
                                                 } else {
                                                     if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
-                                                        searchAdapterMultiSelect=null;
+                                                        searchAdapterMultiSelect = null;
 
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
                                                         searchAsync.execute();
@@ -362,8 +358,8 @@ page=1;
                         pairs.add(new BasicNameValuePair("invited_to[]", list.get(i).getUserId()));
                     }
                 }
-                pairs.add(new BasicNameValuePair("status","1"));
-                pairs.add(new BasicNameValuePair("groupID",groupId));
+                pairs.add(new BasicNameValuePair("status", "1"));
+                pairs.add(new BasicNameValuePair("groupID", groupId));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
 
@@ -384,20 +380,17 @@ page=1;
             searchModels = new ArrayList<>();
             try {
                 if (jo != null) {
-if(jo.has("response")&&!jo.isNull("response"))
-{
-    JSONObject jsonObject=jo.getJSONObject("response");
-    if(jsonObject.has("message")&&!jsonObject.isNull("message"))
-    {
-        JSONObject jsonObject1=jsonObject.getJSONObject("message");
-        if(jsonObject1.has("message")&&!jsonObject1.isNull("message"))
-        {
-            Toast.makeText(Multiple_select_invite_search.this, jsonObject1.getString("message"), Toast.LENGTH_SHORT).show();
-            ApplicationSingleton.setIsGroupUpdated(true);
-            finish();
-        }
-    }
-}
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if (jsonObject.has("message") && !jsonObject.isNull("message")) {
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("message");
+                            if (jsonObject1.has("message") && !jsonObject1.isNull("message")) {
+                                Toast.makeText(Multiple_select_invite_search.this, jsonObject1.getString("message"), Toast.LENGTH_SHORT).show();
+                                ApplicationSingleton.setIsGroupUpdated(true);
+                                finish();
+                            }
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -461,7 +454,7 @@ if(jo.has("response")&&!jo.isNull("response"))
                         pairs.add(new BasicNameValuePair("selectedUsers", list.get(i).getUserId()));
                     }
                 }
-                pairs.add(new BasicNameValuePair("groupID",groupId));
+                pairs.add(new BasicNameValuePair("groupID", groupId));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
 
@@ -656,14 +649,14 @@ if(jo.has("response")&&!jo.isNull("response"))
                         holder.textViewInvite.setVisibility(View.GONE);
                         if (list.size() > 0)
                             removeFromSelected(multipleSelectedItemModel);
-                        textViewDone.setText("Selected ("+list.size()+")");
+                        textViewDone.setText("Selected (" + list.size() + ")");
 
                         horizontalChipCloud.delchip(position, multipleSelectedItemModel.getUserName());
 
                     } else {
                         multipleSelectedItemModels.get(position).setSelected(true);
                         list.add(multipleSelectedItemModels.get(position));
-                        textViewDone.setText("Selected ("+list.size()+")");
+                        textViewDone.setText("Selected (" + list.size() + ")");
 
                         horizontalChipCloud.addChip(multipleSelectedItemModel.getUserName());
                         holder.textViewInvite.setVisibility(View.VISIBLE);

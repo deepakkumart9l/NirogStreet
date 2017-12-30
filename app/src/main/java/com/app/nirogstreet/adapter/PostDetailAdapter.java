@@ -693,6 +693,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                     viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                     viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
+                    Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+
                 } else {
                     viewHolder.QuestionTextView.setVisibility(View.GONE);
 

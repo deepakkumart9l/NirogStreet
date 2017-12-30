@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by Preeti on 08-11-2017.
  */
 public class Group_Listing_Parser {
-    public static ArrayList<GroupModel> groupListingParser(JSONObject jsonObject1) {
+    public static ArrayList<GroupModel> groupListingParser(JSONObject jsonObject1,boolean showJoin) {
         ArrayList<GroupModel> groupModels = new ArrayList<>();
         try {
 
@@ -23,11 +23,16 @@ public class Group_Listing_Parser {
                         JSONArray jsonArray = jsonObjectResponse.getJSONArray("groups");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             UserDetailModel userDetails = null;
+                            String statusdata=null;
                             String user_id = null, lname = null, fname = null, profile_pic = null, slug = null;
                             String id = null, name = null, totalMembers = null, banner = null, description = null, privacy = null, created = null, updated = null, updated_by = null, status = null;
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             if (jsonObject.has("id") && !jsonObject.isNull("id")) {
                                 id = jsonObject.getString("id");
+                            }
+                            if(jsonObject.has("statusdata")&&!jsonObject.isNull("statusdata"))
+                            {
+                                statusdata=jsonObject.getString("statusdata");
                             }
                             if (jsonObject.has("totalMembers") && !jsonObject.isNull("totalMembers")) {
                                 totalMembers = jsonObject.getString("totalMembers");
@@ -79,7 +84,7 @@ public class Group_Listing_Parser {
                                 }
                                 userDetails = new UserDetailModel(user_id, name,1, "", "", "", "", profile_pic, "", "", "", "", "", "", null, null, null, null, null, null, null, null);
                             }
-                            groupModels.add(new GroupModel(id, created, name, description, totalMembers, privacy, banner, userDetails, updated, status, updated_by));
+                            groupModels.add(new GroupModel(id, created, name, description, totalMembers, privacy, banner, userDetails, updated, status, updated_by,showJoin,statusdata));
                         }
                     }
                 }

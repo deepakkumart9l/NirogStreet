@@ -545,6 +545,7 @@ public class Timings extends Activity {
                         entityBuilder.addTextBody("ClinicProfile[pincode]", clinicDetailModel.getPincode());
                         entityBuilder.addTextBody("ClinicProfile[state]", clinicDetailModel.getState());
                         entityBuilder.addTextBody("ClinicProfile[clinic_name]", clinicDetailModel.getName());
+                        entityBuilder.addTextBody("ClinicProfile[locality]", clinicDetailModel.getLocality());
 
 
                         entityBuilder.addTextBody("ClinicProfile[address]", clinicDetailModel.getAddress());
@@ -824,6 +825,7 @@ public class Timings extends Activity {
                             pairs.add(new BasicNameValuePair("ClinicProfile[pincode]", clinicDetailModel.getPincode()));
                             pairs.add(new BasicNameValuePair("ClinicProfile[state]", clinicDetailModel.getState()));
                             pairs.add(new BasicNameValuePair("ClinicProfile[clinic_name]", clinicDetailModel.getName()));
+                            pairs.add(new BasicNameValuePair("ClinicProfile[locality]", clinicDetailModel.getLocality()));
 
 
                             pairs.add(new BasicNameValuePair("ClinicProfile[address]", clinicDetailModel.getAddress()));

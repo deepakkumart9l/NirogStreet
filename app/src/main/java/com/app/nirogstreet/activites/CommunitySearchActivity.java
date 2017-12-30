@@ -252,7 +252,7 @@ public class CommunitySearchActivity  extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
 
                 ArrayList<GroupModel> groupModels = new ArrayList<>();
-                groupModels = Group_Listing_Parser.groupListingParser(jo);
+                groupModels = Group_Listing_Parser.groupListingParser(jo,false);
                 groupModelsTotal.addAll(groupModels);
                 super.onPostExecute(aVoid);
                 try {

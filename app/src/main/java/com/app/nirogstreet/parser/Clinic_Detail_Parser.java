@@ -29,6 +29,7 @@ public class Clinic_Detail_Parser {
                     String address = null;
                     String state = null;
                     String clinicCity = null;
+                    String locality=null;
                     String pincode = null;
                     String at_lat = null;
                     String created_by=null;
@@ -65,6 +66,10 @@ public class Clinic_Detail_Parser {
                         }
                         if (jsonObject1.has("city") && !jsonObject1.isNull("city")) {
                             clinicCity = jsonObject1.getString("city");
+                        }
+                        if(jsonObject1.has("locality")&&!jsonObject1.isNull("locality"))
+                        {
+                            locality=jsonObject1.getString("locality");
                         }
                         if (jsonObject1.has("pincode") && !jsonObject1.isNull("pincode")) {
                             pincode = jsonObject1.getString("pincode");
@@ -119,55 +124,55 @@ public class Clinic_Detail_Parser {
                             if (days.equalsIgnoreCase("Monday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(0).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(0).setSesstionModel2(sesstionModel);
 
                             }
                             if (days.equalsIgnoreCase("Tuesday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(1).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(1).setSesstionModel2(sesstionModel);
 
                             }
                             if (days.equalsIgnoreCase("Wednesday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(2).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(2).setSesstionModel2(sesstionModel);
 
                             }
                             if (days.equalsIgnoreCase("Thursday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(3).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(3).setSesstionModel2(sesstionModel);
 
                             }
                             if (days.equalsIgnoreCase("Friday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(4).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(4).setSesstionModel2(sesstionModel);
 
                             }
                             if (days.equalsIgnoreCase("Saturday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(5).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(5).setSesstionModel2(sesstionModel);
 
                             }
                             if (days.equalsIgnoreCase("Sunday")) {
                                 if (sesstion.equalsIgnoreCase("Morning"))
                                     timingsModels1.get(6).setSesstionModel1(sesstionModel);
-                                else if (sesstion.equalsIgnoreCase("Morning"))
+                                else if (sesstion.equalsIgnoreCase("Evening"))
                                     timingsModels1.get(6).setSesstionModel2(sesstionModel);
 
                             }
                         }
                     }
-                    clinicDetailModels.add(new ClinicDetailModel(clinicId, clinicName, clinicMobile, address, state, clinicCity, pincode, at_lat, at_long, consultation_fee, servicesModels, timingsModels1,created_by,clinic_docID));
+                    clinicDetailModels.add(new ClinicDetailModel(clinicId, clinicName,locality, clinicMobile, address, state, clinicCity, pincode, at_lat, at_long, consultation_fee, servicesModels, timingsModels1,created_by,clinic_docID));
 
                 }
             }

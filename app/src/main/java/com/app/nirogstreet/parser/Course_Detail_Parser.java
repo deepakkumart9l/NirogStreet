@@ -192,6 +192,7 @@ public class Course_Detail_Parser {
                                             for (int l = 0; l < filesJsonArray.length(); l++) {
                                                 String file_id = null, file_parent_id = null, file_name = null, file_description = null, file_banner = null, file_kc_file = null, filecreated_by = null, filecreated_at = null, fileupdated_by = null, fileupdated_at = null, filestatus = null, filetype = null, filedoc_type = null;
                                                 int fileuser_completed=-1;
+                                                String root_id=null;
 
 
                                                 JSONObject fileJsonObject = filesJsonArray.getJSONObject(l);
@@ -203,6 +204,10 @@ public class Course_Detail_Parser {
                                                 }
                                                 if (fileJsonObject.has("parent_id") && !fileJsonObject.isNull("parent_id")) {
                                                     file_parent_id = fileJsonObject.getString("parent_id");
+                                                }
+                                                if(fileJsonObject.has("root_id")&&!fileJsonObject.isNull("root_id"))
+                                                {
+                                                    root_id=fileJsonObject.getString("root_id");
                                                 }
                                                 if (fileJsonObject.has("name") && !fileJsonObject.isNull("name")) {
                                                     file_name = fileJsonObject.getString("name");
@@ -240,7 +245,7 @@ public class Course_Detail_Parser {
                                                 if (fileJsonObject.has("doc_type") && !fileJsonObject.isNull("doc_type")) {
                                                     filedoc_type = fileJsonObject.getString("doc_type");
                                                 }
-                                                file_under_topics.add(new File_Under_Topic(file_id,fileuser_completed, file_parent_id, file_name, file_description, file_banner, file_kc_file, filecreated_by, filecreated_at, fileupdated_by, fileupdated_at, filestatus, filedoc_type, filedoc_type));
+                                                file_under_topics.add(new File_Under_Topic(file_id,fileuser_completed, file_parent_id, file_name, file_description, file_banner, file_kc_file, filecreated_by, filecreated_at, fileupdated_by, fileupdated_at, filestatus, filedoc_type, filedoc_type,root_id));
                                             }
                                         }
                                         topic_under_modules.add(new Topic_Under_Module(topicId, topicuser_completed, topicParent_id, topic_name, topic_description, topic_banner, topic_created_by, topic_created_at, topic_updated_by, topic_updated_at, topic_status, topic_type, topic_doc_type, file_under_topics, author_detail_module));

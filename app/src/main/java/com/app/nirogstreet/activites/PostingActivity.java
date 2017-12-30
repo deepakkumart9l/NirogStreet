@@ -76,6 +76,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -112,6 +113,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PostingActivity extends Activity implements HashTagHelper.OnHashTagClickListener {
     String selectedImagePath = null;
     String selectedVideoPath = null;
+
+    TextView docName;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
     RelativeLayout linkLay, imagelay;
@@ -168,6 +171,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 imagelay.setVisibility(View.VISIBLE);
             }
         });
+        docName=(TextView)findViewById(R.id.docName);
         sesstionManager = new SesstionManager(PostingActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -523,6 +527,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             // Get the Image from data
             selectedImagePath = null;
             selectedVideoPath = null;
+            docName.setVisibility(View.GONE);
             docpath = null;
             ArrayList<Image> imagesarr = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             for (int i = 0; i < imagesarr.size(); i++) {
@@ -618,6 +623,10 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 docpath = path;
                                 imageViewSelected.setImageResource(R.drawable.pdf_image);
                                 imageViewSelected.setClickable(false);
+                                docName.setVisibility(View.VISIBLE);
+                                String name[]=docpath.split("/");
+
+                                docName.setText(name[name.length-1]);
                             } else {
                                 Toast.makeText(PostingActivity.this, "Not Supported", Toast.LENGTH_LONG).show();
                             }
@@ -795,15 +804,12 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //  circularProgressBar.setVisibility(View.VISIBLE);
             pDialog = new ProgressDialog(PostingActivity.this);
             pDialog.setMessage("Uploading...");
-            //pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             pDialog.setCancelable(false);
             pDialog.show();
 
-           /* String xx = StringEscapeUtils.escapeJava(editTextMessage.getText().toString());
-            messageText = xx.replace("\\", "");*/
+
             try {
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
                 Log.e("messageText", "" + messageText);
@@ -900,10 +906,20 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     Bitmap bmThumbnail;
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(selectedVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
                     bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
                     byte[] imageBytes = baos.toByteArray();
                     String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-                    entityBuilder.addTextBody("Feed[url_image]", encodedImage);
+                   // entityBuilder.addTextBody("Feed[url_image]", encodedImage);
 
+
+
+                  /*  if (bmThumbnail == null) {
+                        try {
+                            File filePath = context.getFileStreamPath("tet");
+                            FileInputStream fi = new FileInputStream(filePath);
+                            bmThumbnail = BitmapFactory.decodeStream(fi);
+                        } catch (Exception ex) {
+                        }}*/
                 }
                 if (servicesMultipleSelectedModels != null && servicesMultipleSelectedModels.size() > 0) {
                     for (int i = 0; i < servicesMultipleSelectedModels.size(); i++) {
@@ -1048,34 +1064,13 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             switch (viewHolder.getItemViewType()) {
                 case VIEW_TYPE_LIST:
                     final String askQuestionImages = (String) askQuestionImagesarr.get(position);
+                    String name[]=askQuestionImages.split("/");
                     MyHolderView myViewHolder = (MyHolderView) viewHolder;
-                  /*  if (!askQuestionImages.isServerImage()) {
-                    *//*Picasso.with(context)
-                            .load(askQuestionImages.getImage())
-                            .placeholder(R.drawable.default_image) //this is optional the image to display while the url image is downloading
-                            .into(((MyHolderView) viewHolder).imageViewString);*//*
-                        ((MyHolderView) viewHolder).imageViewString.setImageBitmap(BitmapFactory.decodeFile(askQuestionImages.getImage()));
-                    } else {
-                        Glide.with(context).load(askQuestionImages.getMediaimage()).into(myViewHolder.imageViewString);
-                        // imageLoader.DisplayImage(context, AppUrl.baseUrlWeb + askQuestionImages.getMediaimage(), myViewHolder.imageViewString, null, 100, 100, R.drawable.default_image);
-                    }
-                    myViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (((GallaryModel) askQuestionImagesarr.get(position)).isServerImage()) {
-                                deletedImagesId.add(((GallaryModel) askQuestionImagesarr.get(position)).getMediaimgid());
-                            }
-                            askQuestionImagesarr.remove(position);
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, askQuestionImagesarr.size());
-                        }
-                    });*/
+                    myViewHolder.name.setText(name[name.length-1]);
                     Glide.with(context).load(askQuestionImages).into(myViewHolder.imageViewString);
                     myViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //   strings.remove(position);
-                            // strings.add(strings.size(),"add");
                             if (position == 0) {
                                 recyclerView.setVisibility(View.GONE);
                                 imageViewSelected.setVisibility(View.VISIBLE);
@@ -1089,9 +1084,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 }
                             askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");
                             askQuestionForumImagesAdapter.notifyDataSetChanged();
-                          /*  askQuestionImagesarr.add(askQuestionImagesarr.size(),"add");
-                            notifyItemInserted(askQuestionImagesarr.size());*/
-                        }
+                            }
                     });
                     break;
                 case VIEW_TYPE_ADD_NEW:
@@ -1139,9 +1132,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
         public class MyHolderView extends RecyclerView.ViewHolder {
             ImageView imageViewString, cancelImageView;
+            TextView name;
 
             public MyHolderView(View itemView) {
                 super(itemView);
+                name=(TextView)itemView.findViewById(R.id.name);
                 imageViewString = (ImageView) itemView.findViewById(R.id.gallaryimages);
                 cancelImageView = (ImageView) itemView.findViewById(R.id.cancel);
             }

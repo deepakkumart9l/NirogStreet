@@ -639,7 +639,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
                         viewHolder.statusTextView.setText(feedModel.getMessage().trim().toString());
-                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
 
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
                         if (feedModel.getMessage().length() > 170)
@@ -648,6 +647,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.statusTextView.setText(feedModel.getMessage());
 
                         }
+                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
@@ -723,6 +724,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion().trim().toString());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
+                        Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
 

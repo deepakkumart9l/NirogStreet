@@ -249,7 +249,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/round_green"
-                    android:text="Verify Otp"
+                    android:text="Verify OTP"
                     android:id="@+id/loginTvotp"
 
                     android:padding="13dp"

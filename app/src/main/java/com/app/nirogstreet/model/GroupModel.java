@@ -16,6 +16,15 @@ public class GroupModel {
         return groupName;
     }
 
+    public boolean isJoinShow() {
+        return joinShow;
+    }
+
+    public void setJoinShow(boolean joinShow) {
+        this.joinShow = joinShow;
+    }
+
+    public boolean joinShow=false;
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -94,11 +103,23 @@ public class GroupModel {
 
     String groupId,groupName,groupDescription,totalMembers,privacy,groupBanner;
     UserDetailModel createdByUser;
+
+    public String getStatusdata() {
+        return statusdata;
+    }
+
+    public void setStatusdata(String statusdata) {
+        this.statusdata = statusdata;
+    }
+
+    String statusdata;
     String created,updated,status,updatedBy;
-    public GroupModel(String groupId, String created, String groupName, String groupDescription, String totalMembers, String privacy, String groupBanner, UserDetailModel createdByUser, String updated, String status, String updatedBy) {
+    public GroupModel(String groupId, String created, String groupName, String groupDescription, String totalMembers, String privacy, String groupBanner, UserDetailModel createdByUser, String updated, String status, String updatedBy,boolean joinShow,String statusdata) {
         this.groupId = groupId;
         this.created = created;
         this.groupName = groupName;
+        this.statusdata=statusdata;
+        this.joinShow=joinShow;
         this.groupDescription = groupDescription;
         this.totalMembers = totalMembers;
         this.privacy = privacy;

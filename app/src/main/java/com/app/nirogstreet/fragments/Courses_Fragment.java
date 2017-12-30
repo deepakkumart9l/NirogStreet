@@ -346,6 +346,10 @@ public class Courses_Fragment extends Fragment {
             groupModels = Courses_Parser.groupListingParser(jo);
             otherGroupTextView.setClickable(true);
             myGroupTextView.setClickable(true);
+            if(page==1)
+            {
+                groupModelsTotal=new ArrayList<>();
+            }
            groupModelsTotal.addAll(groupModels);
 
             super.onPostExecute(aVoid);

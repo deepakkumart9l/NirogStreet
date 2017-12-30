@@ -103,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_toRightOf="@+id/auth_image">
 
                     <TextView
@@ -113,6 +113,7 @@
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -120,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/name_lay"
                     android:layout_marginLeft="20dp"
-
+android:orientation="vertical"
                     android:layout_toRightOf="@+id/auth_image">
 
                     <TextView
@@ -130,6 +131,40 @@
                         android:text="View Profile "
                         android:textColor="@color/white"
                         android:textSize="12sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <SeekBar
+                            android:id="@+id/seekBar_luminosite"
+                            android:layout_width="215dp"
+                            android:layout_height="10dp"
+                            android:layout_below="@+id/placeTv"
+                            android:layout_marginLeft="-16dp"
+                            android:layout_marginTop="7dp"
+                            android:layout_toRightOf="@+id/relative"
+                            android:clickable="false"
+                            android:maxHeight="15dp"
+                            android:maxWidth="15dp"
+                            android:minHeight="15dp"
+                            android:minWidth="15dp"
+                            android:progressDrawable="@drawable/custom_seek"
+                            android:progressTint="@color/buttonBackground"
+                            android:splitTrack="false" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:id="@+id/profile_complete_txt"
+                            android:textStyle="bold"
+
+                            android:layout_toRightOf="@+id/seekBar_luminosite"
+                            />
+                    </LinearLayout>
+
                 </LinearLayout>
             </RelativeLayout>
 
