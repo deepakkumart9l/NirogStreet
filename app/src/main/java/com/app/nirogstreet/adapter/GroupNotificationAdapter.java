@@ -94,7 +94,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position);
+                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position,3);
                     acceptDeclineJoinAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -105,7 +105,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position);
+                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position,4);
                     acceptDeclineJoinAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -144,13 +144,15 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
         int status1;
         HttpClient client;
         int pos;
+        int addedType;
         private String responseBody;
 
-        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos) {
+        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos,int addedType) {
             this.groupId = groupId;
             this.status1 = status;
             this.authToken = authToken;
             this.pos = pos;
+            this.addedType=addedType;
             this.userId = userId;
         }
 
@@ -200,9 +202,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-
-
-                String url = AppUrl.BaseUrl + "group/invite";
+                String url = AppUrl.BaseUrl + "group/accept-decline";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -213,10 +213,10 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("invited_to", userId));
+                pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
-                pairs.add(new BasicNameValuePair("addedType", 3 + ""));
+                pairs.add(new BasicNameValuePair("addedType", addedType + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));

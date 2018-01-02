@@ -409,7 +409,7 @@ TextView privacyTextView;
                                         }
                                     }
                                     if (userDetailModels.size() > 0) {
-                                        MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userLists);
+                                        MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userDetailModels);
                                         mRecyclerView.setAdapter(memberListingAdapter);
 
                                     }

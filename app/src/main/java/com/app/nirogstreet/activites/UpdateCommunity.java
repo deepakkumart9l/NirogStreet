@@ -762,11 +762,7 @@ public class UpdateCommunity extends Activity {
     }
 
     private boolean isValidated() {
-        if (add_peopleEditText.getText().toString() == null ||
-                add_peopleEditText.getText().toString().equals("")) {
-            Toast.makeText(UpdateCommunity.this, "Please select group member", Toast.LENGTH_LONG).show();
-            return false;
-        } else if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
+        if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
             Toast.makeText(UpdateCommunity.this, "Please enter Group Name!", Toast.LENGTH_LONG).show();
 
             return false;

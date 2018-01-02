@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="horizontal"
@@ -35,30 +35,25 @@ android:paddingRight="10dp"
             android:textSize="15sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-       >
+
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:id="@+id/cancel"
+            android:layout_marginTop="3dp"
             android:tint="@color/gray_2nd"
+            android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/text"
             android:src="@drawable/cancel" />
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="3dp"
+
             android:id="@+id/accept"
             android:src="@drawable/tick_pink" />
-    </LinearLayout>
 </LinearLayout>

@@ -546,11 +546,7 @@ public class CreateCommunity extends Activity {
     }
 
     private boolean isValidated() {
-        if (add_peopleEditText.getText().toString() == null ||
-                add_peopleEditText.getText().toString().equals("")) {
-            Toast.makeText(CreateCommunity.this, "Please select group member", Toast.LENGTH_LONG).show();
-            return false;
-        } else if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
+       if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
             Toast.makeText(CreateCommunity.this, "Please enter Group Name!", Toast.LENGTH_LONG).show();
 
             return false;

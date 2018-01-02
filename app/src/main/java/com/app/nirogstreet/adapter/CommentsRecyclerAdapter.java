@@ -133,7 +133,13 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
             if (commentsModels.get(position).getCommentsModels().size() > 1) {
                 holder.numberOfReplies.setVisibility(View.VISIBLE);
                 int noOfReply = commentsModels.get(position).getCommentsModels().size() - 1;
-                holder.numberOfReplies.setText("View " + noOfReply + " previous replies");
+                if(noOfReply==1) {
+                    holder.numberOfReplies.setText("View " + noOfReply + " previous reply");
+
+                }else {
+                    holder.numberOfReplies.setText("View " + noOfReply + " previous replies");
+
+                }
             } else {
                 holder.numberOfReplies.setVisibility(View.GONE);
 

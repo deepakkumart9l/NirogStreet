@@ -115,22 +115,23 @@
                             android:textSize="13sp" />
 
 
+
                         <SeekBar
                             android:id="@+id/seekBar_luminosite"
                             android:layout_width="215dp"
                             android:layout_height="10dp"
                             android:layout_below="@+id/placeTv"
-                            android:layout_marginLeft="-16dp"
                             android:layout_marginTop="6dp"
                             android:layout_toRightOf="@+id/relative"
-                            android:clickable="false"
                             android:maxHeight="15dp"
-                            android:maxWidth="15dp"
+                            android:layout_marginLeft="-16dp"
                             android:minHeight="15dp"
                             android:minWidth="15dp"
-                            android:progressDrawable="@drawable/custom_seek"
-                            android:progressTint="@color/buttonBackground"
-                            android:splitTrack="false" />
+                            android:max="100"
+                            android:progress="0"
+                            android:progressDrawable="@layout/custom_seekbar_layout"
+                            android:secondaryProgress="0"
+                            android:thumb="@null" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -182,7 +183,6 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
                         android:orientation="vertical">
-
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -788,8 +788,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginBottom="20dp"
+                            android:visibility="visible"
                             android:layout_marginTop="10dp"
-                            android:background="@color/textcolorgray" />
+                            android:background="@color/white" />
 
                     </LinearLayout>
 

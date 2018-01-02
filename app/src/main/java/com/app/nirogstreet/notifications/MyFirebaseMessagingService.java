@@ -14,6 +14,7 @@ import android.util.Log;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.GroupNotificationListing;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -51,7 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = "";
         //  Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         Iterator myVeryOwnIterator = bundle.keySet().iterator();
-        String msg = "", url = "", postId = "", groupId = "", forumId = "", eventId = "", appointment_id = "";
+        String msg = "", url = "", postId = "", groupId = "", forumId = "", eventId = "", appointment_id = "", notification_type = "";
         while (myVeryOwnIterator.hasNext()) {
             String key = (String) myVeryOwnIterator.next();
             if (key.equalsIgnoreCase("default")) {
@@ -85,11 +86,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 if (msgObject.has("appointment_id") && !msgObject.isNull("appointment_id")) {
                                     appointment_id = msgObject.getString("appointment_id");
                                 }
+                                if (msgObject.has("notification_type") && !msgObject.isNull("notification_type")) {
+                                    notification_type = msgObject.getString("notification_type");
+                                }
                                 if (msgObject.has("message") && !msgObject.isNull("message")) {
                                     msg = msgObject.getString("message");
-                                    sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id);
+                                    sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id, notification_type);
 
                                 }
+
 
                             }
                         }
@@ -105,7 +110,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(String messageBody, String url, String forum, String event, String group, String post, String appointment_id) {
+    private void sendNotification(String messageBody, String url, String forum, String event, String group, String post, String appointment_id, String notification_type) {
         Intent intent = null;
         SesstionManager sessionManager = new SesstionManager(this);
         HashMap<String, String> user = sessionManager.getUserDetails();
@@ -115,10 +120,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent = new Intent(this, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
             intent.putExtra("groupId", group);
-        } else if(!post.equalsIgnoreCase("")) {
+        } else if (!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
             intent.putExtra("feedId", post);
-        }else {
+        } else if (!notification_type.equalsIgnoreCase("")) {
+            intent = new Intent(this, GroupNotificationListing.class);
+        } else {
             intent = new Intent(this, AppointmentActivity.class);
         }
         Bundle bundle = new Bundle();

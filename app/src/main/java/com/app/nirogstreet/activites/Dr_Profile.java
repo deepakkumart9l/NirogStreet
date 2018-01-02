@@ -364,6 +364,7 @@ imgPublic_icon=(ImageView)findViewById(R.id.imgPublic_icon);
         profile_complete_txt=(TextView)findViewById(R.id.profile_complete_txt);
         seekBar=(SeekBar)findViewById(R.id.seekBar_luminosite);
         seekBar.setClickable(false);
+
         seekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

@@ -88,38 +88,38 @@ public class GroupListingAdapter extends
     @Override
     public void onBindViewHolder(MyHolderView holder, final int position) {
         final GroupModel groupModel = groupModels.get(position);
-        try{
-        if (groupModel.getPrivacy()!=null&&groupModel.getPrivacy().equalsIgnoreCase("0")) {
-            if (!groupModel.isJoinShow()) {
-                holder.joinTextView.setVisibility(View.GONE);
-                if (showJoin)
-                    holder.join1.setVisibility(View.VISIBLE);
-            } else {
-                holder.joinTextView.setVisibility(View.VISIBLE);
-                holder.join1.setVisibility(View.GONE);
-
-                //  TypeFaceMethods.setRegularTypeFaceForTextView(holder.joinTextView, context);
-            }
-        } else if (groupModel.getPrivacy().equalsIgnoreCase("1")) {
-            if (groupModel.getStatusdata() == null || groupModel.getStatusdata().equalsIgnoreCase("2")) {
-                holder.joinTextView.setText("Send Request");
-                if (showJoin) {
+        try {
+            if (groupModel.getPrivacy() != null && groupModel.getPrivacy().equalsIgnoreCase("0")) {
+                if (!groupModel.isJoinShow()) {
+                    holder.joinTextView.setVisibility(View.GONE);
+                    if (showJoin)
+                        holder.join1.setVisibility(View.VISIBLE);
+                } else {
                     holder.joinTextView.setVisibility(View.VISIBLE);
                     holder.join1.setVisibility(View.GONE);
 
+                    //  TypeFaceMethods.setRegularTypeFaceForTextView(holder.joinTextView, context);
                 }
-            } else if (groupModel.getStatusdata() != null && groupModel.getStatusdata().equalsIgnoreCase("0")) {
-                holder.join1.setText("Request sent");
-                if (showJoin) {
-                    holder.join1.setVisibility(View.VISIBLE);
-                    holder.joinTextView.setVisibility(View.GONE);
+            } else if (groupModel.getPrivacy().equalsIgnoreCase("1")) {
+                if (groupModel.getStatusdata() == null || groupModel.getStatusdata().equalsIgnoreCase("2")) {
+                    holder.joinTextView.setText("Send Request");
+                    if (showJoin) {
+                        holder.joinTextView.setVisibility(View.VISIBLE);
+                        holder.join1.setVisibility(View.GONE);
+
+                    }
+                } else if (groupModel.getStatusdata() != null && groupModel.getStatusdata().equalsIgnoreCase("0")) {
+                    holder.join1.setText("Request sent");
+                    if (showJoin) {
+                        holder.join1.setVisibility(View.VISIBLE);
+                        holder.joinTextView.setVisibility(View.GONE);
+                    }
+
                 }
+
 
             }
-
-
-        }}catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         holder.joinTextView.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +128,7 @@ public class GroupListingAdapter extends
                 if (groupModel.getPrivacy().equalsIgnoreCase("1")) {
                     if (groupModel.getStatusdata() == null || groupModel.getStatusdata().equalsIgnoreCase("2")) {
                         if (NetworkUtill.isNetworkAvailable(context)) {
-                            SentRequrestJoinAsyncTask sentRequrestJoinAsyncTask = new SentRequrestJoinAsyncTask(groupModel.getGroupId(),position);
+                            SentRequrestJoinAsyncTask sentRequrestJoinAsyncTask = new SentRequrestJoinAsyncTask(groupModel.getGroupId(), position);
                             sentRequrestJoinAsyncTask.execute();
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
@@ -187,12 +187,19 @@ public class GroupListingAdapter extends
                 intent.putExtra("groupId", groupModel.getGroupId());
                 intent.putExtra("status", groupModel.getStatus());
                 ((Activity) context).startActivityForResult(intent, REQUEST_FOR_ACTIVITY_CODE);*/
-                if(groupModel.getPrivacy().equalsIgnoreCase("0")) {
+                if (showJoin)
+
+                    if (groupModel.getPrivacy().equalsIgnoreCase("0")) {
+                        Intent intent = new Intent(context, CommunitiesDetails.class);
+                        intent.putExtra("groupId", groupModel.getGroupId());
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(context, "Request to Join", Toast.LENGTH_SHORT).show();
+                    }
+                else {
                     Intent intent = new Intent(context, CommunitiesDetails.class);
                     intent.putExtra("groupId", groupModel.getGroupId());
                     context.startActivity(intent);
-                }else {
-                    Toast.makeText(context,"Request to Join",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -369,9 +376,9 @@ public class GroupListingAdapter extends
         int pos;
         private String responseBody;
 
-        public SentRequrestJoinAsyncTask(String groupId ,int pos) {
+        public SentRequrestJoinAsyncTask(String groupId, int pos) {
             this.groupId = groupId;
-            this.pos=pos;
+            this.pos = pos;
         }
 
 
@@ -426,7 +433,7 @@ public class GroupListingAdapter extends
 
 
                 pairs.add(new BasicNameValuePair("groupID", groupId));
-                    pairs.add(new BasicNameValuePair("addedType", 2 + ""));
+                pairs.add(new BasicNameValuePair("addedType", 2 + ""));
 
 
                 pairs.add(new BasicNameValuePair("status", "0"));
