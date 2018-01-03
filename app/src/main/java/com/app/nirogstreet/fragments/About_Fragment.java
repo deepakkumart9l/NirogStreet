@@ -125,7 +125,10 @@ TextView privacyTextView;
     @Override
     public void onResume() {
         super.onResume();
+
         if (ApplicationSingleton.isGroupUpdated()) {
+            userLists=new ArrayList<>();
+
             if (NetworkUtill.isNetworkAvailable(context)) {
                 getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
                 getCommunityDetailAsyncTask.execute();
@@ -408,8 +411,8 @@ TextView privacyTextView;
                                             userDetailModels.add(new UserList(userId, userName, profile_pic));
                                         }
                                     }
-                                    if (userDetailModels.size() > 0) {
-                                        MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userDetailModels);
+                                    if (userLists.size() > 0) {
+                                        MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userLists);
                                         mRecyclerView.setAdapter(memberListingAdapter);
 
                                     }

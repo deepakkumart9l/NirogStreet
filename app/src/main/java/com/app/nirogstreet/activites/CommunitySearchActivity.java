@@ -267,7 +267,7 @@ public class CommunitySearchActivity  extends AppCompatActivity {
 
 
                         if (groupListingAdapter == null && groupModelsTotal != null && groupModelsTotal.size() > 0) {
-                            groupListingAdapter = new GroupListingAdapter(groupModelsTotal, CommunitySearchActivity.this, isHide, userId,false);
+                            groupListingAdapter = new GroupListingAdapter(groupModelsTotal, CommunitySearchActivity.this, false, userId,true);
                             recyclerView.setAdapter(groupListingAdapter);
                             recyclerView.setVisibility(View.VISIBLE);
                             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -21,6 +21,7 @@ import com.app.nirogstreet.adapter.Notification_Adapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -59,18 +60,19 @@ public class NotificationListing extends AppCompatActivity {
     String userId;
     LinearLayout no_notifications;
     RecyclerView rv;
-    TextView info;
-    CardView first;
+    TextView info, info1;
+    CardView first, second;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_list_one);
-        no_notifications=(LinearLayout)findViewById(R.id.no_list);
-        first=(CardView)findViewById(R.id.first);
+        no_notifications = (LinearLayout) findViewById(R.id.no_list);
+        first = (CardView) findViewById(R.id.first);
+        second = (CardView) findViewById(R.id.second);
         searchButtonTextView = (TextView) findViewById(R.id.searchButton);
         searchButtonTextView.setText("Notification");
-        info=(TextView)findViewById(R.id.info);
+        info = (TextView) findViewById(R.id.info);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -82,7 +84,7 @@ public class NotificationListing extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(NotificationListing.this);
         rv.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-
+        info1 = (TextView) findViewById(R.id.info1);
         backImageView = (ImageView) findViewById(R.id.back);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.scroll);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -181,18 +183,32 @@ public class NotificationListing extends AppCompatActivity {
                 notificationModels = new ArrayList<>();
 
                 if (jo != null) {
-                    int groupRquest=-1;
+                    int groupRquest = -1, inviteRequest = -1;
                     if (jo.has("notificationdetail") && !jo.isNull("notificationdetail")) {
                         JSONObject jsonObject = jo.getJSONObject("notificationdetail");
-                        if(jsonObject.has("groupRequest")&&!jsonObject.isNull("groupRequest"))
-                        {
-                           groupRquest=jsonObject.getInt("groupRequest");
+                        if (jsonObject.has("groupRequest") && !jsonObject.isNull("groupRequest")) {
+                            groupRquest = jsonObject.getInt("groupRequest");
                             first.setVisibility(View.VISIBLE);
-                            info.setText(groupRquest+"");
+                            info.setText(groupRquest + "");
+                            ApplicationSingleton.setGroupRequestCount(groupRquest);
                             first.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent=new Intent(NotificationListing.this,GroupNotificationListing.class);
+                                    Intent intent = new Intent(NotificationListing.this, GroupNotificationListing.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+
+                        if (jsonObject.has("inviteCount") && !jsonObject.isNull("inviteCount")) {
+                            inviteRequest = jsonObject.getInt("inviteCount");
+                            second.setVisibility(View.VISIBLE);
+                            info1.setText(inviteRequest + "");
+                            ApplicationSingleton.setInvitationRequestCount(inviteRequest);
+                            second.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(NotificationListing.this, InviteNotificationListing.class);
                                     startActivity(intent);
                                 }
                             });
@@ -203,7 +219,7 @@ public class NotificationListing extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", forum_id = "";
                                 int unread = 0;
-                                String appointment_id="";
+                                String appointment_id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 if (jsonObject1.has("profile_pic") && !jsonObject1.isNull("profile_pic")) {
                                     profile_pic = jsonObject1.getString("profile_pic");
@@ -245,10 +261,10 @@ public class NotificationListing extends AppCompatActivity {
                                     unread = jsonObject1.getInt("unread");
                                 }
 
-                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread,appointment_id));
+                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id));
                             }
-                        }else {
-                           no_notifications.setVisibility(View.VISIBLE);
+                        } else {
+                            no_notifications.setVisibility(View.VISIBLE);
                         }
                     }
                 }
@@ -257,7 +273,7 @@ public class NotificationListing extends AppCompatActivity {
                     final Notification_Adapter adapter = new Notification_Adapter(NotificationListing.this, notificationModels, authToken);
                     rv.setAdapter(adapter);
 
-                }else {
+                } else {
                     no_notifications.setVisibility(View.VISIBLE);
 
                 }
@@ -271,6 +287,20 @@ public class NotificationListing extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ApplicationSingleton.getGroupRequestCount() != -1 && ApplicationSingleton.getGroupRequestCount() > 0) {
+            info.setText(ApplicationSingleton.getGroupRequestCount() + "");
+        } else {
+            first.setVisibility(View.GONE);
+        }
+        if (ApplicationSingleton.getInvitationRequestCount() != -1 && ApplicationSingleton.getInvitationRequestCount() > 0) {
+            info1.setText(ApplicationSingleton.getInvitationRequestCount() + "");
+        } else {
+            first.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     protected void onPause() {
@@ -280,5 +310,10 @@ public class NotificationListing extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ApplicationSingleton.setGroupRequestCount(-1);
+        ApplicationSingleton.setInvitationRequestCount(-1);
+    }
 }

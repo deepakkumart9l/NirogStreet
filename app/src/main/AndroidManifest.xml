@@ -44,6 +44,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activites.InviteNotificationListing"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activites.OpenDocument"
             android:screenOrientation="portrait" />
         <activity

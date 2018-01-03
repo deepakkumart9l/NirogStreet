@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/two"
             android:layout_marginBottom="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/textcolorgray"
             android:visibility="gone" />
 
         <LinearLayout

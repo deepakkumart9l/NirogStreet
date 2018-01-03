@@ -79,7 +79,7 @@ public class CommunitiesDetails extends AppCompatActivity {
         LinearLayout tabLinearLayoutTimeline = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum_comm, null);
 
         TextView tabOneTimeline = (TextView) tabLinearLayoutTimeline.findViewById(tab);
-        tabOneTimeline.setText("COMMUNICATIONS");
+        tabOneTimeline.setText("FEED");
         TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOneTimeline, CommunitiesDetails.this);
         tabOneTimeline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);

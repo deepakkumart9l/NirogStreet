@@ -14,8 +14,9 @@ public class ApplicationSingleton extends Application {
     public static boolean isGroupUpdated() {
         return isGroupUpdated;
     }
-public static Course_Detail_model course_detail_model;
-public static boolean isJoinedCommunity=false;
+
+    public static Course_Detail_model course_detail_model;
+    public static boolean isJoinedCommunity = false;
 
     public static boolean isJoinedCommunity() {
         return isJoinedCommunity;
@@ -33,7 +34,8 @@ public static boolean isJoinedCommunity=false;
         ApplicationSingleton.enrolledNow = enrolledNow;
     }
 
-    public static boolean enrolledNow=false;
+    public static boolean enrolledNow = false;
+
     public static boolean isPostDeleted() {
         return isPostDeleted;
     }
@@ -42,7 +44,8 @@ public static boolean isJoinedCommunity=false;
         ApplicationSingleton.isPostDeleted = isPostDeleted;
     }
 
-    public static boolean isPostDeleted=false;
+    public static boolean isPostDeleted = false;
+
     public static Course_Detail_model getCourse_detail_model() {
         return course_detail_model;
     }
@@ -67,13 +70,32 @@ public static boolean isJoinedCommunity=false;
         ApplicationSingleton.courseSubscribe = courseSubscribe;
     }
 
-    public static boolean courseSubscribe=false;
+    public static boolean courseSubscribe = false;
 
     public static FeedModel feedModelPostEdited;
+
     public static boolean isClinicUpdated() {
         return isClinicUpdated;
     }
 
+    public static int getGroupRequestCount() {
+        return groupRequestCount;
+    }
+
+    public static void setGroupRequestCount(int groupRequestCount) {
+        ApplicationSingleton.groupRequestCount = groupRequestCount;
+    }
+
+    public static int getInvitationRequestCount() {
+        return invitationRequestCount;
+    }
+
+    public static void setInvitationRequestCount(int invitationRequestCount) {
+        ApplicationSingleton.invitationRequestCount = invitationRequestCount;
+    }
+
+    public static int invitationRequestCount=-1;
+    public static int groupRequestCount=-1;
     public static int getPostEditPosition() {
         return postEditPosition;
     }
@@ -82,7 +104,7 @@ public static boolean isJoinedCommunity=false;
         ApplicationSingleton.postEditPosition = postEditPosition;
     }
 
-    public static int postEditPosition=-1;
+    public static int postEditPosition = -1;
     public static boolean isListingFinish = false;
     public static FeedModel feedModel;
 
@@ -122,8 +144,9 @@ public static boolean isJoinedCommunity=false;
         ApplicationSingleton.curruntUserLiked = curruntUserLiked;
     }
 
-    public static boolean curruntUserLiked=false;
-    public static int totalLike=-1;
+    public static boolean curruntUserLiked = false;
+    public static int totalLike = -1;
+
     public static int getNoOfComment() {
         return noOfComment;
     }
@@ -132,12 +155,13 @@ public static boolean isJoinedCommunity=false;
         ApplicationSingleton.noOfComment = noOfComment;
     }
 
-    public static int noOfComment=-1;
+    public static int noOfComment = -1;
+
     public static void setPostSelectedPostion(int postSelectedPostion) {
         PostSelectedPostion = postSelectedPostion;
     }
 
-    public static int PostSelectedPostion=-1;
+    public static int PostSelectedPostion = -1;
     public static int postPosition = -1;
 
     public static boolean isListingFinish() {

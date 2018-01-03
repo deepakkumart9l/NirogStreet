@@ -16,18 +16,15 @@ import android.widget.TextView;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.adapter.GroupNotificationAdapter;
-import com.app.nirogstreet.adapter.Notification_Adapter;
+import com.app.nirogstreet.adapter.InvitationNotificationAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.GroupNotificationModel;
-import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.parser.GroupNotificationParser;
 import com.app.nirogstreet.uttil.AppUrl;
-import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,10 +45,9 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 /**
- * Created by Preeti on 29-12-2017.
+ * Created by Preeti on 03-01-2018.
  */
-
-public class GroupNotificationListing extends Activity {
+public class InviteNotificationListing extends Activity {
     SesstionManager sessionManager;
     ArrayList<GroupNotificationModel> notificationModels;
     RecyclerView listView;
@@ -84,7 +80,7 @@ public class GroupNotificationListing extends Activity {
         }
         rv = (RecyclerView) findViewById(R.id.lv);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(GroupNotificationListing.this);
+        LinearLayoutManager llm = new LinearLayoutManager(InviteNotificationListing.this);
         rv.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -95,37 +91,35 @@ public class GroupNotificationListing extends Activity {
             public void onClick(View v) {
                 if(openMain)
                 {
-                    Intent intent1 = new Intent(GroupNotificationListing.this, MainActivity.class);
+                    Intent intent1 = new Intent(InviteNotificationListing.this, MainActivity.class);
                     startActivity(intent1);
                     finish();
                 }
                 finish();
             }
         });
-        sessionManager = new SesstionManager(GroupNotificationListing.this);
+        sessionManager = new SesstionManager(InviteNotificationListing.this);
         HashMap<String, String> user = sessionManager.getUserDetails();
         String authToken = user.get(SesstionManager.AUTH_TOKEN);
         userId = user.get(SesstionManager.USER_ID);
-        if(NetworkUtill.isNetworkAvailable(GroupNotificationListing.this))
+        if(NetworkUtill.isNetworkAvailable(InviteNotificationListing.this))
         {
             notificationAsyncTask=new NotificationAsyncTask(userId,authToken);
             notificationAsyncTask.execute();
         }else {
-            NetworkUtill.showNoInternetDialog(GroupNotificationListing.this);
+            NetworkUtill.showNoInternetDialog(InviteNotificationListing.this);
         }
     }
-
     @Override
     public void onBackPressed() {
         if(openMain)
         {
-            Intent intent1 = new Intent(GroupNotificationListing.this, MainActivity.class);
+            Intent intent1 = new Intent(InviteNotificationListing.this, MainActivity.class);
             startActivity(intent1);
             finish();
         }
         super.onBackPressed();
     }
-
     public class NotificationAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String email, password;
@@ -160,7 +154,7 @@ public class GroupNotificationListing extends Activity {
         protected Void doInBackground(Void... params) {
             try {
 
-                String url = AppUrl.BaseUrl + "group/private-community";
+                String url = AppUrl.BaseUrl + "group/invited-community";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -176,7 +170,7 @@ public class GroupNotificationListing extends Activity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("userID", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 httppost.setHeader("Authorization", "Basic " + authToken);
@@ -205,7 +199,7 @@ public class GroupNotificationListing extends Activity {
                 }
 
                 if (notificationModels != null && notificationModels.size() > 0) {
-                    final GroupNotificationAdapter adapter = new GroupNotificationAdapter(GroupNotificationListing.this, notificationModels, authToken);
+                    final InvitationNotificationAdapter adapter = new InvitationNotificationAdapter(InviteNotificationListing.this, notificationModels, authToken);
                     rv.setAdapter(adapter);
 
                 } else {
@@ -216,17 +210,11 @@ public class GroupNotificationListing extends Activity {
                 e.printStackTrace();
             }
 
-            //  bar.setVisibility(View.GONE);
 
         }
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     protected void onPause() {

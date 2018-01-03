@@ -15,6 +15,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.activites.GroupNotificationListing;
+import com.app.nirogstreet.activites.InviteNotificationListing;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -123,8 +124,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } else if (!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
             intent.putExtra("feedId", post);
-        } else if (!notification_type.equalsIgnoreCase("")) {
+        } else if (notification_type.equalsIgnoreCase("9")) {
             intent = new Intent(this, GroupNotificationListing.class);
+            intent.putExtra("openMain",true);
+
+        } else if (notification_type.equalsIgnoreCase("10")) {
+            intent = new Intent(this, InviteNotificationListing.class);
+            intent.putExtra("openMain",true);
+
         } else {
             intent = new Intent(this, AppointmentActivity.class);
         }

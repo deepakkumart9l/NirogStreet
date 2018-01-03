@@ -153,7 +153,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     EditText title_QuestionEditText, editTextMessage, refernceEditText;
     CheckBox checkBox;
     private boolean albumupdate = false;
-TextView docName;
+    TextView docName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,9 +164,8 @@ TextView docName;
         if (getIntent().hasExtra("feedId")) {
             feedId = getIntent().getStringExtra("feedId");
         }
-        if(getIntent().hasExtra("position"))
-        {
-            position=getIntent().getIntExtra("position",-1);
+        if (getIntent().hasExtra("position")) {
+            position = getIntent().getIntExtra("position", -1);
         }
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
@@ -175,8 +174,8 @@ TextView docName;
         } else {
             NetworkUtill.showNoInternetDialog(PostEditActivity.this);
         }
-        docName=(TextView)findViewById(R.id.docName);
-        myScrollView=(MyScrollView)findViewById(R.id.scrol);
+        docName = (TextView) findViewById(R.id.docName);
+        myScrollView = (MyScrollView) findViewById(R.id.scrol);
         myScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -344,7 +343,7 @@ TextView docName;
                 return false;
             }
         });
-       // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostEditActivity.this);
+        // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostEditActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -456,7 +455,7 @@ TextView docName;
 
         final CharSequence[] items = {"Photo", "Video", "Document", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
-        builder.setTitle("Choose One!");
+        builder.setTitle("Choose One :");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
             @Override
@@ -497,7 +496,7 @@ TextView docName;
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Add Photo :");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
             @Override
@@ -633,9 +632,9 @@ TextView docName;
                             if (extension.equalsIgnoreCase(".doc") || extension.equalsIgnoreCase(".pdf") || extension.equalsIgnoreCase(".docx") || extension.equalsIgnoreCase(".xlsx") || extension.equalsIgnoreCase(".xls") || extension.equalsIgnoreCase(".ppt") || extension.equalsIgnoreCase(".PPTX")) {
                                 docpath = path;
                                 docName.setVisibility(View.VISIBLE);
-                                String name[]=docpath.split("/");
+                                String name[] = docpath.split("/");
 
-                                docName.setText(name[name.length-1]);
+                                docName.setText(name[name.length - 1]);
                                 imageViewSelected.setImageResource(R.drawable.pdf_image);
                                 imageViewSelected.setClickable(false);
                             } else {
@@ -1102,7 +1101,7 @@ TextView docName;
                             ApplicationSingleton.setFeedModelPostEdited(feedModels.get(0));
                             System.out.print(feedModels.size());
                             finish();
-                          //  getFeedTypeImg(feedModels.get(0));
+                            //  getFeedTypeImg(feedModels.get(0));
                         } else {
                             circularProgressBar.setVisibility(View.GONE);
                         }
@@ -1160,7 +1159,7 @@ TextView docName;
 
     @Override
     public void onHashTagClicked(String hashTag) {
-      //  Toast.makeText(PostEditActivity.this, hashTag, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(PostEditActivity.this, hashTag, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -1422,9 +1421,9 @@ TextView docName;
             docpath = feedModel.getFeed_source();
             imageViewSelected.setImageResource(R.drawable.pdf_image);
             docName.setVisibility(View.VISIBLE);
-            String name[]=docpath.split("/");
-imageViewSelected.setVisibility(View.VISIBLE);
-            docName.setText(name[name.length-1]);
+            String name[] = docpath.split("/");
+            imageViewSelected.setVisibility(View.VISIBLE);
+            docName.setText(name[name.length - 1]);
 
         }
         if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
@@ -1433,18 +1432,30 @@ imageViewSelected.setVisibility(View.VISIBLE);
         if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
             editTextMessage.setText(feedModel.getMessage());
         }
-        if(feedModel.getSpecializationModelsTags()!=null&&feedModel.getSpecializationModelsTags().size()>0)
-        {
+        if (feedModel.getSpecializationModelsTags() != null && feedModel.getSpecializationModelsTags().size() > 0) {
             mEditTextView.setText(getSelectedNameCsvTags(feedModel));
-            servicesMultipleSelectedModels=feedModel.getSpecializationModelsTags();
+            servicesMultipleSelectedModels = feedModel.getSpecializationModelsTags();
         }
-        if(feedModel.getRefernce()!=null&&!feedModel.getRefernce().equalsIgnoreCase(""))
-        {
+        if (feedModel.getRefernce() != null && !feedModel.getRefernce().equalsIgnoreCase("")) {
             refernceEditText.setText(feedModel.getRefernce());
         }
+        if(!feedModel.getFeed_type().equalsIgnoreCase("3")&&feedModel.getFeed_type().equalsIgnoreCase("1")&&feedModel.getFeed_type().equalsIgnoreCase("2") && !feedModel.getPost_Type().equalsIgnoreCase("1"))
+        {
+            imageViewSelected.setVisibility(View.GONE);
+        }else {
+            if (feedModel.getFeed_type().equalsIgnoreCase("2") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
+
+                imageViewSelected.setVisibility(View.GONE);
+            }else {
+                imageViewSelected.setVisibility(View.VISIBLE);
+
+            }
+        }
+
         return "";
 
     }
+
     public String getSelectedNameCsvTags(FeedModel feedModel) {
         String languageCSV = "";
         if (feedModel.getSpecializationModelsTags() != null && feedModel.getSpecializationModelsTags().size() > 0) {
@@ -1452,8 +1463,8 @@ imageViewSelected.setVisibility(View.VISIBLE);
                 String language = feedModel.getSpecializationModelsTags().get(i).getSpecializationName();
                 if (language != null && !language.trim().isEmpty()
                         && languageCSV != null && !languageCSV.trim().isEmpty())
-                    languageCSV = ""+languageCSV + " ";
-                String s="#"+language;
+                    languageCSV = "" + languageCSV + " ";
+                String s = "#" + language;
                 languageCSV = languageCSV + s;
 
             }
@@ -1484,9 +1495,6 @@ imageViewSelected.setVisibility(View.VISIBLE);
             if (lastPartContents != null && lastPartContents.length > 1) {
                 int lastPartContentLength = lastPartContents.length;
                 System.out.println("Last Part Length: " + lastPartContentLength);
-                //filenames can contain . , so we assume everything before
-                //the last . is the name, everything after the last . is the
-                //extension
                 String name = "";
                 for (int i = 0; i < lastPartContentLength; i++) {
                     System.out.println("Last Part " + i + ": " + lastPartContents[i]);

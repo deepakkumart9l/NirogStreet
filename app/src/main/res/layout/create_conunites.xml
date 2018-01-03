@@ -147,7 +147,7 @@
                     android:drawableTint="@color/textcolorgray"
                     android:paddingBottom="15dp"
                     android:textSize="16dp"
-                    android:hint="Write a note to include your invite (Optional):"
+                    android:hint="Write a note to include in your invite (Optional):"
                     android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -172,7 +172,7 @@
                     android:drawableTint="@color/textcolorgray"
                     android:paddingBottom="15dp"
                     android:textSize="16dp"
-                    android:hint="Description"
+                    android:hint="Description:"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="5"
                     android:textColor="@color/black"
@@ -209,7 +209,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/add_image"
+                android:paddingLeft="2dp"
                 android:layout_marginTop="10dp"
+                android:textSize="16dp"
+
                 android:text="Add group Image:"
                 android:textColor="@color/textcolorgray" />
 
@@ -218,7 +221,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="13dp"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="3dp"
                 android:background="@color/white"
                 android:scaleType="centerCrop"
                 android:src="@drawable/add_"></ImageView>

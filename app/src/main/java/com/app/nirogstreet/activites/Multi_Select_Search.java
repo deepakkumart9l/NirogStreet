@@ -207,7 +207,7 @@ public class Multi_Select_Search extends Activity
                     searchAsync.cancel(true);
                 totalFeeds = new ArrayList<>();
                 totalFeeds = new ArrayList<>();
-page=1;
+                page = 1;
                 // setVisibilty(0);
                 if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
                     if (searchET.getText().toString().length() == 0) {
@@ -258,7 +258,7 @@ page=1;
 
                     @Override
                     public void afterTextChanged(final Editable s) {
-page=1;
+                        page = 1;
                         timer.cancel();
                         timer = new Timer();
                         timer.schedule(
@@ -340,7 +340,7 @@ page=1;
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
-           // recyclerViewsearchData.setVisibility(View.GONE);
+            // recyclerViewsearchData.setVisibility(View.GONE);
             //  bar = (ProgressBar) findViewById(R.id.progressBar);
             //   bar.setVisibility(View.VISIBLE);
             super.onPreExecute();

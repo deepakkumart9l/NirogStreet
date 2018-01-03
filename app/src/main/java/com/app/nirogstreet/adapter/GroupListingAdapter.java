@@ -147,11 +147,7 @@ public class GroupListingAdapter extends
         if (ishHide) {
             holder.linearLayoutbuttons.setVisibility(View.GONE);
         } else {
-            if (Integer.parseInt(groupModel.getStatus()) == 0) {
-                holder.linearLayoutbuttons.setVisibility(View.VISIBLE);
-            } else {
-                holder.linearLayoutbuttons.setVisibility(View.GONE);
-            }
+
         }
         if (groupModel.getGroupBanner() != null && !groupModel.getGroupBanner().contains("banner-default") && !groupModel.getGroupBanner().contains("tempimages")) {
             Glide.with(context)

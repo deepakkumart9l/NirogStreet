@@ -445,7 +445,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
         final CharSequence[] items = {"Photo", "Video", "Document", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PostingActivity.this);
-        builder.setTitle("Choose One!");
+        builder.setTitle("Choose One :");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
             @Override
@@ -486,7 +486,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PostingActivity.this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Add Photo :");
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
             @Override

@@ -12,9 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
-import com.app.nirogstreet.fragments.About_Fragment;
 import com.app.nirogstreet.model.GroupNotificationModel;
-import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.NetworkUtill;
@@ -43,17 +41,17 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Preeti on 29-12-2017.
+ * Created by Preeti on 03-01-2018.
  */
 
-public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class InvitationNotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<GroupNotificationModel> notificationModels;
     Context context;
     SesstionManager sessionManager;
     String userId;
     String authToken;
 
-    public GroupNotificationAdapter(Context context, ArrayList<GroupNotificationModel> notificationModels, String authToken) {
+    public InvitationNotificationAdapter(Context context, ArrayList<GroupNotificationModel> notificationModels, String authToken) {
         this.context = context;
         this.notificationModels = notificationModels;
         this.authToken = authToken;
@@ -89,12 +87,12 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                     .crossFade()
                     .override(100, 100)
                     .into(genericViewHolder.imageView);
-        genericViewHolder.message.setText(groupNotificationModel.getUserName() + " requested to join " + groupNotificationModel.getComunityName() + "");
+        genericViewHolder.message.setText(groupNotificationModel.getUserName() + " has invited you to join " + groupNotificationModel.getComunityName() + "");
         genericViewHolder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position, 3);
+                   AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position,6);
                     acceptDeclineJoinAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -105,7 +103,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position, 4);
+                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position,5);
                     acceptDeclineJoinAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -147,12 +145,12 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
         int addedType;
         private String responseBody;
 
-        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos, int addedType) {
+        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos,int addedType) {
             this.groupId = groupId;
             this.status1 = status;
             this.authToken = authToken;
             this.pos = pos;
-            this.addedType = addedType;
+            this.addedType=addedType;
             this.userId = userId;
         }
 
@@ -184,7 +182,8 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                                 notifyItemRemoved(pos);
                                 notifyItemRangeChanged(pos, notificationModels.size());
 
-                                ApplicationSingleton.setGroupRequestCount(notificationModels.size());
+                                ApplicationSingleton.setInvitationRequestCount(notificationModels.size());
+
                             }
 
 
@@ -213,7 +212,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("userID", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
                 pairs.add(new BasicNameValuePair("addedType", addedType + ""));
@@ -238,3 +237,4 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
 }
+

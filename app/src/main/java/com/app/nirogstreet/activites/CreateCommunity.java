@@ -501,6 +501,7 @@ public class CreateCommunity extends Activity {
     }
 
     private void initSpinnerScrollingCategory() {
+
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -542,7 +543,7 @@ public class CreateCommunity extends Activity {
         spinnerCategory.setAdapter(adapter);
         spinnerCategory.setHint("Select Category");
         spinnerCategory.setPaddingSafe(0, 0, 0, 0);
-
+        spinnerCategory.setSelection(1);
     }
 
     private boolean isValidated() {
