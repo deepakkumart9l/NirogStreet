@@ -75,10 +75,11 @@ public class CommunitiesFragment extends Fragment {
 
     CircularProgressBar circularProgressBar;
     GroupsOfUserAsyncTask groupsOfUserAsyncTask;
+    GroupsOfUserAsyncTaskAll groupsOfUserAsyncTaskAll;
     TextView createTextView;
     String logedinuserId;
     LinearLayout linearLayout1;
-    GroupListingAdapter groupListingAdapter;
+    GroupListingAdapter groupListingAdapter, allGroupListingAdapter;
     TextView myGroupTextView, otherGroupTextView;
     private boolean isLoading = false;
     ImageView imageViewBack;
@@ -103,8 +104,7 @@ public class CommunitiesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(ApplicationSingleton.isJoinedCommunity())
-        {
+        if (ApplicationSingleton.isJoinedCommunity()) {
 
             page = 1;
             groupModelsTotal = new ArrayList<GroupModel>();
@@ -116,7 +116,7 @@ public class CommunitiesFragment extends Fragment {
             //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
             myGroupTextView.setClickable(false);
             allView.setSelected(true);
-            groupListingAdapter = null;
+            allGroupListingAdapter = null;
             recyclerView.setVisibility(View.GONE);
             otherGroupTextView.setSelected(true);
             otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
@@ -124,7 +124,7 @@ public class CommunitiesFragment extends Fragment {
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/all-groups-new";
 
-                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
@@ -166,7 +166,7 @@ public class CommunitiesFragment extends Fragment {
         sessionManager = new SesstionManager(context);
         linearLayout1 = (LinearLayout) view.findViewById(R.id.linearLayout1);
         no_list = (LinearLayout) view.findViewById(R.id.no_list);
-        button=(Button)view.findViewById(R.id.join_com);
+        button = (Button) view.findViewById(R.id.join_com);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,7 +181,7 @@ public class CommunitiesFragment extends Fragment {
                 // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 myGroupTextView.setClickable(false);
                 allView.setSelected(true);
-                groupListingAdapter = null;
+                allGroupListingAdapter = null;
                 recyclerView.setVisibility(View.GONE);
                 otherGroupTextView.setSelected(true);
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
@@ -189,7 +189,7 @@ public class CommunitiesFragment extends Fragment {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/all-groups-new";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -218,9 +218,10 @@ public class CommunitiesFragment extends Fragment {
             public void onClick(View view) {
                 recyclerView.removeAllViews();
                 otherGroupTextView.setClickable(false);
-                userView.setSelected(true);
                 //   TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
                 //  TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+                myGroupTextView.setClickable(false);
+                userView.setSelected(true);
                 allView.setSelected(false);
                 page = 1;
                 isLoading = false;
@@ -249,12 +250,11 @@ public class CommunitiesFragment extends Fragment {
                 recyclerView.removeAllViews();
                 isLoading = false;
                 no_list.setVisibility(View.GONE);
-
-                //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
+                otherGroupTextView.setClickable(false);                //  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
                 // TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 myGroupTextView.setClickable(false);
                 allView.setSelected(true);
-                groupListingAdapter = null;
+                allGroupListingAdapter = null;
                 recyclerView.setVisibility(View.GONE);
                 otherGroupTextView.setSelected(true);
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
@@ -262,8 +262,8 @@ public class CommunitiesFragment extends Fragment {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/all-groups-new";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTaskAll.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -289,7 +289,7 @@ public class CommunitiesFragment extends Fragment {
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/all-groups-new";
 
-                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
@@ -367,7 +367,11 @@ public class CommunitiesFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             circularProgressBar.setVisibility(View.GONE);
             ArrayList<GroupModel> groupModels = new ArrayList<>();
-            groupModels = Group_Listing_Parser.groupListingParser(jo,showJoin);
+            myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+            otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+            userView.setSelected(true);
+            allView.setSelected(false);
+            groupModels = Group_Listing_Parser.groupListingParser(jo, showJoin);
             otherGroupTextView.setClickable(true);
             myGroupTextView.setClickable(true);
             groupModelsTotal.addAll(groupModels);
@@ -443,4 +447,148 @@ public class CommunitiesFragment extends Fragment {
             groupsOfUserAsyncTask.cancelAsyncTask();
         }
     }
+
+    public class GroupsOfUserAsyncTaskAll extends AsyncTask<Void, Void, Void> {
+        Context context;
+        HttpClient client;
+        String userId;
+        String authToken;
+        JSONObject jo;
+        String url;
+        boolean isHide;
+        SesstionManager sessionManager;
+        boolean showJoin;
+        private String responseBody;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+        public GroupsOfUserAsyncTaskAll(String userId, String authToken, String url, boolean isHide, Context context, boolean showJoin) {
+            this.userId = userId;
+            this.isHide = isHide;
+            this.showJoin = showJoin;
+            this.context = context;
+            this.authToken = authToken;
+            this.url = url;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("pageNo", page + ""));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            circularProgressBar.setVisibility(View.GONE);
+            ArrayList<GroupModel> groupModels = new ArrayList<>();
+            groupModels = Group_Listing_Parser.groupListingParser(jo, showJoin);
+            otherGroupTextView.setClickable(true);
+            otherGroupTextView.setSelected(true);
+            userView.setSelected(false);
+            allView.setSelected(true);
+            otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+            myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+
+            myGroupTextView.setClickable(true);
+            groupModelsTotal.addAll(groupModels);
+            super.onPostExecute(aVoid);
+            try {
+                if (jo != null)
+
+                {
+                    recyclerView.setVisibility(View.VISIBLE);
+
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObjectResponce = jo.getJSONObject("response");
+                        if (jsonObjectResponce.has("totalpage") && !jsonObjectResponce.isNull("totalpage")) {
+                            totalPageCount = jsonObjectResponce.getInt("totalpage");
+
+                        }
+                    }
+                    isLoading = false;
+                    if (groupModelsTotal.size() == 0) {
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        recyclerView.setVisibility(View.VISIBLE);
+
+                    }
+                    if (isHide && groupModels.size() == 0) {
+                        recyclerView.setVisibility(View.GONE);
+                        no_list.setVisibility(View.VISIBLE);
+                    }
+                    if (allGroupListingAdapter == null && groupModelsTotal != null && groupModelsTotal.size() > 0) {
+                        allGroupListingAdapter = new GroupListingAdapter(groupModelsTotal, context, isHide, userId, showJoin);
+                        recyclerView.setAdapter(allGroupListingAdapter);
+                        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+
+                                int totalItemCount = linearLayoutManager.getItemCount();
+                                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                                if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                    try {
+                                        String has_more = "";
+                                        if (page < totalPageCount) {
+                                            page++;
+
+                                            groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, isHide, context, showJoin);
+                                            groupsOfUserAsyncTaskAll.execute();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    isLoading = true;
+                                } else {
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
+                    } else {
+                        allGroupListingAdapter.notifyDataSetChanged();
+                        // recyclerView.scrollToPosition(groupListingAdapter.getItemCount());
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

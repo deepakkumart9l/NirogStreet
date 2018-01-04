@@ -132,7 +132,6 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:background="@color/white"
                 android:visibility="gone">
 
@@ -200,6 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="0.5dp"
                 android:background="@color/white"
                 android:visibility="gone">
 
@@ -228,7 +228,6 @@
                         android:paddingBottom="2dp"
                         android:paddingLeft="3dp"
                         android:paddingRight="3dp"
-                        android:paddingTop="2dp"
                         android:visibility="visible"
                         tools:visibility="visible">
 

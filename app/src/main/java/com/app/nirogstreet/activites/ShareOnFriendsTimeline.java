@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class ShareOnFriendsTimeline extends Activity {
     ArrayList<MultipleSelectedItemModel> multipleSelectedItemModels = new ArrayList<>();
     private static final int RESULT_CODE = 1;
     private ImageView backImageView;
+    LinearLayout lay;
     CircularProgressBar circularProgressBar;
     boolean shareOnGroup = false;
     TextView group_friends;
@@ -64,6 +66,7 @@ public class ShareOnFriendsTimeline extends Activity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
         textTab = (TextView) findViewById(R.id.textTab);
+        lay=(LinearLayout) findViewById(R.id.lay);
         group_friends = (TextView) findViewById(R.id.group_friends);
         textViewmsg = (TextView) findViewById(R.id.msg);
         Intent intent = getIntent();
@@ -102,7 +105,7 @@ public class ShareOnFriendsTimeline extends Activity {
                 finish();
             }
         });
-        friendstextCsv.setOnClickListener(new View.OnClickListener() {
+        lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (shareOnGroup) {

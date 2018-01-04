@@ -95,7 +95,7 @@
                 <EditText
                     android:id="@+id/degree_name"
                     android:layout_width="fill_parent"
-                    android:focusable="false"
+                    android:focusable="true"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:backgroundTint="@color/textcolorgray"

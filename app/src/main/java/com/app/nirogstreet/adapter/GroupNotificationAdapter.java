@@ -176,7 +176,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                         if (jsonObjectresponse.has("message") && !jsonObjectresponse.isNull("message")) {
                             JSONObject jsonObject = jsonObjectresponse.getJSONObject("message");
                             if (jsonObject.has("message") && !jsonObject.isNull("message")) {
-                                Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                              /*   groupModels.remove(pos);
                                 notifyItemRemoved(pos);
                                 notifyItemRangeChanged(pos, groupModels.size());*/

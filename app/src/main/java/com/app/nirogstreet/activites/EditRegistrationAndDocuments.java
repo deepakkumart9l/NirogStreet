@@ -92,7 +92,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     private static final int RESULT_CODE = 1;
 
     int REQUEST_CODE = 4;
-    String type;
+    String type="-1";
     private static final String[] councilType = {"Center", "State"};
 
     ImageView backImageView;
@@ -235,7 +235,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
 degree_name.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        if (type.equalsIgnoreCase("-1")) {
+       /* if (type.equalsIgnoreCase("-1")) {
             Toast.makeText(EditRegistrationAndDocuments.this, "Select Council Type first.", Toast.LENGTH_LONG).show();
         } else {
             if (type.equalsIgnoreCase("1")) {
@@ -255,7 +255,7 @@ degree_name.setOnClickListener(new View.OnClickListener() {
                 }
             }
         }
-    }
+*/    }
 });
     }
 

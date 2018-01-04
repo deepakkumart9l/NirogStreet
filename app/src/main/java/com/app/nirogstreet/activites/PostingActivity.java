@@ -867,7 +867,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
                 }
                 if (linkLay.isShown()) {
-                    if (linkUrl.contains("youtube") || linkUrl.contains("youtu.be")) {
+                    if (linkUrl.contains("v=") || linkUrl.contains("youtu.be")) {
                         entityBuilder.addTextBody("Feed[link_type]", "1");
                     } else {
                         entityBuilder.addTextBody("Feed[link_type]", "2");

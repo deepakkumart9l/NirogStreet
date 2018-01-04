@@ -43,20 +43,35 @@ public class Methods {
     static TextView cur_val;
 
     static int totalSize = 0;
-    public static boolean validCellPhone(String number)
-    {
+
+    public static boolean validCellPhone(String number) {
         return android.util.Patterns.PHONE.matcher(number).matches();
     }
+
+    public static boolean checkStringContainsValidUrl(String str) {
+        String strarr[] = str.split(" ");
+        for (int i = 0; i < strarr.length; i++) {
+            System.out.print(strarr[i]);
+            if (Patterns.WEB_URL.matcher(strarr[i]).matches()) {
+                {
+                    return true;
+                }
+            }
+        }            return false;
+    }
+
     public static boolean isValidEmailAddress(String email) {
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
     }
+
     public static void downloadFile(String dwnload_file_path, Activity activity, String extention, String name) {
 
         new downloadDocument(dwnload_file_path, name, extention, activity).execute();
     }
+
     public static void showProgress(String file_path, Activity activity) {
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -101,7 +116,7 @@ public class Methods {
 
                     // download the file
                     input = connection.getInputStream();
-                    output = new FileOutputStream("/sdcard/"+name+"."+extention);
+                    output = new FileOutputStream("/sdcard/" + name + "." + extention);
 
                     byte data[] = new byte[4096];
                     long total = 0;
@@ -146,6 +161,7 @@ public class Methods {
             dialog.cancel();
         }
     }
+
     public static boolean validWebOrBlog(String str) {
         if (URLUtil.isValidUrl(str))
             return true;
@@ -153,11 +169,12 @@ public class Methods {
 
 
     }
-    public  static boolean validWebUrl(String url)
-    {
-      return   Patterns.WEB_URL.matcher(url).matches();
+
+    public static boolean validWebUrl(String url) {
+        return Patterns.WEB_URL.matcher(url).matches();
 
     }
+
     public static void openDocument(Context context, String typeOfDoc, String fileName) {
 
         File file = new File(Environment.getExternalStorageDirectory(),
@@ -172,6 +189,7 @@ public class Methods {
             Toast.makeText(context, "Downloaded", Toast.LENGTH_LONG).show();
         }
     }
+
     static void showError(final String err, final Context context) {
 
         Toast.makeText(context, err, Toast.LENGTH_LONG).show();
@@ -192,6 +210,7 @@ public class Methods {
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);
     }
+
     public static boolean isValidPhoneNumber(String phone) {
         if (phone.length() < 10 || phone.length() > 10) {
             return false;
@@ -204,6 +223,7 @@ public class Methods {
             return false;
         return true;
     }
+
     public static void hideKeyboardOfView(View view, Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

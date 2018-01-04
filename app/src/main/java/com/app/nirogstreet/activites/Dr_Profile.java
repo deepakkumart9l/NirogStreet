@@ -1067,6 +1067,10 @@ imgPublic_icon=(ImageView)findViewById(R.id.imgPublic_icon);
 
     private void updateContactInfo() {
         if (userDetailModel != null) {
+            if (!UserId.equalsIgnoreCase("")) {
+                seekBar.setVisibility(View.GONE);
+                profile_complete_txt.setVisibility(View.GONE);
+            }
             if(userDetailModel.getProfile_complete()!=1)
             {
                 seekBar.setProgress(userDetailModel.getProfile_complete());

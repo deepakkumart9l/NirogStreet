@@ -85,7 +85,6 @@ public class ApplicationSingleton extends Application {
     public static void setGroupRequestCount(int groupRequestCount) {
         ApplicationSingleton.groupRequestCount = groupRequestCount;
     }
-
     public static int getInvitationRequestCount() {
         return invitationRequestCount;
     }

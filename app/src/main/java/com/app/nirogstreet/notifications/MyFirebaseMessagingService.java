@@ -78,8 +78,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 if (msgObject.has("event_id") && !msgObject.isNull("event_id")) {
                                     eventId = msgObject.getString("event_id");
                                 }
-                                if (msgObject.has("group_id") && !msgObject.isNull("group_id")) {
-                                    groupId = msgObject.getString("group_id");
+                                if (msgObject.has("community_id") && !msgObject.isNull("community_id")) {
+                                    groupId = msgObject.getString("community_id");
                                 }
                                 if (msgObject.has("forum_id") && !msgObject.isNull("forum_id")) {
                                     forumId = msgObject.getString("forum_id");

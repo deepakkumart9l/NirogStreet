@@ -171,6 +171,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SesstionManager sesstionManager=new SesstionManager(LoginActivity.this);
+        if(sesstionManager.isUserLoggedIn())
+        {
+            finish();
+        }
+    }
+
     public class LoginAsync extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String email, password;

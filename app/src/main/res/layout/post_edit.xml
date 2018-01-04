@@ -34,8 +34,8 @@
     </RelativeLayout>
 
     <com.app.nirogstreet.uttil.MyScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scrol"
+        android:layout_width="match_parent"
 
         android:layout_height="wrap_content">
 
@@ -49,8 +49,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="25dp"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/dr_profile"
@@ -73,8 +73,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="Dr. Saini"
-                        android:visibility="gone"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="70dp"
@@ -124,10 +124,10 @@
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
                             android:layout_below="@+id/categorySpinner"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             android:textColorHint="@color/textcolorgray"
                             app:passwordToggleTint="#000">
 
@@ -141,7 +141,8 @@
 
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="3"
-                                android:paddingBottom="14dp"                                android:textColor="@color/black"
+                                android:paddingBottom="14dp"
+                                android:textColor="@color/black"
                                 android:textColorHint="@color/textcolorgray"
                                 android:textSize="16dp" />
                         </android.support.design.widget.TextInputLayout>
@@ -174,7 +175,8 @@
                                 android:hint="Description :"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="3"
-                                android:paddingBottom="14dp"                                android:textColor="@color/black"
+                                android:paddingBottom="14dp"
+                                android:textColor="@color/black"
 
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
@@ -210,7 +212,8 @@
                                 android:hint="Tags (Optional) :"
                                 android:inputType="text|textNoSuggestions|textMultiLine"
                                 android:maxLines="1"
-                                android:paddingBottom="14dp"                                android:textColor="@color/black"
+                                android:paddingBottom="14dp"
+                                android:textColor="@color/black"
 
                                 android:textColorHint="#636163"
                                 android:textCursorDrawable="@drawable/color_cursor"
@@ -267,10 +270,10 @@
                         <RelativeLayout
                             android:id="@+id/imagelay"
                             android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="10dp"
-                            android:layout_height="match_parent"
                             android:background="@color/white">
 
                             <TextView
@@ -278,38 +281,40 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="4dp"
-                                android:textColor="#636163"
-                                android:text="Add Attachment :" />
+                                android:text="Add Attachment :"
+                                android:textColor="#636163" />
+
                             <ImageView
                                 android:id="@+id/imgView"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:layout_marginTop="10dp"
+                                android:layout_below="@id/attacment"
 
                                 android:layout_marginLeft="5dp"
-                                android:layout_below="@id/attacment"
+                                android:layout_marginTop="10dp"
 
                                 android:background="@color/white"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/add_"></ImageView>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:id="@+id/docName"
-                                android:visibility="gone"
-                                android:layout_marginTop="10dp"
-                                android:layout_below="@id/imgView"
-                                android:textColor="#636163"
-                                android:layout_marginLeft="5dp"
 
-                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:id="@+id/docName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/imgView"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="10dp"
+                                android:textColor="#636163"
+
+                                android:visibility="gone" />
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
+                                android:layout_marginTop="20dp"
                                 android:orientation="horizontal"
                                 android:visibility="gone"></android.support.v7.widget.RecyclerView>
 
@@ -410,10 +415,10 @@
                         android:id="@+id/Enable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:buttonTint="@color/buttonBackground"
                         android:checked="true"
-                        android:layout_marginLeft="10dp"
                         android:text="Enable Commenting"
                         android:textColor="#636163" />
                 </LinearLayout>
@@ -423,7 +428,7 @@
                     android:id="@+id/circularProgressBar"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/cir"

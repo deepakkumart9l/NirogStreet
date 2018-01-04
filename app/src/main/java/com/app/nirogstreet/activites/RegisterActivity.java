@@ -40,6 +40,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -95,6 +96,16 @@ public class RegisterActivity extends AppCompatActivity {
         if (requestCode == 1) {
 
             getInfo();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SesstionManager sesstionManager=new SesstionManager(RegisterActivity.this);
+        if(sesstionManager.isUserLoggedIn())
+        {
+            finish();
         }
     }
 
