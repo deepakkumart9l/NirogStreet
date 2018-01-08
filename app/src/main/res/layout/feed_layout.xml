@@ -154,6 +154,8 @@
                     android:layout_marginLeft="15dp"
                     android:lineSpacingExtra="4sp"
                     android:paddingRight="15dp"
+                    android:textColorLink="@color/cardbluebackground"
+
                     android:text="here is Question"
                     android:textColor="@color/black"
                     android:textSize="16.5sp"
@@ -171,7 +173,6 @@
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:text="This is Status Text"
-                    android:autoLink="web"
                     android:textColor="#333333"
                     android:textColorLink="@color/cardbluebackground"
                     android:textSize="15sp"

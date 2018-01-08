@@ -51,9 +51,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/round_edittext"
+                    android:imeOptions="actionNext"
+
                     android:cursorVisible="true"
                     android:hint="Email/Phone"
-                    android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:padding="13dp"
                     android:paddingLeft="10dp"

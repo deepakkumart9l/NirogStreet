@@ -731,16 +731,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            try {
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            finish();
-            super.onBackPressed();
+
+            MainActivity.super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
 
@@ -750,8 +744,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 doubleBackToExitPressedOnce = false;
             }
-        }, 2000);
+        }, 3000);
+
 
     }
-
 }

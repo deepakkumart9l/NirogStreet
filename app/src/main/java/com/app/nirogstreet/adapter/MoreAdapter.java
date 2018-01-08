@@ -135,7 +135,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     CircularProgressBar circularProgressBar;
     String groupId = "";
     private SpannableStringBuilder builder;
-    SpannableString str2,str4;
+    SpannableString str2, str4;
 
     public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar) {
         this.context = context;
@@ -222,10 +222,10 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         myViewHolder.phoneTv.setText(userDetailModel1.getMobile());
                     if (userDetailModel1.getDob() != null)
                         myViewHolder.yearOfBirthTv.setText(userDetailModel1.getDob());
-                    if (userDetailModel1.getExperience() != null&&!userDetailModel1.getExperience().equalsIgnoreCase(""))
+                    if (userDetailModel1.getExperience() != null && !userDetailModel1.getExperience().equalsIgnoreCase(""))
                         myViewHolder.view_detail.setText(userDetailModel1.getExperience() + " years experience");
                     else
-                    myViewHolder.view_detail.setVisibility(View.GONE);
+                        myViewHolder.view_detail.setVisibility(View.GONE);
                     if (userDetailModel1 != null && userDetailModel1.getSpecializationModels() != null) {
                         myViewHolder.QualificationTv.setText(getSelectedNameCsv(userDetailModel1));
                     }
@@ -246,8 +246,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 try {
                     final MyViewHolder viewHolder = (MyViewHolder) holder;
 
+                    int feed_type = 0;
                     final FeedModel feedModel = feedModels.get(position);
-                    int feed_type = Integer.parseInt(feedModel.getFeed_type());
+                    if (feedModel.getFeed_type() != null)
+                        feed_type =
+                                Integer.parseInt(feedModel.getFeed_type());
                     int link_type = 0;
                     if (feedModel.getLink_type() != null) {
                         link_type = Integer.parseInt(feedModel.getLink_type());
@@ -494,8 +497,16 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.webView.setVisibility(View.GONE);
                             viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
 
-                            viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
-
+                            if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
+                            {
+                                Picasso.with(context)
+                                        .load(feedModel.getUrl_image())
+                                        .placeholder(R.drawable.default_)
+                                        .error(R.drawable.default_)
+                                        .into(viewHolder.feedImageView);
+                            }else {
+                                viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
+                            }
                             viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -576,7 +587,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
                         viewHolder.statusTextView.setText(feedModel.getMessage());
-                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
 
                         if (feedModel.getMessage().length() > 170)
                             makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true, context, feedModel, position);
@@ -584,14 +594,14 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
 
                         }
-                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context);
 
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
                     }
-                    if (feedModel.getTotal_likes() != null&&!feedModel.getTotal_likes().equalsIgnoreCase("0")) {
-                        if ( feedModel.getTotal_likes().equalsIgnoreCase("1"))
+                    if (feedModel.getTotal_likes() != null && !feedModel.getTotal_likes().equalsIgnoreCase("0")) {
+                        if (feedModel.getTotal_likes().equalsIgnoreCase("1"))
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
                         else
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
@@ -635,7 +645,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                        Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context);
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -921,7 +931,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         } else {
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                                str3 = new SpannableString(" posted in " );
+                                str3 = new SpannableString(" posted in ");
                                 str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
                                 builder.append(str3);
 
@@ -1004,6 +1014,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     }
+
     public void setDialog(final FeedModel feedModel) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
@@ -1034,7 +1045,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-            ;
+                ;
                 switch (item.getItemId()) {
                     case R.id.edit:
 
@@ -1410,8 +1421,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 switch (item.getItemId()) {
                     case R.id.publicshare:
                         Intent intent = new Intent(context, PublicShare.class);
-                        intent.putExtra("feedId",feedModel.getFeed_id());
-                        intent.putExtra("userId",userId);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
+                        intent.putExtra("userId", userId);
                         context.startActivity(intent);
 
                         /*if (NetworkUtill.isNetworkAvailable(context)) {

@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
@@ -30,6 +32,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Preeti on 23-08-2017.
@@ -57,7 +61,8 @@ public class Methods {
                     return true;
                 }
             }
-        }            return false;
+        }
+        return false;
     }
 
     public static boolean isValidEmailAddress(String email) {
@@ -173,6 +178,35 @@ public class Methods {
     public static boolean validWebUrl(String url) {
         return Patterns.WEB_URL.matcher(url).matches();
 
+    }
+
+    private static boolean isValidUrl(String url) {
+        Pattern p = Patterns.WEB_URL;
+        Matcher m = p.matcher(url.toLowerCase());
+        return m.matches();
+    }
+
+    public static void hyperlink(TextView textView, String s,Context context) {
+        try {
+            int i = 0;
+            SpannableString spannableString = new SpannableString(s);
+            Matcher urlMatcher = Patterns.WEB_URL.matcher(s);
+            while (urlMatcher.find()) {
+                String url = urlMatcher.group(i);
+                int start = urlMatcher.start(i);
+                int end = urlMatcher.end(i++);
+                if (isValidUrl(url)) {
+                    if (url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http"))
+                        spannableString.setSpan(new GoToURLSpan(url,context), start, end, 0);
+                }
+
+            }
+
+            textView.setText(spannableString);
+            textView.setMovementMethod(new LinkMovementMethod());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void openDocument(Context context, String typeOfDoc, String fileName) {

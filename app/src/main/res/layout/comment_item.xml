@@ -46,12 +46,12 @@
             android:id="@+id/comment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="7dp"
             android:lineSpacingExtra="1.2dp"
             android:text=""
-
             android:textColor="#000"
+            android:textColorLink="@color/cardbluebackground"
             android:textSize="13dp"
             android:textStyle="normal" />
 
@@ -171,6 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:text="hgghgh"
+
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -179,10 +180,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-android:paddingRight="10dp"
+                    android:paddingRight="10dp"
                     android:text="gfgh"
 
-                    android:textColor="#000" />
+                    android:textColor="#000"
+
+                    android:textColorLink="@color/cardbluebackground" />
 
             </LinearLayout>
 

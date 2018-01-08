@@ -160,7 +160,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        setContentView(R.layout.post_edit);
+        setContentView(R.layout.post_edit_new);
         if (getIntent().hasExtra("feedId")) {
             feedId = getIntent().getStringExtra("feedId");
         }

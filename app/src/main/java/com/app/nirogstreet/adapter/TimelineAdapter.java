@@ -33,6 +33,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.Base64;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +67,7 @@ import com.app.nirogstreet.activites.PostEditActivity;
 import com.app.nirogstreet.activites.PostingActivity;
 import com.app.nirogstreet.activites.PublicShare;
 import com.app.nirogstreet.activites.ShareOnFriendsTimeline;
+import com.app.nirogstreet.activites.Test;
 import com.app.nirogstreet.activites.VideoPlay_Activity;
 import com.app.nirogstreet.activites.YoutubeVideo_Play;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
@@ -74,6 +76,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.GoToURLSpan;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -86,6 +89,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import javax.net.ssl.SSLContext;
 
@@ -213,9 +217,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 try {
                     final MyViewHolder viewHolder = (MyViewHolder) holder;
-
+                    int feed_type = 0;
                     final FeedModel feedModel = feedModels.get(position);
-                    int feed_type = Integer.parseInt(feedModel.getFeed_type());
+                    if(feedModel.getFeed_type()!=null)
+                        feed_type=
+                    Integer.parseInt(feedModel.getFeed_type());
                     int link_type = 0;
                     if (feedModel.getLink_type() != null) {
                         link_type = Integer.parseInt(feedModel.getLink_type());
@@ -536,7 +542,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.webView.setVisibility(View.GONE);
                             viewHolder.docTypeLayout.setVisibility(View.GONE);
                             viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                            viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
+                            if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
+                            {
+                                Picasso.with(context)
+                                        .load(feedModel.getUrl_image())
+                                        .placeholder(R.drawable.default_)
+                                        .error(R.drawable.default_)
+                                        .into(viewHolder.feedImageView);
+                            }else {
+                                viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
+                            }
                             viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
                             String load = "data:image/jpeg;base64" + "," + feedModel.getUrl_image();
                         /*    final byte[] decodedBytes = Base64.decode(feedModel.getUrl_image(), Base64.DEFAULT);
@@ -650,9 +665,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                      /*   String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                         String scheme = "http://zipinfo.com";*/
-
-                        Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
-
+                        if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                          Methods.hyperlink(viewHolder.statusTextView,feedModel.getMessage(),context);
+                            // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+                        }
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
@@ -728,7 +744,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion().trim().toString());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                        Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+                        //  Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+                       Methods. hyperlink(viewHolder.QuestionTextView,feedModel.getTitleQuestion(),context);
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -1370,8 +1387,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                  switch (item.getItemId()) {
                                                      case R.id.publicshare:
                                                          Intent intent = new Intent(context, PublicShare.class);
-                                                         intent.putExtra("feedId",feedModel.getFeed_id());
-                                                         intent.putExtra("userId",userId);
+                                                         intent.putExtra("feedId", feedModel.getFeed_id());
+                                                         intent.putExtra("userId", userId);
                                                          context.startActivity(intent);
 
                                                        /*  if (NetworkUtill.isNetworkAvailable(context)) {
@@ -1465,7 +1482,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         context.startActivity(intent);
                         break;
                     case R.id.del:
-                       setDialog(feedModel);
+                        setDialog(feedModel);
                         break;
                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
@@ -1482,6 +1499,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         popup.show();//showing popup menu
     }
+
     public void setDialog(final FeedModel feedModel) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons

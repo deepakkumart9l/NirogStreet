@@ -49,6 +49,7 @@
         <activity
             android:name=".activites.OpenDocument"
             android:screenOrientation="portrait" />
+        <activity android:name=".activites.Test"/>
         <activity
             android:name=".activites.Splash"
             android:screenOrientation="portrait" />

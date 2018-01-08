@@ -105,7 +105,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private String authToken, userId;
     SpannableString span;
-    SpannableString span2, str3,str4;
+    SpannableString span2, str3, str4;
 
     private View mCustomView;
 
@@ -190,8 +190,11 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 final MyViewHolder viewHolder = (MyViewHolder) holder;
 
+                int feed_type = 0;
                 final FeedModel feedModel = feedModels.get(position);
-                int feed_type = Integer.parseInt(feedModel.getFeed_type());
+                if (feedModel.getFeed_type() != null)
+                    feed_type =
+                            Integer.parseInt(feedModel.getFeed_type());
                 int link_type = 0;
                 if (feedModel.getLink_type() != null) {
                     link_type = Integer.parseInt(feedModel.getLink_type());
@@ -508,8 +511,16 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.videoView.setVisibility(View.GONE);
                         viewHolder.webView.setVisibility(View.GONE);
                         viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
-                        viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
-                      /*  Bitmap bmThumbnail;
+                        if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
+                        {
+                            Picasso.with(context)
+                                    .load(feedModel.getUrl_image())
+                                    .placeholder(R.drawable.default_)
+                                    .error(R.drawable.default_)
+                                    .into(viewHolder.feedImageView);
+                        }else {
+                            viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
+                        }                      /*  Bitmap bmThumbnail;
                         bmThumbnail = ThumbnailUtils.createVideoThumbnail(feedModel.getUrl_image(), MediaStore.Video.Thumbnails.MINI_KIND);
                         viewHolder.feedImageView.setImageBitmap(bmThumbnail);*/
                         viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
@@ -561,8 +572,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent=new Intent(context,OpenDocument.class);
-                                        intent.putExtra("url",feedModel.getFeed_source());
+                                        Intent intent = new Intent(context, OpenDocument.class);
+                                        intent.putExtra("url", feedModel.getFeed_source());
                                         context.startActivity(intent);
                                     }
                                 });
@@ -594,7 +605,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
                     viewHolder.statusTextView.setText(feedModel.getMessage());
-                    Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+                    Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context);
 
                     viewHolder.statusTextView.setVisibility(View.VISIBLE);
                 } else {
@@ -610,8 +621,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     else
                         viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Likes");
 
-                }else {
-                    viewHolder.likesTextView.setText( "0 Likes");
+                } else {
+                    viewHolder.likesTextView.setText("0 Likes");
 
                 }
                 if (feedModel.getTotal_comments() != null) {
@@ -621,8 +632,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     else
                         viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comments");
 
-                }else {
-                    viewHolder.commntsTextView.setText( "0 Comments");
+                } else {
+                    viewHolder.commntsTextView.setText("0 Comments");
 
                 }
                 viewHolder.likesTextView.setOnClickListener(new View.OnClickListener() {
@@ -693,7 +704,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                     viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                     viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                    Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
+                    Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context);
 
                 } else {
                     viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -787,7 +798,6 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                */
                     }
                 });
-
 
 
                 if (userDetailModel != null && userDetailModel.getName() != null) {
@@ -941,7 +951,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     } else {
                         if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                            str3 = new SpannableString(" posted in " );
+                            str3 = new SpannableString(" posted in ");
                             str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
                             builder.append(str3);
 
@@ -1329,6 +1339,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mCustomView = null;
         }
     }
+
     public void setDialog(final FeedModel feedModel) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
@@ -1366,8 +1377,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 switch (item.getItemId()) {
                     case R.id.publicshare:
                         Intent intent = new Intent(context, PublicShare.class);
-                        intent.putExtra("feedId",feedModel.getFeed_id());
-                        intent.putExtra("userId",userId);
+                        intent.putExtra("feedId", feedModel.getFeed_id());
+                        intent.putExtra("userId", userId);
                         context.startActivity(intent);
 
                       /*  if (NetworkUtill.isNetworkAvailable(context)) {
@@ -1385,7 +1396,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         intent1.putExtra("shareOnGroup", true);
                         context.startActivity(intent1);
 
-                    break;
+                        break;
                     case R.id.share_exteraly:
                         try {
                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {

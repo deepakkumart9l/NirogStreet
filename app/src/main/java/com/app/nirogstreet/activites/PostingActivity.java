@@ -77,6 +77,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -160,8 +162,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        setContentView(R.layout.post);
-        scrollView=(MyScrollView) findViewById(R.id.scrol);
+        setContentView(R.layout.post_new);
+        scrollView = (MyScrollView) findViewById(R.id.scrol);
         backImageView = (ImageView) findViewById(R.id.back);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +173,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 imagelay.setVisibility(View.VISIBLE);
             }
         });
-        docName=(TextView)findViewById(R.id.docName);
+        docName = (TextView) findViewById(R.id.docName);
         sesstionManager = new SesstionManager(PostingActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,7 +235,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     v.getParent().requestDisallowInterceptTouchEvent(true);
 
                     scrollView.setScrolling(false);
-                   return false;
+                    return false;
 
                     // v.getParent().requestDisallowInterceptTouchEvent(false);
 
@@ -329,7 +331,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
         mEditTextView = (TextView) findViewById(R.id.edit_text_field);
         mEditTextView.setFocusable(false);
-       // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
+        // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -615,6 +617,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     String path = PathUtil.getPath(PostingActivity.this, data1);
                     selectedImagePath = null;
                     selectedVideoPath = null;
+             /*   Bitmap    bitmap = BitmapFactory.decodeFile(path);
+                    imageViewSelected.setImageBitmap(bitmap);*/
                     if (path != null) {
                         if (path.contains(".")) {
                             String extension = path.substring(path.lastIndexOf("."));
@@ -624,9 +628,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 imageViewSelected.setImageResource(R.drawable.pdf_image);
                                 imageViewSelected.setClickable(false);
                                 docName.setVisibility(View.VISIBLE);
-                                String name[]=docpath.split("/");
+                                String name[] = docpath.split("/");
 
-                                docName.setText(name[name.length-1]);
+                                docName.setText(name[name.length - 1]);
                             } else {
                                 Toast.makeText(PostingActivity.this, "Not Supported", Toast.LENGTH_LONG).show();
                             }
@@ -906,10 +910,13 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     Bitmap bmThumbnail;
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(selectedVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
                     bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
+                    File bb = getFile(bmThumbnail);
+                    ContentBody cbfile1 = new FileBody(bb);
+entityBuilder.addPart("Feed[url_image]",cbfile1);
+                    System.out.print(cbfile1);
                     byte[] imageBytes = baos.toByteArray();
                     String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-                   // entityBuilder.addTextBody("Feed[url_image]", encodedImage);
+                    // entityBuilder.addTextBody("Feed[url_image]", encodedImage);
 
 
 
@@ -931,6 +938,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 if (docpath != null && docpath.toString().trim().length() > 0) {
                     File file = new File(docpath);
                     file.getAbsolutePath();
+                 /*   Bitmap bmThumbnail;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                    bmThumbnail = ThumbnailUtils.createVideoThumbnail(docpath, MediaStore.Video.Thumbnails.MINI_KIND);
+                    bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);*/
                     ContentBody cbfile = new FileBody(file);
                     entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
                 }
@@ -1003,7 +1015,6 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         return type;
 
     }
-
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -1064,9 +1075,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             switch (viewHolder.getItemViewType()) {
                 case VIEW_TYPE_LIST:
                     final String askQuestionImages = (String) askQuestionImagesarr.get(position);
-                    String name[]=askQuestionImages.split("/");
+                    String name[] = askQuestionImages.split("/");
                     MyHolderView myViewHolder = (MyHolderView) viewHolder;
-                    myViewHolder.name.setText(name[name.length-1]);
+                    myViewHolder.name.setText(name[name.length - 1]);
                     Glide.with(context).load(askQuestionImages).into(myViewHolder.imageViewString);
                     myViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1084,7 +1095,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 }
                             askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");
                             askQuestionForumImagesAdapter.notifyDataSetChanged();
-                            }
+                        }
                     });
                     break;
                 case VIEW_TYPE_ADD_NEW:
@@ -1136,7 +1147,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
             public MyHolderView(View itemView) {
                 super(itemView);
-                name=(TextView)itemView.findViewById(R.id.name);
+                name = (TextView) itemView.findViewById(R.id.name);
                 imageViewString = (ImageView) itemView.findViewById(R.id.gallaryimages);
                 cancelImageView = (ImageView) itemView.findViewById(R.id.cancel);
             }
@@ -1221,5 +1232,54 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             check = false;
         }
         return check;
+    }
+
+    public File bitmapToFile(Bitmap bmp) {
+        try {
+            int size;
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 80, bos);
+            byte[] bArr = bos.toByteArray();
+            bos.flush();
+            bos.close();
+
+            FileOutputStream fos = openFileOutput("mdroid.png", Context.MODE_WORLD_WRITEABLE);
+            fos.write(bArr);
+            fos.flush();
+            fos.close();
+
+            File mFile = new File(Environment.getRootDirectory().getAbsolutePath(), "/mdroid.png");
+            return mFile;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+    private File getFile(Bitmap bitmap)
+    {
+        File f = new File(getCacheDir(), "test.jpeg");
+
+        try {
+            f.createNewFile();
+
+//Convert bitmap to byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return f;
     }
 }
