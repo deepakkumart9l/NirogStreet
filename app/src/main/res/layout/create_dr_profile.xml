@@ -110,57 +110,70 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/profile"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="24dp"
+
                 android:layout_marginTop="14dp"
                 android:text="Select Title"
-                android:textColor="@color/textcolorgray"
+                android:textColor="@color/black"
                 android:textSize="11dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
-            <fr.ganfra.materialspinner.MaterialSpinner
-                android:id="@+id/titleLay"
+            <LinearLayout
+                android:id="@+id/tt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textView"
-                android:layout_alignTop="@+id/textView"
-                android:layout_below="@+id/profile"
 
+                android:layout_below="@+id/textView"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="21dp"
-                android:backgroundTint="@color/textcolorgray"
-                android:drawableTint="@color/textcolorgray"
-                app:ms_arrowColor="@color/textcolorgray"
-                app:ms_baseColor="@color/textcolorgray"
-                app:ms_floatingLabelColor="@color/textcolorgray"
-                app:ms_hintColor="@color/textcolorgray" />
+                android:background="@drawable/round_edittext">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/titleLay"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
+                <Spinner
+                    android:id="@+id/titleLay"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
 
-                <EditText
-                    android:id="@+id/firstNameEt"
-                    style="@style/TextLabel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="-20dp"
                     android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Name"
-                    android:inputType="textCapWords|textCapSentences|textMultiLine"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
 
-            </android.support.design.widget.TextInputLayout>
+
+                    android:drawableTint="@color/white"
+                    android:dropDownWidth="500dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tt"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+
+                android:layout_marginTop="9dp"
+                android:text="Name"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/firstNameEt"
+                style="@style/TextLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/textView1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Name"
+                android:inputType="textCapWords|textCapSentences|textMultiLine"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp"
+                />
 
 
             <TextView
@@ -168,10 +181,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/input_layout_name"
-                android:layout_below="@+id/input_layout_name"
-                android:layout_marginLeft="3dp"
+                android:layout_below="@+id/firstNameEt"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
                 android:text="Gender"
-                android:textColor="@color/textcolorgray"
+
+                android:textColor="@color/black"
                 android:textSize="11dp"
                 android:textStyle="normal"
                 android:visibility="visible" />
@@ -215,156 +230,172 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/genderSpinner"
-                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="9dp"
                 android:text="Select Category"
-                android:textColor="@color/textcolorgray"
+                android:textColor="@color/black"
                 android:textSize="11dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
-            <fr.ganfra.materialspinner.MaterialSpinner
-                android:id="@+id/categorySpinner"
+            <LinearLayout
+                android:id="@+id/categorySpinner1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/txt_selectcategory"
-                android:layout_alignTop="@+id/txt_selectcategory"
-
-                android:layout_below="@+id/genderSpinner"
+                android:layout_height="40dp"
+                android:layout_below="@+id/txt_selectcategory"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="21dp"
-                android:backgroundTint="@color/textcolorgray"
-                android:drawableTint="@color/textcolorgray"
-                android:paddingBottom="-2dp"
-                app:ms_arrowColor="@color/textcolorgray"
-                app:ms_baseColor="@color/textcolorgray"
-                app:ms_floatingLabelColor="@color/textcolorgray"
-                app:ms_hintColor="@color/textcolorgray" />
+                android:background="@drawable/round_edittext">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/city_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/categorySpinner"
-                android:layout_marginLeft="21dp"
+                <Spinner
+                    android:id="@+id/categorySpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignStart="@+id/txt_selectcategory"
+                    android:layout_alignTop="@+id/txt_selectcategory"
 
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="11dp"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
-
-                <EditText
-                    android:id="@+id/cityEt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="@color/textcolorgray"
+                    android:layout_below="@+id/genderSpinner"
 
                     android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="City"
-                    android:focusable="false"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:paddingBottom="14dp"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
+                    android:dropDownWidth="700dp"
+                    android:paddingBottom="-2dp" />
+            </LinearLayout>
 
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/No_of_Year_Ex_lay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/city_layout"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="16dp"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
-
-                <EditText
-                    android:id="@+id/no_of_year"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Years of Experience"
-                    android:inputType="number|textNoSuggestions"
-                    android:maxLength="3"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/dob_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/No_of_Year_Ex_lay"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="16dp"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
-
-                <EditText
-                    android:id="@+id/dob"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="DOB"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
-                    android:focusable="false"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <TextView
+                android:id="@+id/city_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dob_layout"
+                android:layout_below="@+id/categorySpinner1"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
-                android:text="Website Or Blog (If Any)"
-                android:textColor="@color/textcolorgray"
+                android:layout_marginTop="9dp"
+                android:text="Select City"
+                android:textColor="@color/black"
                 android:textSize="11dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/cityEt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/city_text"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:focusable="false"
+                android:hint="City"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp"
+                />
 
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/webSite_layout"
+            <TextView
+                android:id="@+id/year_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/dob_layout"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cityEt"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
+                android:text="Select Year"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                android:textColorHint="@color/textcolorgray">
+            <EditText
+                android:id="@+id/no_of_year"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/year_text"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:hint="Years of Experience"
+                android:inputType="number|textNoSuggestions"
+                android:maxLength="3"
 
-                <EditText
-                    android:id="@+id/website_blog"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-16dp"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Website Or Blog (If Any)"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:paddingBottom="15dp"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
-            </android.support.design.widget.TextInputLayout>
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp"
+                />
+
+
+            <TextView
+                android:id="@+id/dob_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/no_of_year"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
+                android:text="Select Dob"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/dob"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dob_text"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:focusable="false"
+                android:hint="DOB"
+
+                android:inputType="text|textNoSuggestions"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp"
+                />
+
+
+            <TextView
+                android:id="@+id/text_web"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dob"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
+                android:text="Website Or Blog (If Any)"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
+
+
+            <EditText
+                android:id="@+id/website_blog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_web"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Website Or Blog (If Any)"
+
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp"
+                />
 
             <!--
                         <android.support.design.widget.TextInputLayout
@@ -392,93 +423,109 @@
                         </android.support.design.widget.TextInputLayout>
             -->
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/about_you_layout"
+            <TextView
+                android:id="@+id/text_about"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/website_blog"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
+                android:text="About"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/about_you"
+                style="@style/TextLabel"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/webSite_layout"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="16dp"
+                android:layout_below="@+id/text_about"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="About You"
+
+                android:inputType="textCapWords|textCapSentences|textMultiLine"
+                android:maxLines="5"
+                android:padding="13dp"
+                android:textColor="@color/black"
+
                 android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
+                android:textSize="14sp"
+                />
 
-                <EditText
-                    android:id="@+id/about_you"
-                    style="@style/TextLabel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="-20dp"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="About You"
-                    android:inputType="textCapWords|textCapSentences|textMultiLine"
-                    android:paddingBottom="15dp"
 
-                    android:textColor="@color/black"
-
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/contact_num_layout"
+            <TextView
+                android:id="@+id/text_contact"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/about_you_layout"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/about_you"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
+                android:text="Contact Number"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
+
+
+            <EditText
+                android:id="@+id/contact_num"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/text_contact"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Contact Number"
+                android:inputType="number|textNoSuggestions"
+
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
                 android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
+                android:textSize="14sp"
+                />
 
-                <EditText
-                    android:id="@+id/contact_num"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
 
-                    android:layout_marginTop="-16dp"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Contact Number"
-                    android:inputType="number|textNoSuggestions"
-                    android:maxLines="1"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/email_lay"
+            <TextView
+                android:id="@+id/text_email"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/contact_num_layout"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="9dp"
+                android:text="Email Id"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_email"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Email Address"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+
+                android:padding="13dp"
+                android:textColor="@color/black"
                 android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
+                android:textSize="14sp"
+                />
 
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:layout_marginTop="-16dp"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Email Address"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray"
-                    android:textSize="16dp" />
-
-            </android.support.design.widget.TextInputLayout>
 
         </RelativeLayout>
 

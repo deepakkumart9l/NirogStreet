@@ -40,9 +40,7 @@ public class RegistrationAdapter extends RecyclerView.Adapter<RegistrationAdapte
     @Override
     public void onBindViewHolder(RegistrationAdapter.MyHolderView holder, int position) {
         RegistrationAndDocumenModel qualificationModel = qualificationModels.get(position);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
+
         holder.clgNameTv.setText(qualificationModel.getCouncil_registration_number());
         holder.degreeNameTv.setText(qualificationModel.getCouncil_name());
         holder.passinYearTv.setText(qualificationModel.getCouncil_year());

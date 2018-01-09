@@ -58,7 +58,6 @@ public class CommunitiesDetails extends AppCompatActivity {
             }
         });
         mLetterTileProvider = new LetterTileProvider(CommunitiesDetails.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(textTab, CommunitiesDetails.this);
 
         circleImageView = (RoundedImageView) findViewById(R.id.pro);
         moreImageView = (ImageView) findViewById(R.id.more);
@@ -80,7 +79,6 @@ public class CommunitiesDetails extends AppCompatActivity {
 
         TextView tabOneTimeline = (TextView) tabLinearLayoutTimeline.findViewById(tab);
         tabOneTimeline.setText("FEED");
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOneTimeline, CommunitiesDetails.this);
         tabOneTimeline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);
         oneImgTimeline.setImageResource(R.drawable.home);
@@ -92,7 +90,6 @@ public class CommunitiesDetails extends AppCompatActivity {
 
         TextView tabOne = (TextView) tabLinearLayout.findViewById(tab);
         tabOne.setText("ABOUT");
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(tabOne, CommunitiesDetails.this);
 
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImg = (ImageView) tabLinearLayout.findViewById(R.id.icon);

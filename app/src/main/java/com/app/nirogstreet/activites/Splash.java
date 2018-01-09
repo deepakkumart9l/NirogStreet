@@ -87,8 +87,7 @@ public class Splash extends AppCompatActivity {
         }
         thinkAyurveda = (TextView) findViewById(R.id.think);
         thinkNirog = (TextView) findViewById(R.id.nirog);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(thinkAyurveda, Splash.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(thinkNirog, Splash.this);
+
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();

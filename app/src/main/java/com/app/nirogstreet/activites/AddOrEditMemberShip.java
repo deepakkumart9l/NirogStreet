@@ -88,14 +88,12 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
         deleteImageView = (ImageView) findViewById(R.id.delete);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, AddOrEditMemberShip.this);
 
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         saveTv = (TextView) findViewById(R.id.saveTv);
         yearEditText = (EditText) findViewById(R.id.year);
-        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, AddOrEditMemberShip.this);
         backImageView = (ImageView) findViewById(R.id.back);
 
         backImageView.setOnClickListener(new View.OnClickListener() {

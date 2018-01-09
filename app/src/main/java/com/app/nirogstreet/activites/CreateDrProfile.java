@@ -85,6 +85,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -108,7 +109,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
     String title, category, gender;
     EditText editTextDob, editTextemail, editTextName, editTextCity, editTextYearOfExpeicence, editTextWebsite, editTextAbout, editTextContactNumber;
-    TextInputLayout textInputLayout;
     File photoFile;
     private static final String[] titleArray = {"Dr/Mr", "Dr/Mrs", "Dr/Miss"};
     private static final String[] genderArray = {"Male", "Female"};
@@ -127,7 +127,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     TextView saveTv;
     String mCurrentPhotoPath;
     RadioButton maleRadioButton, femaleRadioButton;
-    MaterialSpinner spinnerTitle, spinnerGender, spinnerCategory;
+    Spinner spinnerTitle;
+    Spinner  spinnerGender, spinnerCategory;
     private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
     UserDetailAsyncTask userDetailAsyncTask;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
@@ -152,7 +153,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         title_side_left = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(title_side_left, CreateDrProfile.this);
         editTextemail = (EditText) findViewById(R.id.email);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -173,9 +173,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         genderSpinnerRadioGroup = (RadioGroup) findViewById(R.id.genderSpinner);
         femaleRadioButton = (RadioButton) findViewById(R.id.female);
         skipTextView = (TextView) findViewById(R.id.skip);
-        spinnerCategory = (MaterialSpinner) findViewById(R.id.categorySpinner);
-        spinnerTitle = (MaterialSpinner) findViewById(R.id.titleLay);
-
+        spinnerCategory = (Spinner) findViewById(R.id.categorySpinner);
+        spinnerTitle = (Spinner) findViewById(R.id.titleLay);
         if (isSkip) {
             skipTextView.setVisibility(View.GONE);
             backImageView.setVisibility(View.GONE);
@@ -213,7 +212,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         editTextName.setEnabled(true);
         editTextContactNumber.setEnabled(true);
         saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, CreateDrProfile.this);
         saveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,7 +234,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
             }
         });
-        textInputLayout = (TextInputLayout) findViewById(R.id.dob_layout);
 
         editTextDob = (EditText) findViewById(R.id.dob);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -274,7 +271,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 }
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(editTextDob, CreateDrProfile.this);
 
 
         initSpinnerScrollingTitle();
@@ -596,7 +592,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
 
                 return v;
             }
@@ -605,7 +600,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
 
                 return v;
             }
@@ -614,8 +608,8 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
 
         spinnerCategory.setAdapter(adapter);
-        spinnerCategory.setHint("Select Category");
-        spinnerCategory.setPaddingSafe(0, 0, 0, 0);
+       /* spinnerCategory.setHint("Select Category");
+        spinnerCategory.setPaddingSafe(0, 0, 0, 0);*/
 
     }
 
@@ -646,7 +640,6 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
 
                 return v;
             }
@@ -655,15 +648,14 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateDrProfile.this);
 
                 return v;
             }
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTitle.setAdapter(adapter);
-        spinnerTitle.setHint("Select Title");
-        spinnerTitle.setPaddingSafe(0, 0, 0, 0);
+      //  spinnerTitle.setHint("Select Title");
+        //spinnerTitle.setPaddingSafe(0, 0, 0, 0);
 
     }
 

@@ -39,7 +39,6 @@ import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
-import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -210,13 +209,10 @@ public class Knowledge_Centre_Detail extends Activity {
         }
         auth_imageCircleImageView = (CircleImageView) findViewById(R.id.auth_image);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(addQualificationTextView, Knowledge_Centre_Detail.this);
         sesstionManager = new SesstionManager(Knowledge_Centre_Detail.this);
         main_LinearLayout = (LinearLayout) findViewById(R.id.mainCrad);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(title_side_Tv, this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_name_TV, this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(viewTv, this);
+
         if (isHide) {
 
             addQualificationTextView.setVisibility(View.GONE);
@@ -491,8 +487,7 @@ public class Knowledge_Centre_Detail extends Activity {
                     titleTextView.setText("Module " + pos + " : " + course_detail_model.getModulesModels().get(k).getName());
                     TextView descriptionTextView = (TextView) mainCards.findViewById(R.id.description);
                     descriptionTextView.setText(course_detail_model.getModulesModels().get(k).getDescription());
-                    TypeFaceMethods.setRegularTypeBoldFaceTextView(titleTextView, Knowledge_Centre_Detail.this);
-                    TypeFaceMethods.setRegularTypeFaceForTextView(descriptionTextView, Knowledge_Centre_Detail.this);
+
                     if (descriptionTextView != null && descriptionTextView.getText().length() > 170)
                         makeTextViewResizable(descriptionTextView, 4, "view more", true);
                     else {
@@ -506,13 +501,11 @@ public class Knowledge_Centre_Detail extends Activity {
                                 TextView titleTextViewModule = (TextView) v.findViewById(R.id.title);
                                 int pos1 = i + 1;
                                 titleTextViewModule.setText(pos1 + ". " + course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getName());
-                                TypeFaceMethods.setRegularTypeBoldFaceTextView(titleTextViewModule, Knowledge_Centre_Detail.this);
                                 if (course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics() != null && course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().size() > 0)
                                     for (int j = 0; j < course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().size(); j++) {
                                         View v1 = LayoutInflater.from(Knowledge_Centre_Detail.this).inflate(R.layout.module_item_check, null);
                                         TextView fileName = (TextView) v1.findViewById(R.id.txt);
                                         ImageView checkBox = (ImageView) v1.findViewById(R.id.checkbox);
-                                        TypeFaceMethods.setRegularTypeFaceForTextView(fileName, Knowledge_Centre_Detail.this);
                                         String filename = course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().get(j).getName();
                                         String doc_Type = course_detail_model.getModulesModels().get(k).getTopic_under_modules().get(i).getFile_under_topics().get(j).getDoc_type();
                                         ImageView src = (ImageView) v1.findViewById(R.id.image);

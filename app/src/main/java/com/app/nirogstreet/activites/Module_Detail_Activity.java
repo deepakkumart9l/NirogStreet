@@ -84,7 +84,6 @@ public class Module_Detail_Activity extends Activity {
             file_pos = getIntent().getIntExtra("file_pos", -1);
         }
         title_side_left = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(title_side_left, Module_Detail_Activity.this);
         sesstionManager = new SesstionManager(Module_Detail_Activity.this);
         if (getIntent().hasExtra("url")) {
             url = getIntent().getStringExtra("url");

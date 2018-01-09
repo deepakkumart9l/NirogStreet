@@ -480,7 +480,6 @@ filter(s.toString());
 
                 }
             });
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);
             holder.textViewName.setText(multipleSelectedItemModel.getSpecializationName());
         }
 

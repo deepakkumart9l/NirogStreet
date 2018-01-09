@@ -115,9 +115,7 @@ public class MultipleSelectGroup extends Activity
 
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, MultipleSelectGroup.this);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
         ChipCloudConfig deleteableConfig = new ChipCloudConfig()
                 .selectMode(ChipCloud.SelectMode.multi)
                 .checkedChipColor(Color.parseColor("#ddaa00"))
@@ -125,7 +123,6 @@ public class MultipleSelectGroup extends Activity
                 .uncheckedChipColor(Color.parseColor("#e0e0e0"))
                 .showClose(Color.parseColor("#a6a6a6"))
                 .useInsetPadding(true)
-                .typeface(tf)
                 .uncheckedTextColor(Color.parseColor("#000000"));
 
         horizontalScroll = (LinearLayout) findViewById(R.id.horizontal_layout);

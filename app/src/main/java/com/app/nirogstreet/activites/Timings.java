@@ -86,7 +86,6 @@ public class Timings extends Activity {
             timingsModels1=clinicDetailModel.getTimingsModels();
         }
         sentTv = (TextView) findViewById(R.id.sentTv);
-        TypeFaceMethods.setRegularTypeFaceForTextView(sentTv, Timings.this);
         sentTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +164,6 @@ public class Timings extends Activity {
         public void onBindViewHolder(final MyHolderView holder, final int position) {
             holder.dayTextView.setText(timingsModels.get(position).getDay());
             final boolean[] isFirstTime = {false};
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.dayTextView, context);
             if (!timingsModels.get(position).getSesstionModel1().getStartTime().equalsIgnoreCase("") && !timingsModels.get(position).getSesstionModel1().getEndTime().equalsIgnoreCase("")) {
                 holder.addTextView.setVisibility(View.GONE);
                 holder.firstSesstion.setVisibility(View.VISIBLE);
@@ -451,10 +449,7 @@ public class Timings extends Activity {
                 secondSesstion = (TextView) itemView.findViewById(R.id.secondSesstion);
                 firstSesstion = (TextView) itemView.findViewById(R.id.firstSesstion);
                 view = (View) itemView.findViewById(R.id.view);
-                TypeFaceMethods.setRegularTypeFaceForTextView(dayTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(addTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(secondSesstion, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(firstSesstion, context);
+
 
 
             }

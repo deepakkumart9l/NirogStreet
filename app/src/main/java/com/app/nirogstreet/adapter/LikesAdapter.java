@@ -69,7 +69,6 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
                 .placeholder(R.drawable.user)
                 .error(R.drawable.user)
                 .into(holder.imageView);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.name,context);
     }
 
 

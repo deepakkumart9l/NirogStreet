@@ -87,7 +87,6 @@ public class SpecilizationAndService extends Activity {
                 finish();
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side, SpecilizationAndService.this);
         saveTv = (TextView) findViewById(R.id.saveTv);
         saveTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +98,7 @@ public class SpecilizationAndService extends Activity {
             }
         });
         sepcialization = (EditText) findViewById(R.id.sepcialization);
-        TypeFaceMethods.setRegularTypeFaceEditText(Services_name, SpecilizationAndService.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, SpecilizationAndService.this);
+
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
             sepcialization.setText(getSelectedNameCsv());

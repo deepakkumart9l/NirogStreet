@@ -76,12 +76,9 @@ public class Experience extends Activity {
                 startActivity(intent);
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, Experience.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, Experience.this);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Experience.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,9 +129,7 @@ public class Experience extends Activity {
         @Override
         public void onBindViewHolder(ExperienceAdapter.MyHolderView holder, final int position) {
             ExperinceModel experinceModel = experinceModels.get(position);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
+
             holder.clgNameTv.setText(experinceModel.getOrganizationName());
             holder.degreeNameTv.setText(experinceModel.getAddress());
             if(experinceModel.getEnd_time()==null)

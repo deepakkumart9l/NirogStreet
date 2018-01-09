@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -67,6 +68,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import org.json.JSONArray;
@@ -74,6 +76,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -1032,12 +1035,21 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                         String name = getFileName(urlImage);
                         entityBuilder.addTextBody("Feed[mediaName][]", name);
 
+
                     } else {
 
                         File file = new File(selectedVideoPath);
                         file.getAbsolutePath();
                         ContentBody cbfile = new FileBody(file);
                         entityBuilder.addPart("Feed[imageFile][img][]", cbfile);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        Bitmap bmThumbnail;
+                        bmThumbnail = ThumbnailUtils.createVideoThumbnail(selectedVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
+                        bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        File bb = getFile(bmThumbnail);
+                        ContentBody cbfile1 = new FileBody(bb);
+                        entityBuilder.addPart("Feed[url_image]",cbfile1);
+                        System.out.print(cbfile1);
                     }
                 }
                 if (servicesMultipleSelectedModels != null && servicesMultipleSelectedModels.size() > 0) {
@@ -1397,8 +1409,17 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         }
         if (feedModel.getFeed_type().equalsIgnoreCase("5") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
             selectedVideoPath = feedModel.getFeed_source();
-            imageViewSelected.setBackgroundColor(R.color.gray_2nd);
-            imageViewSelected.setImageResource(R.drawable.play_icon);
+            if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
+            {
+                Picasso.with(PostEditActivity.this)
+                        .load(feedModel.getUrl_image())
+                        .placeholder(R.drawable.default_)
+                        .error(R.drawable.default_)
+                        .into(imageViewSelected);
+            }else {
+             imageViewSelected.setImageResource(R.drawable.default_videobg);
+            }
+          //  imageViewSelected.setImageResource(R.drawable.play_icon);
 
         }
         if (feedModel.getFeed_type().equalsIgnoreCase("2") && feedModel.getPost_Type().equalsIgnoreCase("2") && feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
@@ -1513,5 +1534,28 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             }
         }
         return filename;
+    }
+    private File getFile(Bitmap bitmap)
+    {
+        File f = new File(getCacheDir(), "test.jpeg");
+
+        try {
+            f.createNewFile();
+
+//Convert bitmap to byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return f;
     }
 }

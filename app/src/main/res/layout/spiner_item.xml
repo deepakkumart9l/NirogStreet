@@ -4,6 +4,7 @@
     style="?android:attr/spinnerItemStyle"
     android:singleLine="true"
     android:textColor="@color/black"
+    android:textSize="12sp"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
      />

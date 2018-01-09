@@ -190,8 +190,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
                 // Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(myViewHolder.nameTv, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.view_detail, context);
+
 
 
                 try {
@@ -407,6 +406,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                             viewHolder.moreviewTextView.setText("+" + num + "");
                                         } else {
                                             viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
+                                            viewHolder.moreLinearLayout.setVisibility(View.GONE);
                                             int num = strings.size() - 1;
                                             viewHolder.moreviewTextView.setText("+" + num + "");
                                         }
@@ -984,7 +984,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                    TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.sectionTv, context);
                     if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
                         if (feedModel.getActivity_detail() != null) {
                             if (feedModel.getActivity_detail().equalsIgnoreCase("1"))
@@ -1017,7 +1016,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setDialog(final FeedModel feedModel) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
+        builder.setTitle("Are you sure you want to Delete this post?");// Add the buttons
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (NetworkUtill.isNetworkAvailable(context)) {

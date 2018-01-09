@@ -158,10 +158,7 @@ public class Multiple_select_invite_search extends Activity
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         recyclerViewsearchData = (RecyclerView) findViewById(R.id.recyclerview);
         textViewDone = (TextView) findViewById(R.id.done);
-        TypeFaceMethods.setRegularTypeFaceEditText(searchET, Multiple_select_invite_search.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(specilization, Multiple_select_invite_search.this);
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(textViewDone, Multiple_select_invite_search.this);
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -665,7 +662,6 @@ public class Multiple_select_invite_search extends Activity
 
                 }
             });
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);
             holder.textViewName.setText(multipleSelectedItemModel.getUserName());
         }
 

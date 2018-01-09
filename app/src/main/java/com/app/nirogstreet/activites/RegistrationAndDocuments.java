@@ -77,12 +77,9 @@ Intent intent=new Intent(RegistrationAndDocuments.this,AllClinicListing.class);
         linearLayoutManager = new LinearLayoutManager(RegistrationAndDocuments.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(linearLayoutManager);
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, RegistrationAndDocuments.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, RegistrationAndDocuments.this);
         addQualificationTextView = (TextView) findViewById(R.id.addRegistration);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, RegistrationAndDocuments.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,9 +133,7 @@ Intent intent=new Intent(RegistrationAndDocuments.this,AllClinicListing.class);
         @Override
         public void onBindViewHolder(RegistrationAdapter.MyHolderView holder, final int position) {
             RegistrationAndDocumenModel qualificationModel = qualificationModels.get(position);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
+
             holder.clgNameTv.setText(qualificationModel.getCouncil_registration_number());
             holder.degreeNameTv.setText(qualificationModel.getCouncil_name());
             holder.passinYearTv.setText(qualificationModel.getCouncil_year());

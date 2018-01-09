@@ -94,12 +94,9 @@ public class Award extends AppCompatActivity{
                 startActivity(intent);
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, Award.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, Award.this);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, Award.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,9 +127,7 @@ public class Award extends AppCompatActivity{
         @Override
         public void onBindViewHolder(AwardAdapter.MyHolderView holder, final int position) {
             AwardsModel awardsModel = awardsModels.get(position);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clgNameTv, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
+
             holder.clgNameTv.setText(awardsModel.getAwardName());
             holder.degreeNameTv.setVisibility(View.GONE);
             holder.passinYearTv.setText(awardsModel.getYear());

@@ -123,7 +123,6 @@ public class SearchLocationCity extends AppCompatActivity implements
             e.printStackTrace();
         }
         searchET = (TextView) findViewById(R.id.searchET);
-        TypeFaceMethods.setRegularTypeFaceForTextView(searchET, SearchLocationCity.this);
         buildGoogleApiClient();
 
           /*  findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
@@ -133,7 +132,6 @@ public class SearchLocationCity extends AppCompatActivity implements
                 }
             });*/
         autoCompleteTextView = (EditText) findViewById(R.id.autoCompleteTextView1);
-        TypeFaceMethods.setRegularTypeFaceEditText(autoCompleteTextView, SearchLocationCity.this);
         Methods.showSoftKeyboard(autoCompleteTextView, this);
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
 
@@ -395,7 +393,6 @@ public class SearchLocationCity extends AppCompatActivity implements
 
             }
             holder.title.setText(data.get(position).getFormattedtext());
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.title, SearchLocationCity.this);
             holder.title.setOnClickListener(new View.OnClickListener() {
 
                 @Override

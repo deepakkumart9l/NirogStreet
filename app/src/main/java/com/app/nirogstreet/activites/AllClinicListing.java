@@ -132,12 +132,7 @@ public class AllClinicListing extends  Activity {
         @Override
         public void onBindViewHolder(AllClinicAdapter.MyHolderView holder, final int position) {
             final ClinicDetailModel allClinicModel = allClinicModelArrayList.get(position);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.clinic_Name, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.services_txt, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.address, context);
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.fees, context);
 
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.consultaionFees, context);
             holder.clinic_Name.setText(allClinicModel.getName());
             holder.address.setText(allClinicModel.getAddress());
             holder.fees.setText(allClinicModel.getConsultation_fee());

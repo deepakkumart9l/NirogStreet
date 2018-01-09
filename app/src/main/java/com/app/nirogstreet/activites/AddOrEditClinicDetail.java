@@ -69,7 +69,6 @@ public class AddOrEditClinicDetail extends AppCompatActivity {
             clinicDetailModel = (ClinicDetailModel) getIntent().getSerializableExtra("ClinicModel");
         }
         saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, AddOrEditClinicDetail.this);
         saveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

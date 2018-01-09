@@ -654,7 +654,6 @@ public class Multi_Select_Search_specialization extends Activity
 
                 }
             });
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);
             holder.textViewName.setText(multipleSelectedItemModel.getSpecializationName());
         }
 

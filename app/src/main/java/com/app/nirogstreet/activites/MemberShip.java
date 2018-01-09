@@ -75,12 +75,9 @@ public class MemberShip extends Activity {
                 startActivity(intent);
             }
         });
-        TypeFaceMethods.setRegularTypeFaceForTextView(skipTextView, MemberShip.this);
 
         titileText = (TextView) findViewById(R.id.title_side_left);
-        TypeFaceMethods.setRegularTypeFaceForTextView(titileText, MemberShip.this);
         addQualificationTextView = (TextView) findViewById(R.id.addQualification);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addQualificationTextView, MemberShip.this);
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

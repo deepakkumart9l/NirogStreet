@@ -123,7 +123,6 @@ public class UpdateCommunity extends Activity {
         spinnerCategory = (MaterialSpinner) findViewById(R.id.titleLay);
         create = (TextView) findViewById(R.id.create);
         create.setText("Update");
-        TypeFaceMethods.setRegularTypeFaceForTextView(create, UpdateCommunity.this);
         descriptionEditText = (EditText) findViewById(R.id.description);
         add_imageTextView = (TextView) findViewById(R.id.add_image);
         add_peopleEditText.setOnClickListener(new View.OnClickListener() {
@@ -153,18 +152,13 @@ public class UpdateCommunity extends Activity {
             }
         });
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(add_imageTextView, UpdateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addTextView, UpdateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(community_nameEditText, UpdateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(noteEditText, UpdateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(descriptionEditText, UpdateCommunity.this);
+
         if (getIntent().hasExtra("groupId")) {
             groupId = getIntent().getStringExtra("groupId");
         }
 
 
 
-        TypeFaceMethods.setRegularTypeFaceEditText(add_peopleEditText, UpdateCommunity.this);
         imgCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -738,7 +732,6 @@ public class UpdateCommunity extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, UpdateCommunity.this);
 
                 return v;
             }
@@ -747,7 +740,6 @@ public class UpdateCommunity extends Activity {
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, UpdateCommunity.this);
 
                 return v;
             }

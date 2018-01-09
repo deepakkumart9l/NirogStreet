@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,7 +89,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
     RelativeLayout EditDocRelativeLayout;
     CircularProgressBar circularProgressBar;
     private String authToken, userId;
-    MaterialSpinner spinnerCouncilType;
+    Spinner spinnerCouncilType;
     private static final int RESULT_CODE = 1;
 
     int REQUEST_CODE = 4;
@@ -135,7 +136,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
                 finish();
             }
         });
-        spinnerCouncilType = (MaterialSpinner) findViewById(R.id.titleLay);
+        spinnerCouncilType = (Spinner) findViewById(R.id.titleLay);
 
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         yearEditText = (EditText) findViewById(R.id.year);
@@ -212,7 +213,6 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, EditRegistrationAndDocuments.this);
 
                 return v;
             }
@@ -221,7 +221,6 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, EditRegistrationAndDocuments.this);
 
                 return v;
             }
@@ -230,8 +229,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
 
 
         spinnerCouncilType.setAdapter(adapter);
-        spinnerCouncilType.setHint("Select Council Type");
-        spinnerCouncilType.setPaddingSafe(0, 0, 0, 0);
+
 degree_name.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {

@@ -525,7 +525,6 @@ public class SelectCouncilName extends Activity
 
                 }
             });
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);
             holder.textViewName.setText(multipleSelectedItemModel.getSpecializationName());
         }
 

@@ -42,9 +42,7 @@ public class QualificationAdapter extends RecyclerView.Adapter<QualificationAdap
     @Override
     public void onBindViewHolder(QualificationAdapter.MyHolderView holder, int position) {
         QualificationModel qualificationModel = qualificationModels.get(position);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.degreeNameTv, context);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.clgNameTv, context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(holder.passinYearTv, context);
+
         holder.clgNameTv.setText(qualificationModel.getClgName());
         holder.degreeNameTv.setText(qualificationModel.getDegreeName());
         holder.passinYearTv.setText(qualificationModel.getPassingYear());

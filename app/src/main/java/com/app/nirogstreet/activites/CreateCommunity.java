@@ -118,7 +118,6 @@ public class CreateCommunity extends Activity {
         addTextView = (TextView) findViewById(R.id.add);
         spinnerCategory = (MaterialSpinner) findViewById(R.id.titleLay);
         create = (TextView) findViewById(R.id.create);
-        TypeFaceMethods.setRegularTypeFaceForTextView(create, CreateCommunity.this);
         descriptionEditText = (EditText) findViewById(R.id.description);
         add_imageTextView = (TextView) findViewById(R.id.add_image);
         add_peopleEditText.setOnClickListener(new View.OnClickListener() {
@@ -148,13 +147,7 @@ public class CreateCommunity extends Activity {
             }
         });
 
-        TypeFaceMethods.setRegularTypeFaceForTextView(add_imageTextView, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(addTextView, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(community_nameEditText, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(noteEditText, CreateCommunity.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(descriptionEditText, CreateCommunity.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(add_peopleEditText, CreateCommunity.this);
         imgCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -523,7 +516,6 @@ public class CreateCommunity extends Activity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateCommunity.this);
 
                 return v;
             }
@@ -532,7 +524,6 @@ public class CreateCommunity extends Activity {
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
 
-                TypeFaceMethods.setRegularTypeFaceForTextView((TextView) v, CreateCommunity.this);
 
                 return v;
             }

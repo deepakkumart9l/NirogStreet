@@ -172,7 +172,6 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case TYPE_HEADER:
                 HeaderView myViewHolder = (HeaderView) holder;
                 // Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
                 myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -418,6 +417,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         viewHolder.moreviewTextView.setText("+" + num + "");
                                     } else {
                                         viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
+                                        viewHolder.moreLinearLayout.setVisibility(View.GONE);
                                         int num = strings.size() - 1;
                                         viewHolder.moreviewTextView.setText("+" + num + "");
                                     }
@@ -1342,7 +1342,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setDialog(final FeedModel feedModel) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
+        builder.setTitle("Are you sure you want to Delete this post?");// Add the buttons
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (NetworkUtill.isNetworkAvailable(context)) {

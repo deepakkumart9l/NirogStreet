@@ -87,9 +87,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         final NotificationModel item = notificationModels.get(position);
         try {
             genericViewHolder.name.setText(Html.fromHtml("<b>" + "Dr. " + item.getName() + "</b>" + " " + item.getMessage()));
-            TypeFaceMethods.setRegularTypeFaceForTextView(genericViewHolder.name, context);
             genericViewHolder.time.setText(item.getTime());
-            TypeFaceMethods.setRegularTypeFaceForTextView(genericViewHolder.time, context);
 
             String imgUrl = item.getProfile_pic();
             try {

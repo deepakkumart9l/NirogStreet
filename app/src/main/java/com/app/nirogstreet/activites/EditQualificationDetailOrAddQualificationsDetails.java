@@ -181,19 +181,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         sepcialization = (EditText) findViewById(R.id.sepcialization);
 
         saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(uploadDoctv, EditQualificationDetailOrAddQualificationsDetails.this);
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(docNameTv, EditQualificationDetailOrAddQualificationsDetails.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(add, EditQualificationDetailOrAddQualificationsDetails.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(sepcialization, EditQualificationDetailOrAddQualificationsDetails.this);
-        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, EditQualificationDetailOrAddQualificationsDetails.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(degree_name, EditQualificationDetailOrAddQualificationsDetails.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(clgEt, EditQualificationDetailOrAddQualificationsDetails.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, EditQualificationDetailOrAddQualificationsDetails.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, EditQualificationDetailOrAddQualificationsDetails.this);
 
         yearEditText.setOnClickListener(new View.OnClickListener() {
             @Override

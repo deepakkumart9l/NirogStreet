@@ -33,7 +33,6 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
-import com.app.nirogstreet.uttil.TypeFaceMethods;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -106,14 +105,7 @@ public class AddOrEditAward extends AppCompatActivity {
         degree_name = (EditText) findViewById(R.id.degree_name);
         clgEt = (EditText) findViewById(R.id.clgEt);
         saveTv = (TextView) findViewById(R.id.saveTv);
-        TypeFaceMethods.setRegularTypeFaceEditText(yearEditText, AddOrEditAward.this);
 
-        TypeFaceMethods.setRegularTypeFaceEditText(degree_name, AddOrEditAward.this);
-
-        TypeFaceMethods.setRegularTypeFaceEditText(clgEt, AddOrEditAward.this);
-
-        TypeFaceMethods.setRegularTypeFaceForTextView(title_side_left, AddOrEditAward.this);
-        TypeFaceMethods.setRegularTypeFaceForTextView(saveTv, AddOrEditAward.this);
 
         yearEditText.setOnClickListener(new View.OnClickListener() {
             @Override

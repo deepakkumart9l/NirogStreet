@@ -47,8 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="@dimen/padding_10"
                 android:layout_marginLeft="45dp"
+                android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="10dp"
                 android:paddingRight="@dimen/padding_10"
                 android:paddingTop="@dimen/padding_10"
@@ -87,164 +87,226 @@
             android:layout_margin="20dp"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/clg_lay"
+            <TextView
+                android:id="@+id/text_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Clinic Name"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/clinicName"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Clinic Name"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+            <EditText
+                android:id="@+id/clinicName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Clinic Name"
+                android:inputType="text|textNoSuggestions"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
 
-            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/degree_la"
+            <TextView
+                android:id="@+id/text_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/address"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Address"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/locality_la"
+            <EditText
+                android:id="@+id/address"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Address"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_locality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Locality"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/locality"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Locality"
-                    android:focusable="false"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/sepcialization_la"
+            <EditText
+                android:id="@+id/locality"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:focusable="false"
+                android:hint="Locality"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="City"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/city"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="City"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/lay"
+            <EditText
+                android:id="@+id/city"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="City"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="State"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/country"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="State"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/country"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="State"
+                android:inputType="text|textNoSuggestions"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/year_lay"
+            <TextView
+                android:id="@+id/text_pincode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Pincode"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/pincode"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Pincode"
-                    android:inputType="number|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/pincode"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Pincode"
+                android:inputType="number|textNoSuggestions"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/fee"
+            <TextView
+                android:id="@+id/text_fe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Fee"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/feeEt"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:drawableLeft="@drawable/rupee"
-android:drawablePadding="5dp"
-                    android:inputType="number|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/service_lay"
+            <EditText
+                android:id="@+id/feeEt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@drawable/round_edittext"
+                android:drawableLeft="@drawable/rupee"
+                android:drawablePadding="5dp"
+                android:drawableTint="@color/textcolorgray"
+                android:inputType="number|textNoSuggestions"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_Services_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Services"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/Services_name"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Services"
-                    android:inputType="text|textNoSuggestions"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/Services_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dip"
+                android:background="@drawable/round_edittext"
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Services"
+                android:inputType="text|textNoSuggestions"
+                android:maxLines="1"
+
+                android:padding="13dp"
+                android:textColor="@color/black"
+
+                android:textColorHint="@color/textcolorgray"
+                android:textSize="14sp" />
 
         </LinearLayout>
     </ScrollView>

@@ -620,7 +620,6 @@ recyclerViewsearchData.setVisibility(View.VISIBLE);
                 }
 
             });
-            TypeFaceMethods.setRegularTypeFaceForTextView(holder.textViewName, context);
             holder.textViewName.setText(multipleSelectedItemModel.getClinic_name());
         }
 

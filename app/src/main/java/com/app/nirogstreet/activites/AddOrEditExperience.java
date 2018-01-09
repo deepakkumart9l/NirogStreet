@@ -73,6 +73,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class AddOrEditExperience extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static boolean isVisible = true;
     public static int year;
+    TextView text_to;
     CheckBox checkBox;
 
     ImageView backImageView;
@@ -98,22 +99,25 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
         }
         setContentView(R.layout.add_edit_experience);
         checkBox = (CheckBox) findViewById(R.id.checkbox);
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ubuntu.regular.ttf");
-        checkBox.setTypeface(tf);
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                                                 @Override
                                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                                     if (isChecked) {
                                                         toEt.setVisibility(View.GONE);
+                                                        text_to.setVisibility(View.GONE);
                                                     } else {
                                                         toEt.setVisibility(View.VISIBLE);
+                                                        text_to.setVisibility(View.VISIBLE);
+
 
                                                     }
                                                 }
                                             }
         );
         deleteImageView = (ImageView) findViewById(R.id.delete);
+        text_to=(TextView)findViewById(R.id.text_to);
         sesstionManager = new SesstionManager(AddOrEditExperience.this);
         if (sesstionManager.isUserLoggedIn()) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -180,6 +184,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
             if (experinceModel.getEnd_time() == null) {
                 checkBox.setChecked(true);
                 toEt.setVisibility(View.GONE);
+                text_to.setVisibility(View.GONE);
             }
 
             saveTv.setOnClickListener(new View.OnClickListener() {

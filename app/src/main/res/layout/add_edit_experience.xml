@@ -85,56 +85,75 @@
             android:orientation="vertical"
             android:layout_margin="20dp"
             android:layout_height="match_parent">
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/hospital_lay"
+            <TextView
+                android:id="@+id/text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="Hospital or Clinic"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
                 <EditText
                     android:id="@+id/hospital"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
+                    android:background="@drawable/round_edittext"
+                    android:textSize="14sp"
+                    android:padding="13dp"                     android:drawableTint="@color/textcolorgray"
                     android:hint="Hospital or Clinic"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/year_lay"
+            <TextView
+                android:id="@+id/text_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="City"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
                 <EditText
                     android:id="@+id/city"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
+                    android:background="@drawable/round_edittext"
+                    android:textSize="14sp"
+                    android:padding="13dp"                    android:drawableTint="@color/textcolorgray"
                     android:hint="City"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/clg_lay"
+            <TextView
+                android:id="@+id/text_from"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="From"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
                 <EditText
                     android:id="@+id/from"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
+                    android:background="@drawable/round_edittext"
+                    android:textSize="14sp"
+                    android:padding="13dp"                    android:drawableTint="@color/textcolorgray"
                     android:hint="From"
                     android:focusable="false"
                     android:inputType="text|textNoSuggestions"
@@ -142,28 +161,33 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
 
-            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/toy"
+            <TextView
+                android:id="@+id/text_to"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_below="@+id/contact_num"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="9dp"
+                android:text="To"
+                android:textColor="@color/black"
+                android:textSize="11dp"
+                android:visibility="visible" />
 
                 <EditText
                     android:id="@+id/to"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
+                    android:background="@drawable/round_edittext"
+                    android:textSize="14sp"
+                    android:padding="13dp"                    android:drawableTint="@color/textcolorgray"
                     android:hint="To"
                     android:focusable="false"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/sepcialization_la"
                 android:layout_width="match_parent"
@@ -194,6 +218,7 @@
                     android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="-4dp"
                     android:buttonTint="@color/buttonBackground"
                     android:text="Currently working here."
                     android:textColor="@color/textcolorgray"

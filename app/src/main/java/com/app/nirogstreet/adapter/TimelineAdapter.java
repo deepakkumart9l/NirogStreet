@@ -448,6 +448,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             viewHolder.moreviewTextView.setText("+" + num + "");
                                         } else {
                                             viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
+                                            viewHolder.moreLinearLayout.setVisibility(View.GONE);
                                             int num = strings.size() - 1;
                                             viewHolder.moreviewTextView.setText("+" + num + "");
                                         }
@@ -1502,7 +1503,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setDialog(final FeedModel feedModel) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Are you sure you want to Delete this post.");// Add the buttons
+        builder.setTitle("Are you sure you want to Delete this post?");// Add the buttons
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
