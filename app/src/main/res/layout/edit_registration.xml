@@ -219,7 +219,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/rectangle_draw"
+                android:background="@drawable/round_edittext"
                 android:orientation="horizontal"
                 android:padding="10dp">
 

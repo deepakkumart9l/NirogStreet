@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
@@ -77,6 +78,8 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1412,73 +1415,106 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                                             public boolean onMenuItemClick(MenuItem item) {
+                                                 //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-                //  int index = info.position;
-                //  System.out.print(index);
-                switch (item.getItemId()) {
-                    case R.id.publicshare:
-                        Intent intent = new Intent(context, PublicShare.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        intent.putExtra("userId", userId);
-                        context.startActivity(intent);
+                                                 //  int index = info.position;
+                                                 //  System.out.print(index);
+                                                 switch (item.getItemId()) {
+                                                     case R.id.publicshare:
+                                                         Intent intent = new Intent(context, PublicShare.class);
+                                                         intent.putExtra("feedId", feedModel.getFeed_id());
+                                                         intent.putExtra("userId", userId);
+                                                         context.startActivity(intent);
 
-                        /*if (NetworkUtill.isNetworkAvailable(context)) {
-                            SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
-                            sharePublicAsyncTask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
-                        }*/
-                        break;
-                    case R.id.groupstimeline:
-                        Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
+                                                       /*  if (NetworkUtill.isNetworkAvailable(context)) {
+                                                             SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
+                                                             sharePublicAsyncTask.execute();
+                                                         } else {
+                                                             NetworkUtill.showNoInternetDialog(context);
+                                                         }*/
+                                                         break;
+                                                     case R.id.groupstimeline:
+                                                         Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
 
-                        intent1.putExtra("feedId", feedModel.getFeed_id());
-                        intent1.putExtra("userId", userId);
-                        intent1.putExtra("shareOnGroup", true);
-                        context.startActivity(intent1);
-                        break;
-                    case R.id.share_exteraly:
-                        try {
-                            if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                                text = feedModel.getMessage();
-                            }
+                                                         intent1.putExtra("feedId", feedModel.getFeed_id());
+                                                         intent1.putExtra("userId", userId);
+                                                         intent1.putExtra("shareOnGroup", true);
+                                                         context.startActivity(intent1);
+
+                                                         break;
+                                                     case R.id.share_exteraly:
+                                                         try {
+                                                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                                                 text = feedModel.getMessage();
+                                                             }
        /* if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
             if (feedModel.getFeedSourceArrayList().get(0) != null && feedModel.getFeedSourceArrayList().get(0).length() > 0) {
                 shareText = feedModel.getFeedSourceArrayList().get(0);
             }
         }*/
-                            if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
-                                title = feedModel.getTitleQuestion();
-                            }
-                            if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                                             String path = null;
+                                                             Uri imageUri = null;
+                                                             ArrayList<Uri> files = new ArrayList<Uri>();
+                                                             if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
+                                                                 try {
+                                                                     for (int i=0;i<feedModel.getFeedSourceArrayList().size();i++) {
+                                                                         URL url = new URL(feedModel.getFeedSourceArrayList().get(i));
+                                                                         Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-                                videourl = feedModel.getFeed_source();
-                            }
-                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                            shareIntent.setType("text/plain");
-                            if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0) {
-                                if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
-                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
-                                } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
-                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text);
-                                } else if (title != null && title.length() > 0) {
-                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
-                                } else if (text != null && text.length() > 0) {
-                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                                }
-                                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
-                                context.startActivity(Intent.createChooser(shareIntent,
-                                        context.getResources().getString(R.string.share_with)));
-                            }
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            e.printStackTrace();
-                        }
-                        break;
+                                                                         Uri bitmapUri=null;
 
-                }
+                                                                         String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "title", null);
+                                                                         bitmapUri = Uri.parse(bitmapPath);
+                                                                         files.add(bitmapUri);
+                                                                     }
+                                                                     //  f.getAbsoluteFile();
+                                                                 } catch (IOException e) {
+                                                                     System.out.println(e);
+                                                                 }
+                                                             }
+                                                             if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
+                                                                 title = feedModel.getTitleQuestion();
+                                                             }
+                                                             if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+
+                                                                 videourl = feedModel.getFeed_source();
+                                                             }
+                                                             Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                                             shareIntent.setType("text/plain");
+                                                             if (files != null&&files.size()>0) {
+                                                                 // shareIntent.setDataAndType(imageUri,context. getContentResolver().getType(imageUri));
+
+                                                                 shareIntent.putExtra(Intent.EXTRA_STREAM, files);
+                                                                 shareIntent.setType("image/*");
+                                                                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                             }
+                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0||files.size()>0||feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase(String.valueOf(LINK_TYPE_WEB_LINK))) {
+                                                                 if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
+                                                                 } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text);
+                                                                 } else if (title != null && title.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
+                                                                 } else if (text != null && text.length() > 0) {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+                                                                 }else if(feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase(String.valueOf(LINK_TYPE_WEB_LINK)))
+                                                                 {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
+
+                                                                 }
+                                                                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
+                                                                 context.startActivity(Intent.createChooser(shareIntent,
+                                                                         context.getResources().getString(R.string.share_with)));
+
+
+                                                             }
+                                                         } catch (Exception e) {
+                                                             // TODO: handle exception
+                                                             e.printStackTrace();
+                                                         }
+                                                         break;
+                                                 }
                 /*if (item.getTitle().equals(R.string.SharePublic)) {
 
 
@@ -1487,9 +1523,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else {
 
                 }*/
-                return true;
-            }
-        });
+                                                 return true;
+                                             }
+                                         }
+
+        );
 
         popup.show();//showing popup menu
     }

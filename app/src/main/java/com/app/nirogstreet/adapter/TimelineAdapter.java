@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -77,6 +78,7 @@ import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.GoToURLSpan;
+import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -86,6 +88,11 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -219,9 +226,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     final MyViewHolder viewHolder = (MyViewHolder) holder;
                     int feed_type = 0;
                     final FeedModel feedModel = feedModels.get(position);
-                    if(feedModel.getFeed_type()!=null)
-                        feed_type=
-                    Integer.parseInt(feedModel.getFeed_type());
+                    if (feedModel.getFeed_type() != null)
+                        feed_type =
+                                Integer.parseInt(feedModel.getFeed_type());
                     int link_type = 0;
                     if (feedModel.getLink_type() != null) {
                         link_type = Integer.parseInt(feedModel.getLink_type());
@@ -543,14 +550,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.webView.setVisibility(View.GONE);
                             viewHolder.docTypeLayout.setVisibility(View.GONE);
                             viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                            if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
-                            {
+                            if (feedModel.getUrl_image() != null && !feedModel.getUrl_image().equalsIgnoreCase("")) {
                                 Picasso.with(context)
                                         .load(feedModel.getUrl_image())
                                         .placeholder(R.drawable.default_)
                                         .error(R.drawable.default_)
                                         .into(viewHolder.feedImageView);
-                            }else {
+                            } else {
                                 viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
                             }
                             viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
@@ -667,7 +673,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                         String scheme = "http://zipinfo.com";*/
                         if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                          Methods.hyperlink(viewHolder.statusTextView,feedModel.getMessage(),context);
+                            Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context);
                             // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
                         }
                     } else {
@@ -746,7 +752,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion().trim().toString());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
                         //  Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
-                       Methods. hyperlink(viewHolder.QuestionTextView,feedModel.getTitleQuestion(),context);
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context);
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -1418,6 +1424,26 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 shareText = feedModel.getFeedSourceArrayList().get(0);
             }
         }*/
+                                                             String path = null;
+                                                             Uri imageUri = null;
+                                                             ArrayList<Uri> files = new ArrayList<Uri>();
+                                                             if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
+                                                                 try {
+                                                                     for (int i=0;i<feedModel.getFeedSourceArrayList().size();i++) {
+                                                                         URL url = new URL(feedModel.getFeedSourceArrayList().get(i));
+                                                                         Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                                                                         Uri bitmapUri=null;
+
+                                                                         String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "title", null);
+                                                                         bitmapUri = Uri.parse(bitmapPath);
+                                                                         files.add(bitmapUri);
+                                                                     }
+                                                                     //  f.getAbsoluteFile();
+                                                                 } catch (IOException e) {
+                                                                     System.out.println(e);
+                                                                 }
+                                                             }
                                                              if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
                                                                  title = feedModel.getTitleQuestion();
                                                              }
@@ -1427,7 +1453,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                              }
                                                              Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                                              shareIntent.setType("text/plain");
-                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0) {
+                                                             if (files != null&&files.size()>0) {
+                                                                 // shareIntent.setDataAndType(imageUri,context. getContentResolver().getType(imageUri));
+
+                                                                 shareIntent.putExtra(Intent.EXTRA_STREAM, files);
+                                                                 shareIntent.setType("image/*");
+                                                                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                             }
+                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0||files.size()>0||feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase(String.valueOf(LINK_TYPE_WEB_LINK))) {
                                                                  if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
                                                                  } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
@@ -1436,11 +1469,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
                                                                  } else if (text != null && text.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+                                                                 }else if(feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase(String.valueOf(LINK_TYPE_WEB_LINK)))
+                                                                 {
+                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
+
                                                                  }
                                                                  shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
                                                                  context.startActivity(Intent.createChooser(shareIntent,
                                                                          context.getResources().getString(R.string.share_with)));
-                                                             }
+
+
+                                                         }
                                                          } catch (Exception e) {
                                                              // TODO: handle exception
                                                              e.printStackTrace();
@@ -1800,14 +1839,5 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    public Bitmap StringToBitMap(String encodedImage) {
-        try {
-            byte[] decodedString = Base64.decode("data:image/jpeg;base64," + encodedImage, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
+
 }

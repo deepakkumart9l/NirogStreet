@@ -64,22 +64,18 @@ public class Courses_Fragment extends Fragment {
     ImageView imageViewback;
     private static final int REQUEST_FOR_ACTIVITY_CODE = 6;
     private static final int REQUEST_FOR_UPDAED = 7;
-
     ArrayList<CoursesModel> groupModelsTotal = new ArrayList<>();
-
     String authToken, userId;
     int totalPageCount;
     View userView, allView;
     RelativeLayout searchLayout;
     LinearLayoutManager linearLayoutManager;
-
     CircularProgressBar circularProgressBar;
     GroupsOfUserAsyncTask groupsOfUserAsyncTask;
     TextView createTextView;
     String logedinuserId;
     Button button;
     LinearLayout no_list;
-
     LinearLayout linearLayout1;
     Courses_Listing_Adapter groupListingAdapter;
     TextView myGroupTextView, otherGroupTextView;
