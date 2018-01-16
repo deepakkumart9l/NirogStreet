@@ -34,10 +34,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:visibility="visible"
                 android:text="Create"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="visible" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -52,58 +52,73 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:orientation="vertical">
 
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/degree_la"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/textcolorgray"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="13.5sp"
+                android:text="Community Name :"
 
-                app:passwordToggleTint="#000">
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="normal" />
 
-                <EditText
-                    android:id="@+id/community_name"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:textSize="16dp"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:hint="Community Name:"
-                    android:paddingBottom="15dp"
-                    android:inputType="textCapWords|textCapSentences"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/clg_lay"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/community_name"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleTint="#000">
+                android:layout_marginBottom="10dip"
 
-                <EditText
+                android:drawableTint="@color/textcolorgray"
+                android:hint="Community Name"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLines="1"
+                android:padding="13dp"
+                android:textSize="15dp"
+                android:background="@drawable/round_edittext"
+
+                android:textColor="@color/black"
+                android:textColorHint="@color/textcolorgray"
+               />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="13.5sp"
+                android:text="Add Members :"
+
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+
+            <EditText
                     android:id="@+id/add_people"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:paddingBottom="15dp"
-                    android:textSize="16dp"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:hint="Add Members:"
+                    android:focusable="false"
+                    android:hint="Add Members"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
+                    android:padding="13dp"
+                    android:textSize="15dp"
+                    android:background="@drawable/round_edittext"                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray"
+                     />
 
-            </android.support.design.widget.TextInputLayout>
 
 
             <android.support.design.widget.TextInputLayout
@@ -129,55 +144,64 @@
                     android:textColorHint="@color/textcolorgray" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/year_lay"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleEnabled="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="13.5sp"
+                android:text="Invitation Note :"
 
-                app:passwordToggleTint="#000">
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="normal" />
 
-                <EditText
+
+            <EditText
                     android:id="@+id/note"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
                     android:drawableTint="@color/textcolorgray"
-                    android:paddingBottom="15dp"
-                    android:textSize="16dp"
                     android:hint="Write a note to include in your invite (Optional):"
                     android:inputType="textCapWords|textCapSentences"
                     android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
+                android:padding="13dp"
+                android:textSize="15dp"
+                android:background="@drawable/round_edittext"                    android:textColor="@color/black"
+                    android:textColorHint="@color/textcolorgray"
+                    />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/description_lay"
-                android:layout_width="match_parent"
-                android:textColorHint="@color/textcolorgray"
-                app:passwordToggleEnabled="true"
-
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:passwordToggleTint="#000">
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="13.5sp"
+                android:text="Description :"
 
-                <EditText
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+
+            <EditText
                     android:id="@+id/description"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
-                    android:backgroundTint="@color/textcolorgray"
-                    android:drawableTint="@color/textcolorgray"
-                    android:paddingBottom="15dp"
-                    android:textSize="16dp"
+                android:padding="13dp"
+                android:textSize="15dp"
+                android:background="@drawable/round_edittext"                    android:drawableTint="@color/textcolorgray"
                     android:hint="Description:"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="5"
+                    android:paddingBottom="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/textcolorgray" />
-            </android.support.design.widget.TextInputLayout>
+                    android:textColorHint="@color/textcolorgray"
+                     />
 
             <TextView
                 android:id="@+id/add"
@@ -185,46 +209,66 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:text="Select Privacy:"
-                android:visibility="gone"
-                android:textColor="@color/textcolorgray" />
+                android:textColor="@color/textcolorgray"
+                android:visibility="gone" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="13.5sp"
+                android:text="Select Category :"
 
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+        <LinearLayout
+            android:id="@+id/tt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-            <fr.ganfra.materialspinner.MaterialSpinner
+            android:layout_below="@+id/textView"
+
+            android:background="@drawable/round_edittext">
+
+            <Spinner
                 android:id="@+id/titleLay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_below="@+id/profile"
                 android:layout_marginLeft="-7dp"
-                android:paddingLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:backgroundTint="@color/textcolorgray"
                 android:drawableTint="@color/textcolorgray"
+                android:paddingLeft="2dp"
 
-                app:ms_arrowColor="@color/textcolorgray"
-                app:ms_baseColor="@color/textcolorgray"
-                app:ms_floatingLabelColor="@color/textcolorgray"
-                app:ms_hintColor="@color/textcolorgray" />
-
+            />
+</LinearLayout>
             <TextView
+                android:id="@+id/add_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/add_image"
-                android:paddingLeft="2dp"
-                android:layout_marginTop="10dp"
-                android:textSize="16dp"
 
                 android:text="Add group Image:"
-                android:textColor="@color/textcolorgray" />
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="13.5sp"
+
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="normal" />
 
             <ImageView
                 android:id="@+id/imgView"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginTop="13dp"
                 android:layout_marginLeft="3dp"
-                android:background="@color/white"
-                android:scaleType="centerCrop"
-                android:src="@drawable/add_"></ImageView>
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/add_image_icon"></ImageView>
 
         </LinearLayout>
     </ScrollView>

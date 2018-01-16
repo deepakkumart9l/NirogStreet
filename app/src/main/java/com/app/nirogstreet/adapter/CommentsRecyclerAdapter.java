@@ -162,7 +162,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
             public void onClick(View view) {
                 Intent resultIntent = new Intent(context, Dr_Profile.class);
                 CommentsModel likesModel = commentsModels.get(position);
-                resultIntent.putExtra("userId", likesModel.getUserId());
+                resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.startActivity(resultIntent);
             }
         });
@@ -171,7 +171,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
             public void onClick(View view) {
                 Intent resultIntent = new Intent(context, Dr_Profile.class);
                 CommentsModel likesModel = commentsModels.get(position);
-                resultIntent.putExtra("userId", likesModel.getUserId());
+                resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.startActivity(resultIntent);
             }
         });

@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,7 +78,7 @@ public class CreateCommunity extends Activity {
     private int SELECT_FILE = 999;
     private int REQUEST_CAMERA = 99;
     File photoFile;
-    MaterialSpinner spinnerTitle, spinnerGender, spinnerCategory;
+    Spinner spinnerTitle, spinnerGender, spinnerCategory;
 
     ArrayList<MultipleSelectedItemModel> multipleSelectedItemModels = new ArrayList<>();
     String group = "";
@@ -116,7 +117,7 @@ public class CreateCommunity extends Activity {
         add_peopleEditText = (EditText) findViewById(R.id.add_people);
         noteEditText = (EditText) findViewById(R.id.note);
         addTextView = (TextView) findViewById(R.id.add);
-        spinnerCategory = (MaterialSpinner) findViewById(R.id.titleLay);
+        spinnerCategory = (Spinner) findViewById(R.id.titleLay);
         create = (TextView) findViewById(R.id.create);
         descriptionEditText = (EditText) findViewById(R.id.description);
         add_imageTextView = (TextView) findViewById(R.id.add_image);
@@ -532,8 +533,7 @@ public class CreateCommunity extends Activity {
 
 
         spinnerCategory.setAdapter(adapter);
-        spinnerCategory.setHint("Select Category");
-        spinnerCategory.setPaddingSafe(0, 0, 0, 0);
+
         spinnerCategory.setSelection(1);
     }
 

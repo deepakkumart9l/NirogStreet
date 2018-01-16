@@ -177,6 +177,9 @@ public class Courses_Fragment extends Fragment {
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
+                    myGroupTextView.setClickable(true);
+                    otherGroupTextView.setClickable(true);
+
                 }
             }
         });
@@ -204,6 +207,9 @@ public class Courses_Fragment extends Fragment {
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
+                    myGroupTextView.setClickable(true);
+                    otherGroupTextView.setClickable(true);
+
                 }
             }
         });
@@ -233,6 +239,9 @@ public class Courses_Fragment extends Fragment {
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
+                    myGroupTextView.setClickable(true);
+                    otherGroupTextView.setClickable(true);
+
                 }
             }
         });
@@ -256,6 +265,9 @@ public class Courses_Fragment extends Fragment {
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
+                myGroupTextView.setClickable(true);
+                otherGroupTextView.setClickable(true);
+
             }
         else {
             if (NetworkUtill.isNetworkAvailable(context)) {
@@ -265,6 +277,9 @@ public class Courses_Fragment extends Fragment {
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
+                myGroupTextView.setClickable(true);
+                otherGroupTextView.setClickable(true);
+
             }
         }
 

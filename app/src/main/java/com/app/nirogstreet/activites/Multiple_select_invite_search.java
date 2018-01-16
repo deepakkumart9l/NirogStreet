@@ -34,6 +34,7 @@ import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import de.hdodenhof.circleimageview.CircleImageView;
 import fisk.chipcloud.ChipCloud;
 import fisk.chipcloud.ChipCloudConfig;
 import fisk.chipcloud.ChipDeletedListener;
@@ -623,7 +625,7 @@ public class Multiple_select_invite_search extends Activity
         @Override
         public SearchAdapterMultiSelect.MyHolderView onCreateViewHolder(ViewGroup parent, int viewType) {
             RecyclerView.ViewHolder viewHolder = null;
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_selected, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.multi_selcet_img, parent, false);
             return new SearchAdapterMultiSelect.MyHolderView(v);
         }
 
@@ -636,6 +638,15 @@ public class Multiple_select_invite_search extends Activity
             } else {
                 holder.textViewInvite.setVisibility(View.GONE);
 
+            }
+            if(multipleSelectedItemModel.getProfile_pic()!=null&&!multipleSelectedItemModel.getProfile_pic().equalsIgnoreCase(""))
+                Picasso.with(context)
+                        .load(multipleSelectedItemModel.getProfile_pic())
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into(holder.imageViewPic);
+            else {
+                holder.imageViewPic.setImageResource(R.drawable.user);
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -672,7 +683,8 @@ public class Multiple_select_invite_search extends Activity
 
         public class MyHolderView extends RecyclerView.ViewHolder {
             TextView textViewName, textViewDepartment;
-            ImageView imageViewPic, textViewInvite;
+            ImageView  textViewInvite;
+            CircleImageView imageViewPic;
             RelativeLayout relativeLayoutview;
 
             public MyHolderView(View itemView) {

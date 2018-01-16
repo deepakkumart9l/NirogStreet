@@ -13,12 +13,11 @@
         android:layout_marginRight="60dp"
         android:gravity="center"
         android:paddingLeft="10dp">
-<ImageView
-    android:layout_width="40dp"
-    android:id="@+id/img"
-    android:visibility="gone"
-    android:src="@drawable/user"
-    android:layout_height="40dp" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:id="@+id/img"
+            android:src="@drawable/user"
+            android:layout_height="40dp" />
 
         <TextView
             android:id="@+id/name"

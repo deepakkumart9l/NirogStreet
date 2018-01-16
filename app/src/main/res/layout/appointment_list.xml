@@ -118,14 +118,14 @@
         <ImageView
             android:layout_width="116dp"
             android:layout_height="108dp"
-            android:src="@drawable/notverified" />
+            android:src="@drawable/no_appointment" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:lineSpacingExtra="3.4sp"
-            android:text="Sorry ! Your profile is not verified"
+            android:text="Sorry ! You have no appointments yet"
             android:textColor="#b7b7b7"
             android:textSize="11.3sp" />
     </LinearLayout>

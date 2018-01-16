@@ -125,7 +125,7 @@ public class CommunitiesFragment extends Fragment {
                 String url = AppUrl.BaseUrl + "group/all-groups-new";
 
                 groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
-                groupsOfUserAsyncTask.execute();
+                groupsOfUserAsyncTaskAll.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
             }
@@ -190,7 +190,7 @@ public class CommunitiesFragment extends Fragment {
                     String url = AppUrl.BaseUrl + "group/all-groups-new";
 
                     groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTaskAll.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -238,6 +238,8 @@ public class CommunitiesFragment extends Fragment {
                     groupsOfUserAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
+                    myGroupTextView.setClickable(true);
+                    otherGroupTextView.setClickable(true);
                 }
             }
         });
@@ -266,6 +268,9 @@ public class CommunitiesFragment extends Fragment {
                     groupsOfUserAsyncTaskAll.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
+                    myGroupTextView.setClickable(true);
+                    otherGroupTextView.setClickable(true);
+
                 }
             }
         });
@@ -284,6 +289,9 @@ public class CommunitiesFragment extends Fragment {
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
+                myGroupTextView.setClickable(true);
+                otherGroupTextView.setClickable(true);
+
             }
         else {
             if (NetworkUtill.isNetworkAvailable(context)) {
@@ -293,6 +301,9 @@ public class CommunitiesFragment extends Fragment {
                 groupsOfUserAsyncTask.execute();
             } else {
                 NetworkUtill.showNoInternetDialog(context);
+                myGroupTextView.setClickable(true);
+                otherGroupTextView.setClickable(true);
+
             }
         }
 

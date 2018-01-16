@@ -715,16 +715,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        count = 1;
-        HashMap<String, String> userDetails = sesstionManager.getUserDetails();
-        String userId = userDetails.get(SesstionManager.USER_ID);
-        if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
-            notificationAsyncTask = new NotificationAsyncTask(
-                    userId, "", "");
-            notificationAsyncTask.execute();
+        try {
+            count = 1;
 
-        } else {
-            NetworkUtill.showNoInternetDialog(MainActivity.this);
+            HashMap<String, String> userDetails = sesstionManager.getUserDetails();
+            String userId = userDetails.get(SesstionManager.USER_ID);
+            if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
+                notificationAsyncTask = new NotificationAsyncTask(
+                        userId, "", "");
+                notificationAsyncTask.execute();
+
+            } else {
+                NetworkUtill.showNoInternetDialog(MainActivity.this);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

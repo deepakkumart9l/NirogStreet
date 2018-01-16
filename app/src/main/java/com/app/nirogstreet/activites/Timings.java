@@ -184,6 +184,7 @@ public class Timings extends Activity {
                     isFirstTime[0] = true;
                     Calendar now = Calendar.getInstance();
                     TimePickerDialog tpd;
+
                     tpd = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
                                                            @Override
                                                            public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd, TextView textView, int amOrpmstart, int amorpmEnd) {

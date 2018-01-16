@@ -809,6 +809,7 @@ imgPublic_icon=(ImageView)findViewById(R.id.imgPublic_icon);
             if (userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() != 0) {
                 sevicesCsvTextView.setText(getSelectedServicesCsv());
                 QualificationTv.setText(getSelectedNameCsv());
+                imgPublic_icon.setVisibility(View.VISIBLE);
                 sevicesCsvTextView.setVisibility(View.VISIBLE);
                 sevicesTextView.setVisibility(View.VISIBLE);
 

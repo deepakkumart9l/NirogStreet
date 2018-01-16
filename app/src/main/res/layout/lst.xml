@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -56,24 +57,29 @@
                 android:text="Qualifications"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-
                 android:visibility="gone" />
 
         </RelativeLayout>
     </RelativeLayout>
 
+    <Switch
+        android:id="@+id/simpleSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
+        android:layout_below="@+id/simpleSwitch"
         android:scrollbars="vertical"
         android:visibility="visible"
 
         />
+
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar
         android:id="@+id/circularProgressBar"
-        app:cpb_colors="@array/gplus_colors"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
@@ -81,13 +87,15 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/cir"
         android:padding="8dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:cpb_colors="@array/gplus_colors" />
+
     <LinearLayout
         android:id="@+id/sendOtp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#e82351"
         android:layout_alignParentBottom="true"
+        android:background="#e82351"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible">

@@ -999,9 +999,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                     if (userDetailModel.getCategory() != null) {
                                         if (!userDetailModel.getCategory().equalsIgnoreCase(""))
                                             if (userDetailModel.getCategory().equalsIgnoreCase("1") && !userDetailModel.getCategory().equalsIgnoreCase("")) {
-                                                spinnerCategory.setSelection(1);
+                                                spinnerCategory.setSelection(0);
                                             } else {
-                                                spinnerCategory.setSelection(2);
+                                                spinnerCategory.setSelection(1);
 
                                             }
                                     }
@@ -1010,12 +1010,12 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                     }
                                     if (userDetailModel.getTitle() != null && !userDetailModel.getTitle().equalsIgnoreCase("")) {
                                         if (userDetailModel.getTitle().equalsIgnoreCase("DR/Mr")) {
-                                            spinnerTitle.setSelection(1);
+                                            spinnerTitle.setSelection(0);
                                         } else if (userDetailModel.getTitle().equalsIgnoreCase("DR/Mrs")) {
-                                            spinnerTitle.setSelection(2);
+                                            spinnerTitle.setSelection(1);
 
                                         } else {
-                                            spinnerTitle.setSelection(3);
+                                            spinnerTitle.setSelection(2);
                                         }
                                     }
                                     if (userDetailModel.getCity() != null) {

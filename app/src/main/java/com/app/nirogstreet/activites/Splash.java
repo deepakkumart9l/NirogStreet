@@ -66,9 +66,8 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sesstionManager = new SesstionManager(Splash.this);
-
-        //Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
-
+        if (!AppUrl.AppBaseUrl.contains("appstage"))
+            Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
 
 
         setContentView(R.layout.splash_screen);

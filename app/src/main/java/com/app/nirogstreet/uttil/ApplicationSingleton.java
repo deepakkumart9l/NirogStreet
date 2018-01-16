@@ -1,6 +1,8 @@
 package com.app.nirogstreet.uttil;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.app.nirogstreet.model.Course_Detail_model;
 import com.app.nirogstreet.model.FeedModel;
@@ -11,6 +13,11 @@ import com.app.nirogstreet.model.UserDetailModel;
  */
 
 public class ApplicationSingleton extends Application {
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
     public static boolean isGroupUpdated() {
         return isGroupUpdated;
     }

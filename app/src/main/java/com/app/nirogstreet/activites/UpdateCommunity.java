@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +82,7 @@ public class UpdateCommunity extends Activity {
     private int SELECT_FILE = 999;
     private int REQUEST_CAMERA = 99;
     File photoFile;
-    MaterialSpinner spinnerTitle, spinnerGender, spinnerCategory;
+    Spinner spinnerTitle, spinnerGender, spinnerCategory;
 
     ArrayList<MultipleSelectedItemModel> multipleSelectedItemModels = new ArrayList<>();
     String group = "";
@@ -120,7 +121,7 @@ public class UpdateCommunity extends Activity {
         add_peopleEditText = (EditText) findViewById(R.id.add_people);
         noteEditText = (EditText) findViewById(R.id.note);
         addTextView = (TextView) findViewById(R.id.add);
-        spinnerCategory = (MaterialSpinner) findViewById(R.id.titleLay);
+        spinnerCategory = (Spinner) findViewById(R.id.titleLay);
         create = (TextView) findViewById(R.id.create);
         create.setText("Update");
         descriptionEditText = (EditText) findViewById(R.id.description);
@@ -568,9 +569,9 @@ public class UpdateCommunity extends Activity {
                             if (groupDetailJsonObject.has("privacy") && !groupDetailJsonObject.isNull("privacy")) {
                                 privacy = groupDetailJsonObject.getString("privacy");
                                 if (privacy.equalsIgnoreCase("1")) {
-                                    spinnerCategory.setSelection(2);
-                                } else {
                                     spinnerCategory.setSelection(1);
+                                } else {
+                                    spinnerCategory.setSelection(0);
 
                                 }
                             }
@@ -748,8 +749,7 @@ public class UpdateCommunity extends Activity {
 
 
         spinnerCategory.setAdapter(adapter);
-        spinnerCategory.setHint("Select Category");
-        spinnerCategory.setPaddingSafe(0, 0, 0, 0);
+
 
     }
 

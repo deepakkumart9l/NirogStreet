@@ -1460,7 +1460,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                  shareIntent.setType("image/*");
                                                                  shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                                              }
-                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0||files.size()>0||feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase(String.valueOf(LINK_TYPE_WEB_LINK))) {
+                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0||files.size()>0||feedModel.getLink_type()!=null) {
                                                                  if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
                                                                  } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
@@ -1469,7 +1469,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
                                                                  } else if (text != null && text.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                                                                 }else if(feedModel.getLink_type()!=null&&feedModel.getLink_type().equalsIgnoreCase(String.valueOf(LINK_TYPE_WEB_LINK)))
+                                                                 }else if(feedModel.getLink_type()!=null)
                                                                  {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
 
