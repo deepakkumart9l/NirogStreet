@@ -231,6 +231,7 @@ public class CommunitySearchActivity  extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("searchKey", strTobeSearch));
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("pageNo", page + ""));
+                pairs.add(new BasicNameValuePair("allgroup","1"));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
 

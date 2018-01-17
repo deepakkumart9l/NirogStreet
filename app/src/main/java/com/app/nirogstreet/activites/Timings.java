@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,37 +70,55 @@ public class Timings extends Activity {
     ImageView backImageView;
     TextView sentTv;
     UpdateProfileEditAsyncTask updateProfileEditAsyncTask;
-
     UpdateProfileAsyncTask updateProfileAsyncTask;
     SesstionManager sesstionManager;
     private LinearLayoutManager linearLayoutManager;
     ArrayList<TimingsModel> timingsModels1 = new ArrayList<>();
     ClinicDetailModel clinicDetailModel;
     CircularProgressBar circularProgressBar;
+    Switch switch_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lst);
+        switch_button = (Switch) findViewById(R.id.switch_button);
+
         sesstionManager = new SesstionManager(Timings.this);
         if (getIntent().hasExtra("ClinicModel")) {
             clinicDetailModel = (ClinicDetailModel) getIntent().getSerializableExtra("ClinicModel");
-            timingsModels1=clinicDetailModel.getTimingsModels();
+            timingsModels1 = clinicDetailModel.getTimingsModels();
         }
         sentTv = (TextView) findViewById(R.id.sentTv);
         sentTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validate()) {
-                    clinicDetailModel.setTimingsModels(timingsModels1);
+                    if (switch_button.isChecked()) {
+                        ArrayList<TimingsModel> timingsModels = new ArrayList<TimingsModel>();
+
+                        timingsModels.add(timingsModels1.get(0));
+                        timingsModels.add(timingsModels1.get(0));
+                        timingsModels.add(timingsModels1.get(0));
+
+                        timingsModels.add(timingsModels1.get(0));
+                        timingsModels.add(timingsModels1.get(0));
+                        timingsModels.add(timingsModels1.get(1));
+                        timingsModels.add(timingsModels1.get(2));
+                        clinicDetailModel.setTimingsModels(timingsModels);
+
+                    }else {
+                        clinicDetailModel.setTimingsModels(timingsModels1);
+
+                    }
                     if (NetworkUtill.isNetworkAvailable(Timings.this)) {
-                        if(clinicDetailModel.getClinic_docID()!=null&&!clinicDetailModel.getClinic_docID().equalsIgnoreCase(""))
-                        {
+
+                        if (clinicDetailModel.getClinic_docID() != null && !clinicDetailModel.getClinic_docID().equalsIgnoreCase("")) {
                             updateProfileEditAsyncTask = new UpdateProfileEditAsyncTask(0);
                             updateProfileEditAsyncTask.execute();
 
-                        }else {
-                            updateProfileAsyncTask=new UpdateProfileAsyncTask(0);
+                        } else {
+                            updateProfileAsyncTask = new UpdateProfileAsyncTask(0);
                             updateProfileAsyncTask.execute();
                         }
                     } else {
@@ -120,9 +140,10 @@ public class Timings extends Activity {
         //  recyclerView.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        if (clinicDetailModel != null && clinicDetailModel.getTimingsModels() != null&&clinicDetailModel.getTimingsModels().size()>0) {
+        if (clinicDetailModel != null && clinicDetailModel.getTimingsModels() != null && clinicDetailModel.getTimingsModels().size() > 0) {
             timingsModels1 = clinicDetailModel.getTimingsModels();
         } else {
+
             timingsModels1.add(new TimingsModel("Mon", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
             timingsModels1.add(new TimingsModel("Tue", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
 
@@ -137,6 +158,87 @@ public class Timings extends Activity {
         }
         TimingsAdapter timingsAdapter = new TimingsAdapter(timingsModels1, Timings.this, Timings.this);
         recyclerView.setAdapter(timingsAdapter);
+        switch_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SesstionModel sesstionModelsat1 = new SesstionModel("", "", "", "", false);
+                    SesstionModel sesstionModelsat2 = new SesstionModel("", "", "", "", false);
+                    SesstionModel sesstionModelsun1 = new SesstionModel("", "", "", "", false);
+                    SesstionModel sesstionModelsun2 = new SesstionModel("", "", "", "", false);
+                    if (timingsModels1.get(5).getSesstionModel1().isAvailable() || timingsModels1.get(5).getSesstionModel2().isAvailable()) {
+                        sesstionModelsat1 = timingsModels1.get(5).getSesstionModel1();
+                        sesstionModelsat2 = timingsModels1.get(5).getSesstionModel2();
+                    }
+                    if (timingsModels1.get(6).getSesstionModel1().isAvailable() || timingsModels1.get(6).getSesstionModel2().isAvailable()) {
+                        sesstionModelsun1 = timingsModels1.get(6).getSesstionModel1();
+                        sesstionModelsun2 = timingsModels1.get(6).getSesstionModel2();
+                    }
+                    if (timingsModels1.get(0).getSesstionModel1().isAvailable() || timingsModels1.get(0).getSesstionModel2().isAvailable()) {
+                        SesstionModel sesstionModel1 = timingsModels1.get(0).getSesstionModel1();
+                        SesstionModel sesstionModel2 = timingsModels1.get(0).getSesstionModel2();
+                        timingsModels1.clear();
+                        timingsModels1.add(new TimingsModel("Mon-Fri", sesstionModel1, sesstionModel2));
+
+
+                    } else {
+                        timingsModels1.clear();
+
+                        timingsModels1.add(new TimingsModel("Mon-Fri", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
+
+
+                    }
+
+                    timingsModels1.add(new TimingsModel("Sat", sesstionModelsat1, sesstionModelsat2));
+                    timingsModels1.add(new TimingsModel("Sun", sesstionModelsun1, sesstionModelsun2));
+                    TimingsAdapter timingsAdapter = new TimingsAdapter(timingsModels1, Timings.this, Timings.this);
+                    recyclerView.setAdapter(timingsAdapter);
+                } else {
+                    SesstionModel sesstionModelsat1 = new SesstionModel("", "", "", "", false);
+                    SesstionModel sesstionModelsat2 = new SesstionModel("", "", "", "", false);
+                    SesstionModel sesstionModelsun1 = new SesstionModel("", "", "", "", false);
+                    SesstionModel sesstionModelsun2 = new SesstionModel("", "", "", "", false);
+                    if (timingsModels1.get(1).getSesstionModel1().isAvailable() || timingsModels1.get(1).getSesstionModel2().isAvailable()) {
+                        sesstionModelsat1 = timingsModels1.get(1).getSesstionModel1();
+                        sesstionModelsat2 = timingsModels1.get(1).getSesstionModel2();
+                    }
+                    if (timingsModels1.get(2).getSesstionModel1().isAvailable() || timingsModels1.get(2).getSesstionModel2().isAvailable()) {
+                        sesstionModelsun1 = timingsModels1.get(2).getSesstionModel1();
+                        sesstionModelsun2 = timingsModels1.get(2).getSesstionModel2();
+                    }
+                    if (timingsModels1.get(0).getSesstionModel1().isAvailable() || timingsModels1.get(0).getSesstionModel2().isAvailable()) {
+                        SesstionModel sesstionModel1 = timingsModels1.get(0).getSesstionModel1();
+                        SesstionModel sesstionModel2 = timingsModels1.get(0).getSesstionModel2();
+                        timingsModels1.clear();
+                        timingsModels1.add(new TimingsModel("Mon", sesstionModel1, sesstionModel2));
+                        timingsModels1.add(new TimingsModel("Tue", sesstionModel1, sesstionModel2));
+
+                        timingsModels1.add(new TimingsModel("Wed", sesstionModel1, sesstionModel2));
+
+                        timingsModels1.add(new TimingsModel("Thu", sesstionModel1, sesstionModel2));
+
+                        timingsModels1.add(new TimingsModel("Fri", sesstionModel1, sesstionModel2));
+
+                    } else {
+                        timingsModels1.clear();
+                        timingsModels1.add(new TimingsModel("Mon", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
+                        timingsModels1.add(new TimingsModel("Tue", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
+
+                        timingsModels1.add(new TimingsModel("Wed", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
+
+                        timingsModels1.add(new TimingsModel("Thu", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
+
+                        timingsModels1.add(new TimingsModel("Fri", new SesstionModel("", "", "", "", false), new SesstionModel("", "", "", "", false)));
+
+
+                    }
+                    timingsModels1.add(new TimingsModel("Sat", sesstionModelsat1, sesstionModelsat2));
+                    timingsModels1.add(new TimingsModel("Sun", sesstionModelsun1, sesstionModelsun2));
+                    TimingsAdapter timingsAdapter = new TimingsAdapter(timingsModels1, Timings.this, Timings.this);
+                    recyclerView.setAdapter(timingsAdapter);
+                }
+            }
+        });
     }
 
     public class TimingsAdapter extends
@@ -172,15 +274,16 @@ public class Timings extends Activity {
                 holder.secondSesstionLayout.setVisibility(View.VISIBLE);
                 holder.secondSesstion.setVisibility(View.VISIBLE);
 
-                holder.firstSesstion.setText(timingsModels.get(position).getSesstionModel1().getStartTime() + ":" + timingsModels.get(position).getSesstionModel1().getEndTime());
+                holder.firstSesstion.setText(amPmFromat(timingsModels.get(position).getSesstionModel1().getStartTime()) + " - " + amPmFromat(timingsModels.get(position).getSesstionModel1().getEndTime()));
             }
             if (!timingsModels.get(position).getSesstionModel2().getStartTime().equalsIgnoreCase("") && !timingsModels.get(position).getSesstionModel2().getEndTime().equalsIgnoreCase("")) {
-                holder.secondSesstion.setText(timingsModels.get(position).getSesstionModel2().getStartTime() + ":" + timingsModels.get(position).getSesstionModel2().getEndTime());
+                holder.secondSesstion.setText(amPmFromat(timingsModels.get(position).getSesstionModel2().getStartTime()) + " - " + amPmFromat(timingsModels.get(position).getSesstionModel2().getEndTime()));
 
             }
             holder.addTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    holder.secondSessionCancel.setVisibility(View.VISIBLE);
                     isFirstTime[0] = true;
                     Calendar now = Calendar.getInstance();
                     TimePickerDialog tpd;
@@ -382,16 +485,35 @@ public class Timings extends Activity {
                 @Override
                 public void onClick(View v) {
                     timingsModels.get(position).setSesstionModel1(new SesstionModel("", "", "", "", false));
-                    notifyDataSetChanged();
+                    timingsModels1.get(position).setSesstionModel1(new SesstionModel("", "", "", "", false));
+                    holder.firstSesstion.setText("Add Session Time");
+
+                    if (!timingsModels.get(position).getSesstionModel1().isAvailable() && !timingsModels.get(position).getSesstionModel2().isAvailable()) {
+                        holder.secondSesstionLayout.setVisibility(View.GONE);
+                        holder.firstSesstionLayout.setVisibility(View.GONE);
+                        holder.addTextView.setVisibility(View.VISIBLE);
+                    }
+                    //notifyItemChanged(position);
                 }
             });
             holder.secondSessionCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    timingsModels.get(position).setSesstionModel1(timingsModels.get(position).getSesstionModel2());
-                    timingsModels.get(position).setSesstionModel2(new SesstionModel("", "", "", "", false));
 
-                    notifyDataSetChanged();
+                    timingsModels.get(position).setSesstionModel1(timingsModels.get(position).getSesstionModel1());
+                    timingsModels.get(position).setSesstionModel2(new SesstionModel("", "", "", "", false));
+                    timingsModels1.get(position).setSesstionModel1(timingsModels.get(position).getSesstionModel1());
+
+                    timingsModels1.get(position).setSesstionModel2(new SesstionModel("", "", "", "", false));
+                    holder.secondSessionCancel.setVisibility(View.GONE);
+                    holder.secondSesstion.setText("Add Session Time");
+                    if (!timingsModels.get(position).getSesstionModel1().isAvailable() && !timingsModels.get(position).getSesstionModel2().isAvailable()) {
+                        holder.addTextView.setVisibility(View.VISIBLE);
+
+                        holder.secondSesstionLayout.setVisibility(View.GONE);
+                        holder.firstSesstionLayout.setVisibility(View.GONE);
+                    }
+                    // notifyItemChanged(position);
                 }
             });
         }
@@ -450,7 +572,6 @@ public class Timings extends Activity {
                 secondSesstion = (TextView) itemView.findViewById(R.id.secondSesstion);
                 firstSesstion = (TextView) itemView.findViewById(R.id.firstSesstion);
                 view = (View) itemView.findViewById(R.id.view);
-
 
 
             }
@@ -621,7 +742,7 @@ public class Timings extends Activity {
                                 if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
                                     entityBuilder.addTextBody("Timing[" + 6 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime());
                                     entityBuilder.addTextBody("Timing[" + 6 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime());
-                                    entityBuilder.addTextBody("Timing[" + 6 + "][day]", l + 1+"");
+                                    entityBuilder.addTextBody("Timing[" + 6 + "][day]", l + 1 + "");
                                     entityBuilder.addTextBody("Timing[" + 6 + "][session]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getSesstion());
 
                                     entityBuilder.addTextBody("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee());
@@ -688,7 +809,7 @@ public class Timings extends Activity {
 
                                     entityBuilder.addTextBody("Timing[" + 13 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime());
                                     entityBuilder.addTextBody("Timing[" + 13 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime());
-                                    entityBuilder.addTextBody("Timing[" + 13+ "][day]", l + 1 + "");
+                                    entityBuilder.addTextBody("Timing[" + 13 + "][day]", l + 1 + "");
                                     entityBuilder.addTextBody("Timing[" + 13 + "][session]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getSesstion());
                                     entityBuilder.addTextBody("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee());
 
@@ -724,8 +845,7 @@ public class Timings extends Activity {
                 if (jo != null) {
                     if (jo.has("data") && !jo.isNull("data")) {
                         JSONObject jsonObject = jo.getJSONObject("data");
-                        if(jsonObject.has("profile_complete")&&!jsonObject.isNull("profile_complete"))
-                        {
+                        if (jsonObject.has("profile_complete") && !jsonObject.isNull("profile_complete")) {
                             ApplicationSingleton.getUserDetailModel().setProfile_complete(jsonObject.getInt("profile_complete"));
                         }
                         if (jsonObject.has("status") && !jsonObject.isNull("status")) {
@@ -766,6 +886,7 @@ public class Timings extends Activity {
 
         }
     }
+
     public class UpdateProfileEditAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         CircularProgressBar bar;
@@ -816,170 +937,170 @@ public class Timings extends Activity {
                 pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 if (clinicDetailModel != null) {
 
-                        if(clinicDetailModel.getCreated_by().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
-                            pairs.add(new BasicNameValuePair("ClinicProfile[city]", clinicDetailModel.getCity()));
-                            pairs.add(new BasicNameValuePair("ClinicProfile[pincode]", clinicDetailModel.getPincode()));
-                            pairs.add(new BasicNameValuePair("ClinicProfile[state]", clinicDetailModel.getState()));
-                            pairs.add(new BasicNameValuePair("ClinicProfile[clinic_name]", clinicDetailModel.getName()));
-                            pairs.add(new BasicNameValuePair("ClinicProfile[locality]", clinicDetailModel.getLocality()));
+                    if (clinicDetailModel.getCreated_by().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                        pairs.add(new BasicNameValuePair("ClinicProfile[city]", clinicDetailModel.getCity()));
+                        pairs.add(new BasicNameValuePair("ClinicProfile[pincode]", clinicDetailModel.getPincode()));
+                        pairs.add(new BasicNameValuePair("ClinicProfile[state]", clinicDetailModel.getState()));
+                        pairs.add(new BasicNameValuePair("ClinicProfile[clinic_name]", clinicDetailModel.getName()));
+                        pairs.add(new BasicNameValuePair("ClinicProfile[locality]", clinicDetailModel.getLocality()));
 
 
-                            pairs.add(new BasicNameValuePair("ClinicProfile[address]", clinicDetailModel.getAddress()));
+                        pairs.add(new BasicNameValuePair("ClinicProfile[address]", clinicDetailModel.getAddress()));
+                    }
+                    if (clinicDetailModel.getServicesModels() != null && clinicDetailModel.getServicesModels().size() > 0) {
+                        for (int i = 0; i < clinicDetailModel.getServicesModels().size(); i++) {
+                            pairs.add(new BasicNameValuePair("ClinicServices[name][" + i + "]", clinicDetailModel.getServicesModels().get(i).getSpecializationName()));
+                            if (clinicDetailModel.getServicesModels().get(i).getId() != null)
+                                pairs.add(new BasicNameValuePair("ClinicServices[id][" + i + "]", clinicDetailModel.getServicesModels().get(i).getId()));
+                            else
+                                pairs.add(new BasicNameValuePair("ClinicServices[id][" + i + "]", ""));
+
+
                         }
-                        if (clinicDetailModel.getServicesModels() != null && clinicDetailModel.getServicesModels().size() > 0) {
-                            for (int i = 0; i < clinicDetailModel.getServicesModels().size(); i++) {
-                                pairs.add(new BasicNameValuePair("ClinicServices[name][" + i + "]", clinicDetailModel.getServicesModels().get(i).getSpecializationName()));
-                                if (clinicDetailModel.getServicesModels().get(i).getId() != null)
-                                    pairs.add(new BasicNameValuePair("ClinicServices[id][" + i + "]", clinicDetailModel.getServicesModels().get(i).getId()));
-                                else
-                                    pairs.add(new BasicNameValuePair("ClinicServices[id][" + i + "]", ""));
+                    }
+                }
+                if (clinicDetailModel.getTimingsModels() != null) {
+                    for (int l = 0; l < clinicDetailModel.getTimingsModels().size(); l++) {
+                        pairs.add(new BasicNameValuePair("ClinicDoctors[id]", clinicDetailModel.getClinic_docID()));
+                        if (l == 0) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 0 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 0 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 0 + "][day]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 0 + "][session]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 1 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 1 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 1 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 1 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+
+                            }
+                        } else if (l == 1) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 2 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 2 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 2 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 2 + "][session]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 3 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 3 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 3 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 3 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+
+                            }
+                        } else if (l == 2) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 4 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 4 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 4 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 4 + "][session]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 5 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 5 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 5 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 5 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+
+                            }
+
+                        } else if (l == 3) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 6 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 6 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 6 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 6 + "][session]", 1 + ""));
+
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 7 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 7 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 7 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 7 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+
+                            }
+                        } else if (l == 4) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 8 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 8 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 8 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 8 + "][session]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 9 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 9 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 9 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 9 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+
+                            }
+                        } else if (l == 5) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 10 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 10 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 10 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 10 + "][session]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 11 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 11 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 11 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 11 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+
+                            }
+                        } else if (l == 6) {
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
+                                pairs.add(new BasicNameValuePair("Timing[" + 12 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 12 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 12 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 12 + "][session]", 1 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
+
+                            }
+                            if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
+
+                                pairs.add(new BasicNameValuePair("Timing[" + 13 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 13 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
+                                pairs.add(new BasicNameValuePair("Timing[" + 13 + "][day]", l + 1 + ""));
+                                pairs.add(new BasicNameValuePair("Timing[" + 13 + "][session]", 2 + ""));
+                                pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
 
 
                             }
                         }
+
                     }
-                    if (clinicDetailModel.getTimingsModels() != null) {
-                        for (int l = 0; l < clinicDetailModel.getTimingsModels().size(); l++) {
-                            pairs.add(new BasicNameValuePair("ClinicDoctors[id]",clinicDetailModel.getClinic_docID()));
-                            if (l == 0) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 0 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 0 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 0 + "][day]", 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 0 + "][session]", 1+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 1 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 1 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 1 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 1 + "][session]", 2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-                            } else if (l == 1) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 2 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 2 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 2 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 2 + "][session]",1+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 3 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 3 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 3 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 3 + "][session]", 2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-                            } else if (l == 2) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 4 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 4 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 4 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 4 + "][session]", 1+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 5 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 5 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 5 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 5 + "][session]",2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-
-                            } else if (l == 3) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 6 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 6 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 6 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 6+ "][session]", 1+""));
-
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 7 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 7 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 7 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 7 + "][session]", 2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-                            } else if (l == 4) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 8 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 8 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 8 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 8 + "][session]", 1+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 9 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 9 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 9 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 9 + "][session]", 2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-                            } else if (l == 5) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 10 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 10 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 10 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 10 + "][session]", 1+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 11 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 11 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 11 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 11 + "][session]", 2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-                            } else if (l == 6) {
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().isAvailable()) {
-                                    pairs.add(new BasicNameValuePair("Timing[" + 12 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 12 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel1().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 12 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 12 + "][session]", 1+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-                                }
-                                if (clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().isAvailable()) {
-
-                                    pairs.add(new BasicNameValuePair("Timing[" + 13 + "][start_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getStartTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 13 + "][end_time]", clinicDetailModel.getTimingsModels().get(l).getSesstionModel2().getEndTime()));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 13 + "][day]", l + 1 + ""));
-                                    pairs.add(new BasicNameValuePair("Timing[" + 13 + "][session]",2+""));
-                                    pairs.add(new BasicNameValuePair("ClinicDoctors[fee]", clinicDetailModel.getConsultation_fee()));
-
-
-                                }
-                            }
-
-                        }
-                    }
+                }
 
 
                 httppost.setHeader("Authorization", "Basic " + sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
@@ -1006,8 +1127,7 @@ public class Timings extends Activity {
                 if (jo != null) {
                     if (jo.has("data") && !jo.isNull("data")) {
                         JSONObject jsonObject = jo.getJSONObject("data");
-                        if(jsonObject.has("profile_complete")&&!jsonObject.isNull("profile_complete"))
-                        {
+                        if (jsonObject.has("profile_complete") && !jsonObject.isNull("profile_complete")) {
                             ApplicationSingleton.getUserDetailModel().setProfile_complete(jsonObject.getInt("profile_complete"));
                         }
                         if (jsonObject.has("status") && !jsonObject.isNull("status")) {

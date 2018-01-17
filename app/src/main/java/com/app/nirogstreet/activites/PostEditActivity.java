@@ -920,6 +920,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
            /* String xx = StringEscapeUtils.escapeJava(editTextMessage.getText().toString());
             messageText = xx.replace("\\", "");*/
             try {
+                refrence=URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
+                question=URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
                 Log.e("messageText", "" + messageText);
             } catch (UnsupportedEncodingException e) {
@@ -1056,7 +1058,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                     for (int i = 0; i < servicesMultipleSelectedModels.size(); i++) {
                         if (servicesMultipleSelectedModels.get(i).getId() != null && !servicesMultipleSelectedModels.get(i).getId().equalsIgnoreCase(""))
                             entityBuilder.addTextBody("Tags[id][" + i + "]", servicesMultipleSelectedModels.get(i).getId());
-                        entityBuilder.addTextBody("Tags[name][" + i + "]", servicesMultipleSelectedModels.get(i).getSpecializationName());
+                        entityBuilder.addTextBody("Tags[name][" + i + "]",URLEncoder.encode(servicesMultipleSelectedModels.get(i).getSpecializationName(), "UTF-8") );
                     }
                 }
                 if (docpath != null && docpath.toString().trim().length() > 0) {

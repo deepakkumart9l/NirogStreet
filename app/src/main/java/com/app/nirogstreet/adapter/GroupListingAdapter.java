@@ -190,7 +190,14 @@ public class GroupListingAdapter extends
                         intent.putExtra("groupId", groupModel.getGroupId());
                         context.startActivity(intent);
                     } else {
-                        Toast.makeText(context, "Request to Join", Toast.LENGTH_SHORT).show();
+                        if(groupModel.getCreatedByUser().getUserId().equalsIgnoreCase(sessionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                        {
+                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                            intent.putExtra("groupId", groupModel.getGroupId());
+                            context.startActivity(intent);
+                        }else {
+                            Toast.makeText(context, "Request to Join", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 else {
                     Intent intent = new Intent(context, CommunitiesDetails.class);

@@ -103,10 +103,8 @@ public class TimeLineFragment extends Fragment {
                 ApplicationSingleton.setPostEditPosition(-1);
                 ApplicationSingleton.setFeedModelPostEdited(null);
             }
-            if(ApplicationSingleton.getPostEditPosition()!=-1)
-            {
-                if(ApplicationSingleton.isPostDeleted())
-                {
+            if (ApplicationSingleton.getPostEditPosition() != -1) {
+                if (ApplicationSingleton.isPostDeleted()) {
                     totalFeeds.remove(ApplicationSingleton.getPostEditPosition());
                     feedsAdapter.notifyDataSetChanged();
 
@@ -199,8 +197,7 @@ public class TimeLineFragment extends Fragment {
                     NetworkUtill.showNoInternetDialog(context);
                 }
                 if (totalFeeds.size() > 0) {
-                    if(page==1)
-                    {
+                    if (page == 1) {
                         recyclerView.smoothScrollToPosition(0);
 
                     }
@@ -300,7 +297,7 @@ public class TimeLineFragment extends Fragment {
                         feedModels = FeedParser.feedParserList(jo, page);
                         totalFeeds.add(new FeedModel());
 
-                            recyclerView.smoothScrollToPosition(0);
+                        recyclerView.smoothScrollToPosition(0);
 
 
                         totalFeeds.addAll(1, feedModels);
@@ -373,8 +370,7 @@ public class TimeLineFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(userFeedsAsyncTask!=null&&!userFeedsAsyncTask.isCancelled())
-        {
+        if (userFeedsAsyncTask != null && !userFeedsAsyncTask.isCancelled()) {
             userFeedsAsyncTask.cancelAsyncTask();
         }
     }
