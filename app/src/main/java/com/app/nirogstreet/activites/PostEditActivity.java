@@ -137,6 +137,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     private HashTagHelper mTextHashTagHelper;
     CircularProgressBar circularProgressBar;
     private static final int RESULT_CODE = 8;
+    ImageView cancel1;
 
     private int CAMERA_PERMISSION_CODE = 1;
     private int SELECT_FILE = 999;
@@ -164,6 +165,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.post_edit_new);
+        cancel1=(ImageView)findViewById(R.id.cancel1);
+
         if (getIntent().hasExtra("feedId")) {
             feedId = getIntent().getStringExtra("feedId");
         }
@@ -245,6 +248,17 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 myScrollView.setScrolling(true);
 
                 return false;
+            }
+        });
+        cancel1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedImagePath=null;
+                selectedVideoPath=null;
+                docpath=null;
+                docName.setVisibility(View.GONE);
+                cancel1.setVisibility(View.GONE);
+                imageViewSelected.setImageResource(R.drawable.add_image_icon);
             }
         });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
@@ -572,6 +586,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         if (requestCode == 102 && resultCode == RESULT_OK) {
             if (data.getData() != null) {
                 Uri uri = data.getData();
+                cancel1.setVisibility(View.VISIBLE);
+
                 Glide.with(PostEditActivity.this).load(uri).into(imageViewSelected);
                 try {
                     selectedImagePath = null;
@@ -589,6 +605,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 final Uri imageUri = data.getData();
                 selectedVideoPath = null;
                 docpath = null;
+                cancel1.setVisibility(View.VISIBLE);
+
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imageViewSelected.setImageBitmap(selectedImage);
@@ -603,6 +621,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 Uri uri = Uri.fromFile(photoFile);
                 selectedVideoPath = null;
                 docpath = null;
+                cancel1.setVisibility(View.VISIBLE);
+
                 ImageProcess obj = new ImageProcess(PostEditActivity.this);
                 mCurrentPhotoPath = obj.getPath(uri);
                 selectedImagePath = mCurrentPhotoPath;
@@ -625,6 +645,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 // String pathe = data1.getPath();
                 // path = getRealPathFromURI_API19(getActivity(), data1);
                 try {
+                    cancel1.setVisibility(View.VISIBLE);
+
                     String path = PathUtil.getPath(PostEditActivity.this, data1);
                     selectedImagePath = null;
                     selectedVideoPath = null;
@@ -1239,7 +1261,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                         public void onClick(View view) {
                             //   strings.remove(position);
                             // strings.add(strings.size(),"add");
-                            if (position == 0) {
+                            if(askQuestionImages.length()==2)
+                                if (position == 0) {
                                 recyclerView.setVisibility(View.GONE);
                                 imageViewSelected.setVisibility(View.VISIBLE);
                             }
@@ -1411,6 +1434,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         }
         if (feedModel.getFeed_type().equalsIgnoreCase("5") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
             selectedVideoPath = feedModel.getFeed_source();
+            cancel1.setVisibility(View.VISIBLE);
+
             if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
             {
                 Picasso.with(PostEditActivity.this)
@@ -1420,6 +1445,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                         .into(imageViewSelected);
             }else {
              imageViewSelected.setImageResource(R.drawable.default_videobg);
+
             }
           //  imageViewSelected.setImageResource(R.drawable.play_icon);
 
@@ -1442,6 +1468,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         }
         if (feedModel.getFeed_type().equalsIgnoreCase("6") && feedModel.getPost_Type().equalsIgnoreCase("1")) {
             docpath = feedModel.getFeed_source();
+            cancel1.setVisibility(View.VISIBLE);
+
             imageViewSelected.setImageResource(R.drawable.pdf_image);
             docName.setVisibility(View.VISIBLE);
             String name[] = docpath.split("/");

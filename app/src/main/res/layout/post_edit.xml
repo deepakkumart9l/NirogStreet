@@ -178,7 +178,7 @@
                                 android:paddingBottom="14dp"
                                 android:textColor="@color/black"
 
-                                android:textColorHint="#636163"
+                                android:textColorHint="@color/textcolorgray"
                                 android:textCursorDrawable="@drawable/color_cursor"
                                 android:textSize="15sp" />
                         </android.support.design.widget.TextInputLayout>
@@ -215,7 +215,7 @@
                                 android:paddingBottom="14dp"
                                 android:textColor="@color/black"
 
-                                android:textColorHint="#636163"
+                                android:textColorHint="@color/textcolorgray"
                                 android:textCursorDrawable="@drawable/color_cursor"
                                 android:textSize="15sp">
 
@@ -253,7 +253,7 @@
                                 android:maxLines="3"
                                 android:paddingBottom="14dp"
                                 android:textColor="@color/black"
-                                android:textColorHint="#636163"
+                                android:textColorHint="@color/textcolorgray"
                                 android:textCursorDrawable="@drawable/color_cursor"
                                 android:textSize="15sp" />
                         </android.support.design.widget.TextInputLayout>

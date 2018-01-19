@@ -329,7 +329,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Procced"
+            android:text="Select Timings"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#fff" />
     </LinearLayout>

@@ -138,11 +138,29 @@
                     </org.apmem.tools.layouts.FlowLayout>
                 </RelativeLayout>
             </RelativeLayout>
-
+            <TextView
+                android:id="@+id/statusshare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:gravity="center|left"
+                android:lineSpacingExtra="7sp"
+                android:paddingLeft="16dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="This is Status Text"
+                android:textColor="#333333"
+                android:textColorLink="@color/cardbluebackground"
+                android:textSize="15sp"
+                android:visibility="gone" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff"
+                android:id="@+id/sharedLay"
+
                 android:orientation="vertical">
 
                 <TextView

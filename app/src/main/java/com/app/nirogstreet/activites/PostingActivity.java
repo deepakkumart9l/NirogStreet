@@ -115,7 +115,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PostingActivity extends Activity implements HashTagHelper.OnHashTagClickListener {
     String selectedImagePath = null;
     String selectedVideoPath = null;
-
+ImageView cancel1;
     TextView docName;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
@@ -189,6 +189,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         if (getIntent().hasExtra("groupId")) {
             groupId = getIntent().getStringExtra("groupId");
         }
+        cancel1=(ImageView)findViewById(R.id.cancel1);
         linkLay = (RelativeLayout) findViewById(R.id.linkLay);
         imagelay = (RelativeLayout) findViewById(R.id.imagelay);
         imagelay.setOnTouchListener(new View.OnTouchListener() {
@@ -204,6 +205,17 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 scrollView.setScrolling(true);
 
                 return false;
+            }
+        });
+        cancel1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedImagePath=null;
+                selectedVideoPath=null;
+                docpath=null;
+                docName.setVisibility(View.GONE);
+                cancel1.setVisibility(View.GONE);
+                imageViewSelected.setImageResource(R.drawable.add_image_icon);
             }
         });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
@@ -561,6 +573,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         if (requestCode == 102 && resultCode == RESULT_OK) {
             if (data.getData() != null) {
                 Uri uri = data.getData();
+                cancel1.setVisibility(View.VISIBLE);
                 Glide.with(PostingActivity.this).load(uri).into(imageViewSelected);
                 try {
                     selectedImagePath = null;
@@ -578,6 +591,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 final Uri imageUri = data.getData();
                 selectedVideoPath = null;
                 docpath = null;
+                cancel1.setVisibility(View.VISIBLE);
+
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imageViewSelected.setImageBitmap(selectedImage);
@@ -592,6 +607,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 Uri uri = Uri.fromFile(photoFile);
                 selectedVideoPath = null;
                 docpath = null;
+                cancel1.setVisibility(View.VISIBLE);
+
                 ImageProcess obj = new ImageProcess(PostingActivity.this);
                 mCurrentPhotoPath = obj.getPath(uri);
                 selectedImagePath = mCurrentPhotoPath;
@@ -617,6 +634,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     String path = PathUtil.getPath(PostingActivity.this, data1);
                     selectedImagePath = null;
                     selectedVideoPath = null;
+                    cancel1.setVisibility(View.VISIBLE);
+
              /*   Bitmap    bitmap = BitmapFactory.decodeFile(path);
                     imageViewSelected.setImageBitmap(bitmap);*/
                     if (path != null) {
@@ -1084,6 +1103,7 @@ entityBuilder.addPart("Feed[url_image]",cbfile1);
                     myViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if(askQuestionImages.length()==2)
                             if (position == 0) {
                                 recyclerView.setVisibility(View.GONE);
                                 imageViewSelected.setVisibility(View.VISIBLE);

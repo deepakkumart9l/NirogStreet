@@ -118,8 +118,7 @@ public class CommentsActivity extends AppCompatActivity{
         commentsrecyclerview.setLayoutManager(linearLayoutManager1);
 
         sendImageView = (TextView) findViewById(R.id.commentTV);
-        sendImageView.setEnabled(false);
-        sendImageView.setClickable(false);
+
 
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {

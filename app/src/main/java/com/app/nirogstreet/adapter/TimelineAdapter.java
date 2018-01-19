@@ -735,6 +735,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 .placeholder(R.drawable.user)
                                 .error(R.drawable.user)
                                 .into(viewHolder.profileImageView);
+                    } else {
+                        viewHolder.profileImageView.setImageResource(R.drawable.user);
                     }
                  /*   viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -867,13 +869,33 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         builder.append(span);
                         // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                         String xxx = feedModel.getCommunity_Id();
-                        if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
+                        if (feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0) {
                             if (feedModel.getParent_feed() != null) {
+                                if(feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0)
+                                {
+                                    if(feedModel.getShareWithModels().get(0).getShareMessage()!=null&&!feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
+                                        viewHolder.statusshare.setText(feedModel.getShareWithModels().get(0).getShareMessage());
+                                   viewHolder.statusshare.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params.setMargins(5, 0, 5, 5);
+                                LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params1.setMargins(0, 0, 0, 0);
+                                viewHolder.relativeLayout1.setLayoutParams(params1);
+
+                                viewHolder.sharedLay.setLayoutParams(params);
                                 if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
                                     str2 = new SpannableString(" shared a video ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
-
+                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
                                     ClickableSpan clickSpan1 = new ClickableSpan() {
                                         @Override
                                         public void updateDrawState(TextPaint ds) {
@@ -897,6 +919,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 }
                                 if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
                                     str2 = new SpannableString(" shared a post ");
+                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
                                     ClickableSpan clickSpan1 = new ClickableSpan() {
@@ -926,6 +950,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     str2 = new SpannableString(" shared a link ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                     builder.append(str2);
+                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
 
                                     ClickableSpan clickSpan1 = new ClickableSpan() {
                                         @Override
@@ -953,6 +978,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         str2 = new SpannableString(" shared an image ");
                                         str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
                                         builder.append(str2);
+                                        viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
 
                                         ClickableSpan clickSpan1 = new ClickableSpan() {
                                             @Override
@@ -982,6 +1008,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
                                     str2 = new SpannableString(" shared a document ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+
+                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
                                     builder.append(str2);
                                     ClickableSpan clickSpan1 = new ClickableSpan() {
                                         @Override
@@ -1008,6 +1036,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 }
                             }
                         } else {
+                            viewHolder.statusshare.setVisibility(View.GONE);
+
+                            viewHolder.sharedLay.setBackgroundResource(0);
+                            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params1.setMargins(0, 10, 0, 0);
+                            viewHolder.relativeLayout1.setLayoutParams(params1);
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
                                 str3 = new SpannableString(" posted in ");
                                 str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
@@ -1137,9 +1174,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
         ImageView feedImageView, linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
-        LinearLayout docTypeLayout, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
+        LinearLayout docTypeLayout, sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
+        TextView statusshare;
         RelativeLayout profileSectionLinearLayout, basicAnnouncemetLinearLayout, sayCongratsRelativeLayout, anniversaryLinearLayout, hetrogenousAnnouncementLinearLayout;
         Button buttondownload;
         VideoView videoView;
@@ -1173,6 +1211,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             delImageView = (ImageView) itemView.findViewById(R.id.del);
             two_or_moreLinearLayout = (LinearLayout) itemView.findViewById(R.id.two_or_more);
             frameVideoFrameLayout = (FrameLayout) itemView.findViewById(R.id.frameVideo);
+statusshare=(TextView)itemView.findViewById(R.id.statusshare);
+            sharedLay = (LinearLayout) itemView.findViewById(R.id.sharedLay);
             viewAllTextView = (TextView) itemView.findViewById(R.id.viewAll);
             announcementImage = (ImageView) itemView.findViewById(R.id.announcementImage);
             anniverasaryLayoutImage = (ImageView) itemView.findViewById(R.id.anniverasaryLayoutImage);
@@ -1429,11 +1469,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                              ArrayList<Uri> files = new ArrayList<Uri>();
                                                              if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
                                                                  try {
-                                                                     for (int i=0;i<feedModel.getFeedSourceArrayList().size();i++) {
+                                                                     for (int i = 0; i < feedModel.getFeedSourceArrayList().size(); i++) {
                                                                          URL url = new URL(feedModel.getFeedSourceArrayList().get(i));
                                                                          Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-                                                                         Uri bitmapUri=null;
+                                                                         Uri bitmapUri = null;
 
                                                                          String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "title", null);
                                                                          bitmapUri = Uri.parse(bitmapPath);
@@ -1453,14 +1493,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                              }
                                                              Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                                              shareIntent.setType("text/plain");
-                                                             if (files != null&&files.size()>0) {
+                                                             if (files != null && files.size() > 0) {
                                                                  // shareIntent.setDataAndType(imageUri,context. getContentResolver().getType(imageUri));
 
                                                                  shareIntent.putExtra(Intent.EXTRA_STREAM, files);
                                                                  shareIntent.setType("image/*");
                                                                  shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                                              }
-                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0||files.size()>0||feedModel.getLink_type()!=null) {
+                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0 || files.size() > 0 || feedModel.getLink_type() != null) {
                                                                  if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
                                                                  } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
@@ -1469,8 +1509,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
                                                                  } else if (text != null && text.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                                                                 }else if(feedModel.getLink_type()!=null)
-                                                                 {
+                                                                 } else if (feedModel.getLink_type() != null) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
 
                                                                  }
@@ -1479,7 +1518,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                          context.getResources().getString(R.string.share_with)));
 
 
-                                                         }
+                                                             }
                                                          } catch (Exception e) {
                                                              // TODO: handle exception
                                                              e.printStackTrace();

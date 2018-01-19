@@ -108,13 +108,23 @@ public class FeedModel {
         this.refernce = refernce;
     }
 
+    public ArrayList<ShareWithModel> getShareWithModels() {
+        return shareWithModels;
+    }
+
+    public void setShareWithModels(ArrayList<ShareWithModel> shareWithModels) {
+        this.shareWithModels = shareWithModels;
+    }
+
+    ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
     public String refernce=null;
-    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name, String doc_Type, String community_name, String activity_detail,ArrayList<SpecializationModel> specializationModelsTags,String refernce) {
+    public FeedModel(String feed_id, UserDetailModel userDetailModel_creator, String community_Id, UserDetailModel parentFeedDetail, String parent_feed, String feed_type, String post_Type, String titleQuestion, String message, String link_type, String url_title, String url_description, String url_image, ArrayList<String> feedSourceArrayList, String enable_comment, String created, String updated, int user_has_liked, UserDetailModel createdBy, String feed_source, String total_comments, String total_likes, String status, String doc_name, String doc_Type, String community_name, String activity_detail,ArrayList<SpecializationModel> specializationModelsTags,String refernce,ArrayList<ShareWithModel> shareWithModels) {
         this.feed_id = feed_id;
         this.userDetailModel_creator = userDetailModel_creator;
         this.community_Id = community_Id;
         this.refernce=refernce;
         this.specializationModelsTags=specializationModelsTags;
+        this.shareWithModels=shareWithModels;
         this.parentFeedDetail = parentFeedDetail;
         this.activity_detail = activity_detail;
         this.community_name = community_name;

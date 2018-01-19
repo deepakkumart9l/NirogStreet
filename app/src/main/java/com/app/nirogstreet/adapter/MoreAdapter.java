@@ -633,6 +633,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 .error(R.drawable.user)
                                 .into(viewHolder.profileImageView);
                     }
+                    else {
+                        viewHolder.profileImageView.setImageResource(R.drawable.user);
+                    }
                     viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -792,8 +795,30 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         builder.append(span);
                         // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                         String xxx = feedModel.getCommunity_Id();
-                        if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
+                        if (feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0) {
                             if (feedModel.getParent_feed() != null) {
+                                if(feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0)
+                                {
+                                    if(feedModel.getShareWithModels().get(0).getShareMessage()!=null&&!feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
+                                        viewHolder.statusshare.setText(feedModel.getShareWithModels().get(0).getShareMessage());
+                                        viewHolder.statusshare.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params.setMargins(5, 0, 5, 5);
+                                LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params1.setMargins(0, 0, 0, 0);
+                                viewHolder.relativeLayout1.setLayoutParams(params1);
+
+                                viewHolder.sharedLay.setLayoutParams(params);
+                                viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+
                                 if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
                                     str2 = new SpannableString(" shared a video ");
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -933,6 +958,16 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 }
                             }
                         } else {
+                            viewHolder.statusshare.setVisibility(View.GONE);
+
+                            viewHolder.sharedLay.setBackgroundResource(0);
+                            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params1.setMargins(0, 10, 0, 0);
+                            viewHolder.relativeLayout1.setLayoutParams(params1);
+
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
                                 str3 = new SpannableString(" posted in ");
                                 str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
@@ -1244,12 +1279,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
         ImageView feedImageView, linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
-        LinearLayout docTypeLayout, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
+        LinearLayout docTypeLayout,sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
         RelativeLayout profileSectionLinearLayout, basicAnnouncemetLinearLayout, sayCongratsRelativeLayout, anniversaryLinearLayout, hetrogenousAnnouncementLinearLayout;
         Button buttondownload;
         VideoView videoView;
+        TextView statusshare;
         WebView webView;
         ImageView delImageView;
 
@@ -1264,6 +1300,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             left_view = (View) itemView.findViewById(R.id.left_view);
             delImageView = (ImageView) itemView.findViewById(R.id.del);
+            statusshare=(TextView)itemView.findViewById(R.id.statusshare);
 
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
@@ -1271,6 +1308,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             txtTextView = (TextView) itemView.findViewById(R.id.txt);
             likesTextView = (TextView) itemView.findViewById(R.id.likes);
             commntsTextView = (TextView) itemView.findViewById(R.id.commnts);
+            sharedLay = (LinearLayout) itemView.findViewById(R.id.sharedLay);
+
             link_title_des_lay = (LinearLayout) itemView.findViewById(R.id.link_title_des_lay);
             webView = (WebView) itemView.findViewById(R.id.webview);
             QuestionTextView = (TextView) itemView.findViewById(R.id.Question);

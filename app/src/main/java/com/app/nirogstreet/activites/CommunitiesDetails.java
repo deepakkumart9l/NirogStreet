@@ -38,6 +38,7 @@ public class CommunitiesDetails extends AppCompatActivity {
     ViewPager viewPager;
     static TextView textTab;
     String groupId;
+    boolean openMain=false;
     public static ImageView moreImageView;
     static LetterTileProvider mLetterTileProvider;
     public static RoundedImageView circleImageView;
@@ -49,11 +50,21 @@ public class CommunitiesDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.communication_detail);
         proo=(CircleImageView)findViewById(R.id.proo);
+        if(getIntent().hasExtra("openMain"))
+        {
+            openMain=getIntent().getBooleanExtra("openMain",false);
+        }
         textTab = (TextView) findViewById(R.id.textTab);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(openMain)
+                {
+                    Intent intent1 = new Intent(CommunitiesDetails.this, MainActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }
                 finish();
             }
         });
@@ -135,6 +146,17 @@ public class CommunitiesDetails extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(openMain)
+        {
+            Intent intent1 = new Intent(CommunitiesDetails.this, MainActivity.class);
+            startActivity(intent1);
+            finish();
+        }
+        super.onBackPressed();
     }
 
     public static void setNameAndCoverPic(String name, String url) {

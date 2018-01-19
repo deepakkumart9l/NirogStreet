@@ -104,7 +104,7 @@ public class CreateCommunity extends Activity {
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         setContentView(R.layout.create_conunites);
-        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +165,7 @@ public class CreateCommunity extends Activity {
             createGroupAsyncTask.cancelAsyncTask();
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -173,6 +174,7 @@ public class CreateCommunity extends Activity {
             selectImage();
         }
     }
+
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(CreateCommunity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
@@ -482,7 +484,7 @@ public class CreateCommunity extends Activity {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
                             ApplicationSingleton.setIsGroupCreated(true);
-
+                            Toast.makeText(CreateCommunity.this, "Community created Successfully", Toast.LENGTH_SHORT).show();
                             finish();
 
                         }
@@ -500,7 +502,7 @@ public class CreateCommunity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != -1)
-                    group = position  + "";
+                    group = position + "";
                 else
                     group = "-1";
 
@@ -534,11 +536,11 @@ public class CreateCommunity extends Activity {
 
         spinnerCategory.setAdapter(adapter);
 
-        spinnerCategory.setSelection(1);
+        spinnerCategory.setSelection(0);
     }
 
     private boolean isValidated() {
-       if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
+        if (community_nameEditText.getText().toString() == null || community_nameEditText.getText().toString().equals("")) {
             Toast.makeText(CreateCommunity.this, "Please enter Group Name!", Toast.LENGTH_LONG).show();
 
             return false;

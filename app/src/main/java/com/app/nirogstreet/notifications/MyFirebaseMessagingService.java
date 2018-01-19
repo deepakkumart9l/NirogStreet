@@ -120,6 +120,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (!group.equalsIgnoreCase("")) {
             intent = new Intent(this, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
+            intent.putExtra("openMain",true);
+
             intent.putExtra("groupId", group);
         } else if (!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);

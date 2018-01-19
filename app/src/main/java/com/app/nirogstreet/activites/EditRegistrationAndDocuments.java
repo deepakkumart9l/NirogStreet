@@ -272,10 +272,10 @@ degree_name.setOnClickListener(new View.OnClickListener() {
             yearEditText.setText(registrationAndDocumenModel.getCouncil_year());
             if (registrationAndDocumenModel.getCouncilType() != null) {
                 if (registrationAndDocumenModel.getCouncilType().equalsIgnoreCase("1") && !userDetailModel.getCategory().equalsIgnoreCase("")) {
-                    spinnerCouncilType.setSelection(1);
+                    spinnerCouncilType.setSelection(0);
                     type = "1";
                 } else {
-                    spinnerCouncilType.setSelection(2);
+                    spinnerCouncilType.setSelection(1);
                     type = "2";
                 }
             }

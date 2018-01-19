@@ -69,6 +69,7 @@ public class GroupNotificationListing extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_list);
+
         no_notifications = (LinearLayout) findViewById(R.id.no_list);
         searchButtonTextView = (TextView) findViewById(R.id.searchButton);
         if(getIntent().hasExtra("openMain"))
