@@ -106,14 +106,19 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
 
-
-                if (sesstionManager.isUserLoggedIn()) {
+                if (NetworkUtill.isNetworkAvailable(Splash.this)) {
+                    versionUpdateCheckAsynctask = new VersionUpdateCheckAsynctask();
+                    versionUpdateCheckAsynctask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(Splash.this);
+                }
+               /* if (sesstionManager.isUserLoggedIn()) {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 } else {
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
-                }
+                }*/
             }
         }, 3000);
     }
@@ -249,7 +254,13 @@ public class Splash extends AppCompatActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                if (sesstionManager.isUserLoggedIn()) {
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    finish();
+                }
                 dialogPopUp.cancel();
 
                 finish();
@@ -260,7 +271,7 @@ public class Splash extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=empwin.com.app.com"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.app.nirogstreet"));
                 startActivity(intent);
             }
         });

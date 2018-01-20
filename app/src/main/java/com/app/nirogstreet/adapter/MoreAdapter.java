@@ -607,7 +607,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (feedModel.getTotal_likes().equalsIgnoreCase("1"))
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
                         else
-                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
+                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Likes");
 
                     } else {
                         viewHolder.likesTextView.setText("0 Likes");

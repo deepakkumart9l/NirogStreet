@@ -214,9 +214,13 @@ RelativeLayout experince_rel;
 
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
-
-        setSupportActionBar(toolbar);
-        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+        try {
+            setSupportActionBar(toolbar);
+            startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         phonelay = (RelativeLayout) findViewById(R.id.phonelay);
         emaillay = (RelativeLayout) findViewById(R.id.emaillay);
 

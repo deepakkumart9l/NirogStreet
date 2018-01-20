@@ -170,7 +170,10 @@ public class CommentsActivity extends AppCompatActivity{
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(CommentsActivity.this)) {
                     if (editText.getText() != null&&editText.getText().length()>0) {
-                        postCommentAsyncTask = new PostCommentAsyncTask(feedId, editText.getText().toString());
+                        String text= editText.getText().toString();
+                        editText.setText("");
+                        postCommentAsyncTask = new PostCommentAsyncTask(feedId,text);
+
                         postCommentAsyncTask.execute();
                     } else {
                         Toast.makeText(CommentsActivity.this, "write somting", Toast.LENGTH_LONG).show();

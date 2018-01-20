@@ -298,7 +298,7 @@ public class NotificationListing extends AppCompatActivity {
         if (ApplicationSingleton.getInvitationRequestCount() != -1 && ApplicationSingleton.getInvitationRequestCount() > 0) {
             info1.setText(ApplicationSingleton.getInvitationRequestCount() + "");
         } else {
-            first.setVisibility(View.GONE);
+            second.setVisibility(View.GONE);
         }
     }
 

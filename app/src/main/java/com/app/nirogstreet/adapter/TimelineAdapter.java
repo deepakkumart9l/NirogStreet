@@ -708,10 +708,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     }
                     if (feedModel.getTotal_likes() != null) {
-                        if (feedModel.getTotal_likes().equalsIgnoreCase("0") || feedModel.getTotal_likes().equalsIgnoreCase("1"))
+                        if (feedModel.getTotal_likes().equalsIgnoreCase("1") )
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
                         else
-                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
+                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Likes");
 
                     } else {
                         viewHolder.likesTextView.setText("0 Likes");

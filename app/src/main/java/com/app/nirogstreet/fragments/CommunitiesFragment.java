@@ -532,11 +532,16 @@ public class CommunitiesFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             circularProgressBar.setVisibility(View.GONE);
             ArrayList<GroupModel> groupModels = new ArrayList<>();
-            groupModels = Group_Listing_Parser.groupListingParser(jo, showJoin);
-            otherGroupTextView.setClickable(true);
-            otherGroupTextView.setSelected(true);
-            userView.setSelected(false);
-            allView.setSelected(true);
+            groupModels = Group_Listing_Parser.groupListingParser(jo, showJoin);try {
+
+                otherGroupTextView.setClickable(true);
+                otherGroupTextView.setSelected(true);
+                userView.setSelected(false);
+                allView.setSelected(true);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
             myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
 

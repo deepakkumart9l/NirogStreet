@@ -140,7 +140,9 @@ public class CommentsRepilesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(CommentsRepilesActivity.this)) {
                     if (editText.getText() != null) {
-                        postCommentAsyncTask = new PostSubCommentAsyncTask(feedId, editText.getText().toString(), commentsModel.getCommentId());
+                        String texr=editText.getText().toString();
+                        editText.setText("");
+                        postCommentAsyncTask = new PostSubCommentAsyncTask(feedId, texr, commentsModel.getCommentId());
                         postCommentAsyncTask.execute();
                     } else {
                         Toast.makeText(CommentsRepilesActivity.this, "write somting", Toast.LENGTH_LONG).show();

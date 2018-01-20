@@ -266,21 +266,26 @@ LoginAsync loginAsync;
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equalsIgnoreCase("otp")) {
-                    final String message = intent.getStringExtra("message");
-                    otp = message;
-                    //Do whatever you want with the code here
-                    if (message != null) {
-                        char arr[] = new char[4];
-                        for (int i = 0; i < otp.length(); i++) {
-                            arr[i] = otp.charAt(i);
+                try {
+                    if (intent.getAction().equalsIgnoreCase("otp")) {
+                        final String message = intent.getStringExtra("message");
+                        otp = message;
+                        //Do whatever you want with the code here
+                        if (message != null) {
+                            char arr[] = new char[4];
+                            for (int i = 0; i < otp.length(); i++) {
+                                arr[i] = otp.charAt(i);
+                            }
+                            editTextOtpOne.setText(String.valueOf(arr[0]));
+                            editTextOtpTwo.setText(String.valueOf(arr[1]));
+                            editTextOtpThree.setText(String.valueOf(arr[2]));
+                            editTextOtpFour.setText(String.valueOf(arr[3]));
                         }
-                        editTextOtpOne.setText(String.valueOf(arr[0]));
-                        editTextOtpTwo.setText(String.valueOf(arr[1]));
-                        editTextOtpThree.setText(String.valueOf(arr[2]));
-                        editTextOtpFour.setText(String.valueOf(arr[3]));
-                    }
 
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
         };
@@ -291,6 +296,7 @@ LoginAsync loginAsync;
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("otp"));
+        super.onResume();
 
 
     }

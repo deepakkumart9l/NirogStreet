@@ -514,14 +514,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         viewHolder.videoView.setVisibility(View.GONE);
                         viewHolder.webView.setVisibility(View.GONE);
                         viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
-                        if(feedModel.getUrl_image()!=null&&!feedModel.getUrl_image().equalsIgnoreCase(""))
-                        {
+                        if (feedModel.getUrl_image() != null && !feedModel.getUrl_image().equalsIgnoreCase("")) {
                             Picasso.with(context)
                                     .load(feedModel.getUrl_image())
                                     .placeholder(R.drawable.default_)
                                     .error(R.drawable.default_)
                                     .into(viewHolder.feedImageView);
-                        }else {
+                        } else {
                             viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
                         }                      /*  Bitmap bmThumbnail;
                         bmThumbnail = ThumbnailUtils.createVideoThumbnail(feedModel.getUrl_image(), MediaStore.Video.Thumbnails.MINI_KIND);
@@ -812,11 +811,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     builder.append(span);
                     // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                     String xxx = feedModel.getCommunity_Id();
-                    if (feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0) {
+                    if (feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0) {
                         if (feedModel.getParent_feed() != null) {
-                            if(feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0)
-                            {
-                                if(feedModel.getShareWithModels().get(0).getShareMessage()!=null&&!feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
+                            if (feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0) {
+                                if (feedModel.getShareWithModels().get(0).getShareMessage() != null && !feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
                                     viewHolder.statusshare.setText(feedModel.getShareWithModels().get(0).getShareMessage());
                                     viewHolder.statusshare.setVisibility(View.VISIBLE);
                                 }
@@ -1125,7 +1123,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
         ImageView feedImageView, linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
-        LinearLayout docTypeLayout,sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
+        LinearLayout docTypeLayout, sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
         TextView likesTextView, commntsTextView;
@@ -1155,8 +1153,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
             txtTextView = (TextView) itemView.findViewById(R.id.txt);
-            sharedLay=(LinearLayout)itemView.findViewById(R.id.sharedLay);
-            statusshare=(TextView)itemView.findViewById(R.id.statusshare);
+            sharedLay = (LinearLayout) itemView.findViewById(R.id.sharedLay);
+            statusshare = (TextView) itemView.findViewById(R.id.statusshare);
 
             link_title_des_lay = (LinearLayout) itemView.findViewById(R.id.link_title_des_lay);
             webView = (WebView) itemView.findViewById(R.id.webview);
@@ -1450,11 +1448,11 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                              ArrayList<Uri> files = new ArrayList<Uri>();
                                                              if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
                                                                  try {
-                                                                     for (int i=0;i<feedModel.getFeedSourceArrayList().size();i++) {
+                                                                     for (int i = 0; i < feedModel.getFeedSourceArrayList().size(); i++) {
                                                                          URL url = new URL(feedModel.getFeedSourceArrayList().get(i));
                                                                          Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-                                                                         Uri bitmapUri=null;
+                                                                         Uri bitmapUri = null;
 
                                                                          String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "title", null);
                                                                          bitmapUri = Uri.parse(bitmapPath);
@@ -1474,14 +1472,14 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                              }
                                                              Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                                              shareIntent.setType("text/plain");
-                                                             if (files != null&&files.size()>0) {
+                                                             if (files != null && files.size() > 0) {
                                                                  // shareIntent.setDataAndType(imageUri,context. getContentResolver().getType(imageUri));
 
                                                                  shareIntent.putExtra(Intent.EXTRA_STREAM, files);
                                                                  shareIntent.setType("image/*");
                                                                  shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                                              }
-                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0||files.size()>0||feedModel.getLink_type()!=null) {
+                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0 || files.size() > 0 || feedModel.getLink_type() != null) {
                                                                  if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
                                                                  } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
@@ -1490,8 +1488,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
                                                                  } else if (text != null && text.length() > 0) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                                                                 }else if(feedModel.getLink_type()!=null)
-                                                                 {
+                                                                 } else if (feedModel.getLink_type() != null) {
                                                                      shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
 
                                                                  }

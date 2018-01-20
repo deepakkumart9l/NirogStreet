@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#3c81da"
+    android:background="@color/cardbluebackground"
     android:orientation="vertical">
 
     <TextView
@@ -35,7 +35,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="#fa7800"
+            android:background="@color/buttonBackground"
             android:gravity="center"
             android:padding="10dp"
             android:text="SKIP"
@@ -50,7 +50,7 @@
 
             android:layout_marginRight="20dp"
             android:layout_weight="1"
-            android:background="#fa7800"
+            android:background="@color/buttonBackground"
             android:gravity="center"
 
             android:padding="10dp"
