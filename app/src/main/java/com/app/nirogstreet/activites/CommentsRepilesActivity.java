@@ -111,16 +111,12 @@ public class CommentsRepilesActivity extends AppCompatActivity {
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
+        sendImageView.setClickable(true);
+        sendImageView.setEnabled(true);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.length() == 0) {
-                    sendImageView.setClickable(false);
-                    sendImageView.setEnabled(false);
-                } else {
-                    sendImageView.setClickable(true);
-                    sendImageView.setEnabled(true);
-                }
+
 
 
             }

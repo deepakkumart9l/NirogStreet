@@ -96,7 +96,7 @@ public class UserDetailPaser {
                 awardsModels = AwardsParser.awardsParser(message);
                 ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
                 memberShipModels = MemberShipParser.memberShipParser(message);
-                userDetailModel = new UserDetailModel(id,name,profile_complete, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels);
+                userDetailModel = new UserDetailModel(id,name,profile_complete, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels,null);
 
             }
         } catch (Exception e) {

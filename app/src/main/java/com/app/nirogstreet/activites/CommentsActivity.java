@@ -119,7 +119,8 @@ public class CommentsActivity extends AppCompatActivity{
 
         sendImageView = (TextView) findViewById(R.id.commentTV);
 
-
+        sendImageView.setEnabled(true);
+        sendImageView.setClickable(true);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,18 +132,7 @@ public class CommentsActivity extends AppCompatActivity{
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(s.length()==0)
-                {
-                    sendImageView.setEnabled(false);
-                    sendImageView.setClickable(false);
 
-                }
-                else {
-                    sendImageView.setEnabled(true);
-                    sendImageView.setClickable(true);
-
-
-                }
             }
 
             @Override

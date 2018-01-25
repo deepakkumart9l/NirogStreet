@@ -370,6 +370,7 @@ public class TimeLineFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        swipeLayout.setRefreshing(false);
         if (userFeedsAsyncTask != null && !userFeedsAsyncTask.isCancelled()) {
             userFeedsAsyncTask.cancelAsyncTask();
         }

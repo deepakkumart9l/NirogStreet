@@ -970,6 +970,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                             } else {
                                 UserDetailModel userDetailModel = UserDetailPaser.userDetailParser(dataJsonObject);
                                 if (userDetailModel != null) {
+                                    sesstionManager.updateProfile(userDetailModel.getProfile_pic());
+                                    sesstionManager.createUserLoginSession(userDetailModel.getName(),"", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE));
+
                                     editTextDob.setText(userDetailModel.getDob());
                                     if (userDetailModel.getWebSite() != null)
                                         editTextWebsite.setText(userDetailModel.getWebSite());

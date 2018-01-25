@@ -233,6 +233,25 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedModel.getLink_type() != null) {
                         link_type = Integer.parseInt(feedModel.getLink_type());
                     }
+                    viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                    viewHolder.playicon.setVisibility(View.GONE);
+                    viewHolder.docTypeLayout.setVisibility(View.GONE);
+                    viewHolder.videoView.setVisibility(View.GONE);
+                    viewHolder.linkImageView.setVisibility(View.GONE);
+                    viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                    viewHolder.left_view.setVisibility(View.GONE);
+                    viewHolder.relativeLayout1.setVisibility(View.GONE);
+                    viewHolder.right_view.setVisibility(View.GONE);
+                    viewHolder.bottom_view.setVisibility(View.GONE);
+                    viewHolder.profilePicparent.setVisibility(View.GONE);
+                    viewHolder.parentname.setVisibility(View.GONE);
+                    viewHolder.parentLay.setVisibility(View.GONE);
+                    viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                    viewHolder.docTypeLayout.setVisibility(View.GONE
+                    );
+                    viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                    viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                    viewHolder.feedImageView.setVisibility(View.GONE);
                     switch (feed_type) {
                         case FEED_TYPE_YOUTUBEVIDEO_LINK:
                             switch (link_type) {
@@ -644,7 +663,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.link_title_des_lay.setVisibility(View.GONE);
                             viewHolder.left_view.setVisibility(View.GONE);
                             viewHolder.relativeLayout1.setVisibility(View.GONE);
-
                             viewHolder.right_view.setVisibility(View.GONE);
                             viewHolder.bottom_view.setVisibility(View.GONE);
                             viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
@@ -691,7 +709,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     } else {
                         viewHolder.delImageView.setVisibility(View.GONE);
                     }
-                    if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
+                   /* if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
                         if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
                             if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
                                 viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
@@ -706,9 +724,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     } else {
                         viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
-                    }
+                    }*/
+                  /*  if (feedModel.getParentFeedDetail() != null) {
+                        viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
+
+                    } else {
+                        viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
+
+                    }*/
                     if (feedModel.getTotal_likes() != null) {
-                        if (feedModel.getTotal_likes().equalsIgnoreCase("1") )
+                        if (feedModel.getTotal_likes().equalsIgnoreCase("1"))
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
                         else
                             viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Likes");
@@ -869,182 +894,199 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         builder.append(span);
                         // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
                         String xxx = feedModel.getCommunity_Id();
-                        if (feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0) {
+                        if (feedModel.getParent_feed() != null) {
                             if (feedModel.getParent_feed() != null) {
-                                if(feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0)
-                                {
-                                    if(feedModel.getShareWithModels().get(0).getShareMessage()!=null&&!feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
+                                if (feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0) {
+                                    if (feedModel.getShareWithModels().get(0).getShareMessage() != null && !feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
                                         viewHolder.statusshare.setText(feedModel.getShareWithModels().get(0).getShareMessage());
-                                   viewHolder.statusshare.setVisibility(View.VISIBLE);
+                                        viewHolder.statusshare.setVisibility(View.VISIBLE);
+                                        viewHolder.parentLay.setVisibility(View.VISIBLE);
                                     }
                                 }
+                                if (feedModel.getCreatedBy().getProfile_pic() != null && !feedModel.getCreatedBy().getProfile_pic().equalsIgnoreCase("")) {
+                                    Picasso.with(context)
+                                            .load(feedModel.getCreatedBy().getProfile_pic())
+                                            .placeholder(R.drawable.user)
+                                            .error(R.drawable.user)
+                                            .into(viewHolder.profilePicparent);
+                                    viewHolder.profilePicparent.setVisibility(View.VISIBLE);
+
+                                } else {
+                                    viewHolder.profilePicparent.setImageResource(R.drawable.user);
+                                    viewHolder.profilePicparent.setVisibility(View.VISIBLE);
+
+                                }
+                                viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(context, Dr_Profile.class);
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                            intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
+                                        context.startActivity(intent);
+                                    }
+                                });
+                                viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(context, Dr_Profile.class);
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                            intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
+                                        context.startActivity(intent);
+                                    }
+                                });
+                                viewHolder.parentname.setText(feedModel.getCreatedBy().getName());
+                                viewHolder.parentname.setVisibility(View.VISIBLE);
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
                                         LinearLayout.LayoutParams.WRAP_CONTENT
                                 );
                                 params.setMargins(5, 0, 5, 5);
+
                                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
                                         LinearLayout.LayoutParams.WRAP_CONTENT
                                 );
                                 params1.setMargins(0, 0, 0, 0);
                                 viewHolder.relativeLayout1.setLayoutParams(params1);
+                                RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
+                                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                                        500
+                                );
 
+                                params2.setMargins(0, 0, 0, 0);
+                                viewHolder.feedImageView.setLayoutParams(params2);
                                 viewHolder.sharedLay.setLayoutParams(params);
-                                if (feedModel.getFeed_type().equalsIgnoreCase("5")) {
-                                    str2 = new SpannableString(" shared a video ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
-                                    ClickableSpan clickSpan1 = new ClickableSpan() {
-                                        @Override
-                                        public void updateDrawState(TextPaint ds) {
-                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-                                            ds.setUnderlineText(false);// this remove the underline
-                                        }
+                                str2 = new SpannableString(" shared ");
+                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
-                                        @Override
-                                        public void onClick(View textView) {
+                                viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                builder.append(str2);
+                                ClickableSpan clickSpan1 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setUnderlineText(false);// this remove the underline
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
                                            /* Intent intent = new Intent(context, CommunitiesDetails.class);
                                             intent.putExtra("groupId", feedModel.getCommunity_Id());
                                             context.startActivity(intent);*/
-                                        }
-                                    };
-                                    String thirdspan = str2.toString();
-                                    int third = builder.toString().indexOf(thirdspan);
-                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                                }
-                                if (feedModel.getFeed_type().equalsIgnoreCase("1")) {
-                                    str2 = new SpannableString(" shared a post ");
-                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                    }
+                                };
 
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                    ClickableSpan clickSpan1 = new ClickableSpan() {
-                                        @Override
-                                        public void updateDrawState(TextPaint ds) {
+                                String thirdspan = str2.toString();
+                                int third = builder.toString().indexOf(thirdspan);
+                                builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                if (feedModel.getCreatedBy() != null && feedModel.getCreatedBy().getUserId() != null) {
+                                    if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
+                                        str2 = new SpannableString("their");
+                                    else
+                                        str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
+
+                                }
+                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+
+                                viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                builder.append(str2);
+
+                                ClickableSpan clickSpan12;
+
+                                clickSpan12 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                            ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+
+                                        } else {
                                             ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
                                             ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                             ds.setUnderlineText(false);// this remove the underline
+
                                         }
+                                    }
 
-                                        @Override
-                                        public void onClick(View textView) {
-                                          /*  Intent intent = new Intent(context, CommunitiesDetails.class);
-                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);*/
+                                    @Override
+                                    public void onClick(View textView) {
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+
+                                            Intent intent = new Intent(context, Dr_Profile.class);
+                                            if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                                intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
+                                            context.startActivity(intent);
                                         }
-                                    };
+                                    }
+                                };
 
-                                    String thirdspan = str2.toString();
-                                    int third = builder.toString().indexOf(thirdspan);
-                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                }
-                                if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
-                                    str2 = new SpannableString(" shared a link ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                    builder.append(str2);
-                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                String fourthspan = str2.toString();
+                                int fourth = builder.toString().indexOf(fourthspan);
+                                builder.setSpan(clickSpan12, fourth, fourth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                    ClickableSpan clickSpan1 = new ClickableSpan() {
-                                        @Override
-                                        public void updateDrawState(TextPaint ds) {
-                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-                                            ds.setUnderlineText(false);// this remove the underline
-                                        }
+                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
 
-                                        @Override
-                                        public void onClick(View textView) {
-                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
-                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);*/
-                                        }
-                                    };
-                                    String thirdspan = str2.toString();
-                                    int third = builder.toString().indexOf(thirdspan);
-                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
+                                    str2 = new SpannableString(" post ");
                                 } else {
-                                    if (feedModel.getFeed_type().equalsIgnoreCase("2")) {
-                                        str2 = new SpannableString(" shared an image ");
-                                        str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-                                        builder.append(str2);
-                                        viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                    str2 = new SpannableString("'s post ");
 
-                                        ClickableSpan clickSpan1 = new ClickableSpan() {
-                                            @Override
-                                            public void updateDrawState(TextPaint ds) {
-                                                ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                                ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-                                                ds.setUnderlineText(false);// this remove the underline
-                                            }
+                                }
+                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
-                                            @Override
-                                            public void onClick(View textView) {
-                                               /* Intent intent = new Intent(context, CommunitiesDetails.class);
-                                                intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                                context.startActivity(intent);*/
-                                            }
-                                        };
-                                        String thirdspan = str2.toString();
-                                        int third = builder.toString().indexOf(thirdspan);
+                                viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                builder.append(str2);
 
+                                ClickableSpan clickSpan13 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setUnderlineText(false);// this remove the underline
+                                    }
 
-                                        builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                                        viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                                    @Override
+                                    public void onClick(View textView) {
 
                                     }
-                                }
-                                if (feedModel.getFeed_type().equalsIgnoreCase("6")) {
-                                    str2 = new SpannableString(" shared a document ");
-                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                };
 
-                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
-                                    builder.append(str2);
-                                    ClickableSpan clickSpan1 = new ClickableSpan() {
-                                        @Override
-                                        public void updateDrawState(TextPaint ds) {
-                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-                                            ds.setUnderlineText(false);// this remove the underline
-                                        }
+                                String fifthspan = str2.toString();
+                                int fifth = builder.toString().indexOf(fifthspan);
+                                builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                        @Override
-                                        public void onClick(View textView) {
-                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
-                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);*/
-                                        }
-                                    };
-
-                                    String thirdspan = str2.toString();
-                                    int third = builder.toString().indexOf(thirdspan);
-                                    builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-                                }
                             }
                         } else {
                             viewHolder.statusshare.setVisibility(View.GONE);
-
+                            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    500
+                            );
+                            viewHolder.parentLay.setVisibility(View.GONE);
+                            params2.setMargins(0, 0, 0, 0);
+                            viewHolder.feedImageView.setLayoutParams(params2);
                             viewHolder.sharedLay.setBackgroundResource(0);
                             LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
                                     LinearLayout.LayoutParams.WRAP_CONTENT
                             );
                             params1.setMargins(0, 10, 0, 0);
                             viewHolder.relativeLayout1.setLayoutParams(params1);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params.setMargins(0, 0, 0, 0);
+                            viewHolder.sharedLay.setLayoutParams(params);
                             if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
                                 str3 = new SpannableString(" posted in ");
                                 str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
@@ -1168,6 +1210,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
         TextView likesTextView, commntsTextView;
+        CircleImageView profilePicparent;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
@@ -1178,12 +1221,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
         TextView statusshare;
+        LinearLayout parentLay;
         RelativeLayout profileSectionLinearLayout, basicAnnouncemetLinearLayout, sayCongratsRelativeLayout, anniversaryLinearLayout, hetrogenousAnnouncementLinearLayout;
         Button buttondownload;
         VideoView videoView;
         TextView txtTextView;
         ImageView delImageView;
         WebView webView;
+        TextView parentname;
         LinearLayout link_title_des_lay;
         View basicAnnouncemet_view;
         LinearLayout moreLinearLayout, two_or_moreLinearLayout;
@@ -1195,6 +1240,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             relativeLayout1 = (RelativeLayout) itemView.findViewById(R.id.relativeLayout1);
             left_view = (View) itemView.findViewById(R.id.left_view);
             likesTextView = (TextView) itemView.findViewById(R.id.likes);
+            parentname = (TextView) itemView.findViewById(R.id.parentname);
+            profilePicparent = (CircleImageView) itemView.findViewById(R.id.profilePicparent);
+
             commntsTextView = (TextView) itemView.findViewById(R.id.commnts);
             bottom_view = (View) itemView.findViewById(R.id.bottom_view);
             right_view = (View) itemView.findViewById(R.id.right_view);
@@ -1207,11 +1255,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             moreLinearLayout = (LinearLayout) itemView.findViewById(R.id.moreLinearLayout);
             moreviewTextView = (TextView) itemView.findViewById(R.id.moreview);
             imageFirstImageView = (ImageView) itemView.findViewById(R.id.imageFirst);
+
+            parentLay = (LinearLayout) itemView.findViewById(R.id.parentLay);
             imageSecImageView = (ImageView) itemView.findViewById(R.id.imageSec);
             delImageView = (ImageView) itemView.findViewById(R.id.del);
             two_or_moreLinearLayout = (LinearLayout) itemView.findViewById(R.id.two_or_more);
             frameVideoFrameLayout = (FrameLayout) itemView.findViewById(R.id.frameVideo);
-statusshare=(TextView)itemView.findViewById(R.id.statusshare);
+            statusshare = (TextView) itemView.findViewById(R.id.statusshare);
             sharedLay = (LinearLayout) itemView.findViewById(R.id.sharedLay);
             viewAllTextView = (TextView) itemView.findViewById(R.id.viewAll);
             announcementImage = (ImageView) itemView.findViewById(R.id.announcementImage);
@@ -1436,6 +1486,10 @@ statusshare=(TextView)itemView.findViewById(R.id.statusshare);
                                                          Intent intent = new Intent(context, PublicShare.class);
                                                          intent.putExtra("feedId", feedModel.getFeed_id());
                                                          intent.putExtra("userId", userId);
+                                                         if (feedModel.getParentFeedDetail() != null) {
+                                                             intent.putExtra("parentFeedId", feedModel.getParent_feed());
+
+                                                         }
                                                          context.startActivity(intent);
 
                                                        /*  if (NetworkUtill.isNetworkAvailable(context)) {
@@ -1449,6 +1503,10 @@ statusshare=(TextView)itemView.findViewById(R.id.statusshare);
                                                          Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
 
                                                          intent1.putExtra("feedId", feedModel.getFeed_id());
+                                                         if (feedModel.getParentFeedDetail() != null) {
+                                                             intent1.putExtra("parentFeedId", feedModel.getParent_feed());
+
+                                                         }
                                                          intent1.putExtra("userId", userId);
                                                          intent1.putExtra("shareOnGroup", true);
                                                          context.startActivity(intent1);

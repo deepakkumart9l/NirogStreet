@@ -1,10 +1,14 @@
 package com.app.nirogstreet.activites;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Base64;
@@ -56,6 +60,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailEt, setPass;
     String username, password;
     ImageView backImageView;
+    private int STORAGE_PERMISSION_CODE_VIDEO = 2;
+
     LoginAsync loginAsync;
     CircularProgressBar circularProgressBar;
     TextView loginHeader, loginTv, loginWithOtp;
@@ -83,20 +89,20 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (emailEt.getText().length() == 0) {
                     Toast.makeText(LoginActivity.this, "Email/Phone is Empty", Toast.LENGTH_LONG).show();
-                } else if (!Methods.validCellPhone(emailEt.getText().toString())||!Methods.isValidPhoneNumber(emailEt.getText().toString())) {
+                } else if (!Methods.validCellPhone(emailEt.getText().toString()) || !Methods.isValidPhoneNumber(emailEt.getText().toString())) {
                     Toast.makeText(LoginActivity.this, "Enter valid Phone No", Toast.LENGTH_LONG).show();
 
-                }else {
-                    if(NetworkUtill.isNetworkAvailable(LoginActivity.this))
-                    {
-                        loginViaOTPAsync=new LoginViaOTPAsync();
-                        loginViaOTPAsync.execute();
-                    }else {
+                } else {
+                    if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {checkPermissionGeneral(); {
+
+                        }
+                    } else {
                         NetworkUtill.showNoInternetDialog(LoginActivity.this);
                     }
                 }
             }
         });
+
         // TypeFaceMethods.setRegularTypeFaceForTextView(forgot,LoginActivity.this);
         setPass = (EditText) findViewById(R.id.passEt);
         img_lock.setOnClickListener(new View.OnClickListener() {
@@ -174,10 +180,36 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SesstionManager sesstionManager=new SesstionManager(LoginActivity.this);
-        if(sesstionManager.isUserLoggedIn())
-        {
+        SesstionManager sesstionManager = new SesstionManager(LoginActivity.this);
+        if (sesstionManager.isUserLoggedIn()) {
             finish();
+        }
+    }
+    public void checkPermissionGeneral() {
+        if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+            loginViaOTPAsync = new LoginViaOTPAsync();
+            loginViaOTPAsync.execute();
+            Log.e("", " Permission Already given ");
+        } else {
+            Log.e("", "Current app does not have READ_PHONE_STATE permission");
+            requestPermissions(new String[]{Manifest.permission.READ_SMS,
+                    Manifest.permission.READ_SMS}, STORAGE_PERMISSION_CODE_VIDEO);
+        }
+    }
+    private boolean checkWriteExternalPermission() {
+
+        String permission = "android.permission.READ_SMS";
+        int res = checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 2) {
+            loginViaOTPAsync = new LoginViaOTPAsync();
+            loginViaOTPAsync.execute();
         }
     }
 
@@ -330,6 +362,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
+
     public class LoginViaOTPAsync extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String phone, password;
@@ -375,7 +408,7 @@ public class LoginActivity extends AppCompatActivity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                pairs.add(new BasicNameValuePair("mobile",phone ));
+                pairs.add(new BasicNameValuePair("mobile", phone));
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
@@ -417,10 +450,10 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 if (dataJsonObject.has("userID") && !dataJsonObject.isNull("userID")) {
 
-                                    String userId=dataJsonObject.getString("userID");
-                                    Intent intent=new Intent(LoginActivity.this,LoginWithOTP.class);
-                                    intent.putExtra("UserId",userId);
-                                    intent.putExtra("phone",phone);
+                                    String userId = dataJsonObject.getString("userID");
+                                    Intent intent = new Intent(LoginActivity.this, LoginWithOTP.class);
+                                    intent.putExtra("UserId", userId);
+                                    intent.putExtra("phone", phone);
                                     startActivity(intent);
                                 }
 

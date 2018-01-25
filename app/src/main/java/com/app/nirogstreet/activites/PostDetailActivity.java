@@ -76,6 +76,7 @@ public class PostDetailActivity extends Activity {
     CommentsRecyclerAdapter commentsAdapter = null;
 
     ArrayList<CommentsModel> commentsModels = new ArrayList<>();
+    boolean openMain=false;
 
     private PostDetailAdapter feedsAdapter;
     RecyclerView commentsrecyclerview;
@@ -94,6 +95,7 @@ public class PostDetailActivity extends Activity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+
         //  collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         sendImageView = (TextView) findViewById(R.id.commentTV);
         sendImageView.setEnabled(false);
@@ -103,6 +105,12 @@ public class PostDetailActivity extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(openMain)
+                {
+                    Intent intent1 = new Intent(PostDetailActivity.this, MainActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }
                 finish();
             }
         });
@@ -173,6 +181,17 @@ public class PostDetailActivity extends Activity {
             NetworkUtill.showNoInternetDialog(PostDetailActivity.this);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(openMain)
+        {
+            Intent intent1 = new Intent(PostDetailActivity.this, MainActivity.class);
+            startActivity(intent1);
+            finish();
+        }
     }
 
     @Override

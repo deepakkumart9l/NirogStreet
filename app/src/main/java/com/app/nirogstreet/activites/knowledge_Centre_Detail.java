@@ -6,11 +6,18 @@ package com.app.nirogstreet.activites;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -22,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,6 +78,7 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.app.nirogstreet.activites.OpenDocument.getAvailableFile;
 
 public class Knowledge_Centre_Detail extends Activity {
     TextView title_side_Tv;
@@ -88,17 +97,16 @@ public class Knowledge_Centre_Detail extends Activity {
     SesstionManager sesstionManager;
     CircleImageView auth_imageCircleImageView;
     TextView dr_name_TV;
+    private static final String PDF_MIME_TYPE = "application/pdf";
     String courseId;
     boolean isHide = false;
 
     ImageView backImageView;
-    TextView viewTv,profile_complete_txt;
+    TextView viewTv, profile_complete_txt;
     CircularProgressBar circularProgressBar;
     SeekBar seekBar_luminosite;
 
-
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
-
         if (tv.getTag() == null) {
             tv.setTag(tv.getText());
         }
@@ -109,8 +117,6 @@ public class Knowledge_Centre_Detail extends Activity {
             @Override
             public void onGlobalLayout() {
                 try {
-
-
                     ViewTreeObserver obs = tv.getViewTreeObserver();
                     obs.removeGlobalOnLayoutListener(this);
                     if (maxLine == 0) {
@@ -184,7 +190,7 @@ public class Knowledge_Centre_Detail extends Activity {
         title_side_Tv = (TextView) findViewById(R.id.title_side);
         dr_name_TV = (TextView) findViewById(R.id.dr_name);
         backImageView = (ImageView) findViewById(R.id.back);
-        profile_complete_txt=(TextView)findViewById(R.id.profile_complete_txt);
+        profile_complete_txt = (TextView) findViewById(R.id.profile_complete_txt);
         relativeLayout = (RelativeLayout) findViewById(R.id.rel);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,7 +421,7 @@ public class Knowledge_Centre_Detail extends Activity {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("completed") && !jsonObject.isNull("completed")) {
                             seekBar_luminosite.setProgress(jsonObject.getInt("completed"));
-                            profile_complete_txt.setText(jsonObject.getInt("completed")+" %");
+                            profile_complete_txt.setText(jsonObject.getInt("completed") + " %");
                         }
                     }
                     if (course_detail_model != null) {
@@ -527,6 +533,8 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         intent.putExtra("topic_pos", finalI);
                                                         intent.putExtra("file_pos", finalJ);
                                                         startActivity(intent);
+
+
                                                     }
                                                 }
                                             });
@@ -549,6 +557,8 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         intent.putExtra("file_pos", finalJ);
                                                         intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
                                                         startActivityForResult(intent, 1);
+
+
                                                     }
 
 
@@ -569,7 +579,8 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains("\\.")) {
                                                             //feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
                                                         }
-                                                        Intent intent = new Intent(Knowledge_Centre_Detail.this, DocumentWebView.class);
+                                                        String ext = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1, course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().length());
+                                              /*         Intent intent = new Intent(Knowledge_Centre_Detail.this, DocumentWebView.class);
                                                         intent.putExtra("id", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId());
                                                         intent.putExtra("title", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
                                                         intent.putExtra("course_detail_model", course_detail_model);
@@ -578,6 +589,18 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         intent.putExtra("file_pos", finalJ);
                                                         intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
                                                         startActivityForResult(intent, 1);
+*/
+                                                        String url;
+                                                        if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains(".DOC"))
+
+                                                        {
+                                                            url = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().replace(".DOC", ".doc");
+                                                        }else {
+                                                            url=course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file();
+                                                        }
+
+                                                        showPDFUrl(Knowledge_Centre_Detail.this, url, ext);
+
                                                     }
 
 
@@ -635,12 +658,12 @@ public class Knowledge_Centre_Detail extends Activity {
         String rootID;
         private String responseBody;
 
-        public KnwledgeCompleteAsynctask(String id, int module_pos, int topic_pos, int file_pos,String rootID) {
+        public KnwledgeCompleteAsynctask(String id, int module_pos, int topic_pos, int file_pos, String rootID) {
             this.id = id;
             this.module_pos = module_pos;
             this.topic_pos = topic_pos;
             this.file_pos = file_pos;
-            this.rootID=rootID;
+            this.rootID = rootID;
 
         }
 
@@ -664,7 +687,7 @@ public class Knowledge_Centre_Detail extends Activity {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("completed") && !jsonObject.isNull("completed")) {
                             seekBar_luminosite.setProgress(jsonObject.getInt("completed"));
-                            profile_complete_txt.setText(jsonObject.getInt("completed")+" %");
+                            profile_complete_txt.setText(jsonObject.getInt("completed") + " %");
                         }
                         if (jsonObjectresponse.has("message") && !jsonObjectresponse.isNull("message")) {
                             Toast.makeText(Knowledge_Centre_Detail.this, jsonObjectresponse.getString("message"), Toast.LENGTH_LONG).show();
@@ -701,7 +724,7 @@ public class Knowledge_Centre_Detail extends Activity {
                 pairs.add(new BasicNameValuePair("courseID", id));
                 pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID) + ""));
                 pairs.add(new BasicNameValuePair("status", "1"));
-                pairs.add(new BasicNameValuePair("rootID",rootID));
+                pairs.add(new BasicNameValuePair("rootID", rootID));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
@@ -732,7 +755,7 @@ public class Knowledge_Centre_Detail extends Activity {
                 int file = data.getIntExtra("file", -1);
                 if (course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getUser_completed() != 1)
                     if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
-                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getId(), module, topic, file,course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getRoot_id());
+                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getId(), module, topic, file, course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getRoot_id());
                         knwledgeCompleteAsynctask.execute();
                     } else {
                         NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
@@ -741,5 +764,86 @@ public class Knowledge_Centre_Detail extends Activity {
             if (resultCode == Activity.RESULT_CANCELED) {
             }
         }
+    }
+
+    public void showPDFUrl(final Context context, final String pdfUrl, String ext) {
+
+        if (isPDFSupported(context, ext)) {
+            downloadAndOpenPDF(context, pdfUrl);
+        } else {
+        }
+        //askToOpenPDFThroughGoogleDrive( context, pdfUrl );
+    }
+
+    public static boolean isPDFSupported(Context context, String ext) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        final File tempFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "test." + ext);
+        String url = Uri.fromFile(tempFile).toString();
+        i.setDataAndType(Uri.fromFile(tempFile), getMimeType(url));
+        return context.getPackageManager().queryIntentActivities(i, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+    }
+
+    public void downloadAndOpenPDF(final Context context, final String pdfUrl) {
+        final String filename = pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1);
+        // The place where the downloaded PDF file will be put
+        final File tempFile = getAvailableFile(pdfUrl, context);
+        if (tempFile.exists()) {
+            // If we have downloaded the file before, just go ahead and show it.
+            openPDF(context, Uri.fromFile(tempFile));
+            return;
+        }
+        final ProgressDialog progress = new ProgressDialog(context);
+        progress.setMessage("Downloading, Please Wait!");
+        //progress.setMax(100);
+        // progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        // progress.setIndeterminate(true);
+        // progress.setProgress((int) tempFile.length());
+        progress.show();
+
+        // Create the download request
+        DownloadManager.Request r = new DownloadManager.Request(Uri.parse(pdfUrl));
+        r.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, filename);
+        final DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        BroadcastReceiver onComplete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!progress.isShowing()) {
+                    return;
+                }
+                context.unregisterReceiver(this);
+
+                progress.dismiss();
+                long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                Cursor c = dm.query(new DownloadManager.Query().setFilterById(downloadId));
+                if (c.moveToFirst()) {
+                    int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                        openPDF(context, Uri.fromFile(tempFile));
+                    }
+                }
+                c.close();
+            }
+        };
+        context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        // Enqueue the request
+        dm.enqueue(r);
+    }
+
+    public static final void openPDF(Context context, Uri localUri) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setDataAndType(localUri, getMimeType(localUri.toString()));
+        context.startActivity(i);
+    }
+
+    private static String getMimeType(String url) {
+        String parts[] = url.split("\\.");
+        String extension = parts[parts.length - 1];
+        String type = null;
+        if (extension != null) {
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            type = mime.getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 }

@@ -257,6 +257,7 @@ public class Courses_Fragment extends Fragment {
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
         recyclerView.setLayoutManager(linearLayoutManager);
+        try{
         if (logedinuserId.equals(userId))
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "knowledge/user-courses";
@@ -281,6 +282,9 @@ public class Courses_Fragment extends Fragment {
                 otherGroupTextView.setClickable(true);
 
             }
+        }}catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
         return view;

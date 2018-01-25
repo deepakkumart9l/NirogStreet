@@ -221,132 +221,136 @@ RelativeLayout experince_rel;
         {
             e.printStackTrace();
         }
-        phonelay = (RelativeLayout) findViewById(R.id.phonelay);
-        emaillay = (RelativeLayout) findViewById(R.id.emaillay);
+        try {
+            phonelay = (RelativeLayout) findViewById(R.id.phonelay);
+            emaillay = (RelativeLayout) findViewById(R.id.emaillay);
 
-        backimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+            backimg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
+            collapsingToolbarLayout.setTitle("demo");
+            collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.black));
+            collapsingToolbarLayout.setTitle("My App Title");
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            edtImage = (ImageView) findViewById(R.id.edtImage);
+            experince_rel = (RelativeLayout) findViewById(R.id.experince_rel);
+            imgPublic_icon = (ImageView) findViewById(R.id.imgPublic_icon);
+            birth_rel = (RelativeLayout) findViewById(R.id.birth_rel);
+            webSite_icon = (ImageView) findViewById(R.id.webSite_icon);
+            editInfo = (ImageView) findViewById(R.id.editInfo);
+            circleImageView = (CircleImageView) findViewById(R.id.pro);
+            circleImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!UserId.equalsIgnoreCase("")) {
+
+                    } else {
+                        Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
+                        intent.putExtra("userModel", (Serializable) userDetailModel);
+                        startActivity(intent);
+                    }
+                }
+            });
+            specilizationTv = (TextView) findViewById(R.id.specilizationTv);
+            sevicesTextView = (TextView) findViewById(R.id.sevices);
+            spcilizationCsv = (TextView) findViewById(R.id.spcilizationCsv);
+            sevicesCsvTextView = (TextView) findViewById(R.id.sevicesCsv);
+            SpecilizationsevicesTextView = (TextView) findViewById(R.id.Specilizationsevices);
+            SpecilizationsevicesEdit = (ImageView) findViewById(R.id.SpecilizationsevicesEdit);
+
+            MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
+            awardLay = (LinearLayout) findViewById(R.id.awardLay);
+            AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
+            clinicAddressEdit = (ImageView) findViewById(R.id.clinicAddressEdit);
+            AwardSectionTv = (TextView) findViewById(R.id.AwardSectionTv);
+            MemberShipSectionTv = (TextView) findViewById(R.id.MemberShipSectionTv);
+            backImageView = (ImageView) findViewById(R.id.back);
+            memberLay = (LinearLayout) findViewById(R.id.memberLay);
+            backImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            ExperinceEdit = (ImageView) findViewById(R.id.ExperinceEdit);
+            RegistrationSectionEdit = (ImageView) findViewById(R.id.RegistrationSectionEdit);
+            QualificationSectionEdit = (ImageView) findViewById(R.id.QualificationSectionEdit);
+            experinceLay = (LinearLayout) findViewById(R.id.experinceLay);
+            if (getIntent().hasExtra("UserId")) {
+                UserId = getIntent().getStringExtra("UserId");
             }
-        });
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitle("demo");
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.black));
-        collapsingToolbarLayout.setTitle("My App Title");
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        edtImage = (ImageView) findViewById(R.id.edtImage);
-        experince_rel=(RelativeLayout)findViewById(R.id.experince_rel);
-imgPublic_icon=(ImageView)findViewById(R.id.imgPublic_icon);
-        birth_rel=(RelativeLayout)findViewById(R.id.birth_rel);
-        webSite_icon = (ImageView) findViewById(R.id.webSite_icon);
-        editInfo = (ImageView) findViewById(R.id.editInfo);
-        circleImageView = (CircleImageView) findViewById(R.id.pro);
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!UserId.equalsIgnoreCase("")) {
-
-                } else {
-                    Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
-                    intent.putExtra("userModel", (Serializable) userDetailModel);
-                    startActivity(intent);
+            if (!UserId.equalsIgnoreCase("")) {
+                if (!UserId.equalsIgnoreCase(userId)) {
+                    edtImage.setVisibility(View.GONE);
+                    editInfo.setVisibility(View.GONE);
+                    clinicAddressEdit.setVisibility(View.GONE);
+                    ExperinceEdit.setVisibility(View.GONE);
+                    RegistrationSectionEdit.setVisibility(View.GONE);
+                    QualificationSectionEdit.setVisibility(View.GONE);
+                    AwardEdit.setVisibility(View.GONE);
+                    MemberShipEdit.setVisibility(View.GONE);
+                    SpecilizationsevicesEdit.setVisibility(View.GONE);
                 }
             }
-        });
-        specilizationTv = (TextView) findViewById(R.id.specilizationTv);
-        sevicesTextView = (TextView) findViewById(R.id.sevices);
-        spcilizationCsv = (TextView) findViewById(R.id.spcilizationCsv);
-        sevicesCsvTextView = (TextView) findViewById(R.id.sevicesCsv);
-        SpecilizationsevicesTextView = (TextView) findViewById(R.id.Specilizationsevices);
-        SpecilizationsevicesEdit = (ImageView) findViewById(R.id.SpecilizationsevicesEdit);
-
-        MemberShipEdit = (ImageView) findViewById(R.id.MemberShipEdit);
-        awardLay = (LinearLayout) findViewById(R.id.awardLay);
-        AwardEdit = (ImageView) findViewById(R.id.AwardEdit);
-        clinicAddressEdit = (ImageView) findViewById(R.id.clinicAddressEdit);
-        AwardSectionTv = (TextView) findViewById(R.id.AwardSectionTv);
-        MemberShipSectionTv = (TextView) findViewById(R.id.MemberShipSectionTv);
-        backImageView = (ImageView) findViewById(R.id.back);
-        memberLay = (LinearLayout) findViewById(R.id.memberLay);
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+            if (!UserId.equalsIgnoreCase("")) {
+                emaillay.setVisibility(View.GONE);
+                phonelay.setVisibility(View.GONE);
+            } else {
+                emaillay.setVisibility(View.VISIBLE);
+                phonelay.setVisibility(View.VISIBLE);
             }
-        });
-        ExperinceEdit = (ImageView) findViewById(R.id.ExperinceEdit);
-        RegistrationSectionEdit = (ImageView) findViewById(R.id.RegistrationSectionEdit);
-        QualificationSectionEdit = (ImageView) findViewById(R.id.QualificationSectionEdit);
-        experinceLay = (LinearLayout) findViewById(R.id.experinceLay);
-        if (getIntent().hasExtra("UserId")) {
-            UserId = getIntent().getStringExtra("UserId");
-        }
-        if (!UserId.equalsIgnoreCase("")) {
-            if (!UserId.equalsIgnoreCase(userId)) {
-                edtImage.setVisibility(View.GONE);
-                editInfo.setVisibility(View.GONE);
-                clinicAddressEdit.setVisibility(View.GONE);
-                ExperinceEdit.setVisibility(View.GONE);
-                RegistrationSectionEdit.setVisibility(View.GONE);
-                QualificationSectionEdit.setVisibility(View.GONE);
-                AwardEdit.setVisibility(View.GONE);
-                MemberShipEdit.setVisibility(View.GONE);
-                SpecilizationsevicesEdit.setVisibility(View.GONE);
+            qualifictionLinearLayout = (LinearLayout) findViewById(R.id.QualificatonLinearLayout);
+            regisrtaionLay = (LinearLayout) findViewById(R.id.regisrtaionLay);
+            clinicLay = (LinearLayout) findViewById(R.id.clinicLay);
+            clinicAddressHeading = (TextView) findViewById(R.id.clinicAddressHeading);
+            fee = (TextView) findViewById(R.id.fee);
+            nameTv = (TextView) findViewById(R.id.nameTv);
+            ExperienceSectionTv = (TextView) findViewById(R.id.ExperienceSectionTv);
+            placeTv = (TextView) findViewById(R.id.placeTv);
+            emailTv = (TextView) findViewById(R.id.emailTv);
+            phoneTv = (TextView) findViewById(R.id.phoneTv);
+            WebTv = (TextView) findViewById(R.id.WebTv);
+            RegistrationSectionHeadingTv = (TextView) findViewById(R.id.RegistrationSectionHeadingTv);
+            aboutHeading = (TextView) findViewById(R.id.about);
+            aboutDetail = (TextView) findViewById(R.id.about_detail);
+            aboutDetail.setLineSpacing(1, 1);
+            yearOfBirthTv = (TextView) findViewById(R.id.yearOfBirthTv);
+            yearOfExperienceTv = (TextView) findViewById(R.id.yearOfExperienceTv);
+            QualificationSectionTv = (TextView) findViewById(R.id.QualificationSectionTv);
+            SpecializationSectionHeadingTv = (TextView) findViewById(R.id.SpecializationSectionHeadingTv);
+            QualificationTv = (TextView) findViewById(R.id.QualificationTv);
+            sepcilizationDetailTv = (TextView) findViewById(R.id.sepcilizationDetailTv);
+            consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
+            allTaxes = (TextView) findViewById(R.id.allTaxes);
+            circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
+            sesstionManager = new SesstionManager(Dr_Profile.this);
+
+            if (sesstionManager.isUserLoggedIn() && UserId.equalsIgnoreCase("")) {
+                authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
+                userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
+                email = sesstionManager.getUserDetails().get(SesstionManager.KEY_EMAIL);
+                userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
+                mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
+                emailTv.setText(email);
+                phoneTv.setText(mobile);
+                nameTv.setText("Dr. " + userName);
+
+
             }
+            if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
+                userDetailAsyncTask = new UserDetailAsyncTask();
+                userDetailAsyncTask.execute();
+            } else {
+                NetworkUtill.showNoInternetDialog(Dr_Profile.this);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
-        if (!UserId.equalsIgnoreCase("")) {
-            emaillay.setVisibility(View.GONE);
-            phonelay.setVisibility(View.GONE);
-        } else {
-            emaillay.setVisibility(View.VISIBLE);
-            phonelay.setVisibility(View.VISIBLE);
-        }
-        qualifictionLinearLayout = (LinearLayout) findViewById(R.id.QualificatonLinearLayout);
-        regisrtaionLay = (LinearLayout) findViewById(R.id.regisrtaionLay);
-        clinicLay = (LinearLayout) findViewById(R.id.clinicLay);
-        clinicAddressHeading = (TextView) findViewById(R.id.clinicAddressHeading);
-        fee = (TextView) findViewById(R.id.fee);
-        nameTv = (TextView) findViewById(R.id.nameTv);
-        ExperienceSectionTv = (TextView) findViewById(R.id.ExperienceSectionTv);
-        placeTv = (TextView) findViewById(R.id.placeTv);
-        emailTv = (TextView) findViewById(R.id.emailTv);
-        phoneTv = (TextView) findViewById(R.id.phoneTv);
-        WebTv = (TextView) findViewById(R.id.WebTv);
-        RegistrationSectionHeadingTv = (TextView) findViewById(R.id.RegistrationSectionHeadingTv);
-        aboutHeading = (TextView) findViewById(R.id.about);
-        aboutDetail = (TextView) findViewById(R.id.about_detail);
-        aboutDetail.setLineSpacing(1, 1);
-        yearOfBirthTv = (TextView) findViewById(R.id.yearOfBirthTv);
-        yearOfExperienceTv = (TextView) findViewById(R.id.yearOfExperienceTv);
-        QualificationSectionTv = (TextView) findViewById(R.id.QualificationSectionTv);
-        SpecializationSectionHeadingTv = (TextView) findViewById(R.id.SpecializationSectionHeadingTv);
-        QualificationTv = (TextView) findViewById(R.id.QualificationTv);
-        sepcilizationDetailTv = (TextView) findViewById(R.id.sepcilizationDetailTv);
-        consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
-        allTaxes = (TextView) findViewById(R.id.allTaxes);
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        sesstionManager = new SesstionManager(Dr_Profile.this);
-
-        if (sesstionManager.isUserLoggedIn() && UserId.equalsIgnoreCase("")) {
-            authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
-            userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
-            email = sesstionManager.getUserDetails().get(SesstionManager.KEY_EMAIL);
-            userName = sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME);
-            mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
-            emailTv.setText(email);
-            phoneTv.setText(mobile);
-            nameTv.setText("Dr. " + userName);
-
-
-        }
-        if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
-            userDetailAsyncTask = new UserDetailAsyncTask();
-            userDetailAsyncTask.execute();
-        } else {
-            NetworkUtill.showNoInternetDialog(Dr_Profile.this);
-        }
-
     }
 
     private void findViews() {

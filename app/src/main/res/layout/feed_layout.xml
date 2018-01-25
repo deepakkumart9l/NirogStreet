@@ -164,6 +164,39 @@
                 android:background="#ffffff"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/parentLay"
+                    android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profilePicparent"
+                        android:layout_width="30dp"
+                        android:visibility="gone"
+                        android:layout_height="30dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        app:border_width="0.0dp"
+                        app:border_color="@color/gray_2nd"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
+                    <TextView
+                        android:id="@+id/parentname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left"
+                        android:lineSpacingExtra="4dp"
+                        android:text=""
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/Question"
                     android:layout_width="match_parent"
@@ -173,7 +206,6 @@
                     android:paddingRight="15dp"
                     android:textColorLink="@color/cardbluebackground"
 
-                    android:text="here is Question"
                     android:textColor="@color/black"
                     android:textSize="16.5sp"
                     android:textStyle="bold" />
@@ -189,7 +221,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
-                    android:text="This is Status Text"
+                    android:paddingBottom="5dp"
                     android:textColor="#333333"
                     android:textColorLink="@color/cardbluebackground"
                     android:textSize="15sp"
@@ -225,8 +257,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="250dp"
                             android:adjustViewBounds="true"
+                            android:layout_marginTop="3dp"
                             android:background="@color/white"
-                            android:paddingTop="5dp"
                             android:scaleType="centerCrop"
                             android:visibility="gone" />
 

@@ -35,7 +35,7 @@ public class IncomingSms extends BroadcastReceiver {
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
 
                     String senderNum = phoneNumber;
-                    if (currentMessage.getDisplayMessageBody().contains("NirogStreet")) {
+                    if (!currentMessage.getDisplayMessageBody().contains("of your account at")) {
 
                         String message = currentMessage.getDisplayMessageBody().split(" ")[0];
 

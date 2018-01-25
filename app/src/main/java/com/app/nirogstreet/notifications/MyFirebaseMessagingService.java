@@ -125,6 +125,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra("groupId", group);
         } else if (!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
+            intent.putExtra("openMain",true);
+
             intent.putExtra("feedId", post);
         } else if (notification_type.equalsIgnoreCase("9")) {
             intent = new Intent(this, GroupNotificationListing.class);

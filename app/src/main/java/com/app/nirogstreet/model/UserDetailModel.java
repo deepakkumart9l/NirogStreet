@@ -9,6 +9,15 @@ import java.util.ArrayList;
 
 public class UserDetailModel implements Serializable {
     String userId;
+String created_by;
+
+    public String getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
+    }
 
     public String getUserId() {
         return userId;
@@ -222,12 +231,13 @@ public class UserDetailModel implements Serializable {
 
     }
 
-    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels) {
+    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels,String created_by) {
         this.name = name;
         this.userId = userId;
         this.profile_complete = profile_complete;
         this.specializationModels = specializationModels;
         this.servicesModels = servicesModels;
+        this.created_by=created_by;
         this.memberShipModels = memberShipModels;
         this.clinicDetailModels = clinicDetailModels;
         this.registrationAndDocumenModels = registrationAndDocumenModels;

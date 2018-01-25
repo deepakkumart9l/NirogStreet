@@ -52,6 +52,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<NotificationModel> notificationModels;
     Context context;
+    boolean isClicked=false;
     ReadUnReadAsyncTask readUnReadAsyncTask;
     SesstionManager sessionManager;
     String userId;
@@ -124,13 +125,15 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View view) {
                     NotificationModel notificationModel = notificationModels.get(position);
                     if (notificationModel.getUnread() == 1) {
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
-                            readUnReadAsyncTask.execute();
-                        } else {
-                            openNotification(notificationModel);
+                        if(!isClicked) {
+                            isClicked=true;
+                            if (NetworkUtill.isNetworkAvailable(context)) {
+                                readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
+                                readUnReadAsyncTask.execute();
+                            } else {
+                                openNotification(notificationModel);
+                            }
                         }
-
                     } else {
 
                         openNotification(notificationModel);
@@ -262,6 +265,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
             Intent intent = new Intent(context, AppointmentActivity.class);
             context.startActivity(intent);
         }
+        isClicked=false;
     }
 }
 

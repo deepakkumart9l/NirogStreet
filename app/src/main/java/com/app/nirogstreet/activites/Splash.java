@@ -110,7 +110,12 @@ public class Splash extends AppCompatActivity {
                     versionUpdateCheckAsynctask = new VersionUpdateCheckAsynctask();
                     versionUpdateCheckAsynctask.execute();
                 } else {
-                    NetworkUtill.showNoInternetDialog(Splash.this);
+                    try {
+                        NetworkUtill.showNoInternetDialog(Splash.this);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
                /* if (sesstionManager.isUserLoggedIn()) {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -194,8 +199,13 @@ public class Splash extends AppCompatActivity {
                                     addDialog(latestVersion, false
                                     );
                                 } else {
-                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                    finish();
+                                    if (sesstionManager.isUserLoggedIn()) {
+                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                        finish();
+                                    } else {
+                                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                        finish();
+                                    }
                                 }
                             }
                         }

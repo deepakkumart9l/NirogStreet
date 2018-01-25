@@ -34,7 +34,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/back"
 
-                android:text="Share on group's timeline"
+                android:text="Share on public feed"
                 android:textColor="@color/white"
                 android:textSize="15dp"
                 android:textStyle="normal" />

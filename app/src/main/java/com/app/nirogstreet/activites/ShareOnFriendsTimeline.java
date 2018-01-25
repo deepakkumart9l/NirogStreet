@@ -52,6 +52,7 @@ public class ShareOnFriendsTimeline extends Activity {
     CircularProgressBar circularProgressBar;
     boolean shareOnGroup = false;
     TextView group_friends;
+    String parnetFeedId = "";
     private boolean imagedlt = false;
     TextView textTab;
 
@@ -66,7 +67,7 @@ public class ShareOnFriendsTimeline extends Activity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
         textTab = (TextView) findViewById(R.id.textTab);
-        lay=(LinearLayout) findViewById(R.id.lay);
+        lay = (LinearLayout) findViewById(R.id.lay);
         group_friends = (TextView) findViewById(R.id.group_friends);
         textViewmsg = (TextView) findViewById(R.id.msg);
         Intent intent = getIntent();
@@ -85,7 +86,7 @@ public class ShareOnFriendsTimeline extends Activity {
             @Override
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(ShareOnFriendsTimeline.this)) {
-                    if (multipleSelectedItemModels != null&&multipleSelectedItemModels.size()>0) {
+                    if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
 
                         shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
                         shareOnFriendsTimeLineAsyncTask.execute();
@@ -97,6 +98,9 @@ public class ShareOnFriendsTimeline extends Activity {
                 }
             }
         });
+        if (intent.hasExtra("parentFeedId")) {
+            parnetFeedId = intent.getStringExtra("parentFeedId");
+        }
         friendstextCsv = (TextView) findViewById(R.id.textCsv);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +193,10 @@ public class ShareOnFriendsTimeline extends Activity {
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
 
                 pairs.add(new BasicNameValuePair("userID", Userid));
-                pairs.add(new BasicNameValuePair("feedID", feedId));
+                if (!parnetFeedId.equalsIgnoreCase(""))
+                    pairs.add(new BasicNameValuePair("feedID", parnetFeedId));
+                else
+                    pairs.add(new BasicNameValuePair("feedID", feedId));
                 if (shareOnGroup) {
                     pairs.add(new BasicNameValuePair("shareType", "3"));
 

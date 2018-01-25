@@ -97,6 +97,14 @@ public class MoreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(ApplicationSingleton.isContactInfoUpdated())
+        {
+            if(feedsAdapter!=null)
+            {
+                feedsAdapter.notifyDataSetChanged();
+            }
+            ApplicationSingleton.setIsContactInfoUpdated(false);
+        }
         if (ApplicationSingleton.getPostEditPosition() != -1) {
             if (ApplicationSingleton.getFeedModelPostEdited() != null) {
                 totalFeeds.set(ApplicationSingleton.getPostEditPosition(), ApplicationSingleton.getFeedModelPostEdited());

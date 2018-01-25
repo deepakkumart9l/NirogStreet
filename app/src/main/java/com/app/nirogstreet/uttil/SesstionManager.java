@@ -121,6 +121,8 @@ public class SesstionManager {
         editor1.commit();
     }
 
+
+
     public void languageLogOut() {
         editor1.clear();
         editor1.commit();

@@ -50,6 +50,7 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
     private ImageView backImageView;
     CircularProgressBar circularProgressBar;
     boolean shareOnGroup = false;
+    String parnetFeedId="";
     TextView group_friends;
     private boolean imagedlt = false;
     TextView textTab;
@@ -75,6 +76,10 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
             if (shareOnGroup) {
                 textTab.setText("Share in community ");
             }
+        }
+        if(intent.hasExtra("parentFeedId"))
+        {
+            parnetFeedId=intent.getStringExtra("parentFeedId");
         }
         final String userId = intent.getStringExtra("userId");
         final String feedId = intent.getStringExtra("feedId");
@@ -151,6 +156,9 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
 
                 pairs.add(new BasicNameValuePair("userID", Userid));
+                if (!parnetFeedId.equalsIgnoreCase(""))
+                    pairs.add(new BasicNameValuePair("feedID", parnetFeedId));
+                else
                 pairs.add(new BasicNameValuePair("feedID", feedId));
 
                     pairs.add(new BasicNameValuePair("shareType", "1"));
