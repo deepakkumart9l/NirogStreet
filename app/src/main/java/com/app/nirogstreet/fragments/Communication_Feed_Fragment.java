@@ -54,12 +54,10 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  */
 
 public class Communication_Feed_Fragment extends Fragment {
-
     Context context;
     RecyclerView recyclerView;
     int totalPageCount;
     private boolean isLoading = false;
-
     int page = 1;
     TimelineAdapter feedsAdapter;
     private SwipeRefreshLayout swipeLayout;

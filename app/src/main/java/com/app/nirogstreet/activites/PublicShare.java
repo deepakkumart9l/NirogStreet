@@ -47,6 +47,7 @@ public class PublicShare extends Activity {
 ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
     ArrayList<MultipleSelectedItemModel> multipleSelectedItemModels = new ArrayList<>();
     private static final int RESULT_CODE = 1;
+    boolean isPosted=false;
     private ImageView backImageView;
     CircularProgressBar circularProgressBar;
     boolean shareOnGroup = false;
@@ -86,13 +87,16 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
         textViewshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NetworkUtill.isNetworkAvailable(PublicShare.this)) {
+                if (!isPosted) {
+                    isPosted=true;
+                    if (NetworkUtill.isNetworkAvailable(PublicShare.this)) {
 
                         shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
                         shareOnFriendsTimeLineAsyncTask.execute();
                     } else {
                         Toast.makeText(PublicShare.this, "Select friends", Toast.LENGTH_LONG).show();
                     }
+                }
 
             }
         });
@@ -181,6 +185,8 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
             try {
+                isPosted=false;
+
                 if (jo != null) {
                     if (jo.has("status") && !jo.isNull("status")) {
                         if (jo.has("responce") && !jo.isNull("responce")) {

@@ -49,6 +49,7 @@ public class ShareOnFriendsTimeline extends Activity {
     private static final int RESULT_CODE = 1;
     private ImageView backImageView;
     LinearLayout lay;
+    boolean isPosted=false;
     CircularProgressBar circularProgressBar;
     boolean shareOnGroup = false;
     TextView group_friends;
@@ -87,11 +88,13 @@ public class ShareOnFriendsTimeline extends Activity {
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(ShareOnFriendsTimeline.this)) {
                     if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
-
-                        shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
-                        shareOnFriendsTimeLineAsyncTask.execute();
-                    } else {
-                        Toast.makeText(ShareOnFriendsTimeline.this, "Select community", Toast.LENGTH_LONG).show();
+                        if (!isPosted) {
+                            isPosted=true;
+                            shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
+                            shareOnFriendsTimeLineAsyncTask.execute();
+                        } else {
+                            Toast.makeText(ShareOnFriendsTimeline.this, "Select community", Toast.LENGTH_LONG).show();
+                        }
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(ShareOnFriendsTimeline.this);
@@ -235,6 +238,7 @@ public class ShareOnFriendsTimeline extends Activity {
             circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
+                    isPosted=false;
                     if (jo.has("status") && !jo.isNull("status")) {
                         if (jo.has("responce") && !jo.isNull("responce")) {
                             JSONObject jsonObjectResponce = jo.getJSONObject("responce");
