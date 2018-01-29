@@ -1,6 +1,7 @@
 package com.app.nirogstreet.activites;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ public class AppointmentActivity extends Activity {
     GetAppointmentAsynctask getAppointmentAsynctask;
     CircularProgressBar circularProgressBar;
     LinearLayout no_appointment, notverified;
+    boolean openMain = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +71,21 @@ public class AppointmentActivity extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (openMain) {
+                    Intent intent1 = new Intent(AppointmentActivity.this, MainActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }
+
                 finish();
             }
         });
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager llm = new LinearLayoutManager(AppointmentActivity.this);
         recyclerview.setHasFixedSize(true);
-
+        if (getIntent().hasExtra("openMain")) {
+            openMain = getIntent().getBooleanExtra("openMain", false);
+        }
         recyclerview.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         if (NetworkUtill.isNetworkAvailable(AppointmentActivity.this)) {
@@ -83,6 +93,16 @@ public class AppointmentActivity extends Activity {
             getAppointmentAsynctask.execute();
         } else {
             NetworkUtill.showNoInternetDialog(AppointmentActivity.this);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (openMain) {
+            Intent intent1 = new Intent(AppointmentActivity.this, MainActivity.class);
+            startActivity(intent1);
+            finish();
         }
     }
 
@@ -129,14 +149,14 @@ public class AppointmentActivity extends Activity {
 
                             if (jsonObject1.has("new") && !jsonObject1.isNull("new")) {
                                 JSONArray jsonArray = jsonObject1.getJSONArray("new");
-                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray,"Upcoming");
+                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray, "Upcoming");
                                 if (appointmentModels != null && appointmentModels.size() > 0) {
                                     appointmentModelsTotal.addAll(appointmentModels);
                                 }
                             }
                             if (jsonObject1.has("old") && !jsonObject1.isNull("old")) {
                                 JSONArray jsonArray = jsonObject1.getJSONArray("old");
-                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray,"Previous");
+                                ArrayList<AppointmentModel> appointmentModels = AppointmentParser.appointmentModels(jsonArray, "Previous");
                                 if (appointmentModels != null && appointmentModels.size() > 0) {
                                     appointmentModelsTotal.addAll(appointmentModels);
                                 }

@@ -958,10 +958,19 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
                                 if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
 
-                                    str2 = new SpannableString(" post ");
+                                        str2 = new SpannableString(" post in ");
+                                    else
+                                        str2 = new SpannableString(" post ");
+
                                 } else {
-                                    str2 = new SpannableString("'s post ");
+                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+
+                                        str2 = new SpannableString("'s post in ");
+                                    else
+                                        str2 = new SpannableString("'s post ");
+
 
                                 }
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -988,7 +997,36 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                {   str2 = new SpannableString(feedModel.getCommunity_name());
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
+                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                    builder.append(str2);
+
+                                    ClickableSpan clickSpan14 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+
+                                    String sixthspan = str2.toString();
+                                    int six = builder.toString().indexOf(sixthspan);
+                                    builder.setSpan(clickSpan14, six, six + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                }
                             }
                         } else {
                             viewHolder.statusshare.setVisibility(View.GONE);

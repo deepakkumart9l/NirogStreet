@@ -101,6 +101,10 @@ public class PostDetailActivity extends Activity {
         sendImageView.setEnabled(false);
         sendImageView.setClickable(false);
         backImageView = (ImageView) findViewById(R.id.back);
+        if(getIntent().hasExtra("openMain"))
+        {
+            openMain=getIntent().getBooleanExtra("openMain",false);
+        }
         noContentTextView = (TextView) findViewById(R.id.noContent);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -138,6 +138,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         } else {
             intent = new Intent(this, AppointmentActivity.class);
+            intent.putExtra("openMain",true);
+
         }
         Bundle bundle = new Bundle();
         bundle.putString("notificationUrl", url);
