@@ -733,12 +733,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private static long back_pressed;
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+  /*      if (doubleBackToExitPressedOnce) {
 
             MainActivity.super.onBackPressed();
+
             return;
         }
         this.doubleBackToExitPressedOnce = true;
@@ -750,8 +752,17 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 doubleBackToExitPressedOnce = false;
             }
-        }, 3000);
+        }, 3000);*/
 
+        if (back_pressed + 2000 > System.currentTimeMillis()){
 
+            finish();
+
+            super.onBackPressed();
+        }
+        else{
+            Toast.makeText(getBaseContext(), "Press once again to exit", Toast.LENGTH_SHORT).show();
+            back_pressed = System.currentTimeMillis();
+        }
     }
 }

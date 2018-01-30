@@ -123,13 +123,34 @@ public class NotificationModel {public String getEventId() {
 
     String appointment_id;
 
-    public NotificationModel(String profile_pic, String message, String link_url, String name, String slug, String time, String postId, String groupId, String eventId, String fourumId, String id, int unread,String appointment_id) {
+    public String getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
+    }
+
+    String courseID;
+
+    public String getNotification_type() {
+        return notification_type;
+    }
+
+    public void setNotification_type(String notification_type) {
+        this.notification_type = notification_type;
+    }
+
+    String notification_type;
+    public NotificationModel(String profile_pic, String message, String link_url, String name, String slug, String time, String postId, String groupId, String eventId, String fourumId, String id, int unread,String appointment_id,String courseID,String notification_type) {
         this.profile_pic = profile_pic;
         this.message = message;
         this.appointment_id=appointment_id;
         this.time = time;
+        this.courseID=courseID;
         this.postId = postId;
         this.groupId = groupId;
+        this.notification_type=notification_type;
         this.id = id;
         this.unread = unread;
         this.eventId = eventId;

@@ -305,7 +305,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editTextMessage.getText().toString().contains(" ")) {
-                    String strarr[] = editTextMessage.getText().toString().split(" ");
+                    String str=editTextMessage.getText().toString().replaceAll("\n"," ");
+                    String strarr[] = str.split(" ");
                     for (int i = 0; i < strarr.length; i++) {
                         System.out.print(strarr[i]);
                         if (Patterns.WEB_URL.matcher(strarr[i]).matches()) {

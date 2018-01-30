@@ -163,7 +163,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             MyViewHolder viewHolder = (MyViewHolder) holder;
 
             if (payloads.get(0) instanceof String) {
-                if (String.valueOf(payloads.get(0)).equalsIgnoreCase("0") || String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
+                if (String.valueOf(payloads.get(0)).equalsIgnoreCase("1"))
                     viewHolder.likesTextView.setText(String.valueOf(payloads.get(0)) + " Like");
                 else
                     viewHolder.likesTextView.setText(String.valueOf(payloads.get(0)) + " Likes");
@@ -1162,6 +1162,10 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
+        if(feedModel.getParentFeedDetail()!=null)
+        {
+            popup.getMenu().getItem(0).setVisible(false);
+        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 ;

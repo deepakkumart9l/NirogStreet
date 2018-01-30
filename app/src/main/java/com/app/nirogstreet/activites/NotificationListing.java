@@ -217,8 +217,9 @@ public class NotificationListing extends AppCompatActivity {
                         if (jsonObject.has("notification") && !jsonObject.isNull("notification")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("notification");
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", forum_id = "";
+                                String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", courseID="",forum_id = "";
                                 int unread = 0;
+                                String notificationType="";
                                 String appointment_id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 if (jsonObject1.has("profile_pic") && !jsonObject1.isNull("profile_pic")) {
@@ -254,14 +255,20 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("community_id") && !jsonObject1.isNull("community_id")) {
                                     group_id = jsonObject1.getString("community_id");
                                 }
+                                if(jsonObject1.has("course_id")&&!jsonObject1.isNull("course_id"))
+                                {
+                                    courseID=jsonObject1.getString("course_id");
+                                }
                                 if (jsonObject1.has("forum_id") && !jsonObject1.isNull("forum_id")) {
                                     forum_id = jsonObject1.getString("forum_id");
                                 }
                                 if (jsonObject1.has("unread") && !jsonObject1.isNull("unread")) {
                                     unread = jsonObject1.getInt("unread");
                                 }
-
-                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id));
+                                if (jsonObject1.has("notification_type") && !jsonObject1.isNull("notification_type")) {
+                                    notificationType = jsonObject1.getString("notification_type");
+                                }
+                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id,courseID,notificationType));
                             }
                         } else {
                             no_notifications.setVisibility(View.VISIBLE);

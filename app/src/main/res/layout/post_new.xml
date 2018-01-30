@@ -1,9 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
+
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/circularProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:cpb_colors="@array/gplus_colors" />
 
     <RelativeLayout
         android:id="@+id/searchLayout"
@@ -35,7 +48,8 @@
     <com.app.nirogstreet.uttil.MyScrollView
         android:id="@+id/scrol"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,31 +151,35 @@
                                 android:text="Add Attachment :"
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
+
                             <android.support.percent.PercentFrameLayout
                                 android:id="@+id/toplayout"
-                                android:layout_marginTop="20dp"
-
                                 android:layout_width="90dp"
+
+                                android:layout_height="77dp"
                                 android:layout_marginLeft="5dp"
 
-                                android:layout_height="77dp">
-                            <ImageView
-                                android:id="@+id/imgView"
-                                android:layout_width="90dp"
-                                android:layout_height="77dp"
-                                android:layout_below="@id/attacment"
-                                android:background="@color/white"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/add_image_icon"></ImageView>
-                            <ImageView
-                                android:id="@+id/cancel1"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="right"
-                                android:padding="8dp"
-                                android:visibility="gone"
-                                android:src="@drawable/cancel" />
-                        </android.support.percent.PercentFrameLayout>
+                                android:layout_marginTop="20dp">
+
+                                <ImageView
+                                    android:id="@+id/imgView"
+                                    android:layout_width="90dp"
+                                    android:layout_height="77dp"
+                                    android:layout_below="@id/attacment"
+                                    android:background="@color/white"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/add_image_icon"></ImageView>
+
+                                <ImageView
+                                    android:id="@+id/cancel1"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_gravity="right"
+                                    android:padding="8dp"
+                                    android:src="@drawable/cancel"
+                                    android:visibility="gone" />
+                            </android.support.percent.PercentFrameLayout>
+
                             <TextView
                                 android:id="@+id/docName"
                                 android:layout_width="wrap_content"
@@ -460,18 +478,7 @@
                 </LinearLayout>
 
 
-                <com.app.nirogstreet.circularprogressbar.CircularProgressBar
-                    android:id="@+id/circularProgressBar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/cir"
-                    android:padding="8dp"
-                    android:visibility="gone"
-                    app:cpb_colors="@array/gplus_colors" />
             </LinearLayout>
         </LinearLayout>
     </com.app.nirogstreet.uttil.MyScrollView>
-</LinearLayout>
+</RelativeLayout>

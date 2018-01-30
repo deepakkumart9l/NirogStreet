@@ -115,7 +115,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PostingActivity extends Activity implements HashTagHelper.OnHashTagClickListener {
     String selectedImagePath = null;
     String selectedVideoPath = null;
-ImageView cancel1;
+    ImageView cancel1;
     TextView docName;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
@@ -189,7 +189,7 @@ ImageView cancel1;
         if (getIntent().hasExtra("groupId")) {
             groupId = getIntent().getStringExtra("groupId");
         }
-        cancel1=(ImageView)findViewById(R.id.cancel1);
+        cancel1 = (ImageView) findViewById(R.id.cancel1);
         linkLay = (RelativeLayout) findViewById(R.id.linkLay);
         imagelay = (RelativeLayout) findViewById(R.id.imagelay);
         imagelay.setOnTouchListener(new View.OnTouchListener() {
@@ -210,9 +210,9 @@ ImageView cancel1;
         cancel1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedImagePath=null;
-                selectedVideoPath=null;
-                docpath=null;
+                selectedImagePath = null;
+                selectedVideoPath = null;
+                docpath = null;
                 docName.setVisibility(View.GONE);
                 cancel1.setVisibility(View.GONE);
                 imageViewSelected.setImageResource(R.drawable.add_image_icon);
@@ -287,7 +287,8 @@ ImageView cancel1;
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editTextMessage.getText().toString().contains(" ")) {
-                    String strarr[] = editTextMessage.getText().toString().split(" ");
+                    String str=editTextMessage.getText().toString().replaceAll("\n"," ");
+                    String strarr[] = str.split(" ");
                     for (int i = 0; i < strarr.length; i++) {
                         System.out.print(strarr[i]);
                         if (Patterns.WEB_URL.matcher(strarr[i]).matches()) {
@@ -834,8 +835,8 @@ ImageView cancel1;
 
 
             try {
-                refrence=URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
-                question=URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
+                refrence = URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
+                question = URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
                 Log.e("messageText", "" + messageText);
             } catch (UnsupportedEncodingException e) {
@@ -933,7 +934,7 @@ ImageView cancel1;
                     bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                     File bb = getFile(bmThumbnail);
                     ContentBody cbfile1 = new FileBody(bb);
-entityBuilder.addPart("Feed[url_image]",cbfile1);
+                    entityBuilder.addPart("Feed[url_image]", cbfile1);
                     System.out.print(cbfile1);
                     byte[] imageBytes = baos.toByteArray();
                     String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
@@ -953,7 +954,7 @@ entityBuilder.addPart("Feed[url_image]",cbfile1);
                     for (int i = 0; i < servicesMultipleSelectedModels.size(); i++) {
                         if (servicesMultipleSelectedModels.get(i).getId() != null && !servicesMultipleSelectedModels.get(i).getId().equalsIgnoreCase(""))
                             entityBuilder.addTextBody("Tags[id][" + i + "]", servicesMultipleSelectedModels.get(i).getId());
-                        entityBuilder.addTextBody("Tags[name][" + i + "]",URLEncoder.encode(servicesMultipleSelectedModels.get(i).getSpecializationName(), "UTF-8") );
+                        entityBuilder.addTextBody("Tags[name][" + i + "]", URLEncoder.encode(servicesMultipleSelectedModels.get(i).getSpecializationName(), "UTF-8"));
                     }
                 }
                 if (docpath != null && docpath.toString().trim().length() > 0) {
@@ -1036,6 +1037,7 @@ entityBuilder.addPart("Feed[url_image]",cbfile1);
         return type;
 
     }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -1103,11 +1105,11 @@ entityBuilder.addPart("Feed[url_image]",cbfile1);
                     myViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(askQuestionImages.length()==2)
-                            if (position == 0) {
-                                recyclerView.setVisibility(View.GONE);
-                                imageViewSelected.setVisibility(View.VISIBLE);
-                            }
+                            if (askQuestionImages.length() == 2)
+                                if (position == 0) {
+                                    recyclerView.setVisibility(View.GONE);
+                                    imageViewSelected.setVisibility(View.VISIBLE);
+                                }
                             askQuestionImagesarr.remove(position);
                             notifyItemRemoved(position);
                             notifyItemRangeChanged(position, askQuestionImagesarr.size());
@@ -1281,8 +1283,8 @@ entityBuilder.addPart("Feed[url_image]",cbfile1);
         }
 
     }
-    private File getFile(Bitmap bitmap)
-    {
+
+    private File getFile(Bitmap bitmap) {
         File f = new File(getCacheDir(), "test.jpeg");
 
         try {
@@ -1298,8 +1300,7 @@ entityBuilder.addPart("Feed[url_image]",cbfile1);
             fos.write(bitmapdata);
             fos.flush();
             fos.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return f;

@@ -18,6 +18,16 @@ public class ApplicationSingleton extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+    public static boolean isDocOpen() {
+        return isDocOpen;
+    }
+
+    public static void setIsDocOpen(boolean isDocOpen) {
+        ApplicationSingleton.isDocOpen = isDocOpen;
+    }
+
+    public static boolean isDocOpen=false;
     public static boolean isGroupUpdated() {
         return isGroupUpdated;
     }

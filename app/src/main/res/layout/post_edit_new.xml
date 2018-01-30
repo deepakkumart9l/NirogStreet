@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
+    <com.app.nirogstreet.circularprogressbar.CircularProgressBar
+        android:id="@+id/circularProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
 
+        android:layout_marginTop="10dp"
+        android:background="@drawable/cir"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:cpb_colors="@array/gplus_colors" />
     <RelativeLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"
@@ -36,6 +47,7 @@
     <com.app.nirogstreet.uttil.MyScrollView
         android:id="@+id/scrol"
         android:layout_width="match_parent"
+        android:layout_below="@+id/searchLayout"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -462,18 +474,8 @@
                 </LinearLayout>
 
 
-                <com.app.nirogstreet.circularprogressbar.CircularProgressBar
-                    android:id="@+id/circularProgressBar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/cir"
-                    android:padding="8dp"
-                    android:visibility="gone"
-                    app:cpb_colors="@array/gplus_colors" />
+
             </LinearLayout>
         </LinearLayout>
     </com.app.nirogstreet.uttil.MyScrollView>
-</LinearLayout>
+</RelativeLayout>

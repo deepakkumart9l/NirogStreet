@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.uttil.AppUrl;
@@ -52,7 +53,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<NotificationModel> notificationModels;
     Context context;
-    boolean isClicked=false;
+    boolean isClicked = false;
     ReadUnReadAsyncTask readUnReadAsyncTask;
     SesstionManager sessionManager;
     String userId;
@@ -87,7 +88,12 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         MyViewHolder genericViewHolder = (MyViewHolder) holder;
         final NotificationModel item = notificationModels.get(position);
         try {
-            genericViewHolder.name.setText(Html.fromHtml("<b>" + "Dr. " + item.getName() + "</b>" + " " + item.getMessage()));
+            if (item.getNotification_type().equalsIgnoreCase("12")) {
+                genericViewHolder.name.setText(item.getMessage());
+
+            } else {
+                genericViewHolder.name.setText(Html.fromHtml("<b>" + "Dr. " + item.getName() + "</b>" + " " + item.getMessage()));
+            }
             genericViewHolder.time.setText(item.getTime());
 
             String imgUrl = item.getProfile_pic();
@@ -125,8 +131,8 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View view) {
                     NotificationModel notificationModel = notificationModels.get(position);
                     if (notificationModel.getUnread() == 1) {
-                        if(!isClicked) {
-                            isClicked=true;
+                        if (!isClicked) {
+                            isClicked = true;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
                                 readUnReadAsyncTask.execute();
@@ -260,12 +266,17 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
             Intent intent = new Intent(context, PostDetailActivity.class);
             intent.putExtra("feedId", notificationModel.getPostId());
             context.startActivity(intent);
-        }else if(notificationModel.getAppointment_id()!=null&&!notificationModel.getAppointment_id().equalsIgnoreCase(""))
-        {
+        } else if (notificationModel.getAppointment_id() != null && !notificationModel.getAppointment_id().equalsIgnoreCase("")) {
             Intent intent = new Intent(context, AppointmentActivity.class);
             context.startActivity(intent);
+        } else if (notificationModel.getCourseID() != null && !notificationModel.getCourseID().equalsIgnoreCase("")) {
+            Intent intent = new Intent(context, Knowledge_Centre_Detail.class);
+            intent.putExtra("courseID", notificationModel.getCourseID());
+
+            context.startActivity(intent);
+
         }
-        isClicked=false;
+        isClicked = false;
     }
 }
 

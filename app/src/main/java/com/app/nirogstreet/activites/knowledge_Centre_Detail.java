@@ -88,6 +88,7 @@ public class Knowledge_Centre_Detail extends Activity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     KnwledgeCompleteAsynctask knwledgeCompleteAsynctask;
     LinearLayout main_LinearLayout;
+    int k_Module_pos, i_Tpoic_pos, j_File_pos;
     Course_Detail_model course_detail_model;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -105,6 +106,7 @@ public class Knowledge_Centre_Detail extends Activity {
     TextView viewTv, profile_complete_txt;
     CircularProgressBar circularProgressBar;
     SeekBar seekBar_luminosite;
+    private boolean openMain=false;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
         if (tv.getTag() == null) {
@@ -195,6 +197,12 @@ public class Knowledge_Centre_Detail extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (openMain) {
+                    Intent intent1 = new Intent(Knowledge_Centre_Detail.this, MainActivity.class);
+                    startActivity(intent1);
+                    finish();
+                }
+
                 finish();
             }
         });
@@ -209,6 +217,9 @@ public class Knowledge_Centre_Detail extends Activity {
         viewTv = (TextView) findViewById(R.id.view);
         if (getIntent().hasExtra("courseID")) {
             courseId = getIntent().getStringExtra("courseID");
+        }
+        if (getIntent().hasExtra("openMain")) {
+            openMain = getIntent().getBooleanExtra("openMain", false);
         }
         if (getIntent().hasExtra("isHide")) {
             isHide = getIntent().getBooleanExtra("isHide", false);
@@ -246,7 +257,15 @@ public class Knowledge_Centre_Detail extends Activity {
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (openMain) {
+            Intent intent1 = new Intent(Knowledge_Centre_Detail.this, MainActivity.class);
+            startActivity(intent1);
+            finish();
+        }
+    }
     public class AcceptDeclineJoinAsyncTask extends AsyncTask<Void, Void, Void> {
         String authToken;
         JSONObject jo;
@@ -470,7 +489,18 @@ public class Knowledge_Centre_Detail extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
         update();
+        if (ApplicationSingleton.isDocOpen()) {
+            if (course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getUser_completed() != 1)
+                if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
+                    knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getId(), k_Module_pos, i_Tpoic_pos, j_File_pos, course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getRoot_id());
+                    knwledgeCompleteAsynctask.execute();
+                } else {
+                    NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
+                }
+            ApplicationSingleton.setIsDocOpen(false);
+        }
     }
 
     private void update() {
@@ -590,15 +620,18 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
                                                         startActivityForResult(intent, 1);
 */
+                                                        k_Module_pos = finalK;
+                                                        i_Tpoic_pos = finalI;
+                                                        j_File_pos = finalJ;
                                                         String url;
                                                         if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains(".DOC"))
 
                                                         {
                                                             url = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().replace(".DOC", ".doc");
-                                                        }else {
-                                                            url=course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file();
+                                                        } else {
+                                                            url = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file();
                                                         }
-
+                                                        ApplicationSingleton.setIsDocOpen(true);
                                                         showPDFUrl(Knowledge_Centre_Detail.this, url, ext);
 
                                                     }

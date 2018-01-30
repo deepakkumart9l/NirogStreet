@@ -16,6 +16,7 @@ import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.activites.GroupNotificationListing;
 import com.app.nirogstreet.activites.InviteNotificationListing;
+import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -53,7 +54,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = "";
         //  Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         Iterator myVeryOwnIterator = bundle.keySet().iterator();
-        String msg = "", url = "", postId = "", groupId = "", forumId = "", eventId = "", appointment_id = "", notification_type = "";
+        String msg = "", url = "", postId = "", groupId = "", forumId = "", course_id = "", eventId = "", appointment_id = "", notification_type = "";
         while (myVeryOwnIterator.hasNext()) {
             String key = (String) myVeryOwnIterator.next();
             if (key.equalsIgnoreCase("default")) {
@@ -90,9 +91,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 if (msgObject.has("notification_type") && !msgObject.isNull("notification_type")) {
                                     notification_type = msgObject.getString("notification_type");
                                 }
+                                if (msgObject.has("course_id") && !msgObject.isNull("course_id")) {
+                                    course_id = msgObject.getString("course_id");
+                                }
                                 if (msgObject.has("message") && !msgObject.isNull("message")) {
                                     msg = msgObject.getString("message");
-                                    sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id, notification_type);
+                                    sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id, course_id, notification_type);
 
                                 }
 
@@ -111,7 +115,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(String messageBody, String url, String forum, String event, String group, String post, String appointment_id, String notification_type) {
+    private void sendNotification(String messageBody, String url, String forum, String event, String group, String post, String appointment_id, String courseId, String notification_type) {
         Intent intent = null;
         SesstionManager sessionManager = new SesstionManager(this);
         HashMap<String, String> user = sessionManager.getUserDetails();
@@ -120,26 +124,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (!group.equalsIgnoreCase("")) {
             intent = new Intent(this, CommunitiesDetails.class);
             intent.putExtra("userId", userId);
-            intent.putExtra("openMain",true);
-
+            intent.putExtra("openMain", true);
             intent.putExtra("groupId", group);
         } else if (!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
-            intent.putExtra("openMain",true);
-
+            intent.putExtra("openMain", true);
             intent.putExtra("feedId", post);
         } else if (notification_type.equalsIgnoreCase("9")) {
             intent = new Intent(this, GroupNotificationListing.class);
-            intent.putExtra("openMain",true);
-
+            intent.putExtra("openMain", true);
         } else if (notification_type.equalsIgnoreCase("10")) {
             intent = new Intent(this, InviteNotificationListing.class);
-            intent.putExtra("openMain",true);
+            intent.putExtra("openMain", true);
+        } else if (!courseId.equalsIgnoreCase("")) {
+
+            intent = new Intent(this, Knowledge_Centre_Detail.class);
+            intent.putExtra("openMain", true);
+            intent.putExtra("courseID", courseId);
 
         } else {
             intent = new Intent(this, AppointmentActivity.class);
-            intent.putExtra("openMain",true);
-
+            intent.putExtra("openMain", true);
         }
         Bundle bundle = new Bundle();
         bundle.putString("notificationUrl", url);
