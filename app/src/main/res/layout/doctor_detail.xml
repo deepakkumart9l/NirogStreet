@@ -115,36 +115,34 @@
                             android:textSize="13sp" />
 
 
-
                         <SeekBar
                             android:id="@+id/seekBar_luminosite"
                             android:layout_width="215dp"
                             android:layout_height="10dp"
                             android:layout_below="@+id/placeTv"
+                            android:layout_marginLeft="-16dp"
                             android:layout_marginTop="6dp"
                             android:layout_toRightOf="@+id/relative"
+                            android:max="100"
                             android:maxHeight="15dp"
-                            android:layout_marginLeft="-16dp"
                             android:minHeight="15dp"
                             android:minWidth="15dp"
-                            android:max="100"
                             android:progress="0"
                             android:progressDrawable="@layout/custom_seekbar_layout"
                             android:secondaryProgress="0"
                             android:thumb="@null" />
 
                         <TextView
+                            android:id="@+id/profile_complete_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/placeTv"
                             android:layout_marginTop="2dp"
+                            android:layout_toRightOf="@+id/seekBar_luminosite"
                             android:textColor="@color/white"
                             android:textSize="11sp"
-                            android:id="@+id/profile_complete_txt"
-                            android:textStyle="bold"
 
-                            android:layout_toRightOf="@+id/seekBar_luminosite"
-                             />
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
                 </FrameLayout>
@@ -183,6 +181,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
                         android:orientation="vertical">
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -217,9 +216,9 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/experince_rel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/experince_rel"
 
                             android:layout_marginTop="8dp">
 
@@ -241,9 +240,9 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/birth_rel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/birth_rel"
                             android:layout_marginTop="8dp">
 
                             <ImageView
@@ -280,10 +279,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="7dp"
-
                                 android:layout_toRightOf="@+id/webSite_icon"
+                                android:autoLink="web"
                                 android:inputType="textCapWords|textCapSentences"
-                                android:textColor="#202020" />
+                                android:textColor="#202020"
+                                android:textColorLink="@color/cardbluebackground" />
 
                         </RelativeLayout>
 
@@ -788,9 +788,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginBottom="20dp"
-                            android:visibility="visible"
                             android:layout_marginTop="10dp"
-                            android:background="@color/white" />
+                            android:background="@color/white"
+                            android:visibility="visible" />
 
                     </LinearLayout>
 

@@ -26,7 +26,7 @@ public class FeedParser {
                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                 UserDetailModel ParentFeedDetail = null;
-                String share_id=null,share_feed_id=null,shareUser_id=null,share_user_name=null,share_user_message=null;
+                String share_id=null,share_feed_id=null,share_type=null,shareUser_id=null,share_user_name=null,share_user_message=null;
                 String feed_tag_name = null;
                 ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
@@ -194,6 +194,10 @@ public class FeedParser {
                             {
                                 share_feed_id=jsonObject1.getString("feed_id");
                             }
+                            if(jsonObject1.has("share_type")&&!jsonObject1.isNull("share_type"))
+                            {
+                                share_type=jsonObject1.getString("share_type");
+                            }
                             if(jsonObject1.has("share_with")&&!jsonObject1.isNull("share_with"))
                             {
                                 JSONObject jsonObject2=jsonObject1.getJSONObject("share_with");
@@ -206,7 +210,7 @@ public class FeedParser {
                                     share_user_name=jsonObject2.getString("name");
                                 }
                             }
-                            shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message));
+                            shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message,share_type));
 
                         }
                     }
@@ -349,9 +353,10 @@ public class FeedParser {
                                 ArrayList<String> mediaList = new ArrayList<>();
                                 String activity_detail = null;
                                 String feed_Tag_id = null;
-                                String share_id=null,share_feed_id=null,shareUser_id=null,share_user_name=null,share_user_message=null;
+                                String share_id=null,share_feed_id=null,share_type=null,shareUser_id=null,share_user_name=null,share_user_message=null;
                                 String feed_tag_name = null;
                                 ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
+
                                 ArrayList<SpecializationModel> specializationModelsForTags = new ArrayList<>();
                                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
@@ -516,6 +521,10 @@ JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
                                         {
                                             share_feed_id=jsonObject1.getString("feed_id");
                                         }
+                                        if(jsonObject1.has("share_type")&&!jsonObject1.isNull("share_type"))
+                                        {
+                                            share_type=jsonObject1.getString("share_type");
+                                        }
                                         if(jsonObject1.has("share_with")&&!jsonObject1.isNull("share_with"))
                                         {
                                             JSONObject jsonObject2=jsonObject1.getJSONObject("share_with");
@@ -528,7 +537,7 @@ JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
                                                 share_user_name=jsonObject2.getString("name");
                                             }
                                         }
-                                        shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message));
+                                        shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message,share_type));
                                     }
                                 }
                                 if (jsonObject.has("parent_feed") && !jsonObject.isNull("parent_feed")) {
@@ -668,6 +677,7 @@ JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                 UserDetailModel ParentFeedDetail = null;
                 String activity_detail = null;
+                String share_type=null;
                 String share_id=null,share_feed_id=null,shareUser_id=null,share_user_name=null,share_user_message=null;
                 ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
@@ -831,6 +841,10 @@ JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
                         {
                             share_feed_id=jsonObject1.getString("feed_id");
                         }
+                        if(jsonObject1.has("share_type")&&!jsonObject1.isNull("share_type"))
+                        {
+                            share_type=jsonObject1.getString("share_type");
+                        }
                         if(jsonObject1.has("share_with")&&!jsonObject1.isNull("share_with"))
                         {
                             JSONObject jsonObject2=jsonObject1.getJSONObject("share_with");
@@ -843,7 +857,7 @@ JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
                                 share_user_name=jsonObject2.getString("name");
                             }
                         }
-                        shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message));
+                        shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message,share_type));
 
                     }
                 }

@@ -13,6 +13,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.SearchActivity;
 import com.app.nirogstreet.model.SearchModel;
+import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -62,7 +63,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final SearchModel rowItem = rowItems.get(position);
-        holder.txtTitle.setText("Dr. "+rowItem.getFname().trim() + " " + rowItem.getLname());
+        if(rowItem.getId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+        holder.txtTitle.setText(rowItem.getFname().trim() + " " + rowItem.getLname());
+        else
+            holder.txtTitle.setText("Dr. "+rowItem.getFname().trim() + " " + rowItem.getLname());
+
         holder.department.setText(rowItem.getDeprtment());
         //ImageLoader imageLoader=new ImageLoader(context);
         String imgUrl = rowItem.getProfileimage();

@@ -886,7 +886,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     });
                     //   TypeFaceMethods.setRegularTypeFaceForTextView(viewHolder.nameTextView, context);
                     if (userDetailModel != null && userDetailModel.getName() != null) {
-                        String name = "Dr. " + userDetailModel.getName();
+
+                        String name;
+                        if(userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                           name= userDetailModel.getName();
+                        }else {
+                          name  ="Dr. " + userDetailModel.getName();
+                        }
                         builder = new SpannableStringBuilder();
                         span = new SpannableString(name);
                         span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
@@ -987,6 +993,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
                                         str2 = new SpannableString("their");
                                     else
+                                    if(feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+                                    {
+                                        str2 = new SpannableString(feedModel.getCreatedBy().getName());
+
+                                    }else
                                         str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
 
                                 }
@@ -1032,7 +1043,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
                                     if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
 
                                         str2 = new SpannableString(" post in ");
@@ -1040,11 +1051,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         str2 = new SpannableString(" post ");
 
                                 } else {
-                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
 
                                         str2 = new SpannableString("'s post in ");
                                     else
+                                    if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                        str2 = new SpannableString(" post ");
+
+                                    }else {
                                         str2 = new SpannableString("'s post ");
+
+
+                                    }
 
 
                                 }
@@ -1072,7 +1090,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
                                 {   str2 = new SpannableString(feedModel.getCommunity_name());
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 

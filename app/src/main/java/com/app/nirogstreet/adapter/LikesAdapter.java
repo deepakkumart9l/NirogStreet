@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.model.LikesModel;
+import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
@@ -46,11 +47,21 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, final int position) {
         RecyclerView.ViewHolder genericViewHolder = (RecyclerView.ViewHolder) holder;
         final LikesModel rowItem = likesModels.get(position);
-        if (rowItem.getFname() != null) {
-            if (rowItem.getLname() != null)
-                holder.name.setText("Dr. "+rowItem.getFname() + " " + rowItem.getLname());
-            else
-                holder.name.setText("Dr. "+rowItem.getFname());
+        if(rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+        {
+            if (rowItem.getFname() != null) {
+                if (rowItem.getLname() != null)
+                    holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());
+                else
+                    holder.name.setText(rowItem.getFname());
+            }
+        }else {
+            if (rowItem.getFname() != null) {
+                if (rowItem.getLname() != null)
+                    holder.name.setText("Dr. " + rowItem.getFname() + " " + rowItem.getLname());
+                else
+                    holder.name.setText("Dr. " + rowItem.getFname());
+            }
         }
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -94,7 +94,7 @@ public class EditRegistrationAndDocuments extends AppCompatActivity implements D
 
     int REQUEST_CODE = 4;
     String type="-1";
-    private static final String[] councilType = {"Center", "State"};
+    private static final String[] councilType = {"Central", "State"};
 
     ImageView backImageView;
     EditText council_typeEt;

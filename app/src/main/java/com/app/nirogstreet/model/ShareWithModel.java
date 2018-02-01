@@ -9,6 +9,15 @@ public class ShareWithModel {
         return id;
     }
 
+    public String getShareType() {
+        return shareType;
+    }
+
+    public void setShareType(String shareType) {
+        this.shareType = shareType;
+    }
+
+    public String shareType;
     public void setId(String id) {
         this.id = id;
     }
@@ -52,11 +61,12 @@ public class ShareWithModel {
     String shareMessage;
 
 
-    public ShareWithModel(String id, String feed_id, String user_id, String user_name, String shareMessage) {
+    public ShareWithModel(String id, String feed_id, String user_id, String user_name, String shareMessage,String shareType) {
         this.id = id;
         this.feed_id = feed_id;
         this.user_id = user_id;
         this.user_name = user_name;
+        this.shareType=shareType;
         this.shareMessage = shareMessage;
     }
 

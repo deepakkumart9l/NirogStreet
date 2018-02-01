@@ -257,7 +257,7 @@ public class MoreFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            circularProgressBar.setVisibility(View.VISIBLE);
+          //  circularProgressBar.setVisibility(View.VISIBLE);
 
             super.onPreExecute();
         }
@@ -382,7 +382,8 @@ public class MoreFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             //circularProgressBar.setVisibility(View.VISIBLE);
-            swipeLayout.setRefreshing(true);
+            if(circularProgressBar.getVisibility()==View.GONE)
+                swipeLayout.setRefreshing(true);
             super.onPreExecute();
         }
 

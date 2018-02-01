@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,7 +16,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -522,7 +520,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     .into(viewHolder.feedImageView);
                         } else {
                             viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
-                        }                      /*  Bitmap bmThumbnail;
+                        }
+                        /*  Bitmap bmThumbnail;
                         bmThumbnail = ThumbnailUtils.createVideoThumbnail(feedModel.getUrl_image(), MediaStore.Video.Thumbnails.MINI_KIND);
                         viewHolder.feedImageView.setImageBitmap(bmThumbnail);*/
                         viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
@@ -815,8 +814,13 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 if (userDetailModel != null && userDetailModel.getName() != null) {
-                    String name = "Dr. " + userDetailModel.getName();
-                    builder = new SpannableStringBuilder();
+                    String name;
+                    if(userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+                    {
+                        name = userDetailModel.getName();
+                    }else {
+                        name = "Dr. " + userDetailModel.getName();
+                    }                    builder = new SpannableStringBuilder();
                     span = new SpannableString(name);
                     span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
                     span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -916,8 +920,12 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
                                     str2 = new SpannableString("their");
                                 else
+                                if(feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                                    str2 = new SpannableString(feedModel.getCreatedBy().getName());
+                                }else {
                                     str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
 
+                                }
                             }
                             str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
@@ -961,7 +969,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                             viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                            if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+
+                            if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
                                 if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
 
                                     str2 = new SpannableString(" post in ");
@@ -969,15 +978,21 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     str2 = new SpannableString(" post ");
 
                             } else {
-                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
 
                                     str2 = new SpannableString("'s post in ");
                                 else
+                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                    str2 = new SpannableString(" post ");
+
+                                }else {
                                     str2 = new SpannableString("'s post ");
 
 
-                            }
-                            str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                }
+
+
+                            }str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
                             viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
                             builder.append(str2);
@@ -1001,7 +1016,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                             viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                             viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                            if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                            if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
                             {   str2 = new SpannableString(feedModel.getCommunity_name());
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 

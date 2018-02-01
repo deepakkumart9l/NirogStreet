@@ -337,7 +337,10 @@ RelativeLayout experince_rel;
                 mobile = sesstionManager.getUserDetails().get(SesstionManager.MOBILE);
                 emailTv.setText(email);
                 phoneTv.setText(mobile);
-                nameTv.setText("Dr. " + userName);
+                if(userId.equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+                nameTv.setText( userName);
+                else
+                    nameTv.setText("Dr. " + userName);
 
 
             }
@@ -1092,7 +1095,12 @@ RelativeLayout experince_rel;
                 experince_rel.setVisibility(View.GONE);
             }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
-                nameTv.setText("Dr. " + userDetailModel.getName());
+                if(userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                    nameTv.setText(userDetailModel.getName());
+                }else {
+                    nameTv.setText("Dr. " + userDetailModel.getName());
+
+                }
             }
             if (userDetailModel.getEmail() != null && !userDetailModel.getEmail().equalsIgnoreCase("")) {
                 emailTv.setText(userDetailModel.getEmail());
@@ -1107,12 +1115,18 @@ RelativeLayout experince_rel;
                 WebTv.setVisibility(View.GONE);
                 webSite_icon.setVisibility(View.GONE);
             }
-            if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
-                yearOfBirthTv.setText(userDetailModel.getDob());
-                birth_rel.setVisibility(View.VISIBLE);
+            if (UserId.equalsIgnoreCase("")) {
+
+                if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
+                    yearOfBirthTv.setText(userDetailModel.getDob());
+                    birth_rel.setVisibility(View.VISIBLE);
+                } else {
+                    birth_rel.setVisibility(View.GONE);
+
+                }
             }else {
                 birth_rel.setVisibility(View.GONE);
-
+                yearOfBirthTv.setVisibility(View.GONE);
             }
             if (userDetailModel.getAbout() != null && !userDetailModel.getAbout().equalsIgnoreCase("")) {
                 aboutDetail.setText(userDetailModel.getAbout());

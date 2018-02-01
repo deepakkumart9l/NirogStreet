@@ -217,7 +217,12 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     });
                     if (name != null)
-                        myViewHolder.nameTv.setText("Dr. " + name);
+                        if(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                            myViewHolder.nameTv.setText(name);
+                        }else {
+                            myViewHolder.nameTv.setText("Dr. " + name);
+
+                        }
                     if (userDetailModel1.getEmail() != null)
                         myViewHolder.emailTv.setText(userDetailModel1.getEmail());
                     if (userDetailModel1.getMobile() != null)
@@ -811,7 +816,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.sectionTv.setVisibility(View.VISIBLE);
 
                     if (userDetailModel != null && userDetailModel.getName() != null) {
-                        String name = "Dr. " + userDetailModel.getName();
+                        String name;
+                        if(userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+                        {
+                            name = userDetailModel.getName();
+                        }else {
+                            name = "Dr. " + userDetailModel.getName();
+                        }
                         builder = new SpannableStringBuilder();
                         span = new SpannableString(name);
                         span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
@@ -912,8 +923,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
                                         str2 = new SpannableString("their");
                                     else
-                                        str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
+                                    if(feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+                                    {
+                                        str2 = new SpannableString(feedModel.getCreatedBy().getName());
 
+                                    }else {
+                                        str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
+                                    }
                                 }
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
@@ -957,7 +973,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+
+                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
                                     if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
 
                                         str2 = new SpannableString(" post in ");
@@ -965,15 +982,21 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         str2 = new SpannableString(" post ");
 
                                 } else {
-                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
 
                                         str2 = new SpannableString("'s post in ");
                                     else
+                                    if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                        str2 = new SpannableString(" post ");
+
+                                    }else {
                                         str2 = new SpannableString("'s post ");
 
 
-                                }
-                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                    }
+
+
+                                }str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
                                 viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
                                 builder.append(str2);
@@ -997,7 +1020,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
                                 {   str2 = new SpannableString(feedModel.getCommunity_name());
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
@@ -1104,7 +1127,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                     viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                    if (feedModel.getCommunity_Id() == null || feedModel.getCommunity_Id().equalsIgnoreCase("")) {
                         if (feedModel.getActivity_detail() != null) {
                             if (feedModel.getActivity_detail().equalsIgnoreCase("1"))
                                 viewHolder.sectionTv.setText("You created this post");
@@ -1122,9 +1144,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.sectionTv.setText("You liked this post");
 
                         }
-                    } else {
-                        viewHolder.sectionTv.setText("You posted in " + feedModel.getCommunity_name());
-                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();

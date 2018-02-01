@@ -88,11 +88,22 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
             e.printStackTrace();
         }
 
-        if (rowItem.getFname() != null) {
-            if (rowItem.getLname() != null)
-                holder.name.setText("Dr. " + rowItem.getFname() + " " + rowItem.getLname());
-            else
-                holder.name.setText("Dr. " + rowItem.getFname());
+        if(rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+        {
+
+            if (rowItem.getFname() != null) {
+                if (rowItem.getLname() != null)
+                    holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());
+                else
+                    holder.name.setText(rowItem.getFname());
+            }
+        }else {
+            if (rowItem.getFname() != null) {
+                if (rowItem.getLname() != null)
+                    holder.name.setText("Dr. " + rowItem.getFname() + " " + rowItem.getLname());
+                else
+                    holder.name.setText("Dr. " + rowItem.getFname());
+            }
         }
         if (commentsModels.get(position).isUserLiked()) {
             holder.like.setText("Unlike");
@@ -121,7 +132,12 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         });
         if (commentsModels.get(position).getCommentsModels() != null && commentsModels.get(position).getCommentsModels().size() >= 1) {
             holder.subComment.setVisibility(View.VISIBLE);
-            holder.subCommntName.setText("Dr. " + rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+            if(rowItem.getCommentsModels().get(rowItem.getCommentsModels        ().size() - 1).getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+
+                holder.subCommntName.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+           else
+                holder.subCommntName.setText("Dr. " + rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+
             Glide.with(context)
                     .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()).placeholder(R.drawable.user) // Uri of the picture
                     .centerCrop()
