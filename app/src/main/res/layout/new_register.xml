@@ -196,6 +196,98 @@
                         android:scaleType="fitXY"
                         android:background="@drawable/lock" />
                 </LinearLayout>
+                <View
+                    android:id="@+id/textView22"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_above="@+id/btnJoin"
+                    android:layout_alignParentLeft="true"
+                    android:background="#ffffff" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Referral code"
+                    android:textSize="13sp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000" />
+
+                <EditText
+                    android:id="@+id/referalcode"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+                    android:padding="13dp"
+                    android:background="@drawable/round_edittext"
+                    android:cursorVisible="true"
+                    android:hint="Referral code"
+                    android:inputType="textCapWords|textCapSentences"
+
+                    android:imeOptions="actionNext"
+                    android:textStyle="normal"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textColorHint="#9d9d9d"
+                    android:textCursorDrawable="@drawable/blackpipe"
+                    android:textSize="14sp">
+
+                    <requestFocus />
+                </EditText>
+                <View
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_above="@+id/btnJoin"
+                    android:layout_alignParentLeft="true"
+                    android:background="#ffffff" />
+                <TextView
+                    android:id="@+id/registerAs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/input_layout_name"
+                    android:layout_below="@+id/firstNameEt"
+                    android:layout_marginTop="10dp"
+                    android:text="Are you a"
+                    android:textSize="13sp"
+
+                    android:textColor="#000"
+                    android:textStyle="normal"
+                    android:visibility="visible" />
+                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/genderSpinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/registerAs"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="6dp"
+                    android:backgroundTint="@color/textcolorgray"
+                    android:orientation="horizontal"
+                    android:textColorHighlight="@color/textcolorgray"
+                    android:visibility="visible">
+
+                    <RadioButton
+                        android:id="@+id/doctor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-5dp"
+                        android:backgroundTint="@color/cardbluebackground"
+                        android:buttonTint="@color/buttonBackground"
+                        android:text="Doctor"
+                        android:checked="true"
+                        android:textColorHighlight="@color/cardbluebackground" />
+
+                    <RadioButton
+                        android:id="@+id/student"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="100dp"
+                        android:backgroundTint="@color/buttonBackground"
+                        android:buttonTint="@color/buttonBackground"
+                        android:text="Student"
+                        android:textColorHighlight="@color/buttonBackground" />
+                </RadioGroup>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -224,6 +316,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="50dp"
                     android:layout_marginLeft="30dp"
                     android:orientation="horizontal">
 
@@ -243,6 +336,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:orientation="vertical">
 
                         <TextView

@@ -853,6 +853,9 @@ RelativeLayout experince_rel;
                             NetworkUtill.showNoInternetDialog(Dr_Profile.this);
                         }
                         break;
+                    case R.id.refer:
+                        Intent intent=new Intent(Dr_Profile.this,ReferalActivity.class);
+                        startActivity(intent);
                 }
                 return false;
             }

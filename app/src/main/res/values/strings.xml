@@ -15,6 +15,7 @@
     <string name="mdtp_done_label">Done</string>
     <string name="seletct_title">Please select Title</string>
     <string name="select_gender">Please select Gender</string>
+
     <string name="select_category">Please select Category</string>
     <string name="Rs">\u20A8</string>
     <string name="enter_City">Please enter City</string>
@@ -26,6 +27,13 @@
     <string name="qualification">Select your qualification</string>
     <string name="university">Enter your university name</string>
     <string name="year">Select Year.</string>
+    <string name="no_awards">You have not added any Awards yet!</string>
+    <string name="no_clinic">You have not added any Clinics yet!</string>
+    <string name="no_membership">You have not added any Memberships yet!</string>
+    <string name="no_experinec">You have not added any Experience yet!</string>
+
+    <string name="no_qualification">You have not added any Qualifications yet!</string>
+    <string name="no_reistraion">You have not added any Registrations yet!</string>
     <string name="council">Enter your Council Registration Number</string>
     <string name="council_name">Enter Council name.</string>
     <dimen name="tile_letter_font_size">17sp</dimen>

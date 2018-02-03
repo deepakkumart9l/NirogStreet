@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
@@ -38,13 +39,14 @@ public class AllClinicListing extends  Activity {
     RecyclerView recyclerview;
     private LinearLayoutManager linearLayoutManager;
     AllClinicAdapter allClinicAdapter;
+    LinearLayout no_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.exerience_list);
+        setContentView(R.layout.exerience_list_one);
         userDetailModel = ApplicationSingleton.getUserDetailModel();
-
+no_list=(LinearLayout)findViewById(R.id.no_list);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,13 +102,18 @@ public class AllClinicListing extends  Activity {
         if (userDetailModel != null && userDetailModel.getClinicDetailModels() != null && userDetailModel.getClinicDetailModels().size() > 0) {
             allClinicAdapter = new AllClinicAdapter(AllClinicListing.this, userDetailModel.getClinicDetailModels(), userDetailModel);
             recyclerview.setAdapter(allClinicAdapter);
+            recyclerview.setVisibility(View.VISIBLE);
+            no_list.setVisibility(View.GONE);
         } else {
             if (allClinicAdapter != null) {
                 allClinicAdapter.notifyItemRemoved(0);
                 allClinicAdapter.notifyItemRangeChanged(0, 0);
-                recyclerview.setVisibility(View.GONE);
+
 
             }
+            recyclerview.setVisibility(View.GONE);
+            recyclerview.setVisibility(View.GONE);
+            no_list.setVisibility(View.VISIBLE);
         }
 
     }

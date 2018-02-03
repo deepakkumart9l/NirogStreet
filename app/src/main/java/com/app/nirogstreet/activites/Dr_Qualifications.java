@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,8 @@ public class Dr_Qualifications extends AppCompatActivity {
     SesstionManager sesstionManager;
     TextView titileText, skipTextView;
     ImageView backImageView;
+    LinearLayout no_list;
+
     boolean isSkip = false;
     private UserDetailModel userDetailModel;
     RecyclerView recyclerview;
@@ -76,6 +79,7 @@ public class Dr_Qualifications extends AppCompatActivity {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.qualifications);
+        no_list=(LinearLayout)findViewById(R.id.no_list);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +134,7 @@ public class Dr_Qualifications extends AppCompatActivity {
             qualificationAdapter = new QualificationAdapter(Dr_Qualifications.this, userDetailModel.getQualificationModels(), userDetailModel);
             recyclerview.setAdapter(qualificationAdapter);
             recyclerview.setVisibility(View.VISIBLE);
+            no_list.setVisibility(View.GONE);
         } else {
             if (qualificationAdapter != null) {
                 qualificationAdapter.notifyItemRemoved(0);
@@ -137,6 +142,8 @@ public class Dr_Qualifications extends AppCompatActivity {
                 recyclerview.setVisibility(View.GONE);
 
             }
+            recyclerview.setVisibility(View.GONE);
+            no_list.setVisibility(View.VISIBLE);
         }
 
     }

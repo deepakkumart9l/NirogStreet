@@ -38,7 +38,7 @@
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Qualification"
+                android:text="Experience"
                 android:textColor="@color/white"
 
                 android:textSize="16sp" />
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="45dp"
+                android:layout_marginLeft="40dp"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
@@ -73,17 +73,17 @@
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="160dp"
+            android:layout_width="116dp"
             android:layout_height="108dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/qualification" />
+            android:src="@drawable/clinic" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:lineSpacingExtra="3.4sp"
-            android:text="@string/no_qualification"
+            android:text="@string/no_clinic"
             android:textColor="#b7b7b7"
             android:textSize="11.3sp" />
     </LinearLayout>
@@ -94,8 +94,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/header"
         android:layout_marginBottom="50dp"
+
         android:scrollbars="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout

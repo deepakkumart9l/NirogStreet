@@ -508,7 +508,7 @@ public LoginAsync(String otp,String phone)
                     JSONObject dataJsonObject;
                     boolean status = false;
 
-                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "",referral_code="";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
 
@@ -550,7 +550,10 @@ public LoginAsync(String otp,String phone)
                                         if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
                                             createdOn = userJsonObject.getString("createdOn");
                                         }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
+                                        if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                            referral_code = userJsonObject.getString("referral_code");
+                                        }
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code);
                                         Intent intent1 = new Intent(LoginWithOTP.this, MainActivity.class);
                                         startActivity(intent1);
                                         finish();

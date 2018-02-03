@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
@@ -32,6 +33,8 @@ public class MemberShip extends Activity {
     SesstionManager sesstionManager;
     TextView titileText, skipTextView;
     ImageView backImageView;
+    LinearLayout no_list;
+
     boolean isSkip = false;
     private UserDetailModel userDetailModel;
     RecyclerView recyclerview;
@@ -44,6 +47,7 @@ public class MemberShip extends Activity {
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        no_list = (LinearLayout) findViewById(R.id.no_list);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,13 +101,18 @@ public class MemberShip extends Activity {
         if (userDetailModel != null && userDetailModel.getMemberShipModels() != null && userDetailModel.getMemberShipModels().size() > 0) {
             memberShipAdapter = new MemberShipAdapter(MemberShip.this, userDetailModel.getMemberShipModels(), userDetailModel);
             recyclerview.setAdapter(memberShipAdapter);
-        }else {
+            recyclerview.setVisibility(View.VISIBLE);
+            no_list.setVisibility(View.GONE);
+        } else {
             if (memberShipAdapter != null) {
                 memberShipAdapter.notifyItemRemoved(0);
                 memberShipAdapter.notifyItemRangeChanged(0, 0);
                 recyclerview.setVisibility(View.GONE);
 
-            }}
+            }
+            recyclerview.setVisibility(View.GONE);
+            no_list.setVisibility(View.VISIBLE);
+        }
     }
 
     public class MemberShipAdapter extends RecyclerView.Adapter<MemberShipAdapter.MyHolderView> {

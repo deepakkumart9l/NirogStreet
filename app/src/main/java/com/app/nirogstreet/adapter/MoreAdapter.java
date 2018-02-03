@@ -209,6 +209,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         sesstionManager.updateProfile(userDetailModel1.getProfile_pic());
 
                     }
+                 if(   sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
+                 {
+                     myViewHolder.card.setVisibility(View.GONE);
+                 }else {
+                     myViewHolder.card.setVisibility(View.VISIBLE);
+
+                 }
                     myViewHolder.card.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

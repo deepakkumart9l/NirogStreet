@@ -31,6 +31,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,10 +78,12 @@ public class RegisterActivity extends AppCompatActivity {
     private int CONTACT_PERMISSION_CODE = 1;
     String email = null;
     boolean clickEnamble=true;
+    String role;
     ImageButton img_lock;
-
+    RadioGroup roleSpinnerRadioGroup;
+RadioButton doctorRadioButton,studentRadioButton;
     String fname = null, lname = null;
-    EditText firstNameEt, phoneEt, emailEt, setPass;
+    EditText firstNameEt, phoneEt, emailEt, setPass,referralEt;
     String phoneNumber = null;
     LinearLayout signIn;
     TextView registerHeader;
@@ -193,7 +197,10 @@ public class RegisterActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.new_register);
         img_lock = (ImageButton) findViewById(R.id.img_lock);
-
+        doctorRadioButton = (RadioButton) findViewById(R.id.doctor);
+        roleSpinnerRadioGroup = (RadioGroup) findViewById(R.id.genderSpinner);
+        studentRadioButton = (RadioButton) findViewById(R.id.student);
+        referralEt=(EditText)findViewById(R.id.referalcode);
         img_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,7 +319,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public class SendOtpAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
-        String mobile, email, fname, lname, password;
+        String mobile, email, fname, lname, password,referral=null;
         CircularProgressBar bar;
 
         JSONObject jo;
@@ -328,6 +335,8 @@ public class RegisterActivity extends AppCompatActivity {
         public SendOtpAsyncTask(String mobile, String password, String fname, String email) {
             this.email = email;
             this.fname = fname;
+
+
             this.password = password;
             this.mobile = mobile;
             this.mobile = mobile;
@@ -336,6 +345,10 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
+            if(referralEt.getText().toString().length()>0)
+            {
+                referral=referralEt.getText().toString();
+            }
             super.onPreExecute();
         }
 
@@ -365,6 +378,8 @@ public class RegisterActivity extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("User[lname]", lname));
                 pairs.add(new BasicNameValuePair("User[email]", email));
                 pairs.add(new BasicNameValuePair("User[password]", password));
+                if(referral!=null)
+                pairs.add(new BasicNameValuePair("User[referral]",referral));
                 pairs.add(new BasicNameValuePair("is_registration", "1"));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
@@ -406,6 +421,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
                                 intent.putExtra("fname", firstNameEt.getText().toString());
                                 intent.putExtra("otp", otp);
+                                intent.putExtra("role",role);
+                                if(referralEt.getText().toString().length()>0)
+                                {
+                                    intent.putExtra("referral",referralEt.getText().toString());
+                                }
                                 intent.putExtra("email", emailEt.getText().toString().trim());
                                 intent.putExtra("phone", phoneEt.getText().toString());
                                 intent.putExtra("password", setPass.getText().toString());
@@ -452,10 +472,21 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (setPass.getText().toString().length() == 0) {
             Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
             return false;
-        } /*else if (!Methods.isValidPassword(setPass.getText().toString())) {
+        }int radioButtonID = roleSpinnerRadioGroup.getCheckedRadioButtonId();
+        View radioButton = roleSpinnerRadioGroup.findViewById(radioButtonID);
+        int idx = roleSpinnerRadioGroup.indexOfChild(radioButton);
+        if (idx == -1) {
+          //  Toast.makeText(RegisterActivity.this, R.string.select_gender, Toast.LENGTH_SHORT).show();
+
+            return false;
+        } else {
+            role = idx + 1 + "";
+        }
+        /*else if (!Methods.isValidPassword(setPass.getText().toString())) {
             Toast.makeText(RegisterActivity.this, "Enter valid password", Toast.LENGTH_SHORT).show();
             return false;
         }*/
+
         return true;
     }
 

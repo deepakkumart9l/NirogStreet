@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
@@ -35,6 +36,7 @@ public class RegistrationAndDocuments extends Activity {
     RegistrationAdapter registrationAdapter;
     boolean isSkip = false;
     RecyclerView recyclerview;
+    LinearLayout no_list;
     ImageView backImageView;
     private LinearLayoutManager linearLayoutManager;
     private UserDetailModel userDetailModel;
@@ -63,6 +65,7 @@ public class RegistrationAndDocuments extends Activity {
         } else {
             skipTextView.setVisibility(View.GONE);
         }
+        no_list=(LinearLayout)findViewById(R.id.no_list);
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +101,8 @@ Intent intent=new Intent(RegistrationAndDocuments.this,AllClinicListing.class);
             userDetailModel = ApplicationSingleton.getUserDetailModel();
         }
         if (userDetailModel != null && userDetailModel.getRegistrationAndDocumenModels() != null && userDetailModel.getRegistrationAndDocumenModels().size() > 0) {
+           recyclerview.setVisibility(View.VISIBLE);
+            no_list.setVisibility(View.GONE);
             registrationAdapter = new RegistrationAdapter(RegistrationAndDocuments.this, userDetailModel.getRegistrationAndDocumenModels(), userDetailModel);
             recyclerview.setAdapter(registrationAdapter);
         }
@@ -108,6 +113,8 @@ Intent intent=new Intent(RegistrationAndDocuments.this,AllClinicListing.class);
                 recyclerview.setVisibility(View.GONE);
 
             }
+            recyclerview.setVisibility(View.GONE);
+            no_list.setVisibility(View.VISIBLE);
         }
     }
 

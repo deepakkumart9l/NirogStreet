@@ -827,7 +827,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
                                     }
                                     sesstionManager.updateProfile(ApplicationSingleton.getUserDetailModel().getProfile_pic());
-                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(),"", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE));
+                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(),"", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE),sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE));
 
                                     if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
                                         ApplicationSingleton.getUserDetailModel().setCategory(userJsonObject.getString("category"));

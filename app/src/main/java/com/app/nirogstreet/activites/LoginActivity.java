@@ -288,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject dataJsonObject;
                     boolean status = false;
 
-                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    String auth_token = "", createdOn = "",referral_code="", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
 
@@ -330,7 +330,10 @@ public class LoginActivity extends AppCompatActivity {
                                         if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
                                             createdOn = userJsonObject.getString("createdOn");
                                         }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
+                                        if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                            referral_code = userJsonObject.getString("referral_code");
+                                        }
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code);
                                         Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent1);
                                         finish();

@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
@@ -37,6 +38,8 @@ public class MemberListing extends Activity {
     private RecyclerView mRecyclerView;
     ImageView imageViewSearch;
     ImageView backImageView;
+    LinearLayout no_list;
+
     CircularProgressBar circularProgressBar;
     private LinearLayoutManager mLinearLayoutManager;
     private String text = "";
@@ -55,6 +58,7 @@ public class MemberListing extends Activity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+
         searchModels = new ArrayList<>();
         if (getIntent().hasExtra("userList")) {
             searchModels = (ArrayList<UserList>) getIntent().getSerializableExtra("userList");

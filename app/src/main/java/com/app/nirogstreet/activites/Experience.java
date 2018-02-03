@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
@@ -34,6 +35,7 @@ public class Experience extends Activity {
     ExperienceAdapter experienceAdapter;
     ImageView backImageView;
     boolean isSkip = false;
+    LinearLayout no_list;
     private UserDetailModel userDetailModel;
     RecyclerView recyclerview;
     private LinearLayoutManager linearLayoutManager;
@@ -45,6 +47,7 @@ public class Experience extends Activity {
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        no_list=(LinearLayout)findViewById(R.id.no_list);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +101,8 @@ public class Experience extends Activity {
         if (userDetailModel != null && userDetailModel.getExperinceModels() != null && userDetailModel.getExperinceModels().size() > 0) {
             experienceAdapter = new ExperienceAdapter(Experience.this, userDetailModel.getExperinceModels(), userDetailModel);
             recyclerview.setAdapter(experienceAdapter);
+            recyclerview.setVisibility(View.VISIBLE);
+            no_list.setVisibility(View.GONE);
         }else {
             if (experienceAdapter != null) {
                 experienceAdapter.notifyItemRemoved(0);
@@ -105,6 +110,8 @@ public class Experience extends Activity {
                 recyclerview.setVisibility(View.GONE);
 
             }
+            recyclerview.setVisibility(View.GONE);
+            no_list.setVisibility(View.VISIBLE);
         }
     }
 

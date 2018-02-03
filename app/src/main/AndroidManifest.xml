@@ -57,7 +57,8 @@
             android:name=".activites.PublicShare"
             android:screenOrientation="portrait" />
 
-
+<activity android:name=".activites.ReferalActivity"
+    android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.LoadHtmlPageActivity"
             android:screenOrientation="portrait" />

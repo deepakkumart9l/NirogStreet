@@ -62,6 +62,31 @@
 
         </RelativeLayout>
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/no_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="116dp"
+            android:layout_height="108dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/experince" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:lineSpacingExtra="3.4sp"
+            android:text="@string/no_experinec"
+            android:textColor="#b7b7b7"
+            android:textSize="11.3sp" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -71,7 +96,7 @@
         android:layout_marginBottom="50dp"
 
         android:scrollbars="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout

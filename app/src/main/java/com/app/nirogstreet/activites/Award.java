@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.nirogstreet.R;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class Award extends AppCompatActivity{
     CircularProgressBar circularProgressBar;
     TextView addQualificationTextView, addTextView;
+    LinearLayout no_list;
 
     SesstionManager sesstionManager;
     TextView titileText, skipTextView;
@@ -47,13 +49,18 @@ public class Award extends AppCompatActivity{
         if (userDetailModel != null && userDetailModel.getAwardsModels() != null && userDetailModel.getAwardsModels().size() > 0) {
             awardAdapter = new AwardAdapter(Award.this, userDetailModel.getAwardsModels(), userDetailModel);
             recyclerview.setAdapter(awardAdapter);
+            recyclerview.setVisibility(View.VISIBLE);
+            no_list.setVisibility(View.GONE);
         }else {
             if (awardAdapter != null) {
                 awardAdapter.notifyItemRemoved(0);
                 awardAdapter.notifyItemRangeChanged(0, 0);
-                recyclerview.setVisibility(View.GONE);
 
-            }}
+
+            }
+            recyclerview.setVisibility(View.GONE);
+            recyclerview.setVisibility(View.GONE);
+            no_list.setVisibility(View.VISIBLE);}
     }
 
     @Override
@@ -70,6 +77,8 @@ public class Award extends AppCompatActivity{
                 finish();
             }
         });
+        no_list=(LinearLayout)findViewById(R.id.no_list);
+
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerview.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(Award.this);

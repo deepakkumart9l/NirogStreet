@@ -231,9 +231,20 @@ String created_by;
 
     }
 
-    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels,String created_by) {
+    public String getReferral_code() {
+        return referral_code;
+    }
+
+    public void setReferral_code(String referral_code) {
+        this.referral_code = referral_code;
+    }
+
+    String referral_code;
+
+    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels,String created_by,String referral_code) {
         this.name = name;
         this.userId = userId;
+        this.referral_code=referral_code;
         this.profile_complete = profile_complete;
         this.specializationModels = specializationModels;
         this.servicesModels = servicesModels;

@@ -56,7 +56,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 public class OtpActivity extends AppCompatActivity {
     BroadcastReceiver receiver;
     ImageView backImageView;
-    String fname, email, pass, phone, otp = null;
+    String fname, email, pass, phone, otp = null,role,referral=null;
     TextView loginHeader, resendOtp, timerTextView;
     Button VerifyTv;
     SesstionManager sesstionManager;
@@ -83,7 +83,14 @@ public class OtpActivity extends AppCompatActivity {
         if (getIntent().hasExtra("fname")) {
             fname = getIntent().getStringExtra("fname");
         }
-
+if(getIntent().hasExtra("role"))
+{
+    role=getIntent().getStringExtra("role");
+}
+        if(getIntent().hasExtra("referral"))
+        {
+            referral=getIntent().getStringExtra("referral");
+        }
         if (getIntent().hasExtra("email")) {
             email = getIntent().getStringExtra("email");
         }
@@ -373,6 +380,17 @@ public class OtpActivity extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("User[password]", password));
                 pairs.add(new BasicNameValuePair("User[mobile]", mobile));
                 pairs.add(new BasicNameValuePair("otp", otp));
+                if(referral!=null)
+                {
+                    pairs.add(new BasicNameValuePair("User[referral]",referral));
+                }
+                if(role.equalsIgnoreCase("1"))
+                pairs.add(new BasicNameValuePair("user_type",AppUrl.DOCTOR_ROLE));
+                if(role.equalsIgnoreCase("2"))
+                {
+                    pairs.add(new BasicNameValuePair("user_type",AppUrl.STUDENT_ROLE));
+
+                }
 
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 //  httppost.setHeader("Authorization", "Basic " + base64EncodedCredentials);
@@ -397,7 +415,7 @@ public class OtpActivity extends AppCompatActivity {
                     JSONArray errorArray;
                     JSONObject dataJsonObject;
                     boolean status = false;
-                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    String auth_token = "",referral_code="" ,createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
                         try {
@@ -455,7 +473,10 @@ public class OtpActivity extends AppCompatActivity {
                                         if (userJsonObject.has("createdOn") && !userJsonObject.isNull("createdOn")) {
                                             createdOn = userJsonObject.getString("createdOn");
                                         }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type);
+                                        if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                            referral_code = userJsonObject.getString("referral_code");
+                                        }
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code);
                                         Intent intent = new Intent(OtpActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
