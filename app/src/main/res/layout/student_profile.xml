@@ -182,7 +182,57 @@
                         android:layout_marginTop="10dp"
                         android:orientation="vertical">
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content">
 
+                            <ImageView
+                                android:id="@+id/imgPublic_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginTop="3dp"
+
+                                android:src="@drawable/specilization" />
+
+                            <TextView
+                                android:id="@+id/QualificationTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="7dp"
+                                android:layout_marginRight="30dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_toRightOf="@+id/imgPublic_icon"
+                                android:text=""
+                                android:textColor="#202020" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/experince_rel"
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="8dp">
+
+                            <ImageView
+                                android:id="@+id/mail_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:paddingLeft="2dp"
+                                android:src="@drawable/work_experience" />
+
+                            <TextView
+                                android:id="@+id/yearOfExperienceTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="7dp"
+                                android:layout_toRightOf="@+id/mail_icon"
+                                android:textColor="#202020" />
+
+                        </RelativeLayout>
 
                         <RelativeLayout
                             android:id="@+id/birth_rel"
@@ -207,14 +257,37 @@
                             <ImageView
                                 android:id="@+id/editInfo"
                                 android:layout_width="30dp"
-                                android:layout_height="30dp"
+                                android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="-5dp"
-                                android:padding="9dp"
+                                android:padding="7dp"
                                 android:src="@drawable/edit" />
-
                         </RelativeLayout>
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <ImageView
+                                android:id="@+id/webSite_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:padding="2dp"
+                                android:src="@drawable/web" />
+
+                            <TextView
+                                android:id="@+id/WebTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="7dp"
+                                android:layout_toRightOf="@+id/webSite_icon"
+                                android:autoLink="web"
+                                android:inputType="textCapWords|textCapSentences"
+                                android:textColor="#202020"
+                                android:textColorLink="@color/cardbluebackground" />
+
+                        </RelativeLayout>
 
                         <RelativeLayout
                             android:id="@+id/phonelay"
@@ -305,7 +378,7 @@
                                 android:id="@+id/QualificationSectionTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Qualification"
+                                android:text="Add Qualification"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -335,6 +408,311 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginTop="10dp"
+                            android:visibility="visible"
+                            android:background="@color/textcolorgray" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:layout_marginTop="15dp"
+
+                            >
+
+                            <TextView
+                                android:id="@+id/Specilizationsevices"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add Interests"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/SpecilizationsevicesEdit"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
+
+                                android:src="@drawable/add"
+
+                                />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/sevices"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Services"
+                            android:visibility="gone"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/sevicesCsv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginTop="3dp" />
+
+                        <TextView
+                            android:id="@+id/specilizationTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Specialization"
+                            android:visibility="gone"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/spcilizationCsv"
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="3dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="15dp"
+                            android:visibility="gone"
+                            android:background="@color/textcolorgray" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/SpecializationSectionHeadingTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Qualification"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/SpecializationectionEdit"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_below="@+id/SpecializationSectionHeadingTv"
+
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/sepcilizationDetailTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Specilization"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:visibility="gone"></TextView>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/textcolorgray"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+android:visibility="gone"
+                            android:layout_marginTop="15dp">
+
+                            <TextView
+                                android:id="@+id/RegistrationSectionHeadingTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add Registration "
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:id="@+id/RegistrationSectionEdit"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
+
+
+                                android:src="@drawable/add"
+
+                                />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/regisrtaionLay"
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone"
+                            android:background="@color/textcolorgray"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+android:visibility="gone"
+                            android:layout_marginTop="15dp">
+
+                            <TextView
+                                android:id="@+id/clinicAddressHeading"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" Add Clinic"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/clinicAddressEdit"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
+
+                                android:src="@drawable/add"
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/clinicLay"
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+
+                            android:background="@color/textcolorgray"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+
+                                android:layout_weight="2">
+
+                                <TextView
+                                    android:id="@+id/consultaionFees"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Consultation Fee"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/allTaxes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Inclusive of taxes"
+                                    android:textColor="@color/black"
+
+                                    android:textSize="16sp"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/fee"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:text=""
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/textcolorgray"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+
+                            >
+
+                            <TextView
+                                android:id="@+id/ExperienceSectionTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add Experience"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:id="@+id/ExperinceEdit"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
+
+
+                                android:src="@drawable/add"
+
+                                />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/experinceLay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
                             android:background="@color/textcolorgray" />
 
 
@@ -349,7 +727,7 @@
                                 android:id="@+id/AwardSectionTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Award"
+                                android:text="Add Award"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -382,9 +760,50 @@
                             android:background="@color/textcolorgray" />
 
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+
+                            >
+
+                            <TextView
+                                android:id="@+id/MemberShipSectionTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add Membership"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/MemberShipEdit"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="-5dp"
+                                android:padding="9dp"
 
 
+                                android:src="@drawable/add"
 
+                                />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/memberLay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/white"
+                            android:visibility="visible" />
 
                     </LinearLayout>
 

@@ -23,8 +23,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -34,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,19 +81,24 @@ public class RegisterActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
     private int CONTACT_PERMISSION_CODE = 1;
     String email = null;
-    boolean clickEnamble=true;
+    boolean clickEnamble = true;
     String role;
+    String title = "1", category, gender;
+
+    Spinner spinnerTitle;
+    private static final String[] titleArray = {"Dr.", "Mr.", "Mrs.", "Ms."};
+
     ImageButton img_lock;
     RadioGroup roleSpinnerRadioGroup;
-RadioButton doctorRadioButton,studentRadioButton;
+    RadioButton doctorRadioButton, studentRadioButton;
     String fname = null, lname = null;
-    EditText firstNameEt, phoneEt, emailEt, setPass,referralEt;
+    EditText firstNameEt, phoneEt, emailEt, setPass, referralEt;
     String phoneNumber = null;
     LinearLayout signIn;
     TextView registerHeader;
     LinearLayout registerAs;
     Button sentTv;
-    private int passwordNotVisible=1;
+    private int passwordNotVisible = 1;
 
     CircularProgressBar circularProgressBar;
 
@@ -106,9 +115,8 @@ RadioButton doctorRadioButton,studentRadioButton;
     @Override
     protected void onResume() {
         super.onResume();
-        SesstionManager sesstionManager=new SesstionManager(RegisterActivity.this);
-        if(sesstionManager.isUserLoggedIn())
-        {
+        SesstionManager sesstionManager = new SesstionManager(RegisterActivity.this);
+        if (sesstionManager.isUserLoggedIn()) {
             finish();
         }
     }
@@ -191,6 +199,47 @@ RadioButton doctorRadioButton,studentRadioButton;
         }
     }
 
+    private void initSpinnerScrollingTitle() {
+        spinnerTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != -1) {
+                    title = position + 1 + "";
+
+                } else
+                    title = "-1";
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                R.layout.spiner_item, titleArray) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+
+
+                return v;
+            }
+
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+
+
+                return v;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTitle.setAdapter(adapter);
+        //  spinnerTitle.setHint("Select Title");
+        //spinnerTitle.setPaddingSafe(0, 0, 0, 0);
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,7 +249,9 @@ RadioButton doctorRadioButton,studentRadioButton;
         doctorRadioButton = (RadioButton) findViewById(R.id.doctor);
         roleSpinnerRadioGroup = (RadioGroup) findViewById(R.id.genderSpinner);
         studentRadioButton = (RadioButton) findViewById(R.id.student);
-        referralEt=(EditText)findViewById(R.id.referalcode);
+        referralEt = (EditText) findViewById(R.id.referalcode);
+        spinnerTitle = (Spinner) findViewById(R.id.titleLay);
+
         img_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,8 +334,8 @@ RadioButton doctorRadioButton,studentRadioButton;
                 if (NetworkUtill.isNetworkAvailable(RegisterActivity.this)) {
                     if (validation()) {
                         if (checkWriteExternalPermission()) {
-                            if(clickEnamble) {
-                                clickEnamble=false;
+                            if (clickEnamble) {
+                                clickEnamble = false;
                                 sendOtpAsyncTask = new SendOtpAsyncTask(phoneEt.getText().toString(), setPass.getText().toString(), firstNameEt.getText().toString(), emailEt.getText().toString());
                                 sendOtpAsyncTask.execute();
                             }
@@ -297,6 +348,8 @@ RadioButton doctorRadioButton,studentRadioButton;
                 }
             }
         });
+        initSpinnerScrollingTitle();
+
     }
 
     private boolean checkWriteExternalPermission() {
@@ -319,7 +372,7 @@ RadioButton doctorRadioButton,studentRadioButton;
 
     public class SendOtpAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
-        String mobile, email, fname, lname, password,referral=null;
+        String mobile, email, fname, lname, password, referral = null;
         CircularProgressBar bar;
 
         JSONObject jo;
@@ -345,9 +398,8 @@ RadioButton doctorRadioButton,studentRadioButton;
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
-            if(referralEt.getText().toString().length()>0)
-            {
-                referral=referralEt.getText().toString();
+            if (referralEt.getText().toString().length() > 0) {
+                referral = referralEt.getText().toString();
             }
             super.onPreExecute();
         }
@@ -378,8 +430,8 @@ RadioButton doctorRadioButton,studentRadioButton;
                 pairs.add(new BasicNameValuePair("User[lname]", lname));
                 pairs.add(new BasicNameValuePair("User[email]", email));
                 pairs.add(new BasicNameValuePair("User[password]", password));
-                if(referral!=null)
-                pairs.add(new BasicNameValuePair("User[referral]",referral));
+                if (referral != null)
+                    pairs.add(new BasicNameValuePair("User[referral]", referral));
                 pairs.add(new BasicNameValuePair("is_registration", "1"));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
@@ -407,7 +459,7 @@ RadioButton doctorRadioButton,studentRadioButton;
                     JSONArray errorArray;
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
-                        clickEnamble=true;
+                        clickEnamble = true;
 
                         if (dataJsonObject.has("status") && !dataJsonObject.isNull("status")) {
                             status = dataJsonObject.getBoolean("status");
@@ -421,11 +473,11 @@ RadioButton doctorRadioButton,studentRadioButton;
                                 Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
                                 intent.putExtra("fname", firstNameEt.getText().toString());
                                 intent.putExtra("otp", otp);
-                                intent.putExtra("role",role);
-                                if(referralEt.getText().toString().length()>0)
-                                {
-                                    intent.putExtra("referral",referralEt.getText().toString());
+                                intent.putExtra("role", role);
+                                if (referralEt.getText().toString().length() > 0) {
+                                    intent.putExtra("referral", referralEt.getText().toString());
                                 }
+                                intent.putExtra("title", title);
                                 intent.putExtra("email", emailEt.getText().toString().trim());
                                 intent.putExtra("phone", phoneEt.getText().toString());
                                 intent.putExtra("password", setPass.getText().toString());
@@ -446,7 +498,7 @@ RadioButton doctorRadioButton,studentRadioButton;
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(RegisterActivity.this,R.string.wrong,Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this, R.string.wrong, Toast.LENGTH_LONG).show();
             }
 
 
@@ -454,6 +506,7 @@ RadioButton doctorRadioButton,studentRadioButton;
     }
 
     protected boolean validation() {
+
         if (firstNameEt.getText().toString().length() == 0) {
             Toast.makeText(RegisterActivity.this, "Enter name", Toast.LENGTH_SHORT).show();
             return false;
@@ -472,11 +525,12 @@ RadioButton doctorRadioButton,studentRadioButton;
         } else if (setPass.getText().toString().length() == 0) {
             Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
             return false;
-        }int radioButtonID = roleSpinnerRadioGroup.getCheckedRadioButtonId();
+        }
+        int radioButtonID = roleSpinnerRadioGroup.getCheckedRadioButtonId();
         View radioButton = roleSpinnerRadioGroup.findViewById(radioButtonID);
         int idx = roleSpinnerRadioGroup.indexOfChild(radioButton);
         if (idx == -1) {
-          //  Toast.makeText(RegisterActivity.this, R.string.select_gender, Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(RegisterActivity.this, R.string.select_gender, Toast.LENGTH_SHORT).show();
 
             return false;
         } else {
@@ -486,7 +540,10 @@ RadioButton doctorRadioButton,studentRadioButton;
             Toast.makeText(RegisterActivity.this, "Enter valid password", Toast.LENGTH_SHORT).show();
             return false;
         }*/
-
+        if (title.equalsIgnoreCase("-1")) {
+            Toast.makeText(RegisterActivity.this, R.string.seletct_title, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

@@ -148,7 +148,9 @@ public class PostDetailActivity extends Activity {
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
                     if (editText.getText() != null && editText.getText().length() > 0) {
-                        postCommentAsyncTask = new PostCommentAsyncTask(feedId, editText.getText().toString());
+                        String str=editText.getText().toString();
+                        editText.setText("");
+                        postCommentAsyncTask = new PostCommentAsyncTask(feedId,str);
                         postCommentAsyncTask.execute();
                     } else {
                         Toast.makeText(PostDetailActivity.this, "write something", Toast.LENGTH_LONG).show();

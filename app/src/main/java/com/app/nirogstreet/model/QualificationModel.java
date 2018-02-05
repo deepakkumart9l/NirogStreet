@@ -120,10 +120,32 @@ public class QualificationModel implements Serializable {
     String passingYear;
     String upladedDoc;
 
-    public QualificationModel(String clgName, String id, String userId, String course_name, String type, String university, String created_on, String updated_on, String updated_by, String status, String degreeName, String passingYear, String upladedDoc) {
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public String getSatrt_year() {
+        return satrt_year;
+    }
+
+    public void setSatrt_year(String satrt_year) {
+        this.satrt_year = satrt_year;
+    }
+
+    String specialization;
+    String satrt_year;
+
+
+    public QualificationModel(String clgName, String id, String userId, String course_name, String type, String university, String created_on, String updated_on, String updated_by, String status, String degreeName, String passingYear, String upladedDoc,String specialization,String start_year) {
         this.clgName = clgName;
         this.id = id;
         this.userId = userId;
+        this.specialization=specialization;
+        this.satrt_year=start_year;
         this.course_name = course_name;
         this.type = type;
         this.university = university;

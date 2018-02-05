@@ -336,7 +336,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="9dp"
-                android:text="Select Dob"
+                android:text="Select Date of Birth"
                 android:textColor="@color/black"
                 android:textSize="11dp"
                 android:visibility="visible" />
@@ -351,7 +351,7 @@
                 android:background="@drawable/round_edittext"
                 android:drawableTint="@color/textcolorgray"
                 android:focusable="false"
-                android:hint="DOB"
+                android:hint="Date of Birth"
 
                 android:inputType="text|textNoSuggestions"
                 android:maxLines="1"

@@ -172,7 +172,13 @@ public class Dr_Qualifications extends AppCompatActivity {
 
             holder.clgNameTv.setText(qualificationModel.getDegreeName());
             holder.degreeNameTv.setText(qualificationModel.getClgName());
-            holder.passinYearTv.setText(qualificationModel.getPassingYear());
+            if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
+            {
+                holder.passinYearTv.setText(qualificationModel.getSatrt_year()+ " - "+qualificationModel.getPassingYear());
+
+            }else {
+                holder.passinYearTv.setText(qualificationModel.getPassingYear());
+            }
             if(qualificationModel.getUpladedDoc()!=null&&!qualificationModel.getUpladedDoc().equalsIgnoreCase(""))
             {
                 String s[] = qualificationModel.getUpladedDoc().split("documents/");

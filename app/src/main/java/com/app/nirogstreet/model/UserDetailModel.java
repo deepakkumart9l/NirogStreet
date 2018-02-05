@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class UserDetailModel implements Serializable {
     String userId;
-String created_by;
+    String created_by;
 
     public String getCreated_by() {
         return created_by;
@@ -227,6 +227,16 @@ String created_by;
 
     int profile_complete;
 
+    public String getUser_Type() {
+        return user_Type;
+    }
+
+    public void setUser_Type(String user_Type) {
+        this.user_Type = user_Type;
+    }
+
+    String user_Type;
+
     public UserDetailModel() {
 
     }
@@ -241,14 +251,15 @@ String created_by;
 
     String referral_code;
 
-    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels,String created_by,String referral_code) {
+    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels, String created_by, String referral_code, String user_Type) {
         this.name = name;
         this.userId = userId;
-        this.referral_code=referral_code;
+        this.referral_code = referral_code;
+        this.user_Type = user_Type;
         this.profile_complete = profile_complete;
         this.specializationModels = specializationModels;
         this.servicesModels = servicesModels;
-        this.created_by=created_by;
+        this.created_by = created_by;
         this.memberShipModels = memberShipModels;
         this.clinicDetailModels = clinicDetailModels;
         this.registrationAndDocumenModels = registrationAndDocumenModels;

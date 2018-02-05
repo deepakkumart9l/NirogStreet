@@ -44,6 +44,7 @@ import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.PathUtil;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -82,13 +83,16 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     int position = -1;
     ImageView backImageView;
     String docpath = null;
-    boolean isQualificationTouched=false;
+    boolean isQualificationTouched = false;
     SesstionManager sesstionManager;
     AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask;
     DeleteQualificationAsynctask deleteQualificationAsynctask;
-
+    TextView strt_year;
+    EditText specialization_et;
     LinearLayout updateDocLinearLayout;
+    boolean isStrtClicked = false, isPassingClicked = false;
     RelativeLayout EditDocRelativeLayout;
+    EditText strtyear;
     private static final int RESULT_CODE = 1;
     ImageView deleteImageView;
     TextView docNameTv, uploadDoctv, add;
@@ -98,7 +102,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     UserDetailModel userDetailModel;
 
     CircularProgressBar circularProgressBar;
-    TextView title_side_left, saveTv;
+    TextView title_side_left, saveTv, specialization_txt;
     private ArrayList<SpecializationModel> multipleSelectedItemModels;
     private String authToken, userId;
 
@@ -126,15 +130,17 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(intent, "Select Documents"), REQUEST_CODE);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.print(requestCode);
         if (requestCode == 3) {
-         //   selectImage();
+            //   selectImage();
             openFile();
         }
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +148,10 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        specialization_txt = (TextView) findViewById(R.id.specialization_txt);
+        specialization_et = (EditText) findViewById(R.id.specialization_et);
+        strt_year = (TextView) findViewById(R.id.strt_year);
+        strtyear = (EditText) findViewById(R.id.strtyear);
         deleteImageView = (ImageView) findViewById(R.id.delete);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         updateDocLinearLayout = (LinearLayout) findViewById(R.id.uploadDoc);
@@ -182,23 +192,30 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
         saveTv = (TextView) findViewById(R.id.saveTv);
 
-
+        if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+            strt_year.setVisibility(View.VISIBLE);
+            strtyear.setVisibility(View.VISIBLE);
+        }
         yearEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isStrtClicked = false;
+                isPassingClicked = true;
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(yearEditText.getWindowToken(), 0);
                 show();
             }
         });
 
-        yearEditText.setOnTouchListener(new View.OnTouchListener() {
+
+        strtyear.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
+                isStrtClicked = true;
+                isPassingClicked = false;
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(yearEditText.getWindowToken(), 0);
                 show();
-                return false;
             }
         });
         if (getIntent().hasExtra("pos")) {
@@ -208,8 +225,8 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         clgEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isQualificationTouched) {
-                    isQualificationTouched=true;
+                if (!isQualificationTouched) {
+                    isQualificationTouched = true;
                     Intent intent = new Intent(EditQualificationDetailOrAddQualificationsDetails.this, SingleSelectQualifications.class);
                     startActivityForResult(intent, RESULT_CODE);
                 }
@@ -237,6 +254,19 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                 EditDocRelativeLayout.setVisibility(View.GONE);
                 updateDocLinearLayout.setVisibility(View.VISIBLE);
             }
+            if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
+            {
+                strtyear.setVisibility(View.VISIBLE);
+                strt_year.setVisibility(View.VISIBLE);
+                if(qualificationModel.getSatrt_year()!=null)
+                strtyear.setText(qualificationModel.getSatrt_year());
+                if(qualificationModel.getSpecialization()!=null)
+                {
+                    specialization_et.setVisibility(View.VISIBLE);
+                    specialization_txt.setVisibility(View.VISIBLE);
+                    specialization_et.setText(qualificationModel.getSpecialization());
+                }
+            }
             title_side_left.setText("Edit Qualification");
             sepcialization.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -257,7 +287,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                     if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
 
 
-                        deleteQualificationAsynctask= new DeleteQualificationAsynctask( qualificationModel.getId());
+                        deleteQualificationAsynctask = new DeleteQualificationAsynctask(qualificationModel.getId());
                         deleteQualificationAsynctask.execute();
 
 
@@ -320,7 +350,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     @Override
     protected void onResume() {
         super.onResume();
-        isQualificationTouched=false;
+        isQualificationTouched = false;
 
     }
 
@@ -381,6 +411,14 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             if (data != null) {
                 String s = data.getStringExtra("friendsCsv");
                 clgEt.setText(s);
+                if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
+                    if (s.equalsIgnoreCase("P.hd") && s.equalsIgnoreCase("MS")) {
+                        specialization_et.setVisibility(View.VISIBLE);
+                        specialization_txt.setVisibility(View.VISIBLE);
+                    } else {
+                        specialization_et.setVisibility(View.GONE);
+                        specialization_txt.setVisibility(View.GONE);
+                    }
                 System.out.print(s);
                 multipleSelectedItemModels = (ArrayList<SpecializationModel>) data.getSerializableExtra("list");
             }
@@ -403,8 +441,10 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 System.out.print(year);
                 isVisible = true;
-
-                yearEditText.setText(year + "");
+                if (isPassingClicked)
+                    yearEditText.setText(year + "");
+                if (isStrtClicked)
+                    strtyear.setText(year + "");
             }
         });
         if (isVisible) {
@@ -515,6 +555,20 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Specialization.", Toast.LENGTH_SHORT).show();
             return false;
         }*/
+        if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+            if (strtyear.getText().toString().length() == 0) {
+                Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Start Year", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (yearEditText.getText().toString().length() == 0) {
+                Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Select Passing Year", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (Integer.parseInt(strtyear.getText().toString()) > Integer.parseInt(yearEditText.getText().toString())) {
+                Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, "Invalid Year", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
         if (yearEditText.getText().toString().length() == 0) {
             Toast.makeText(EditQualificationDetailOrAddQualificationsDetails.this, R.string.year, Toast.LENGTH_SHORT).show();
             return false;
@@ -530,6 +584,8 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
         JSONObject jo;
         HttpClient client;
+        String strt_yr = null;
+        String specilisation = null;
 
         public void cancelAsyncTask() {
             if (client != null && !isCancelled()) {
@@ -550,6 +606,12 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
+            if (strtyear.getVisibility() == View.VISIBLE) {
+                strt_yr = strtyear.getText().toString();
+            }
+            if (specialization_et.getVisibility() == View.VISIBLE) {
+                specilisation = specialization_et.getText().toString();
+            }
 
             super.onPreExecute();
         }
@@ -577,6 +639,10 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                 entityBuilder.addTextBody("userID", userId);
                 entityBuilder.addTextBody("Qualification[college]", university);
                 entityBuilder.addTextBody("Qualification[year]", year);
+                if (strt_yr != null)
+                    entityBuilder.addTextBody("Qualification[start_year]", strt_yr);
+                if (specilisation != null)
+                    entityBuilder.addTextBody("Qualification[specialization]", specilisation);
                 entityBuilder.addTextBody("Qualification[degree]", qualification);
                 if (position != -1)
                     entityBuilder.addTextBody("Qualification[id]", id);
@@ -627,8 +693,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
@@ -748,8 +813,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {
@@ -760,7 +824,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                                     userDetailModel.setQualificationModels(qualificationModels);
                                     ApplicationSingleton.setUserDetailModel(userDetailModel);
                                     ApplicationSingleton.setIsQualificationUpdated(true);
-                                }else {
+                                } else {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
                                     ArrayList<QualificationModel> qualificationModels = null;
@@ -791,9 +855,9 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     @Override
     protected void onPause() {
         super.onPause();
-        if(addOrUpdateQualificationAsynctask!=null&&!addOrUpdateQualificationAsynctask.isCancelled())
+        if (addOrUpdateQualificationAsynctask != null && !addOrUpdateQualificationAsynctask.isCancelled())
             addOrUpdateQualificationAsynctask.cancelAsyncTask();
-        if(deleteQualificationAsynctask!=null&&!deleteQualificationAsynctask.isCancelled())
+        if (deleteQualificationAsynctask != null && !deleteQualificationAsynctask.isCancelled())
             deleteQualificationAsynctask.cancelAsyncTask();
     }
 }

@@ -110,7 +110,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     String title, category, gender;
     EditText editTextDob, editTextemail, editTextName, editTextCity, editTextYearOfExpeicence, editTextWebsite, editTextAbout, editTextContactNumber;
     File photoFile;
-    private static final String[] titleArray = {"Dr/Mr", "Dr/Mrs", "Dr/Miss"};
+    private static final String[] titleArray = {"Dr.", "Mr.", "Mrs.","Ms."};
     private static final String[] genderArray = {"Male", "Female"};
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
@@ -128,7 +128,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     String mCurrentPhotoPath;
     RadioButton maleRadioButton, femaleRadioButton;
     Spinner spinnerTitle;
-    Spinner  spinnerGender, spinnerCategory;
+    Spinner spinnerGender, spinnerCategory;
     private ArrayAdapter<String> adapterTitle, adapterGender, adapterCategory;
     UserDetailAsyncTask userDetailAsyncTask;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
@@ -138,6 +138,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
     private int SELECT_FILE = 999;
     TextView title_side_left;
+    TextView year_text;
     SesstionManager sesstionManager;
 
     @Override
@@ -152,6 +153,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
+        year_text = (TextView) findViewById(R.id.year_text);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         editTextemail = (EditText) findViewById(R.id.email);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -281,6 +283,11 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             userDetailAsyncTask.execute();
         } else {
             NetworkUtill.showNoInternetDialog(CreateDrProfile.this);
+        }
+        if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+            editTextYearOfExpeicence.setVisibility(View.GONE);
+            year_text.setVisibility(View.GONE);
+
         }
     }
 
@@ -535,7 +542,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             if (data != null) {
                 String s = data.getStringExtra("friendsCsv");
 
-                editTextCity .setText(s);
+                editTextCity.setText(s);
                 System.out.print(s);
             }
         }
@@ -619,7 +626,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != -1) {
                     title = position + 1 + "";
-                    if (position == 0) {
+                    if (position == 0||position==1) {
                         maleRadioButton.setChecked(true);
                     } else {
                         femaleRadioButton.setChecked(true);
@@ -654,7 +661,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTitle.setAdapter(adapter);
-      //  spinnerTitle.setHint("Select Title");
+        //  spinnerTitle.setHint("Select Title");
         //spinnerTitle.setPaddingSafe(0, 0, 0, 0);
 
     }
@@ -803,8 +810,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         ;
 
                                     }
-                                    if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                    {
+                                    if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                         ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                     }
                                     if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
@@ -827,7 +833,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
                                     }
                                     sesstionManager.updateProfile(ApplicationSingleton.getUserDetailModel().getProfile_pic());
-                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(),"", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE),sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE));
+                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(), "", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE), sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE));
 
                                     if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
                                         ApplicationSingleton.getUserDetailModel().setCategory(userJsonObject.getString("category"));
@@ -1015,13 +1021,16 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         editTextAbout.setText(userDetailModel.getAbout());
                                     }
                                     if (userDetailModel.getTitle() != null && !userDetailModel.getTitle().equalsIgnoreCase("")) {
-                                        if (userDetailModel.getTitle().equalsIgnoreCase("DR/Mr")) {
+                                        if (userDetailModel.getTitle().equalsIgnoreCase("1")) {
                                             spinnerTitle.setSelection(0);
-                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("DR/Mrs")) {
+                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("2")) {
                                             spinnerTitle.setSelection(1);
 
-                                        } else {
+                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("3")){
                                             spinnerTitle.setSelection(2);
+                                        }else {
+                                            spinnerTitle.setSelection(3);
+
                                         }
                                     }
                                     if (userDetailModel.getCity() != null) {
@@ -1067,13 +1076,15 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             Toast.makeText(CreateDrProfile.this, R.string.enter_City, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (editTextYearOfExpeicence.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
-            Toast.makeText(CreateDrProfile.this, "Experience cannot be greater than 100", Toast.LENGTH_SHORT).show();
-            return false;
+        if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
+            if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE) && editTextYearOfExpeicence.getText().toString().length() == 0) {
+                Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
+                Toast.makeText(CreateDrProfile.this, "Experience cannot be greater than 100", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         if (editTextDob.getText().toString().length() == 0) {
             Toast.makeText(CreateDrProfile.this, R.string.DOB, Toast.LENGTH_SHORT).show();

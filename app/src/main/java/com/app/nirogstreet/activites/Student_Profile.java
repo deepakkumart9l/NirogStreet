@@ -18,7 +18,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -26,18 +25,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -45,25 +40,20 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
-import com.app.nirogstreet.fragments.About_Fragment;
 import com.app.nirogstreet.model.ClinicDetailModel;
-import com.app.nirogstreet.model.Image;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
-import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
-import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -90,10 +80,10 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Preeti on 22-08-2017.
+ * Created by Preeti on 05-02-2018.
  */
 
-public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class Student_Profile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
     LogoutAsyncTask logoutAsyncTask;
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.5f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.5f;
@@ -209,7 +199,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.doctor_detail);
+        setContentView(R.layout.student_profile);
         findViews();
 
         toolbar.setTitle("");
@@ -248,7 +238,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                     if (!UserId.equalsIgnoreCase("")) {
 
                     } else {
-                        Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
+                        Intent intent = new Intent(Student_Profile.this, CreateDrProfile.class);
                         intent.putExtra("userModel", (Serializable) userDetailModel);
                         startActivity(intent);
                     }
@@ -326,7 +316,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             consultationFeesHeading = (TextView) findViewById(R.id.consultaionFees);
             allTaxes = (TextView) findViewById(R.id.allTaxes);
             circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-            sesstionManager = new SesstionManager(Dr_Profile.this);
+            sesstionManager = new SesstionManager(Student_Profile.this);
 
             if (sesstionManager.isUserLoggedIn() && UserId.equalsIgnoreCase("")) {
                 authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -343,11 +333,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
 
             }
-            if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
+            if (NetworkUtill.isNetworkAvailable(Student_Profile.this)) {
                 userDetailAsyncTask = new UserDetailAsyncTask();
                 userDetailAsyncTask.execute();
             } else {
-                NetworkUtill.showNoInternetDialog(Dr_Profile.this);
+                NetworkUtill.showNoInternetDialog(Student_Profile.this);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -383,9 +373,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
     public void checkPermission() {
-        if (ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(Dr_Profile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(Student_Profile.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Student_Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Student_Profile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
             selectImage();
         } else {
@@ -396,7 +386,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
     private void selectImage() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Dr_Profile.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Student_Profile.this);
 
 
         if (selectedImagePath == null)
@@ -446,7 +436,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                     } else if (items[item].equals("Remove")) {
                         dialog.dismiss();
                         selectedImagePath = null;
-                        Glide.with(Dr_Profile.this)
+                        Glide.with(Student_Profile.this)
                                 .load(R.drawable.user)
                                 .into(circleImageView);
                     } else if (items[item].equals("Cancel")) {
@@ -475,7 +465,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = new ImageProcess(Dr_Profile.this).getOutputMediaFile("");
+        photoFile = new ImageProcess(Student_Profile.this).getOutputMediaFile("");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 try {
@@ -485,7 +475,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                     Log.e("ex", "" + ex);
                     // Error occurred while creating the File
                 }
-                Uri photoURI = FileProvider.getUriForFile(Dr_Profile.this,
+                Uri photoURI = FileProvider.getUriForFile(Student_Profile.this,
                         "com.app.nirogstreet.fileprovider",
                         photoFile);
                 Log.e("photoURI", "" + photoURI);
@@ -499,7 +489,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = new ImageProcess(Dr_Profile.this).getOutputMediaFile("");
+        photoFile = new ImageProcess(Student_Profile.this).getOutputMediaFile("");
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -526,11 +516,11 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 Uri uri = Uri.fromFile(photoFile);
 
                 try {
-                    ImageProcess obj = new ImageProcess(Dr_Profile.this);
+                    ImageProcess obj = new ImageProcess(Student_Profile.this);
                     mCurrentPhotoPath = obj.getPath(uri);
                     selectedImagePath = mCurrentPhotoPath;
                     File fff = new File(selectedImagePath);
-                    Glide.with(Dr_Profile.this)
+                    Glide.with(Student_Profile.this)
                             .load(fff) // Uri of the picture
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -549,8 +539,8 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 circleImageView.setImageBitmap(selectedImage);
-                Uri selectedImagePath1 = getImageUri(Dr_Profile.this, selectedImage);
-                selectedImagePath = getPath(selectedImagePath1, Dr_Profile.this);
+                Uri selectedImagePath1 = getImageUri(Student_Profile.this, selectedImage);
+                selectedImagePath = getPath(selectedImagePath1, Student_Profile.this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -664,7 +654,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                     errorArray = dataJsonObject.getJSONArray("message");
                                     for (int i = 0; i < errorArray.length(); i++) {
                                         String error = errorArray.getJSONObject(i).getString("error");
-                                        Toast.makeText(Dr_Profile.this, error, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Student_Profile.this, error, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             } else {
@@ -672,16 +662,16 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
                                 updateContactInfo();
                                 updateQualification();
-                                updateRegistrationAndDocument();
+                               // updateRegistrationAndDocument();
                                 updateExperience();
-                                updateClinicInfo();
                                 updateAwards();
                                 updateSpecilizationAndService();
                                 updateMemberShip();
                                 SpecilizationsevicesEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, SpecilizationAndService.class);
+                                        Intent intent = new Intent(Student_Profile.this, SpecilizationAndService.class);
+                                        intent.putExtra("student_intrests",true);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -689,7 +679,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 editInfo.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
+                                        Intent intent = new Intent(Student_Profile.this, CreateDrProfile.class);
                                         intent.putExtra("userModel", (Serializable) userDetailModel);
                                         startActivity(intent);
                                     }
@@ -697,7 +687,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 QualificationSectionEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, Dr_Qualifications.class);
+                                        Intent intent = new Intent(Student_Profile.this, Dr_Qualifications.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -705,7 +695,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 RegistrationSectionEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, RegistrationAndDocuments.class);
+                                        Intent intent = new Intent(Student_Profile.this, RegistrationAndDocuments.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -713,7 +703,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 ExperinceEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, Experience.class);
+                                        Intent intent = new Intent(Student_Profile.this, Experience.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -721,7 +711,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 MemberShipEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, MemberShip.class);
+                                        Intent intent = new Intent(Student_Profile.this, MemberShip.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -729,7 +719,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 AwardEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, Award.class);
+                                        Intent intent = new Intent(Student_Profile.this, Award.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -737,7 +727,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 clinicAddressEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(Dr_Profile.this, AllClinicListing.class);
+                                        Intent intent = new Intent(Student_Profile.this, AllClinicListing.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -767,10 +757,10 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         if (ApplicationSingleton.isContactInfoUpdated()) {
             updateContactInfo();
         }
-        if (ApplicationSingleton.isClinicUpdated()) {
+       /* if (ApplicationSingleton.isClinicUpdated()) {
             updateClinicInfo();
             ApplicationSingleton.setIsClinicUpdated(false);
-        }
+        }*/
         if (ApplicationSingleton.isMemberShipUpdated()) {
             updateMemberShip();
             ApplicationSingleton.setIsMemberShipUpdated(false);
@@ -800,43 +790,33 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
     private void updateSpecilizationAndService() {
         if (userDetailModel != null) {
-            if (userDetailModel.getSpecializationModels().size() == 0 && userDetailModel.getServicesModels().size() == 0) {
+            if (userDetailModel.getSpecializationModels().size() == 0 ) {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
 
             } else {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
-                SpecilizationsevicesTextView.setText("Services & Specialization");
+                SpecilizationsevicesTextView.setText("Interests");
 
             }
             if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
                 spcilizationCsv.setText(getSelectedNameCsv());
-                specilizationTv.setVisibility(View.VISIBLE);
+               // specilizationTv.setVisibility(View.VISIBLE);
                 spcilizationCsv.setVisibility(View.VISIBLE);
             } else {
                 spcilizationCsv.setVisibility(View.GONE);
                 specilizationTv.setVisibility(View.GONE);
             }
-            if (userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() != 0) {
-                sevicesCsvTextView.setText(getSelectedServicesCsv());
-                QualificationTv.setText(getSelectedNameCsv());
-                imgPublic_icon.setVisibility(View.VISIBLE);
-                sevicesCsvTextView.setVisibility(View.VISIBLE);
-                sevicesTextView.setVisibility(View.VISIBLE);
 
-            } else {
-                sevicesCsvTextView.setVisibility(View.GONE);
-                sevicesTextView.setVisibility(View.GONE);
-            }
 
         }
         if (!UserId.equalsIgnoreCase("")) {
-            SpecilizationsevicesTextView.setText("Services & Specialization");
+            SpecilizationsevicesTextView.setText("Interests");
 
         }
     }
 
     private void setMoreMenu(int i) {
-        PopupMenu popup = new PopupMenu(Dr_Profile.this, logout);
+        PopupMenu popup = new PopupMenu(Student_Profile.this, logout);
 
         popup.getMenuInflater().inflate(R.menu.logout, popup.getMenu());
 
@@ -845,15 +825,15 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.logout:
-                        if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
+                        if (NetworkUtill.isNetworkAvailable(Student_Profile.this)) {
                             logoutAsyncTask = new LogoutAsyncTask("");
                             logoutAsyncTask.execute();
                         } else {
-                            NetworkUtill.showNoInternetDialog(Dr_Profile.this);
+                            NetworkUtill.showNoInternetDialog(Student_Profile.this);
                         }
                         break;
                     case R.id.refer:
-                        Intent intent = new Intent(Dr_Profile.this, ReferalActivity.class);
+                        Intent intent = new Intent(Student_Profile.this, ReferalActivity.class);
                         startActivity(intent);
                 }
                 return false;
@@ -871,7 +851,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
 
             if (userDetailModel.getExperinceModels() == null || userDetailModel.getExperinceModels().size() == 0) {
-                ExperienceSectionTv.setText("Add a Experience");
+                ExperienceSectionTv.setText("Add Experience");
                 ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
                 experinceLay.removeAllViews();
 
@@ -926,7 +906,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
 
             if (userDetailModel.getMemberShipModels() == null || userDetailModel.getMemberShipModels().size() == 0) {
-                MemberShipSectionTv.setText("Add a Membership");
+                MemberShipSectionTv.setText("Add Membership");
                 memberLay.removeAllViews();
 
                 MemberShipEdit.setImageResource(R.drawable.add);
@@ -979,7 +959,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             if (userDetailModel.getQualificationModels() == null || userDetailModel.getQualificationModels().size() == 0) {
                 qualifictionLinearLayout.removeAllViews();
 
-                QualificationSectionTv.setText("Add a Qualification");
+                QualificationSectionTv.setText("Add Qualification");
                 QualificationSectionEdit.setImageResource(R.drawable.add);
 
             } else {
@@ -1000,8 +980,13 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
+                        if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
+                        {
+                            year.setText(userDetailModel.getQualificationModels().get(i).getSatrt_year()+ " - "+userDetailModel.getQualificationModels().get(i).getPassingYear());
 
-                        year.setText(userDetailModel.getQualificationModels().get(i).getPassingYear());
+                        }else {
+                            year.setText(userDetailModel.getQualificationModels().get(i).getPassingYear());
+                        }
                         degreename.setText(userDetailModel.getQualificationModels().get(i).getClgName());
                         textView.setText(userDetailModel.getQualificationModels().get(i).getDegreeName());
                         v.setLayoutParams(params);
@@ -1030,7 +1015,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
 
             if (userDetailModel.getAwardsModels() == null || userDetailModel.getAwardsModels().size() == 0) {
-                AwardSectionTv.setText("Add a Award");
+                AwardSectionTv.setText("Add Award");
                 AwardEdit.setImageResource(R.drawable.add);
                 awardLay.removeAllViews();
 
@@ -1095,6 +1080,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                     nameTv.setText(userDetailModel.getName());
                 } else {
+
                     nameTv.setText("Dr. " + userDetailModel.getName());
 
                 }
@@ -1144,7 +1130,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
 
             if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
-                Picasso.with(Dr_Profile.this)
+                Picasso.with(Student_Profile.this)
                         .load(userDetailModel.getProfile_pic())
                         .placeholder(R.drawable.user)
                         .error(R.drawable.user)
@@ -1162,7 +1148,8 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         }
 
         if (userDetailModel.getClinicDetailModels() == null || userDetailModel.getClinicDetailModels().size() == 0) {
-            clinicAddressHeading.setText("Add a Clinic");
+            clinicAddressHeading.setText("Add  Clinic");
+            clinicAddressEdit.setVisibility(View.GONE);
             clinicAddressEdit.setImageResource(R.drawable.add);
             clinicLay.removeAllViews();
 
@@ -1273,7 +1260,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
             }
 
             if (userDetailModel.getRegistrationAndDocumenModels() == null || userDetailModel.getRegistrationAndDocumenModels().size() == 0) {
-                RegistrationSectionHeadingTv.setText("Add a Registration");
+                RegistrationSectionHeadingTv.setText("Add Registration");
                 RegistrationSectionEdit.setImageResource(R.drawable.add);
                 regisrtaionLay.removeAllViews();
 
@@ -1353,7 +1340,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                         if (status) {
                             sesstionManager.logoutUser();
                             sesstionManager.languageLogOut();
-                            Intent intent = new Intent(Dr_Profile.this, LoginActivity.class);
+                            Intent intent = new Intent(Student_Profile.this, LoginActivity.class);
                             intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
@@ -1399,3 +1386,4 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     }
 
 }
+

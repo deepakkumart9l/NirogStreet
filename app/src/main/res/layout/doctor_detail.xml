@@ -376,7 +376,7 @@
                                 android:id="@+id/QualificationSectionTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Qualification"
+                                android:text="Add Qualification"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -419,7 +419,7 @@
                                 android:id="@+id/Specilizationsevices"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Services &amp; Specialization"
+                                android:text="Add Services &amp; Specialization"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -526,7 +526,7 @@
                                 android:id="@+id/RegistrationSectionHeadingTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Registration "
+                                android:text="Add Registration "
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -568,7 +568,7 @@
                                 android:id="@+id/clinicAddressHeading"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" Add a Clinic"
+                                android:text=" Add Clinic"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -670,7 +670,7 @@
                                 android:id="@+id/ExperienceSectionTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Experience"
+                                android:text="Add Experience"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -714,7 +714,7 @@
                                 android:id="@+id/AwardSectionTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Award"
+                                android:text="Add Award"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -758,7 +758,7 @@
                                 android:id="@+id/MemberShipSectionTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Membership"
+                                android:text="Add Membership"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 

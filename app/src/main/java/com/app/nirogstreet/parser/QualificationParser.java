@@ -24,8 +24,9 @@ public class QualificationParser {
                     String QualificationId = null;
                     String userId = null, course_name = null, type = null, university = null, created_on = null, updated_on = null, updated_by = null, status = null;
 
-
+String specialization=null;
                     String degreeName = null;
+                    String start_year=null;
                     String passingYear = null;
                     String upladedDoc = null;
                     JSONObject qualificationJsonObject = qualificationJsonArray.getJSONObject(i);
@@ -44,8 +45,16 @@ public class QualificationParser {
                     if (qualificationJsonObject.has("type") && !qualificationJsonObject.isNull("type")) {
                         type = qualificationJsonObject.getString("type");
                     }
+                    if(qualificationJsonObject.has("start_year")&&!qualificationJsonObject.isNull("start_year"))
+                    {
+                        start_year=qualificationJsonObject.getString("start_year");
+                    }
                     if (qualificationJsonObject.has("college") && !qualificationJsonObject.isNull("college")) {
                         clgName = qualificationJsonObject.getString("college");
+                    }
+                    if(qualificationJsonObject.has("specialization")&&!qualificationJsonObject.isNull("specialization"))
+                    {
+                        specialization=qualificationJsonObject.getString("specialization");
                     }
                     if (qualificationJsonObject.has("university") && !qualificationJsonObject.isNull("university")) {
                         university = qualificationJsonObject.getString("university");
@@ -68,7 +77,7 @@ public class QualificationParser {
                     if (qualificationJsonObject.has("status") && !qualificationJsonObject.isNull("status")) {
                         status = qualificationJsonObject.getString("status");
                     }
-                    qualificationModels.add(new QualificationModel(clgName, QualificationId, userId, course_name, type, university, created_on, updated_on, updated_by, status, degreeName, passingYear, upladedDoc));
+                    qualificationModels.add(new QualificationModel(clgName, QualificationId, userId, course_name, type, university, created_on, updated_on, updated_by, status, degreeName, passingYear, upladedDoc,specialization,start_year));
                 }
 
             }

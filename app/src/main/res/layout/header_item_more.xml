@@ -285,7 +285,7 @@
                     android:layout_width="16dp"
                     android:layout_height="20dp"
                     android:id="@+id/icon"
-                    android:src="@drawable/appointment" />
+                    android:src="@drawable/refer_icon" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -294,7 +294,7 @@
                     android:layout_marginLeft="15dp"
                     android:textStyle="normal"
                     android:layout_toRightOf="@+id/icon"
-                    android:text="My Appointments"
+                    android:text="Refer &amp; Invite"
                     android:textColor="#cc000000"
                     android:lineSpacingExtra="6sp"
                     />

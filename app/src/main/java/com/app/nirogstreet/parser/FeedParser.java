@@ -26,9 +26,9 @@ public class FeedParser {
                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                 UserDetailModel ParentFeedDetail = null;
-                String share_id=null,share_feed_id=null,share_type=null,shareUser_id=null,share_user_name=null,share_user_message=null;
+                String share_id = null, share_feed_id = null, share_type = null, shareUser_id = null, share_user_name = null, share_user_message = null;
                 String feed_tag_name = null;
-                ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
+                ArrayList<ShareWithModel> shareWithModels = new ArrayList<>();
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
                 int user_has_liked = 0, youcongratulated = 0;
@@ -65,7 +65,9 @@ public class FeedParser {
                     }
                     if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code="";
+                        String referral_code = "";
+                        String user_type = null;
+
                         JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
                         if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                             name = userJsonObject.getString("name");
@@ -106,11 +108,13 @@ String referral_code="";
                         if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                             city = userJsonObject.getString("city");
                         }
-                        if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                        {
-                            referral_code=userJsonObject.getString("referral_code");
+                        if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                            referral_code = userJsonObject.getString("referral_code");
                         }
-                        userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,null,referral_code);
+                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                            user_type = userJsonObject.getString("user_type");
+                        }
+                        userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
 
                     }
                     if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
@@ -129,15 +133,18 @@ String referral_code="";
                         }
                     }
                     if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", parent_created_by=null,city = "", title = "", website = "", name = "";
-String referral_code="";
+                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", parent_created_by = null, city = "", title = "", website = "", name = "";
+                        String referral_code = "";
+                        String user_type = null;
                         JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
                         if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
                             id = userJsonObject.getString("user_id");
                         }
-                        if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                        {
-                            referral_code=userJsonObject.getString("referral_code");
+                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                            user_type = userJsonObject.getString("user_type");
+                        }
+                        if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                            referral_code = userJsonObject.getString("referral_code");
                         }
                         if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                             name = userJsonObject.getString("name");
@@ -175,50 +182,40 @@ String referral_code="";
                         if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                             city = userJsonObject.getString("city");
                         }
-                        if(userJsonObject.has("created_by")&&!userJsonObject.isNull("created_by"))
-                        {
-                            parent_created_by=userJsonObject.getString("created_by");
+                        if (userJsonObject.has("created_by") && !userJsonObject.isNull("created_by")) {
+                            parent_created_by = userJsonObject.getString("created_by");
                         }
 
-                        parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,parent_created_by,referral_code);
+                        parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type);
 
                     }
 
-                    if(jsonObject.has("sharewith")&&!jsonObject.isNull("sharewith"))
-                    {
-                        JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
-                        for(int l=0;l<jsonArray1.length();l++)
-                        {
-                            JSONObject jsonObject1=jsonArray1.getJSONObject(l);
-                            if(jsonObject1.has("id")&&!jsonObject1.isNull("id"))
-                            {
-                                share_id=jsonObject1.getString("id");
+                    if (jsonObject.has("sharewith") && !jsonObject.isNull("sharewith")) {
+                        JSONArray jsonArray1 = jsonObject.getJSONArray("sharewith");
+                        for (int l = 0; l < jsonArray1.length(); l++) {
+                            JSONObject jsonObject1 = jsonArray1.getJSONObject(l);
+                            if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
+                                share_id = jsonObject1.getString("id");
                             }
-                            if(jsonObject1.has("message")&&!jsonObject1.isNull("message"))
-                            {
-                                share_user_message=jsonObject1.getString("message");
+                            if (jsonObject1.has("message") && !jsonObject1.isNull("message")) {
+                                share_user_message = jsonObject1.getString("message");
                             }
-                            if(jsonObject1.has("feed_id")&&!jsonObject1.isNull("feed_id"))
-                            {
-                                share_feed_id=jsonObject1.getString("feed_id");
+                            if (jsonObject1.has("feed_id") && !jsonObject1.isNull("feed_id")) {
+                                share_feed_id = jsonObject1.getString("feed_id");
                             }
-                            if(jsonObject1.has("share_type")&&!jsonObject1.isNull("share_type"))
-                            {
-                                share_type=jsonObject1.getString("share_type");
+                            if (jsonObject1.has("share_type") && !jsonObject1.isNull("share_type")) {
+                                share_type = jsonObject1.getString("share_type");
                             }
-                            if(jsonObject1.has("share_with")&&!jsonObject1.isNull("share_with"))
-                            {
-                                JSONObject jsonObject2=jsonObject1.getJSONObject("share_with");
-                                if(jsonObject2.has("id")&&!jsonObject2.isNull("id"))
-                                {
-                                    shareUser_id=jsonObject2.getString("id");
+                            if (jsonObject1.has("share_with") && !jsonObject1.isNull("share_with")) {
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("share_with");
+                                if (jsonObject2.has("id") && !jsonObject2.isNull("id")) {
+                                    shareUser_id = jsonObject2.getString("id");
                                 }
-                                if(jsonObject2.has("name")&&!jsonObject2.isNull("name"))
-                                {
-                                    share_user_name=jsonObject2.getString("name");
+                                if (jsonObject2.has("name") && !jsonObject2.isNull("name")) {
+                                    share_user_name = jsonObject2.getString("name");
                                 }
                             }
-                            shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message,share_type));
+                            shareWithModels.add(new ShareWithModel(share_id, share_feed_id, shareUser_id, share_user_name, share_user_message, share_type));
 
                         }
                     }
@@ -281,53 +278,56 @@ String referral_code="";
                     }
                     if (jsonObject.has("created_by") && !jsonObject.isNull("created_by")) {
 
-                            String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code="";
-                            JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
-                            if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                                name = userJsonObject.getString("name");
-                            }
+                        String user_type = null;
+                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                        String referral_code = "";
+                        JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
+                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                            name = userJsonObject.getString("name");
+                        }
+                        if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                            user_type = userJsonObject.getString("user_type");
+                        }
                         if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                             id = userJsonObject.getString("id");
                         }
-                            if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
-                                experience = userJsonObject.getString("experience");
-                            }
-                        if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                        {
-                            referral_code=userJsonObject.getString("referral_code");
+                        if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                            experience = userJsonObject.getString("experience");
                         }
-                            if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
-                                gender = userJsonObject.getString("gender");
-                            }
-                            if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                                email = userJsonObject.getString("email");
-                            }
-                            if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                                mobile = userJsonObject.getString("mobile");
-                            }
-                            if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
-                                profile_picuser = userJsonObject.getString("profile_pic");
-                            }
-                            if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
-                                category = userJsonObject.getString("category");
-                            }
-                            if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
-                                dob = userJsonObject.getString("dob");
-                            }
-                            if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
-                                website = userJsonObject.getString("website");
-                            }
-                            if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
-                                about = userJsonObject.getString("aboutus");
-                            }
-                            if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                                title = userJsonObject.getString("Title");
-                            }
-                            if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
-                                city = userJsonObject.getString("city");
-                            }
-                            cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,null,referral_code);
+                        if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                            referral_code = userJsonObject.getString("referral_code");
+                        }
+                        if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                            gender = userJsonObject.getString("gender");
+                        }
+                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                            email = userJsonObject.getString("email");
+                        }
+                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                            mobile = userJsonObject.getString("mobile");
+                        }
+                        if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                            profile_picuser = userJsonObject.getString("profile_pic");
+                        }
+                        if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                            category = userJsonObject.getString("category");
+                        }
+                        if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                            dob = userJsonObject.getString("dob");
+                        }
+                        if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                            website = userJsonObject.getString("website");
+                        }
+                        if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                            about = userJsonObject.getString("aboutus");
+                        }
+                        if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                            title = userJsonObject.getString("Title");
+                        }
+                        if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                            city = userJsonObject.getString("city");
+                        }
+                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
 
 
                     }
@@ -339,7 +339,7 @@ String referral_code="";
                         docName = jsonObject.getString("docName");
 
                     }
-                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail,specializationModelsForTags,refrence,shareWithModels);
+                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels);
                 }
 
 
@@ -365,9 +365,9 @@ String referral_code="";
                                 ArrayList<String> mediaList = new ArrayList<>();
                                 String activity_detail = null;
                                 String feed_Tag_id = null;
-                                String share_id=null,share_feed_id=null,share_type=null,shareUser_id=null,share_user_name=null,share_user_message=null;
+                                String share_id = null, share_feed_id = null, share_type = null, shareUser_id = null, share_user_name = null, share_user_message = null;
                                 String feed_tag_name = null;
-                                ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
+                                ArrayList<ShareWithModel> shareWithModels = new ArrayList<>();
 
                                 ArrayList<SpecializationModel> specializationModelsForTags = new ArrayList<>();
                                 String user_id = null, fname = null, lname = null, slug = null, profile_pic = null;
@@ -404,14 +404,14 @@ String referral_code="";
                                 }
                                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code="";
+                                    String referral_code = "";
+                                    String user_type = null;
                                     JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
                                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                                         name = userJsonObject.getString("name");
                                     }
-                                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                                    {
-                                        referral_code=userJsonObject.getString("referral_code");
+                                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                        referral_code = userJsonObject.getString("referral_code");
                                     }
                                     if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                                         id = userJsonObject.getString("id");
@@ -434,6 +434,9 @@ String referral_code="";
                                     if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
                                         category = userJsonObject.getString("category");
                                     }
+                                    if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                                        user_type = userJsonObject.getString("user_type");
+                                    }
                                     if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
                                         dob = userJsonObject.getString("dob");
                                     }
@@ -449,7 +452,7 @@ String referral_code="";
                                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                         city = userJsonObject.getString("city");
                                     }
-                                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,null,referral_code);
+                                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
 
                                 }
                                 if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
@@ -468,8 +471,9 @@ String referral_code="";
                                     }
                                 }
                                 if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", parent_created_by=null,city = "", title = "", website = "", name = "";
-String referral_code="";
+                                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", parent_created_by = null, city = "", title = "", website = "", name = "";
+                                    String referral_code = "";
+                                    String user_type = null;
                                     JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
                                     if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
                                         id = userJsonObject.getString("user_id");
@@ -477,9 +481,8 @@ String referral_code="";
                                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                                         name = userJsonObject.getString("name");
                                     }
-                                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                                    {
-                                        referral_code=userJsonObject.getString("referral_code");
+                                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                        referral_code = userJsonObject.getString("referral_code");
                                     }
                                     if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
                                         experience = userJsonObject.getString("experience");
@@ -514,49 +517,42 @@ String referral_code="";
                                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                         city = userJsonObject.getString("city");
                                     }
-                                    if(userJsonObject.has("created_by")&&!userJsonObject.isNull("created_by"))
-                                    {
-                                        parent_created_by=userJsonObject.getString("created_by");
+                                    if (userJsonObject.has("created_by") && !userJsonObject.isNull("created_by")) {
+                                        parent_created_by = userJsonObject.getString("created_by");
                                     }
-                                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,parent_created_by,referral_code);
+                                    if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                                        user_type = userJsonObject.getString("user_type");
+                                    }
+                                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type);
 
 
                                 }
-                                if(jsonObject.has("sharewith")&&!jsonObject.isNull("sharewith"))
-                                {
-JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
-                                    for(int l=0;l<jsonArray1.length();l++)
-                                    {
-                                        JSONObject jsonObject1=jsonArray1.getJSONObject(l);
-                                        if(jsonObject1.has("id")&&!jsonObject1.isNull("id"))
-                                        {
-                                            share_id=jsonObject1.getString("id");
+                                if (jsonObject.has("sharewith") && !jsonObject.isNull("sharewith")) {
+                                    JSONArray jsonArray1 = jsonObject.getJSONArray("sharewith");
+                                    for (int l = 0; l < jsonArray1.length(); l++) {
+                                        JSONObject jsonObject1 = jsonArray1.getJSONObject(l);
+                                        if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
+                                            share_id = jsonObject1.getString("id");
                                         }
-                                        if(jsonObject1.has("message")&&!jsonObject1.isNull("message"))
-                                        {
-                                            share_user_message=jsonObject1.getString("message");
+                                        if (jsonObject1.has("message") && !jsonObject1.isNull("message")) {
+                                            share_user_message = jsonObject1.getString("message");
                                         }
-                                        if(jsonObject1.has("feed_id")&&!jsonObject1.isNull("feed_id"))
-                                        {
-                                            share_feed_id=jsonObject1.getString("feed_id");
+                                        if (jsonObject1.has("feed_id") && !jsonObject1.isNull("feed_id")) {
+                                            share_feed_id = jsonObject1.getString("feed_id");
                                         }
-                                        if(jsonObject1.has("share_type")&&!jsonObject1.isNull("share_type"))
-                                        {
-                                            share_type=jsonObject1.getString("share_type");
+                                        if (jsonObject1.has("share_type") && !jsonObject1.isNull("share_type")) {
+                                            share_type = jsonObject1.getString("share_type");
                                         }
-                                        if(jsonObject1.has("share_with")&&!jsonObject1.isNull("share_with"))
-                                        {
-                                            JSONObject jsonObject2=jsonObject1.getJSONObject("share_with");
-                                            if(jsonObject2.has("id")&&!jsonObject2.isNull("id"))
-                                            {
-                                                shareUser_id=jsonObject2.getString("id");
+                                        if (jsonObject1.has("share_with") && !jsonObject1.isNull("share_with")) {
+                                            JSONObject jsonObject2 = jsonObject1.getJSONObject("share_with");
+                                            if (jsonObject2.has("id") && !jsonObject2.isNull("id")) {
+                                                shareUser_id = jsonObject2.getString("id");
                                             }
-                                            if(jsonObject2.has("name")&&!jsonObject2.isNull("name"))
-                                            {
-                                                share_user_name=jsonObject2.getString("name");
+                                            if (jsonObject2.has("name") && !jsonObject2.isNull("name")) {
+                                                share_user_name = jsonObject2.getString("name");
                                             }
                                         }
-                                        shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message,share_type));
+                                        shareWithModels.add(new ShareWithModel(share_id, share_feed_id, shareUser_id, share_user_name, share_user_message, share_type));
                                     }
                                 }
                                 if (jsonObject.has("parent_feed") && !jsonObject.isNull("parent_feed")) {
@@ -618,57 +614,59 @@ JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
                                 }
                                 if (jsonObject.has("created_by") && !jsonObject.isNull("created_by")) {
 
-                                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code=""
-;                                        JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
-                                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                                            name = userJsonObject.getString("name");
-                                        }
-                                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                                    {
-                                        referral_code=userJsonObject.getString("referral_code");
+                                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                                    String referral_code = "";
+                                    String user_type = null;
+                                    JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
+                                    if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                                        name = userJsonObject.getString("name");
+                                    }
+                                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                        referral_code = userJsonObject.getString("referral_code");
                                     }
                                     if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                                         id = userJsonObject.getString("id");
                                     }
-                                        if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
-                                            experience = userJsonObject.getString("experience");
-                                        }
-                                        if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
-                                            gender = userJsonObject.getString("gender");
-                                        }
-                                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                                            email = userJsonObject.getString("email");
-                                        }
-                                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                                            mobile = userJsonObject.getString("mobile");
-                                        }
-                                        if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
-                                            profile_picuser = userJsonObject.getString("profile_pic");
-                                        }
-                                        if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
-                                            category = userJsonObject.getString("category");
-                                        }
-                                        if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
-                                            dob = userJsonObject.getString("dob");
-                                        }
-                                        if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
-                                            website = userJsonObject.getString("website");
-                                        }
-                                        if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
-                                            about = userJsonObject.getString("aboutus");
-                                        }
-                                        if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                                            title = userJsonObject.getString("Title");
-                                        }
-                                        if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
-                                            city = userJsonObject.getString("city");
-                                        }
-                                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                                    {
-                                        referral_code=userJsonObject.getString("referral_code");
+                                    if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                                        experience = userJsonObject.getString("experience");
                                     }
-                                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,null,referral_code);
+                                    if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                                        gender = userJsonObject.getString("gender");
+                                    }
+                                    if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                                        user_type = userJsonObject.getString("user_type");
+                                    }
+                                    if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                                        email = userJsonObject.getString("email");
+                                    }
+                                    if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                                        mobile = userJsonObject.getString("mobile");
+                                    }
+                                    if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                                        profile_picuser = userJsonObject.getString("profile_pic");
+                                    }
+                                    if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                                        category = userJsonObject.getString("category");
+                                    }
+                                    if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                                        dob = userJsonObject.getString("dob");
+                                    }
+                                    if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                                        website = userJsonObject.getString("website");
+                                    }
+                                    if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                                        about = userJsonObject.getString("aboutus");
+                                    }
+                                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                                        title = userJsonObject.getString("Title");
+                                    }
+                                    if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                                        city = userJsonObject.getString("city");
+                                    }
+                                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                                        referral_code = userJsonObject.getString("referral_code");
+                                    }
+                                    cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
 
 
                                 }
@@ -680,7 +678,7 @@ String referral_code=""
                                     docName = jsonObject.getString("docName");
 
                                 }
-                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail,specializationModelsForTags,refrence,shareWithModels));
+                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels));
                             }
                         }
                     }
@@ -704,9 +702,9 @@ String referral_code=""
                 ArrayList<String> feedSourceArrayList = new ArrayList<>();
                 UserDetailModel ParentFeedDetail = null;
                 String activity_detail = null;
-                String share_type=null;
-                String share_id=null,share_feed_id=null,shareUser_id=null,share_user_name=null,share_user_message=null;
-                ArrayList<ShareWithModel> shareWithModels=new ArrayList<>();
+                String share_type = null;
+                String share_id = null, share_feed_id = null, shareUser_id = null, share_user_name = null, share_user_message = null;
+                ArrayList<ShareWithModel> shareWithModels = new ArrayList<>();
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
                 int user_has_liked = 0, youcongratulated = 0;
@@ -740,14 +738,18 @@ String referral_code=""
 
                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code="";
+                    String referral_code = "";
+                    String user_type = null;
                     JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                         name = userJsonObject.getString("name");
                     }
-                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                    {
-                        referral_code=userJsonObject.getString("referral_code");
+                    if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                        user_type = userJsonObject.getString("user_type");
+                    }
+
+                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                        referral_code = userJsonObject.getString("referral_code");
                     }
                     if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                         id = userJsonObject.getString("id");
@@ -785,7 +787,7 @@ String referral_code="";
                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                         city = userJsonObject.getString("city");
                     }
-                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,null,referral_code);
+                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
 
                 }
                 if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
@@ -804,15 +806,18 @@ String referral_code="";
                     }
                 }
                 if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
-                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "",parent_created_by=null, email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code="";
+                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", parent_created_by = null, email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                    String referral_code = "";
+                    String user_type = null;
                     JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
                     if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
                         id = userJsonObject.getString("user_id");
                     }
-                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                    {
-                        referral_code=userJsonObject.getString("referral_code");
+                    if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                        user_type = userJsonObject.getString("user_type");
+                    }
+                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                        referral_code = userJsonObject.getString("referral_code");
                     }
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                         name = userJsonObject.getString("name");
@@ -850,49 +855,39 @@ String referral_code="";
                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                         city = userJsonObject.getString("city");
                     }
-                    if(userJsonObject.has("created_by")&&!userJsonObject.isNull("created_by"))
-                    {
-                        parent_created_by=userJsonObject.getString("created_by");
+                    if (userJsonObject.has("created_by") && !userJsonObject.isNull("created_by")) {
+                        parent_created_by = userJsonObject.getString("created_by");
                     }
-                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,parent_created_by,referral_code);
+                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type);
 
 
                 }
-                if(jsonObject.has("sharewith")&&!jsonObject.isNull("sharewith"))
-                {
-                    JSONArray jsonArray1=jsonObject.getJSONArray("sharewith");
-                    for(int l=0;l<jsonArray1.length();l++)
-                    {
-                        JSONObject jsonObject1=jsonArray1.getJSONObject(l);
-                        if(jsonObject1.has("id")&&!jsonObject1.isNull("id"))
-                        {
-                            share_id=jsonObject1.getString("id");
+                if (jsonObject.has("sharewith") && !jsonObject.isNull("sharewith")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("sharewith");
+                    for (int l = 0; l < jsonArray1.length(); l++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(l);
+                        if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
+                            share_id = jsonObject1.getString("id");
                         }
-                        if(jsonObject1.has("message")&&!jsonObject1.isNull("message"))
-                        {
-                            share_user_message=jsonObject1.getString("message");
+                        if (jsonObject1.has("message") && !jsonObject1.isNull("message")) {
+                            share_user_message = jsonObject1.getString("message");
                         }
-                        if(jsonObject1.has("feed_id")&&!jsonObject1.isNull("feed_id"))
-                        {
-                            share_feed_id=jsonObject1.getString("feed_id");
+                        if (jsonObject1.has("feed_id") && !jsonObject1.isNull("feed_id")) {
+                            share_feed_id = jsonObject1.getString("feed_id");
                         }
-                        if(jsonObject1.has("share_type")&&!jsonObject1.isNull("share_type"))
-                        {
-                            share_type=jsonObject1.getString("share_type");
+                        if (jsonObject1.has("share_type") && !jsonObject1.isNull("share_type")) {
+                            share_type = jsonObject1.getString("share_type");
                         }
-                        if(jsonObject1.has("share_with")&&!jsonObject1.isNull("share_with"))
-                        {
-                            JSONObject jsonObject2=jsonObject1.getJSONObject("share_with");
-                            if(jsonObject2.has("id")&&!jsonObject2.isNull("id"))
-                            {
-                                shareUser_id=jsonObject2.getString("id");
+                        if (jsonObject1.has("share_with") && !jsonObject1.isNull("share_with")) {
+                            JSONObject jsonObject2 = jsonObject1.getJSONObject("share_with");
+                            if (jsonObject2.has("id") && !jsonObject2.isNull("id")) {
+                                shareUser_id = jsonObject2.getString("id");
                             }
-                            if(jsonObject2.has("name")&&!jsonObject2.isNull("name"))
-                            {
-                                share_user_name=jsonObject2.getString("name");
+                            if (jsonObject2.has("name") && !jsonObject2.isNull("name")) {
+                                share_user_name = jsonObject2.getString("name");
                             }
                         }
-                        shareWithModels.add(new ShareWithModel(share_id,share_feed_id,shareUser_id,share_user_name,share_user_message,share_type));
+                        shareWithModels.add(new ShareWithModel(share_id, share_feed_id, shareUser_id, share_user_name, share_user_message, share_type));
 
                     }
                 }
@@ -956,53 +951,56 @@ String referral_code="";
                 }
                 if (jsonObject.has("created_by") && !jsonObject.isNull("created_by")) {
 
-                        String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
-String referral_code="";
-                        JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
-                        if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
-                            name = userJsonObject.getString("name");
-                        }
+                    String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
+                    String referral_code = "";
+                    String user_type = null;
+                    JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
+                    if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
+                        name = userJsonObject.getString("name");
+                    }
                     if (userJsonObject.has("id") && !userJsonObject.isNull("id")) {
                         id = userJsonObject.getString("id");
                     }
-                        if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
-                            experience = userJsonObject.getString("experience");
-                        }
-                        if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
-                            gender = userJsonObject.getString("gender");
-                        }
-                        if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
-                            email = userJsonObject.getString("email");
-                        }
-                        if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
-                            mobile = userJsonObject.getString("mobile");
-                        }
-                        if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
-                            profile_picuser = userJsonObject.getString("profile_pic");
-                        }
-                        if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
-                            category = userJsonObject.getString("category");
-                        }
-                        if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
-                            dob = userJsonObject.getString("dob");
-                        }
-                        if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
-                            website = userJsonObject.getString("website");
-                        }
-                        if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
-                            about = userJsonObject.getString("aboutus");
-                        }
-                        if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                            title = userJsonObject.getString("Title");
-                        }
-                        if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
-                            city = userJsonObject.getString("city");
-                        }
-                    if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
-                    {
-                        referral_code=userJsonObject.getString("referral_code");
+                    if (userJsonObject.has("experience") && !userJsonObject.isNull("experience")) {
+                        experience = userJsonObject.getString("experience");
                     }
-                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null,null,referral_code);
+                    if (userJsonObject.has("gender") && !userJsonObject.isNull("gender")) {
+                        gender = userJsonObject.getString("gender");
+                    }
+                    if (userJsonObject.has("email") && !userJsonObject.isNull("email")) {
+                        email = userJsonObject.getString("email");
+                    }
+                    if (userJsonObject.has("mobile") && !userJsonObject.isNull("mobile")) {
+                        mobile = userJsonObject.getString("mobile");
+                    }
+                    if (userJsonObject.has("profile_pic") && !userJsonObject.isNull("profile_pic")) {
+                        profile_picuser = userJsonObject.getString("profile_pic");
+                    }
+                    if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
+                        category = userJsonObject.getString("category");
+                    }
+                    if (userJsonObject.has("dob") && !userJsonObject.isNull("dob")) {
+                        dob = userJsonObject.getString("dob");
+                    }
+                    if (userJsonObject.has("website") && !userJsonObject.isNull("website")) {
+                        website = userJsonObject.getString("website");
+                    }
+                    if (userJsonObject.has("aboutus") && !userJsonObject.isNull("aboutus")) {
+                        about = userJsonObject.getString("aboutus");
+                    }
+                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                        title = userJsonObject.getString("Title");
+                    }
+                    if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
+                        city = userJsonObject.getString("city");
+                    }
+                    if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
+                        user_type = userJsonObject.getString("user_type");
+                    }
+                    if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
+                        referral_code = userJsonObject.getString("referral_code");
+                    }
+                    cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
 
 
                 }
@@ -1015,7 +1013,7 @@ String referral_code="";
 
                 }
 
-                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail,specializationModelsForTags,refrence,shareWithModels));
+                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels));
 
 
             }

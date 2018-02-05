@@ -55,6 +55,7 @@ public class SpecilizationAndService extends Activity {
     private static final int RESULT_CODE = 1;
     private String authToken, userId;
     boolean isServiceClicked = false;
+    boolean student_intrests=false;
     boolean isSpecilizationClicked = false;
     TextView title_side;
     UpdateSpecializationAndServices updateSpecializationAndServices;
@@ -62,12 +63,15 @@ public class SpecilizationAndService extends Activity {
     ArrayList<SpecializationModel> multipleSelectedItemModels = new ArrayList<>();
     ArrayList<SpecializationModel> servicesMultipleSelectedModels = new ArrayList<>();
     TextView saveTv;
+    TextView text_email,text_email1;
     private SesstionManager sesstionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.specilization_services);
+        text_email=(TextView) findViewById(R.id.text_email);
+        text_email1=(TextView)findViewById(R.id.text_email1);
         sesstionManager = new SesstionManager(SpecilizationAndService.this);
         if (sesstionManager.isUserLoggedIn()) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -76,6 +80,10 @@ public class SpecilizationAndService extends Activity {
         if(getIntent().hasExtra("isSkip"))
         {
             isSkip=getIntent().getBooleanExtra("isSkip",false);
+        }
+        if(getIntent().hasExtra("student_intrests"))
+        {
+            student_intrests=getIntent().getBooleanExtra("student_intrests",false);
         }
         title_side = (TextView) findViewById(R.id.title_side);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
@@ -98,7 +106,13 @@ public class SpecilizationAndService extends Activity {
             }
         });
         sepcialization = (EditText) findViewById(R.id.sepcialization);
-
+if(student_intrests)
+{
+    text_email1.setVisibility(View.GONE);
+    text_email.setVisibility(View.GONE);
+    Services_name.setVisibility(View.GONE);
+    title_side.setText("Interests");
+}
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
             sepcialization.setText(getSelectedNameCsv());

@@ -28,11 +28,16 @@ public class UserDetailPaser {
             if (dataJsonObject.has("message") && !dataJsonObject.isNull("message")) {
                 JSONObject message = dataJsonObject.getJSONObject("message");
                 int profile_complete=1;
+                String user_type=null;
                 String category = "", gender = "", experience = "",referral_code="", profile_pic = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                 if (message.has("userDetail") && !message.isNull("userDetail")) {
                     JSONObject userJsonObject = message.getJSONObject("userDetail");
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
                         name = userJsonObject.getString("name");
+                    }
+                    if(userJsonObject.has("user_type")&&!userJsonObject.isNull("user_type"))
+                    {
+                        user_type=userJsonObject.getString("user_type");
                     }
                     if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
                     {
@@ -100,7 +105,7 @@ public class UserDetailPaser {
                 awardsModels = AwardsParser.awardsParser(message);
                 ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
                 memberShipModels = MemberShipParser.memberShipParser(message);
-                userDetailModel = new UserDetailModel(id,name,profile_complete, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels,null,referral_code);
+                userDetailModel = new UserDetailModel(id,name,profile_complete, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels,null,referral_code,user_type);
 
             }
         } catch (Exception e) {

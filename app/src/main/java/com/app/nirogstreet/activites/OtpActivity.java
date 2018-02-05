@@ -55,6 +55,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class OtpActivity extends AppCompatActivity {
     BroadcastReceiver receiver;
+    String title="-1";
     ImageView backImageView;
     String fname, email, pass, phone, otp = null,role,referral=null;
     TextView loginHeader, resendOtp, timerTextView;
@@ -87,6 +88,10 @@ if(getIntent().hasExtra("role"))
 {
     role=getIntent().getStringExtra("role");
 }
+        if(getIntent().hasExtra("title"))
+        {
+            title=getIntent().getStringExtra("title");
+        }
         if(getIntent().hasExtra("referral"))
         {
             referral=getIntent().getStringExtra("referral");
@@ -379,6 +384,7 @@ if(getIntent().hasExtra("role"))
                 pairs.add(new BasicNameValuePair("User[email]", email));
                 pairs.add(new BasicNameValuePair("User[password]", password));
                 pairs.add(new BasicNameValuePair("User[mobile]", mobile));
+                pairs.add(new BasicNameValuePair("user_title",title));
                 pairs.add(new BasicNameValuePair("otp", otp));
                 if(referral!=null)
                 {
