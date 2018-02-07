@@ -285,6 +285,8 @@ TextView privacyTextView;
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
+                              String user_type_created_by=null,title_created_by=null;
+
                             String name = null, invite_note = null, description = null, banner = null, privacy = null, created_profile = null, createdBy_id = null, createdBy_name = null;
                             JSONObject groupDetailJsonObject = jsonObject.getJSONObject("groupDetail");
                             if (groupDetailJsonObject.has("name") && !groupDetailJsonObject.isNull("name")) {
@@ -383,7 +385,15 @@ TextView privacyTextView;
 
 
                                 }
-                                userLists.add(new UserList(createdBy_id,createdBy_name,created_profile));
+                                if(created_ByObject.has("user_type")&&!created_ByObject.isNull("user_type"))
+                                {
+                                    user_type_created_by=created_ByObject.getString("user_type");
+                                }
+                                if(created_ByObject.has("Title")&&!created_ByObject.isNull("Title"))
+                                {
+                                    title_created_by=created_ByObject.getString("Title");
+                                }
+                                userLists.add(new UserList(createdBy_id,createdBy_name,created_profile,user_type_created_by,title_created_by));
 
                             }
                             final ArrayList<UserList> userDetailModels = new ArrayList<>();
@@ -391,13 +401,21 @@ TextView privacyTextView;
                                 JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
                                 if (jsonArray != null && jsonArray.length() > 0) {
                                     for (int i = 0; i < jsonArray.length(); i++) {
-                                        String userId = null, userName = null, profile_pic = null;
+                                        String userId = null, userName = null, profile_pic = null,user_Type=null,title=null;
                                         JSONObject object = jsonArray.getJSONObject(i);
                                         if (object.has("user_id") && !object.isNull("user_id")) {
                                             JSONObject userDetail = object.getJSONObject("user_id");
                                             if (userDetail.has("id") && !userDetail.isNull("id")) {
                                                 userId = userDetail.getString("id");
 
+                                            }
+                                            if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                            {
+                                                user_Type=userDetail.getString("user_type");
+                                            }
+                                            if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                            {
+                                                title=userDetail.getString("Title");
                                             }
                                             if (userDetail.has("name") && !userDetail.isNull("name")) {
                                                 userName = userDetail.getString("name");
@@ -407,8 +425,8 @@ TextView privacyTextView;
                                                 profile_pic = userDetail.getString("profile_pic");
                                             }
                                             if(!userId.equalsIgnoreCase(createdBy_id))
-                                            userLists.add(new UserList(userId, userName, profile_pic));
-                                            userDetailModels.add(new UserList(userId, userName, profile_pic));
+                                            userLists.add(new UserList(userId, userName, profile_pic,user_Type,title));
+                                            userDetailModels.add(new UserList(userId, userName, profile_pic,user_Type,title));
                                         }
                                     }
                                     if (userLists.size() > 0) {

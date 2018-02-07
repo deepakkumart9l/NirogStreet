@@ -17,11 +17,31 @@ public class UserList implements Serializable {
         this.profile_pic = profile_pic;
     }
 
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    String user_type;
+    String title;
     String profile_pic;
-    public UserList(String id, String name,String profile_pic) {
+    public UserList(String id, String name,String profile_pic,String user_type,String title) {
         this.id = id;
         this.name = name;
         this.profile_pic=profile_pic;
+        this.user_type=user_type;
+        this.title=title;
     }
 
     String name;

@@ -25,6 +25,7 @@ public class SesstionManager {
     public static final String CREATED_ON = "createdOn";
     public static final String USER_TYPE = "user_type";
     public static final String REFERRAL_CODE = "referral_code";
+    public static final String TITLE = "title";
 
     public static final String KEY_FNAME = "fname";
 
@@ -45,7 +46,7 @@ public class SesstionManager {
         editor = pref.edit();
     }
 
-    public void createUserLoginSession(String fname,String lname, String email, String auth_token, String mobile, String createdOn,String userId,String user_type,String referral_code) {
+    public void createUserLoginSession(String fname,String lname, String email, String auth_token, String mobile, String createdOn,String userId,String user_type,String referral_code,String title) {
         editor.putBoolean(IS_USER_LOGIN, true);
         editor.putString(KEY_FNAME, fname);
         editor.putString(KEY_EMAIL, email);
@@ -56,6 +57,7 @@ public class SesstionManager {
         editor.putString(CREATED_ON,createdOn);
         editor.putString(USER_TYPE,user_type);
         editor.putString(REFERRAL_CODE,referral_code);
+        editor.putString(TITLE,title);
         //  editor.putString(KEY_LANGUAGE,lang);
         editor.commit();
     }
@@ -91,6 +93,7 @@ public class SesstionManager {
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
         user.put(USER_ID,pref.getString(USER_ID,null));
         user.put(REFERRAL_CODE,pref.getString(REFERRAL_CODE,null));
+        user.put(TITLE,pref.getString(TITLE,""));
         return user;
     }
     public HashMap<String, String> getProfile() {

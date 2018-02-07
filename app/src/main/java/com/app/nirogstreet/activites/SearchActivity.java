@@ -262,6 +262,7 @@ public class SearchActivity extends AppCompatActivity {
                         if (jsonObject.has("users") && !jsonObject.isNull("users")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("users");
                             for (int i = 0; i < jsonArray.length(); i++) {
+                                String user_type=null,title=null;
                                 String fname = "", lname = "", slug = "", profile_pic = "", department = "", id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 if (jsonObject1.has("name") && !jsonObject1.isNull("name")) {
@@ -272,6 +273,14 @@ public class SearchActivity extends AppCompatActivity {
                                 }
                                 if (jsonObject1.has("lname") && !jsonObject1.isNull("lname")) {
                                     lname = jsonObject1.getString("lname");
+                                }
+                                if(jsonObject1.has("user_type")&&!jsonObject1.isNull("user_type"))
+                                {
+                                    user_type=jsonObject1.getString("user_type");
+                                }
+                                if(jsonObject1.has("Title")&&!jsonObject1.isNull("Title"))
+                                {
+                                 title=jsonObject1.getString("Title");
                                 }
                                 if (jsonObject1.has("slug") && !jsonObject1.isNull("slug")) {
                                     slug = jsonObject1.getString("slug");
@@ -289,7 +298,7 @@ public class SearchActivity extends AppCompatActivity {
                                     } else
                                         username = fname;
                                 }
-                                searchModels.add(new SearchModel(fname, slug, lname, department, profile_pic, id));
+                                searchModels.add(new SearchModel(fname, slug, lname, department, profile_pic, id,user_type,title));
                             }
                             isLoading = false;
                             if (searchAdapter == null && searchModels != null && searchModels.size() > 0) {

@@ -14,6 +14,7 @@ import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ImageLoader;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -45,7 +46,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        RecyclerView.ViewHolder genericViewHolder = (RecyclerView.ViewHolder) holder;
+        RecyclerView.ViewHolder genericViewHolder = (RecyclerView.ViewHolder) holder;try{
         final LikesModel rowItem = likesModels.get(position);
         if(rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
         {
@@ -58,18 +59,20 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
         }else {
             if (rowItem.getFname() != null) {
                 if (rowItem.getLname() != null)
-                    holder.name.setText("Dr. " + rowItem.getFname() + " " + rowItem.getLname());
+                    holder.name.setText(Methods.getName(rowItem.getTitle(), rowItem.getFname() + " " + rowItem.getLname()));
                 else
-                    holder.name.setText("Dr. " + rowItem.getFname());
+                    holder.name.setText(Methods.getName(rowItem.getTitle(),rowItem.getFname()));
             }
         }
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent resultIntent = new Intent(context, Dr_Profile.class);
                 LikesModel likesModel = likesModels.get(position);
+               /* Intent resultIntent = new Intent(context, Dr_Profile.class);
+
                 resultIntent.putExtra("UserId", likesModel.getUserId());
-                context.    startActivity(resultIntent);
+                context.    startActivity(resultIntent);*/
+                Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
             }
         });
         //  holder.name.setText(rowItem.getName());
@@ -80,6 +83,9 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
                 .placeholder(R.drawable.user)
                 .error(R.drawable.user)
                 .into(holder.imageView);
+    }catch (Exception e)
+        {
+        e.printStackTrace();}
     }
 
 

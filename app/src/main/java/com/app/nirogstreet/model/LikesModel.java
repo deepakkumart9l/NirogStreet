@@ -4,7 +4,7 @@ package com.app.nirogstreet.model;
  * Created by Preeti on 27-10-2017.
  */
 public class LikesModel {
-    public LikesModel(String commentId, String createdOn, String message, String userProfile_pic, String slug, String lname, String fname, String userId) {
+    public LikesModel(String commentId, String createdOn, String message, String userProfile_pic, String slug, String lname, String fname, String userId,String user_type,String title) {
         this.commentId = commentId;
         this.createdOn = createdOn;
         this.message = message;
@@ -13,7 +13,28 @@ public class LikesModel {
         this.lname = lname;
         this.fname = fname;
         this.userId = userId;
+        this.user_type=user_type;
+        this.title=title;
     }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    String user_type;
+    String title;
 
     String commentId = null;
 

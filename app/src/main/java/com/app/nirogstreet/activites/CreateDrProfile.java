@@ -58,6 +58,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -553,8 +555,10 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 circleImageView.setImageBitmap(selectedImage);
-                Uri selectedImagePath1 = getImageUri(CreateDrProfile.this, selectedImage);
-                selectedImagePath = getPath(selectedImagePath1, CreateDrProfile.this);
+                if(selectedImage!=null) {
+                    Uri selectedImagePath1 = getImageUri(CreateDrProfile.this, selectedImage);
+                    selectedImagePath = getPath(selectedImagePath1, CreateDrProfile.this);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -712,7 +716,12 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
+            try {
+                fname= URLEncoder.encode(fname.toString(), "UTF-8");
 
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             super.onPreExecute();
         }
 
@@ -832,8 +841,13 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         ;
 
                                     }
+                                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                                        ApplicationSingleton.getUserDetailModel().setTitle(userJsonObject.getString("Title"));
+                                        ;
+
+                                    }
                                     sesstionManager.updateProfile(ApplicationSingleton.getUserDetailModel().getProfile_pic());
-                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(), "", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE), sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE));
+                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(), "", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE), sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE),ApplicationSingleton.getUserDetailModel().getTitle());
 
                                     if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
                                         ApplicationSingleton.getUserDetailModel().setCategory(userJsonObject.getString("category"));
@@ -855,11 +869,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         ;
 
                                     }
-                                    if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                                        ApplicationSingleton.getUserDetailModel().setTitle(userJsonObject.getString("Title"));
-                                        ;
 
-                                    }
                                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                         ApplicationSingleton.getUserDetailModel().setCity(userJsonObject.getString("city"));
                                         ;
@@ -1077,11 +1087,11 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             return false;
         }
         if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
-            if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE) && editTextYearOfExpeicence.getText().toString().length() == 0) {
+            if ( editTextYearOfExpeicence.getText().toString().length() == 0) {
                 Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
+            if (editTextYearOfExpeicence.getText().length()>0&&Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
                 Toast.makeText(CreateDrProfile.this, "Experience cannot be greater than 100", Toast.LENGTH_SHORT).show();
                 return false;
             }

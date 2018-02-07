@@ -36,7 +36,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Refer"
+                android:text="Refer &amp; Invite"
                 android:textColor="@color/white"
 
                 android:textSize="16sp" />

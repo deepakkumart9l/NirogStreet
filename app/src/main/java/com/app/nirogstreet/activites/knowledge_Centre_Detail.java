@@ -492,14 +492,19 @@ public class Knowledge_Centre_Detail extends Activity {
 
         update();
         if (ApplicationSingleton.isDocOpen()) {
-            if (course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getUser_completed() != 1)
-                if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
-                    knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getId(), k_Module_pos, i_Tpoic_pos, j_File_pos, course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getRoot_id());
-                    knwledgeCompleteAsynctask.execute();
-                } else {
-                    NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
-                }
-            ApplicationSingleton.setIsDocOpen(false);
+            try {
+                if (course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getUser_completed() != 1)
+                    if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
+                        knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getId(), k_Module_pos, i_Tpoic_pos, j_File_pos, course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getRoot_id());
+                        knwledgeCompleteAsynctask.execute();
+                    } else {
+                        NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
+                    }
+                ApplicationSingleton.setIsDocOpen(false);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

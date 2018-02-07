@@ -69,11 +69,31 @@ public class CommentsModel implements Serializable
         this.comment = comment;
     }
 
-    public CommentsModel(String fname, String lname, String slug, String userId, String commentId, String profile_pic_url, String name, String timeStamp, String comment, int totalLikes, boolean liked,ArrayList<CommentsModel> subComments) {
+        public String getUser_type() {
+            return user_type;
+        }
+
+        public void setUser_type(String user_type) {
+            this.user_type = user_type;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        String user_type;
+        String title;
+    public CommentsModel(String fname, String lname, String slug, String userId, String commentId, String profile_pic_url, String name, String timeStamp, String comment, int totalLikes, boolean liked,ArrayList<CommentsModel> subComments,String user_type,String title) {
         this.fname = fname;
         this.lname = lname;
         this.totalLikes = totalLikes;
         this.isUserLiked = liked;
+        this.user_type=user_type;
+        this.title=title;
         this.slug = slug;
         this.subComments=subComments;
         this.userId = userId;

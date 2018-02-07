@@ -90,7 +90,8 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
     TextView strt_year;
     EditText specialization_et;
     LinearLayout updateDocLinearLayout;
-    boolean isStrtClicked = false, isPassingClicked = false;
+    boolean isStrtClicked = false;
+    static boolean isPassingClicked = false;
     RelativeLayout EditDocRelativeLayout;
     EditText strtyear;
     private static final int RESULT_CODE = 1;
@@ -517,11 +518,22 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
            /* monthPicker.setMinValue(1);
             monthPicker.setMaxValue(12);
             monthPicker.setValue(cal.get(Calendar.MONTH) + 1);*/
+SesstionManager sesstionManager=new SesstionManager(getActivity());
 
             int year = cal.get(Calendar.YEAR);
-            yearPicker.setMinValue(1917);
-            yearPicker.setMaxValue(MAX_YEAR);
-            yearPicker.setValue(1980);
+            if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)&&isPassingClicked) {
+                yearPicker.setMinValue(1917);
+
+
+            }
+            else
+            {
+                yearPicker.setMinValue(1917);
+
+
+            }
+            yearPicker.setMaxValue(2030);
+
 
             builder.setView(dialog)
                     // Add action buttons

@@ -100,9 +100,9 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         }else {
             if (rowItem.getFname() != null) {
                 if (rowItem.getLname() != null)
-                    holder.name.setText("Dr. " + rowItem.getFname() + " " + rowItem.getLname());
+                    holder.name.setText(Methods.getName(rowItem.getTitle() ,rowItem.getFname() + " " + rowItem.getLname()));
                 else
-                    holder.name.setText("Dr. " + rowItem.getFname());
+                    holder.name.setText(Methods.getName(rowItem.getTitle(), rowItem.getFname()));
             }
         }
         if (commentsModels.get(position).isUserLiked()) {
@@ -136,7 +136,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 
                 holder.subCommntName.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
            else
-                holder.subCommntName.setText("Dr. " + rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+                holder.subCommntName.setText(Methods.getName(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getTitle(),rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname()));
 
             Glide.with(context)
                     .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()).placeholder(R.drawable.user) // Uri of the picture
@@ -147,7 +147,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                     .into(holder.subcommentimg);
             // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
             holder.subcommnt.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment());
-            Methods.hyperlink(  holder.subcommnt,rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment(),context);
+            Methods.hyperlink(  holder.subcommnt,rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment(),context,0);
 
             if (commentsModels.get(position).getCommentsModels().size() > 1) {
                 holder.numberOfReplies.setVisibility(View.VISIBLE);
@@ -176,19 +176,24 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent resultIntent = new Intent(context, Dr_Profile.class);
                 CommentsModel likesModel = commentsModels.get(position);
+               /* Intent resultIntent = new Intent(context, Dr_Profile.class);
+
                 resultIntent.putExtra("UserId", likesModel.getUserId());
-                context.startActivity(resultIntent);
+                context.startActivity(resultIntent);*/
+                Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
             }
         });
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent resultIntent = new Intent(context, Dr_Profile.class);
                 CommentsModel likesModel = commentsModels.get(position);
+
+               /* Intent resultIntent = new Intent(context, Dr_Profile.class);
                 resultIntent.putExtra("UserId", likesModel.getUserId());
-                context.startActivity(resultIntent);
+                context.startActivity(resultIntent);*/
+                Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
+
             }
         });
         //  holder.name.setText(rowItem.getName());
@@ -202,7 +207,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
         holder.time.setText(rowItem.getTimeStamp());
         holder.totalLike.setText(commentsModels.get(position).getTotalLikes() + "");
         holder.message.setText(rowItem.getComment());
-        Methods.hyperlink(holder.message,rowItem.getComment(),context);
+        Methods.hyperlink(holder.message,rowItem.getComment(),context,0);
         // imageLoader.DisplayImage(context, rowItem.getProfile_pic_url(), holder.imageView, null, 150, 150, R.drawable.profile_default);
         holder.subComment.setOnClickListener(new View.OnClickListener() {
             @Override

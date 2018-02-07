@@ -28,11 +28,14 @@ import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
+import com.google.common.base.Utf8;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -354,6 +357,13 @@ if(getIntent().hasExtra("role"))
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
 
+            try {
+                fname= URLEncoder.encode(fname.toString(), "UTF-8");
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
             super.onPreExecute();
         }
 
@@ -402,7 +412,7 @@ if(getIntent().hasExtra("role"))
                 //  httppost.setHeader("Authorization", "Basic " + base64EncodedCredentials);
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
-                responseBody = EntityUtils.toString(response.getEntity());
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
                 jo = new JSONObject(responseBody);
 
             } catch (Exception e) {
@@ -421,7 +431,7 @@ if(getIntent().hasExtra("role"))
                     JSONArray errorArray;
                     JSONObject dataJsonObject;
                     boolean status = false;
-                    String auth_token = "",referral_code="" ,createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "";
+                    String auth_token = "",referral_code="" ,createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "",title="";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
                         try {
@@ -481,8 +491,10 @@ if(getIntent().hasExtra("role"))
                                         }
                                         if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
                                             referral_code = userJsonObject.getString("referral_code");
+                                        } if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
+                                            title = userJsonObject.getString("Title");
                                         }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code);
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code,title);
                                         Intent intent = new Intent(OtpActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();

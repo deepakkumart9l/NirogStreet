@@ -14,6 +14,7 @@ import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.SearchActivity;
 import com.app.nirogstreet.model.SearchModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -66,7 +67,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         if(rowItem.getId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
         holder.txtTitle.setText(rowItem.getFname().trim() + " " + rowItem.getLname());
         else
-            holder.txtTitle.setText("Dr. "+rowItem.getFname().trim() + " " + rowItem.getLname());
+            holder.txtTitle.setText(Methods.getName(rowItem.getTitle(),rowItem.getFname().trim() + " " + rowItem.getLname()));
 
         holder.department.setText(rowItem.getDeprtment());
         //ImageLoader imageLoader=new ImageLoader(context);
@@ -92,11 +93,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, Dr_Profile.class);
+               /* Intent intent = new Intent(context, Dr_Profile.class);
                 if (!rowItem.getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
 
                     intent.putExtra("UserId", rowItem.getId());
-                context.startActivity(intent);
+                context.startActivity(intent);*/
+                Methods.profileUser(rowItem.getUser_type(),context,rowItem.getId());
             }
         });
     }

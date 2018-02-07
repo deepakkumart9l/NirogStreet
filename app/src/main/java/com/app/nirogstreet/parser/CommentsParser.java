@@ -21,6 +21,7 @@ public class CommentsParser {
                         int totalLikes = 0;
                         boolean isuserLiked = false;
                         ArrayList<CommentsModel> subComment = new ArrayList<>();
+                        String user_type_comment=null,title_comment=null;
                         String commentId = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null, message = null, createdOn = null;
                         JSONObject jsonObjectComment = jsonArray.getJSONObject(i);
                         if (jsonObjectComment.has("id") && !jsonObjectComment.isNull("id")) {
@@ -32,6 +33,7 @@ public class CommentsParser {
                             JSONArray subComments = jsonObjectComment.getJSONArray("subcumment");
                             for (int k = 0; k < subComments.length(); k++) {
                                 JSONObject sub_commentObject = subComments.getJSONObject(k);
+String User_type=null,title=null;
                                 String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                 if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                     JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
@@ -39,6 +41,14 @@ public class CommentsParser {
                                         if (userDetail.has("id") && !userDetail.isNull("id")) {
                                             userIdSubComment = userDetail.getString("id");
 
+                                        }
+                                        if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                        {
+                                            User_type=userDetail.getString("user_type");
+                                        }
+                                        if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                        {
+                                            title=userDetail.getString("Title");
                                         }
                                         if (userDetail.has("name") && !userDetail.isNull("name")) {
                                             fnameSubComment = userDetail.getString("name");
@@ -63,7 +73,7 @@ public class CommentsParser {
                                 if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                     subCommentCreatedOn = sub_commentObject.getString("created");
                                 }
-                                subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null));
+                                subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
 
                             }
                         }
@@ -103,10 +113,18 @@ public class CommentsParser {
                                 if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                     slug = userDetail.getString("slug");
                                 }
+                                    if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                    {
+                                        user_type_comment=userDetail.getString("user_type");
+                                    }
+                                if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                {
+                                    title_comment=userDetail.getString("Title");
+                                }
                             }
                         }
 
-                        commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment));
+                        commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment,user_type_comment,title_comment));
                     }
                 }
             }

@@ -511,7 +511,7 @@ public class PostDetailActivity extends Activity {
                         int totalLikes = 0;
                         boolean isuserLiked = false;
                         ArrayList<CommentsModel> subComment = new ArrayList<>();
-
+String user_type_comment=null,title_comment=null;
                         String commentId = null, message = null, createdOn = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null;
                         InputMethodManager inputMethodManager =
                                 (InputMethodManager) PostDetailActivity.this.getSystemService(
@@ -550,6 +550,7 @@ public class PostDetailActivity extends Activity {
                                 JSONArray subComments = jsonObject.getJSONArray("subcumment");
                                 for (int k = 0; k < subComments.length(); k++) {
                                     JSONObject sub_commentObject = subComments.getJSONObject(k);
+                                    String User_type=null,title=null;
                                     String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                     if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                         JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
@@ -569,6 +570,14 @@ public class PostDetailActivity extends Activity {
                                             if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                                 slugSubComment = userDetail.getString("slug");
                                             }
+                                            if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                            {
+                                                User_type=userDetail.getString("user_type");
+                                            }
+                                            if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                            {
+                                                title=userDetail.getString("Title");
+                                            }
                                         }
                                     }
                                     if (sub_commentObject.has("message") && !sub_commentObject.isNull("message")) {
@@ -577,7 +586,7 @@ public class PostDetailActivity extends Activity {
                                     if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                         subCommentCreatedOn = sub_commentObject.getString("created");
                                     }
-                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null));
+                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
 
                                 }
                             }
@@ -586,6 +595,14 @@ public class PostDetailActivity extends Activity {
                                 {
                                     if (userDetail.has("id") && !userDetail.isNull("id")) {
                                         userId = userDetail.getString("id");
+                                    }
+                                    if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                    {
+                                        user_type_comment=userDetail.getString("user_type");
+                                    }
+                                    if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                    {
+                                        title_comment=userDetail.getString("Title");
                                     }
                                     if (userDetail.has("name") && !userDetail.isNull("name")) {
                                         fname = userDetail.getString("name");
@@ -599,9 +616,17 @@ public class PostDetailActivity extends Activity {
                                     if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                         slug = userDetail.getString("slug");
                                     }
+                                    if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                    {
+                                        user_type_comment=userDetail.getString("user_type");
+                                    }
+                                    if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                    {
+                                        title_comment=userDetail.getString("Title");
+                                    }
                                 }
 
-                                commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment));
+                                commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment,user_type_comment,title_comment));
                                 if (commentsAdapter == null && commentsModels.size() > 0) {
                                     commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true);
                                     commentsrecyclerview.setAdapter(commentsAdapter);

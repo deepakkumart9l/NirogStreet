@@ -32,8 +32,10 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -199,11 +201,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC) != null) {
                     String url;
                     url = sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC);
-                    Picasso.with(context)
-                            .load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC))
-                            .placeholder(R.drawable.user)
-                            .error(R.drawable.user)
-                            .into(myViewHolder.circleImageView);
+                    if (url != null && !url.equalsIgnoreCase(""))
+                        Picasso.with(context)
+                                .load(url)
+                                .placeholder(R.drawable.user)
+                                .error(R.drawable.user)
+                                .into(myViewHolder.circleImageView);
                 }
                 //   Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
                 //  TypeFaceMethods.setRegularTypeFaceForTextView(myViewHolder.postAn, context);
@@ -691,7 +694,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                         String scheme = "http://zipinfo.com";*/
                         if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                            Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context);
+                            Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
                             // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
                         }
                     } else {
@@ -779,7 +782,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion().trim().toString());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
                         //  Linkify.addLinks(viewHolder.QuestionTextView, Linkify.WEB_URLS);
-                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context);
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context,feedModel.getIs_pin());
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -835,10 +838,25 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ApplicationSingleton.setPostSelectedPostion(position);
-                            Intent intent = new Intent(context, PostDetailActivity.class);
-                            intent.putExtra("feedId", feedModel.getFeed_id());
-                            context.startActivity(intent);
+                           /* */
+                            if (position == 1 && feedModel.getIs_pin() == 1) {
+                                String str = Methods.getUrl(feedModel.getMessage());
+                                if (!str.equalsIgnoreCase("")) {
+
+                                    Uri uri = Uri.parse(str)
+                                            .buildUpon()
+                                            .appendQueryParameter("userId", sesstionManager.getUserDetails().get(SesstionManager.USER_ID))
+                                            .build();
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(uri);
+                                    context.startActivity(i);
+                                }
+                            } else {
+                                ApplicationSingleton.setPostSelectedPostion(position);
+                                Intent intent = new Intent(context, PostDetailActivity.class);
+                                intent.putExtra("feedId", feedModel.getFeed_id());
+                                context.startActivity(intent);
+                            }
 
                         }
                     });
@@ -888,10 +906,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (userDetailModel != null && userDetailModel.getName() != null) {
 
                         String name;
-                        if(userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
-                           name= userDetailModel.getName();
-                        }else {
-                          name  ="Dr. " + userDetailModel.getName();
+                        if (userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                            name = userDetailModel.getName();
+                        } else {
+                            name = Methods.getName(userDetailModel.getTitle(), userDetailModel.getName());
                         }
                         builder = new SpannableStringBuilder();
                         span = new SpannableString(name);
@@ -925,22 +943,25 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(context, Dr_Profile.class);
+                                      /*  Intent intent = new Intent(context, Dr_Profile.class);
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                             intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);
+                                        context.startActivity(intent);*/
+                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
                                     }
                                 });
                                 viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(context, Dr_Profile.class);
+                                      /*  Intent intent = new Intent(context, Dr_Profile.class);
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                             intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);
+                                        context.startActivity(intent);*/
+                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
+
                                     }
                                 });
-                                viewHolder.parentname.setText(feedModel.getCreatedBy().getName());
+                                viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getName()));
                                 viewHolder.parentname.setVisibility(View.VISIBLE);
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -992,13 +1013,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 if (feedModel.getCreatedBy() != null && feedModel.getCreatedBy().getUserId() != null) {
                                     if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
                                         str2 = new SpannableString("their");
-                                    else
-                                    if(feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
-                                    {
+                                    else if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                                         str2 = new SpannableString(feedModel.getCreatedBy().getName());
 
-                                    }else
-                                        str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
+                                    } else
+                                        str2 = new SpannableString(Methods.getName(feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getName()));
 
                                 }
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -1028,10 +1047,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     public void onClick(View textView) {
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
 
-                                            Intent intent = new Intent(context, Dr_Profile.class);
+                                          /*  Intent intent = new Intent(context, Dr_Profile.class);
                                             if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                                 intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
+                                            Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
+
                                         }
                                     }
                                 };
@@ -1043,22 +1064,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
-                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
+                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()) && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
+                                    if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase(""))
 
                                         str2 = new SpannableString(" post in ");
                                     else
                                         str2 = new SpannableString(" post ");
 
                                 } else {
-                                    if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
+                                    if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("") && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
 
                                         str2 = new SpannableString("'s post in ");
-                                    else
-                                    if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                    else if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
                                         str2 = new SpannableString(" post ");
 
-                                    }else {
+                                    } else {
                                         str2 = new SpannableString("'s post ");
 
 
@@ -1090,8 +1110,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
-                                {   str2 = new SpannableString(feedModel.getCommunity_name());
+                                if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("") && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
+                                    str2 = new SpannableString(feedModel.getCommunity_name());
                                     str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
                                     viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
@@ -1188,10 +1208,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         @Override
                         public void onClick(View textView) {
-                            Intent intent = new Intent(context, Dr_Profile.class);
+                           /* Intent intent = new Intent(context, Dr_Profile.class);
                             if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                 intent.putExtra("UserId", userDetailModel.getUserId());
-                            context.startActivity(intent);
+                            context.startActivity(intent);*/
+                            Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
+
                         }
                     };
                     builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1661,10 +1683,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
 
-       if(feedModel.getParentFeedDetail()!=null)
-       {
-           popup.getMenu().getItem(0).setVisible(false);
-       }
+        if (feedModel.getParentFeedDetail() != null) {
+            popup.getMenu().getItem(0).setVisible(false);
+        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();

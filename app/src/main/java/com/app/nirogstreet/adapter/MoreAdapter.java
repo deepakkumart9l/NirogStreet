@@ -228,11 +228,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (sesstionManager.getUserDetails().get(SesstionManager.USER_ID).equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                             myViewHolder.nameTv.setText(name);
                         } else {
-                            if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
 
-                            myViewHolder.nameTv.setText( name);
-                            else
-                                myViewHolder.nameTv.setText("Dr. " + name);
+                            myViewHolder.nameTv.setText( Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),name));
+
 
 
                         }
@@ -631,7 +629,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
 
                         }
-                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context);
+                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
 
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
@@ -672,10 +670,12 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(context, Dr_Profile.class);
+                           /* Intent intent = new Intent(context, Dr_Profile.class);
                             if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                 intent.putExtra("UserId", userDetailModel.getUserId());
-                            context.startActivity(intent);
+                            context.startActivity(intent);*/
+                            Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+
                         }
                     });
                     if (feedModel.getCreated() != null) {
@@ -684,7 +684,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context);
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context,feedModel.getIs_pin());
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -831,7 +831,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                             name = userDetailModel.getName();
                         } else {
-                            name = "Dr. " + userDetailModel.getName();
+                            name = Methods.getName(userDetailModel.getTitle(),userDetailModel.getName());
                         }
                         builder = new SpannableStringBuilder();
                         span = new SpannableString(name);
@@ -865,22 +865,25 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(context, Dr_Profile.class);
+                                       /* Intent intent = new Intent(context, Dr_Profile.class);
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                             intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);
+                                        context.startActivity(intent);*/
+                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
                                     }
                                 });
                                 viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(context, Dr_Profile.class);
+                                      /*  Intent intent = new Intent(context, Dr_Profile.class);
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                             intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);
+                                        context.startActivity(intent);*/
+                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+
                                     }
                                 });
-                                viewHolder.parentname.setText(feedModel.getCreatedBy().getName());
+                                viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
                                 viewHolder.parentname.setVisibility(View.VISIBLE);
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -936,7 +939,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         str2 = new SpannableString(feedModel.getCreatedBy().getName());
 
                                     } else {
-                                        str2 = new SpannableString("Dr. " + feedModel.getCreatedBy().getName());
+                                        str2 = new SpannableString(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
                                     }
                                 }
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -966,10 +969,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     public void onClick(View textView) {
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
 
-                                            Intent intent = new Intent(context, Dr_Profile.class);
+                                           /* Intent intent = new Intent(context, Dr_Profile.class);
                                             if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                                 intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                            context.startActivity(intent);
+                                            context.startActivity(intent);*/
+                                            Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
                                         }
                                     }
                                 };
@@ -1126,10 +1130,12 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         @Override
                         public void onClick(View textView) {
-                            Intent intent = new Intent(context, Dr_Profile.class);
+                    /*        Intent intent = new Intent(context, Dr_Profile.class);
                             if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                 intent.putExtra("UserId", userDetailModel.getUserId());
-                            context.startActivity(intent);
+                            context.startActivity(intent);*/
+                            Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+
                         }
                     };
                     builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

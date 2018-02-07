@@ -18,7 +18,7 @@ public class LikeParser {
                 if (jsonObject.has("likes") && !jsonObject.isNull("likes")) {
                     JSONArray jsonArray = jsonObject.getJSONArray("likes");
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        String commentId = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null, message = null, createdOn = null;
+                        String commentId = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null, message = null, createdOn = null,user_Type=null,title=null;
                         JSONObject jsonObjectComment = jsonArray.getJSONObject(i);
                         if (jsonObjectComment.has("id") && !jsonObjectComment.isNull("id")) {
                             commentId = jsonObjectComment.getString("id");
@@ -36,6 +36,14 @@ public class LikeParser {
                                 if (userDetail.has("id") && !userDetail.isNull("id")) {
                                     userId = userDetail.getString("id");
                                 }
+                                if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                {
+                                    user_Type=userDetail.getString("user_type");
+                                }
+if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+{
+    title=userDetail.getString("Title");
+}
                                 if (userDetail.has("name") && !userDetail.isNull("name")) {
                                     fname = userDetail.getString("name");
                                 }
@@ -51,7 +59,7 @@ public class LikeParser {
                             }
                         }
 
-                        likesModels.add(new LikesModel(commentId, createdOn, message, userProfile_pic, slug, lname, fname, userId));
+                        likesModels.add(new LikesModel(commentId, createdOn, message, userProfile_pic, slug, lname, fname, userId,user_Type,title));
                     }
                 }
             }

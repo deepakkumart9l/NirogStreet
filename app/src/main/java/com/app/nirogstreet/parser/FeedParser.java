@@ -31,7 +31,7 @@ public class FeedParser {
                 ArrayList<ShareWithModel> shareWithModels = new ArrayList<>();
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
-                int user_has_liked = 0, youcongratulated = 0;
+                int user_has_liked = 0, youcongratulated = 0,is_pin=0;
                 UserDetailModel userDetailModel = null;
                 String feed_Tag_id = null;
                 ArrayList<SpecializationModel> specializationModelsForTags = new ArrayList<>();
@@ -331,6 +331,10 @@ public class FeedParser {
 
 
                     }
+                   if (jsonObject.has("is_pin")&&!jsonObject.isNull("is_pin"))
+                    {
+                        is_pin=jsonObject.getInt("is_pin");
+                    }
                     if (jsonObject.has("user_hasLiked") && !jsonObject.isNull("user_hasLiked")) {
                         user_has_liked = jsonObject.getInt("user_hasLiked");
 
@@ -339,7 +343,7 @@ public class FeedParser {
                         docName = jsonObject.getString("docName");
 
                     }
-                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels);
+                    feedModel = new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels,is_pin);
                 }
 
 
@@ -375,7 +379,7 @@ public class FeedParser {
                                 UserDetailModel ParentFeedDetail = null;
                                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
-                                int user_has_liked = 0, youcongratulated = 0;
+                                int user_has_liked = 0, youcongratulated = 0,is_pin=0;
                                 UserDetailModel userDetailModel = null;
                                 UserDetailModel parentFeedDetail = null;
                                 UserDetailModel cretedBy = null;
@@ -674,11 +678,15 @@ public class FeedParser {
                                     user_has_liked = jsonObject.getInt("user_hasLiked");
 
                                 }
+                                if (jsonObject.has("is_pin")&&!jsonObject.isNull("is_pin"))
+                                {
+                                    is_pin=jsonObject.getInt("is_pin");
+                                }
                                 if (jsonObject.has("docName") && !jsonObject.isNull("docName")) {
                                     docName = jsonObject.getString("docName");
 
                                 }
-                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels));
+                                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels,is_pin));
                             }
                         }
                     }
@@ -707,7 +715,7 @@ public class FeedParser {
                 ArrayList<ShareWithModel> shareWithModels = new ArrayList<>();
                 String alubmName = null, albumDescription = null, albumLocation = null, albumCreatorUserId = null, albumCreatorfname = null, albumCreatorlname = null, albumCreaterProfile_pic = null, albumCreatorSlug = null;
                 String feed_id = null, feed_from = null, group_id = null, event_id = null, parent_feed = null, titleQuestion = null, post_type = null, feed_type = null, feed_for = null, feed_source = null, refrence = null, message = null, at_place = null, link_type = null, url_title = null, url_description = null, url_image = null, at_lang = null, at_long = null, created = null, updated = null, status = null, announcment_id = null, totalLikes = null, enable_comment = null, totalComments = null, docName = null, docIcon = null, docType = null, wishes = null;
-                int user_has_liked = 0, youcongratulated = 0;
+                int user_has_liked = 0, youcongratulated = 0,is_pin=0;
                 UserDetailModel userDetailModel = null;
                 UserDetailModel parentFeedDetail = null;
                 String feed_Tag_id = null;
@@ -1012,8 +1020,12 @@ public class FeedParser {
                     docName = jsonObject.getString("docName");
 
                 }
+                if (jsonObject.has("is_pin")&&!jsonObject.isNull("is_pin"))
+                {
+                    is_pin=jsonObject.getInt("is_pin");
+                }
 
-                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels));
+                feedModels.add(new FeedModel(feed_id, userDetailModel, community_id, parentFeedDetail, parent_feed, feed_type, post_type, titleQuestion, message, link_type, url_title, url_description, url_image, feedSourceArrayList, enable_comment, created, updated, user_has_liked, cretedBy, feed_source, totalComments, totalLikes, status, docName, "", community_name, activity_detail, specializationModelsForTags, refrence, shareWithModels,is_pin));
 
 
             }

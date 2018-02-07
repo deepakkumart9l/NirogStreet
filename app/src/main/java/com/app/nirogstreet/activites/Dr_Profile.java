@@ -54,6 +54,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.ImageProcess;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -150,7 +151,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(nameTv.getText().toString());
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),nameTv.getText().toString()));
 
             }
 
@@ -339,7 +340,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 if (userId.equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
                     nameTv.setText(userName);
                 else
-                    nameTv.setText("Dr. " + userName);
+                    nameTv.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), userName));
 
 
             }
@@ -669,6 +670,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                                 }
                             } else {
                                 userDetailModel = UserDetailPaser.userDetailParser(dataJsonObject);
+
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
                                 updateContactInfo();
                                 updateQualification();
@@ -1095,7 +1097,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                     nameTv.setText(userDetailModel.getName());
                 } else {
-                    nameTv.setText("Dr. " + userDetailModel.getName());
+                    nameTv.setText(Methods.getName(userDetailModel.getTitle(),userDetailModel.getName()));
 
                 }
             }

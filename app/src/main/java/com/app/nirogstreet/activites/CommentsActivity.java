@@ -301,6 +301,7 @@ public class CommentsActivity extends AppCompatActivity{
                                 CommentsActivity.this.getCurrentFocus().getWindowToken(), 0);
                         ArrayList<CommentsModel> subComment = new ArrayList<>();
                         Toast.makeText(CommentsActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
+                        String user_type_comment=null,title_comment=null;
                         String commentId = null, message = null, createdOn = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null;
                         if (response.has("comment") && !response.isNull("comment")) {
                             JSONObject jsonObject = response.getJSONObject("comment");
@@ -331,6 +332,8 @@ public class CommentsActivity extends AppCompatActivity{
                                 JSONArray subComments = jsonObject.getJSONArray("subcumment");
                                 for (int k = 0; k < subComments.length(); k++) {
                                     JSONObject sub_commentObject = subComments.getJSONObject(k);
+                                    String User_type=null;
+                                    String title=null;
                                     String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                     if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                         JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
@@ -350,6 +353,15 @@ public class CommentsActivity extends AppCompatActivity{
                                             if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                                 slugSubComment = userDetail.getString("slug");
                                             }
+                                            if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                            {
+                                                User_type=userDetail.getString("user_type");
+                                            }
+                                            if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                            {
+                                                title=userDetail.getString("Title");
+                                            }
+
                                         }
                                     }
                                     if (sub_commentObject.has("message") && !sub_commentObject.isNull("message")) {
@@ -358,7 +370,7 @@ public class CommentsActivity extends AppCompatActivity{
                                     if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                         subCommentCreatedOn = sub_commentObject.getString("created");
                                     }
-                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null));
+                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
 
                                 }
                             }
@@ -374,6 +386,14 @@ public class CommentsActivity extends AppCompatActivity{
                                     if (userDetail.has("lname") && !userDetail.isNull("lname")) {
                                         lname = userDetail.getString("lname");
                                     }
+                                    if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
+                                    {
+                                        user_type_comment=userDetail.getString("user_type");
+                                    }
+                                    if(userDetail.has("Title")&&!userDetail.isNull("Title"))
+                                    {
+                                        title_comment=userDetail.getString("Title");
+                                    }
                                     if (userDetail.has("profile_pic") && !userDetail.isNull("profile_pic")) {
                                         userProfile_pic = userDetail.getString("profile_pic");
                                     }
@@ -383,7 +403,7 @@ public class CommentsActivity extends AppCompatActivity{
 
                                 }
                             }
-                            commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment));
+                            commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment,user_type_comment,title_comment));
                             commentsAdapter.notifyDataSetChanged();
                             ApplicationSingleton.setIsCommented(true);
                             ApplicationSingleton.setNo_of_count(commentsAdapter.getItemCount());

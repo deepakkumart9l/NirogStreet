@@ -122,10 +122,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String authToken = user.get(SesstionManager.AUTH_TOKEN);
         String userId = user.get(SesstionManager.USER_ID);
         if (!group.equalsIgnoreCase("")) {
-            intent = new Intent(this, CommunitiesDetails.class);
-            intent.putExtra("userId", userId);
+            intent = new Intent(this, PostDetailActivity.class);
             intent.putExtra("openMain", true);
-            intent.putExtra("groupId", group);
+            intent.putExtra("feedId", post);
         } else if (!post.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
             intent.putExtra("openMain", true);
@@ -169,7 +168,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.white_noti)
                     .setContentTitle("NirogStreet")
-                    .setContentText(messageBody)
+                    .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
+
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
@@ -183,7 +183,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.color_noti)
                     .setContentTitle("NirogStreet")
-                    .setContentText(messageBody)
+                    .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);

@@ -21,7 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
+import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.activites.SearchLocationCity;
+import com.app.nirogstreet.activites.Student_Profile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,6 +49,40 @@ public class Methods {
     static TextView cur_val;
 
     static int totalSize = 0;
+
+    public static String getName(String title, String name) {
+        String str = "";
+        if (title != null) {
+            if (title.equalsIgnoreCase("1")) {
+                str = "Dr. " + name;
+            } else {
+                str = name;
+            }
+        } else {
+            str = name;
+        }
+        return str;
+    }
+
+    public static void profileUser(String userType, Context context, String userId) {
+        SesstionManager sesstionManager = new SesstionManager(context);
+        if (userType.equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
+            Intent intent = new Intent(context, Dr_Profile.class);
+            if (!userId.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                intent.putExtra("UserId", userId);
+
+            }
+            context.startActivity(intent);
+        } else if (userType.equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+            Intent intent = new Intent(context, Student_Profile.class);
+            if (!userId.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                intent.putExtra("UserId", userId);
+
+            }
+            context.startActivity(intent);
+        }
+
+    }
 
     public static boolean validCellPhone(String number) {
         return android.util.Patterns.PHONE.matcher(number).matches();
@@ -186,7 +222,28 @@ public class Methods {
         return m.matches();
     }
 
-    public static void hyperlink(TextView textView, String s,Context context) {
+    public static String getUrl(String s) {
+        try {
+            int i = 0;
+
+            SpannableString spannableString = new SpannableString(s);
+            Matcher urlMatcher = Patterns.WEB_URL.matcher(s);
+            while (urlMatcher.find()) {
+                String url = urlMatcher.group(i);
+                int start = urlMatcher.start(i);
+                int end = urlMatcher.end(i++);
+                if (isValidUrl(url)) {
+                    return url;
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static void hyperlink(TextView textView, String s, Context context,int is_pin) {
         try {
             int i = 0;
             SpannableString spannableString = new SpannableString(s);
@@ -197,12 +254,13 @@ public class Methods {
                 int end = urlMatcher.end(i++);
                 if (isValidUrl(url)) {
                     if (url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http"))
-                        spannableString.setSpan(new GoToURLSpan(url,context), start, end, 0);
+                        spannableString.setSpan(new GoToURLSpan(url, context), start, end, 0);
                 }
 
             }
 
             textView.setText(spannableString);
+            if(is_pin!=1)
             textView.setMovementMethod(new LinkMovementMethod());
         } catch (Exception e) {
             e.printStackTrace();

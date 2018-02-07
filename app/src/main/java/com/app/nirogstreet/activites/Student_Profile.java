@@ -46,6 +46,7 @@ import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.ImageProcess;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
@@ -140,7 +141,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(nameTv.getText().toString());
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),nameTv.getText().toString()));
 
             }
 
@@ -329,7 +330,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                 if (userId.equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
                     nameTv.setText(userName);
                 else
-                    nameTv.setText("Dr. " + userName);
+                    nameTv.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),userName));
 
 
             }
@@ -1081,7 +1082,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                     nameTv.setText(userDetailModel.getName());
                 } else {
 
-                    nameTv.setText("Dr. " + userDetailModel.getName());
+                    nameTv.setText(Methods.getName(userDetailModel.getTitle(),userDetailModel.getName()));
 
                 }
             }
@@ -1103,8 +1104,9 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                 if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
                     yearOfBirthTv.setText(userDetailModel.getDob());
                     birth_rel.setVisibility(View.VISIBLE);
+
                 } else {
-                    birth_rel.setVisibility(View.GONE);
+                    birth_rel.setVisibility(View.VISIBLE);
 
                 }
             } else {

@@ -61,11 +61,31 @@ public class SearchModel { String fname;
 
     String slug;
 
-    public SearchModel(String fname, String slug, String lname,String deprtment,String profileimage1,String id) {
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    String user_type;
+    String title;
+    public SearchModel(String fname, String slug, String lname,String deprtment,String profileimage1,String id,String user_type,String title) {
         this.fname = fname;
         this.slug = slug;
         this.deprtment=deprtment;
         this.id=id;
+        this.user_type=user_type;
+        this.title=title;
         this.profileimage=profileimage1;
         this.lname = lname;
     }

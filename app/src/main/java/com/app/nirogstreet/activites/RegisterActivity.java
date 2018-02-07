@@ -398,6 +398,7 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
+
             if (referralEt.getText().toString().length() > 0) {
                 referral = referralEt.getText().toString();
             }
@@ -435,7 +436,7 @@ public class RegisterActivity extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("is_registration", "1"));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
-                responseBody = EntityUtils.toString(response.getEntity());
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
                 jo = new JSONObject(responseBody);
 
             } catch (Exception e) {

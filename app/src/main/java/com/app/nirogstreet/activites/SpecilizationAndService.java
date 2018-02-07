@@ -112,6 +112,8 @@ if(student_intrests)
     text_email.setVisibility(View.GONE);
     Services_name.setVisibility(View.GONE);
     title_side.setText("Interests");
+    sepcialization.setHint("Add your interests");
+
 }
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");

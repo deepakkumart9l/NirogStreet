@@ -13,6 +13,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.Dr_Profile;
 import com.app.nirogstreet.model.SearchModel;
 import com.app.nirogstreet.model.UserList;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -65,7 +66,7 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final UserList rowItem = rowItems.get(position);
-        holder.txtTitle.setText(rowItem.getName());
+        holder.txtTitle.setText(Methods.getName(rowItem.getTitle(),rowItem.getName()));
         //ImageLoader imageLoader=new ImageLoader(context);
         if(position==0)
         {
@@ -92,11 +93,12 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
         ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, Dr_Profile.class);
+              /*  Intent intent = new Intent(context, Dr_Profile.class);
                 if (!rowItem.getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
 
                     intent.putExtra("UserId", rowItem.getId());
-                context.startActivity(intent);
+                context.startActivity(intent);*/
+                Methods.profileUser(rowItem.getUser_type(),context,rowItem.getId());
 
             }
         });

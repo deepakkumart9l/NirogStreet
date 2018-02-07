@@ -689,6 +689,7 @@ public class Multiple_select_invite_search extends Activity
 
             public MyHolderView(View itemView) {
                 super(itemView);
+                imageViewPic=(CircleImageView)itemView.findViewById(R.id.img);
                 relativeLayoutview = (RelativeLayout) itemView.findViewById(R.id.view);
                 textViewName = (TextView) itemView.findViewById(R.id.name);
                 textViewInvite = (ImageView) itemView.findViewById(R.id.invite);
