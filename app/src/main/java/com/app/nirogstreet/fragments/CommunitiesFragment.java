@@ -542,11 +542,16 @@ public class CommunitiesFragment extends Fragment {
             {
                 e.printStackTrace();
             }
-            otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
-            myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+            try {
+                otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+                myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
 
-            myGroupTextView.setClickable(true);
-            groupModelsTotal.addAll(groupModels);
+                myGroupTextView.setClickable(true);
+                groupModelsTotal.addAll(groupModels);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             super.onPostExecute(aVoid);
             try {
                 if (jo != null)

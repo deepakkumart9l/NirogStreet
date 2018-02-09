@@ -805,11 +805,15 @@ public class Knowledge_Centre_Detail extends Activity {
     }
 
     public void showPDFUrl(final Context context, final String pdfUrl, String ext) {
-
-        if (isPDFSupported(context, ext)) {
-            downloadAndOpenPDF(context, pdfUrl);
-        } else {
-        }
+try {
+    if (isPDFSupported(context, ext)) {
+        downloadAndOpenPDF(context, pdfUrl);
+    } else {
+    }
+}catch (Exception e)
+{
+    e.printStackTrace();
+}
         //askToOpenPDFThroughGoogleDrive( context, pdfUrl );
     }
 
@@ -845,6 +849,7 @@ public class Knowledge_Centre_Detail extends Activity {
         BroadcastReceiver onComplete = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                try{
                 if (!progress.isShowing()) {
                     return;
                 }
@@ -860,6 +865,9 @@ public class Knowledge_Centre_Detail extends Activity {
                     }
                 }
                 c.close();
+            }catch (Exception e)
+                {e.printStackTrace();
+                }
             }
         };
         context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
@@ -869,9 +877,14 @@ public class Knowledge_Centre_Detail extends Activity {
     }
 
     public static final void openPDF(Context context, Uri localUri) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(localUri, getMimeType(localUri.toString()));
-        context.startActivity(i);
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setDataAndType(localUri, getMimeType(localUri.toString()));
+            context.startActivity(i);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private static String getMimeType(String url) {

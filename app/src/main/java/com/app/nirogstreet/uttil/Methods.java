@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.text.style.StyleSpan;
+import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
@@ -243,6 +246,47 @@ public class Methods {
         return "";
     }
 
+    public static void hyperlinkSet(TextView textView, String s, Context context,int is_pin,SpannableString spannableString) {
+        try {
+            int i = 0;
+            boolean isValidTrue=false;
+
+            Matcher urlMatcher = Patterns.WEB_URL.matcher(s);
+            while (urlMatcher.find()) {
+                String url = urlMatcher.group(i);
+                int start = urlMatcher.start(i);
+                int end = urlMatcher.end(i++);
+                if (isValidUrl(url)) {
+                    isValidTrue=true;
+                    if (url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http")||url.startsWith("Www.")) {
+                        if(is_pin==1) {
+                            SesstionManager sesstionManager=new SesstionManager(context);
+                            String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+
+                            spannableString.setSpan(new GoToURLSpan(url+"?userId="+q, context), start, end, 0);
+                        }else {
+                            spannableString.setSpan(new GoToURLSpan(url, context), start, end, 0);
+
+                        }
+                    }
+                }else {
+
+                }
+
+            }
+            if(!isValidTrue)
+            {
+                spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            }
+
+            //textView.setText(spannableString);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void hyperlink(TextView textView, String s, Context context,int is_pin) {
         try {
             int i = 0;
@@ -262,6 +306,7 @@ public class Methods {
             textView.setText(spannableString);
             if(is_pin!=1)
             textView.setMovementMethod(new LinkMovementMethod());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

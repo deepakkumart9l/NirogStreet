@@ -1,6 +1,7 @@
 package com.app.nirogstreet.adapter;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -79,6 +80,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.ExpandableTextView;
 import com.app.nirogstreet.uttil.GoToURLSpan;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
@@ -95,6 +97,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,9 +124,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     int positionat;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    SpannableString str2;
+    SpannableString str2,spanStatus2;
     String text, videourl, title;
-    SpannableString span;
+    SpannableString span,spanStatus;
 
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -156,7 +159,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
-    private SpannableStringBuilder builder;
+    private SpannableStringBuilder builder,builder1;
 
 
     public TimelineAdapter(Context context, ArrayList<FeedModel> feedModels, Activity activity, String groupId, FrameLayout customViewContainer, CircularProgressBar circularProgressBar) {
@@ -681,22 +684,67 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
 
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
-                        viewHolder.statusTextView.setText(feedModel.getMessage().trim().toString());
+                       // viewHolder.statusTextView.setText(feedModel.getMessage().trim().toString());
 
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
-                        if (feedModel.getMessage().length() > 170)
-                            makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true, context, feedModel, position);
-                        else {
-                            viewHolder.statusTextView.setText(feedModel.getMessage());
+                        if (feedModel.getMessage().length() > 120) {
+                            try {
+                                builder1 = new SpannableStringBuilder();
+                                spanStatus = new SpannableString(feedModel.getMessage().substring(0, 170));
 
+                                spanStatus.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanStatus.length(), 0);
+                              //  spanStatus.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Methods.hyperlinkSet(viewHolder.statusTextView,spanStatus.toString(),context,feedModel.getIs_pin(),spanStatus);
+                                builder1.append(spanStatus);
+                                spanStatus2 = new SpannableString(" ... view more");
+                                spanStatus2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, spanStatus2.length(), 0);
+
+                                builder1.append(spanStatus2);
+                                ClickableSpan clickSpan1 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setUnderlineText(false);// this remove the underline
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
+                                        ApplicationSingleton.setPostSelectedPostion(position);
+                                        Intent intent = new Intent(context, PostDetailActivity.class);
+                                        intent.putExtra("feedId", feedModel.getFeed_id());
+                                        context.startActivity(intent);
+                                    }
+                                };
+                                String thirdspan = spanStatus2.toString();
+                                int third = builder1.toString().indexOf(thirdspan);
+                                //  doResizeTextView(viewHolder.statusTextView, 3, "view more", true);
+                                builder1.setSpan(clickSpan1, third, third + spanStatus2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.statusTextView.setText(builder1, TextView.BufferType.SPANNABLE);
+                                viewHolder.statusTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                //viewHolder.statusTextView.setText(feedModel.getMessage());
+                                //viewHolder.statusTextView.setText(feedModel.getMessage());
+                                //  cycleTextViewExpansion(viewHolder.statusTextView);
+                                if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                    //Methods.hyperlink(viewHolder.statusTextView, viewHolder.statusTextView.getText().toString(), context,feedModel.getIs_pin());
+                                    // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+                                }
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }  else {
+                            viewHolder.statusTextView.setText(feedModel.getMessage());
+                            if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
+                                // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+                            }
                         }
                      /*   String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                         String scheme = "http://zipinfo.com";*/
-                        if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                            Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
-                            // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
-                        }
+
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
 
@@ -839,13 +887,22 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onClick(View v) {
                            /* */
+                            try{
                             if (position == 1 && feedModel.getIs_pin() == 1) {
+
+
+
+// Receiving side
+                                String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+
                                 String str = Methods.getUrl(feedModel.getMessage());
+                                str=str+"?userId="+q;
                                 if (!str.equalsIgnoreCase("")) {
+
+
 
                                     Uri uri = Uri.parse(str)
                                             .buildUpon()
-                                            .appendQueryParameter("userId", sesstionManager.getUserDetails().get(SesstionManager.USER_ID))
                                             .build();
                                     Intent i = new Intent(Intent.ACTION_VIEW);
                                     i.setData(uri);
@@ -858,6 +915,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 context.startActivity(intent);
                             }
 
+                        }catch (Exception e)
+                            {
+                            e.printStackTrace();}
                         }
                     });
                     viewHolder.feedlikeLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -1289,8 +1349,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
         TextView likesTextView, commntsTextView;
+        TextView statusTextView;
         CircleImageView profilePicparent;
-        TextView statusTextView, nameTextView, QuestionTextView,
+        TextView  nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
@@ -1934,50 +1995,42 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             );
         }
     }
-
-    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
+    public static void doResizeTextView(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
 
         if (tv.getTag() == null) {
             tv.setTag(tv.getText());
         }
         ViewTreeObserver vto = tv.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @SuppressWarnings("deprecation")
             @Override
             public void onGlobalLayout() {
-                try {
 
-
-                    ViewTreeObserver obs = tv.getViewTreeObserver();
-                    obs.removeGlobalOnLayoutListener(this);
-                    if (maxLine == 0) {
-                        int lineEndIndex = tv.getLayout().getLineEnd(0);
-                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
-                        tv.setText(text);
-                        tv.setMovementMethod(LinkMovementMethod.getInstance());
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
-                    } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
-                        int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
-                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
-                        tv.setText(text);
-                        tv.setMovementMethod(LinkMovementMethod.getInstance());
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
-                    } else {
-                        int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
-                        String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
-                        tv.setText(text);
-                        tv.setMovementMethod(LinkMovementMethod.getInstance());
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                ViewTreeObserver obs = tv.getViewTreeObserver();
+                obs.removeGlobalOnLayoutListener(this);
+                if (maxLine == 0) {
+                    int lineEndIndex = tv.getLayout().getLineEnd(0);
+                    String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                    tv.setText(text);
+                    tv.setMovementMethod(LinkMovementMethod.getInstance());
+                    tv.setText(
+                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                    viewMore), TextView.BufferType.SPANNABLE);
+                } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
+                    int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
+                    String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                    tv.setText(text);
+                    tv.setMovementMethod(LinkMovementMethod.getInstance());
+                    tv.setText(
+                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                    viewMore), TextView.BufferType.SPANNABLE);
+                } else {
+                    int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
+                    String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
+                    tv.setText(text);
+                    tv.setMovementMethod(LinkMovementMethod.getInstance());
+                    tv.setText(
+                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
+                                    viewMore), TextView.BufferType.SPANNABLE);
                 }
             }
         });
@@ -1985,7 +2038,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
-                                                                            final int maxLine, final String spanableText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
+                                                                            final int maxLine, final String spanableText, final boolean viewMore) {
         String str = strSpanned.toString();
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
@@ -1996,19 +2049,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void onClick(View widget) {
 
                     if (viewMore) {
-                     /*   tv.setLayoutParams(tv.getLayoutParams());
+                        tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, -1, "view less", false);*/
-                        ApplicationSingleton.setPostSelectedPostion(position);
-                        Intent intent = new Intent(context, PostDetailActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);
+                        doResizeTextView(tv, -1, "View Less", false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, "view more", true, context, feedModel, position);
+                        doResizeTextView(tv, 3, "View More", true);
                     }
 
                 }
@@ -2018,6 +2067,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return ssb;
 
     }
-
-
+    private void cycleTextViewExpansion(TextView tv){
+        int collapsedMaxLines = 3;
+        ObjectAnimator animation = ObjectAnimator.ofInt(tv, "maxLines",
+                15 == collapsedMaxLines? tv.getLineCount() : collapsedMaxLines);
+        animation.setDuration(200).start();
+    }
 }
+
+

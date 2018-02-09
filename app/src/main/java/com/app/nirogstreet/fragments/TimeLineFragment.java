@@ -323,31 +323,32 @@ public class TimeLineFragment extends Fragment {
                     if (totalFeeds.size() > 0) {
                         feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer, circularProgressBar);
                         recyclerView.setAdapter(feedsAdapter);
-                    }
-                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                            super.onScrolled(recyclerView, dx, dy);
+                        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
 
-                            int totalItemCount = linearLayoutManager.getItemCount();
-                            int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                            if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
-                                try {
-                                    String has_more = "";
-                                    if (page < totalPageCount) {
-                                        page++;
+                                int totalItemCount = linearLayoutManager.getItemCount();
+                                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                                if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                    try {
+                                        String has_more = "";
+                                        if (page < totalPageCount) {
+                                            page++;
 
-                                        String url = AppUrl.BaseUrl + "feed/home";
-                                        userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                                        userFeedsAsyncTask.execute();
+                                            String url = AppUrl.BaseUrl + "feed/home";
+                                            userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
+                                            userFeedsAsyncTask.execute();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                    isLoading = true;
                                 }
-                                isLoading = true;
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     feedsAdapter.notifyDataSetChanged();
 

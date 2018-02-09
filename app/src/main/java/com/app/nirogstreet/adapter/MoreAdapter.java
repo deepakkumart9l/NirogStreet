@@ -108,7 +108,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     int positionat;
-    SpannableString span2, str3;
+    SpannableString span2, str3,spanStatus,spanStatus2;
     String text, videourl, title;
 
 
@@ -140,7 +140,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
-    private SpannableStringBuilder builder;
+    private SpannableStringBuilder builder,builder1;
     SpannableString str2, str4;
 
     public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar) {
@@ -624,7 +624,55 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewHolder.statusTextView.setText(feedModel.getMessage());
 
                         if (feedModel.getMessage().length() > 170)
-                            makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true, context, feedModel, position);
+                            if (feedModel.getMessage().length() > 170) {
+                                try {
+                                    builder1 = new SpannableStringBuilder();
+                                    spanStatus = new SpannableString(feedModel.getMessage().substring(0, 170));
+
+                                    spanStatus.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanStatus.length(), 0);
+                                    //  spanStatus.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    Methods.hyperlinkSet(viewHolder.statusTextView,spanStatus.toString(),context,feedModel.getIs_pin(),spanStatus);
+                                    builder1.append(spanStatus);
+                                    spanStatus2 = new SpannableString(" ... view more");
+                                    spanStatus2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, spanStatus2.length(), 0);
+
+                                    builder1.append(spanStatus2);
+                                    ClickableSpan clickSpan1 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            ApplicationSingleton.setPostSelectedPostion(position);
+                                            Intent intent = new Intent(context, PostDetailActivity.class);
+                                            intent.putExtra("feedId", feedModel.getFeed_id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+                                    String thirdspan = spanStatus2.toString();
+                                    int third = builder1.toString().indexOf(thirdspan);
+                                    //  doResizeTextView(viewHolder.statusTextView, 3, "view more", true);
+                                    builder1.setSpan(clickSpan1, third, third + spanStatus2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.statusTextView.setText(builder1, TextView.BufferType.SPANNABLE);
+                                    viewHolder.statusTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                    //viewHolder.statusTextView.setText(feedModel.getMessage());
+                                    //viewHolder.statusTextView.setText(feedModel.getMessage());
+                                    //  cycleTextViewExpansion(viewHolder.statusTextView);
+                                    if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                        //Methods.hyperlink(viewHolder.statusTextView, viewHolder.statusTextView.getText().toString(), context,feedModel.getIs_pin());
+                                        // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+                                    }
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        //makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true);
                         else {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
 
@@ -1875,8 +1923,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
-
+    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
         if (tv.getTag() == null) {
             tv.setTag(tv.getText());
         }
@@ -1887,8 +1934,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onGlobalLayout() {
                 try {
-
-
                     ViewTreeObserver obs = tv.getViewTreeObserver();
                     obs.removeGlobalOnLayoutListener(this);
                     if (maxLine == 0) {
@@ -1898,7 +1943,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
+                                        viewMore), TextView.BufferType.SPANNABLE);
                     } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
                         int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
                         String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
@@ -1906,7 +1951,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
+                                        viewMore), TextView.BufferType.SPANNABLE);
                     } else {
                         int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
                         String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
@@ -1914,7 +1959,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-                                        viewMore, context, feedModel, position), TextView.BufferType.SPANNABLE);
+                                        viewMore), TextView.BufferType.SPANNABLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1925,7 +1970,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
-                                                                            final int maxLine, final String spanableText, final boolean viewMore, final Context context, final FeedModel feedModel, final int position) {
+                                                                            final int maxLine, final String spanableText, final boolean viewMore) {
         String str = strSpanned.toString();
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
@@ -1936,19 +1981,15 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void onClick(View widget) {
 
                     if (viewMore) {
-                     /*   tv.setLayoutParams(tv.getLayoutParams());
+                        tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, -1, "view less", false);*/
-                        ApplicationSingleton.setPostSelectedPostion(position);
-                        Intent intent = new Intent(context, PostDetailActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);
+                        makeTextViewResizable(tv, -1, "view less", false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, "view more", true, context, feedModel, position);
+                        makeTextViewResizable(tv, 3, "view more", true);
                     }
 
                 }
@@ -1958,5 +1999,4 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return ssb;
 
     }
-
 }

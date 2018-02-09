@@ -26,6 +26,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -606,7 +607,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
                     viewHolder.statusTextView.setText(feedModel.getMessage());
-                    Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
+                   Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
 
                     viewHolder.statusTextView.setVisibility(View.VISIBLE);
                 } else {
@@ -693,6 +694,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                       e.printStackTrace();
                   }
                 }
+
                 viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -724,6 +726,38 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     viewHolder.QuestionTextView.setVisibility(View.GONE);
 
                 }
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                           /* */
+                        try{
+                            if (position == 1 && feedModel.getIs_pin() == 1) {
+
+
+
+// Receiving side
+                                String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+
+                                String str = Methods.getUrl(feedModel.getMessage());
+                                str=str+"?userId="+q;
+                                if (!str.equalsIgnoreCase("")) {
+
+
+
+                                    Uri uri = Uri.parse(str)
+                                            .buildUpon()
+                                            .build();
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(uri);
+                                    context.startActivity(i);
+                                }
+                            }
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();}
+                    }
+                });
                 viewHolder.feedcommentlisting.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -777,6 +811,38 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
                         }
+                    }
+                });
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                           /* */
+                        try{
+                            if (position == 1 && feedModel.getIs_pin() == 1) {
+
+
+
+// Receiving side
+                                String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+
+                                String str = Methods.getUrl(feedModel.getMessage()+"?userId="+q);
+                                if (!str.equalsIgnoreCase("")) {
+
+
+
+                                    Uri uri = Uri.parse(str)
+                                            .buildUpon()
+                                            .build();
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(uri);
+                                    context.startActivity(i);
+                                }
+                            }
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();}
                     }
                 });
                 try {

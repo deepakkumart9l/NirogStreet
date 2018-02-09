@@ -943,6 +943,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
            /* String xx = StringEscapeUtils.escapeJava(editTextMessage.getText().toString());
             messageText = xx.replace("\\", "");*/
             try {
+               /* linktitle=URLEncoder.encode(linktitle, "UTF-8");
+                linkDescription=URLEncoder.encode(linkDescription,"UTF-8");*/
                 refrence=URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
                 question=URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
