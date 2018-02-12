@@ -219,6 +219,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         saveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
                     if (validate()) {
 
@@ -1064,6 +1065,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     }
 
     public boolean validate() {
+        try{
         if (title.equalsIgnoreCase("-1")) {
             Toast.makeText(CreateDrProfile.this, R.string.seletct_title, Toast.LENGTH_SHORT).show();
             return false;
@@ -1109,6 +1111,10 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 Toast.makeText(CreateDrProfile.this, R.string.blog, Toast.LENGTH_SHORT).show();
                 return false;
             }
+        }}catch (Exception e)
+        {
+
+            e.printStackTrace();
         }
         return true;
     }

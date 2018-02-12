@@ -660,58 +660,59 @@ TextView privacyTextView;
     }
 
     private void setMoreMenu(int i) {
-        PopupMenu popup = new PopupMenu(context, view, Gravity.END);
-        switch (i) {
-            case 1:
-                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-                popup.getMenu().findItem(R.id.leave).setVisible(false);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.edit:
-                                Intent intent = new Intent(context, UpdateCommunity.class);
-                                intent.putExtra("update", true);
-                                intent.putExtra("groupId", groupId);
-                                context.startActivity(intent);
-                                break;
-                            case R.id.invite:
-                                Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
-                                intent1.putExtra("groupId", groupId);
-                                context.startActivity(intent1);
-                                break;
-                            case R.id.leave:
-                                setDialog();
+        try {
+            PopupMenu popup = new PopupMenu(context, view, Gravity.END);
+            switch (i) {
+                case 1:
+                    popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                    popup.getMenu().findItem(R.id.leave).setVisible(false);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.edit:
+                                    Intent intent = new Intent(context, UpdateCommunity.class);
+                                    intent.putExtra("update", true);
+                                    intent.putExtra("groupId", groupId);
+                                    context.startActivity(intent);
+                                    break;
+                                case R.id.invite:
+                                    Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
+                                    intent1.putExtra("groupId", groupId);
+                                    context.startActivity(intent1);
+                                    break;
+                                case R.id.leave:
+                                    setDialog();
                                /* if (NetworkUtill.isNetworkAvailable(context)) {
                                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
                                     acceptDeclineJoinAsyncTask.execute();
                                 } else {
                                     NetworkUtill.showNoInternetDialog(context);
                                 }*/
-                                break;
+                                    break;
 
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                popup.show();
+                    });
+                    popup.show();
 
-                break;
-            case 2:
-                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-                popup.getMenu().findItem(R.id.edit).setVisible(false);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
+                    break;
+                case 2:
+                    popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                    popup.getMenu().findItem(R.id.edit).setVisible(false);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
 
-                            case R.id.invite:
-                                Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
-                                intent1.putExtra("groupId", groupId);
-                                context.startActivity(intent1);
-                                break;
-                            case R.id.leave:
-                                setDialog();
+                                case R.id.invite:
+                                    Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
+                                    intent1.putExtra("groupId", groupId);
+                                    context.startActivity(intent1);
+                                    break;
+                                case R.id.leave:
+                                    setDialog();
 
                                /* if (NetworkUtill.isNetworkAvailable(context)) {
                                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
@@ -719,38 +720,42 @@ TextView privacyTextView;
                                 } else {
                                     NetworkUtill.showNoInternetDialog(context);
                                 }*/
-                                break;
+                                    break;
 
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                popup.show();
-                break;
-            case 3:
-                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-                popup.getMenu().findItem(R.id.edit).setVisible(false);
-                popup.getMenu().findItem(R.id.invite).setVisible(false);
-                popup.getMenu().findItem(R.id.leave).setTitle("Join");
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
+                    });
+                    popup.show();
+                    break;
+                case 3:
+                    popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                    popup.getMenu().findItem(R.id.edit).setVisible(false);
+                    popup.getMenu().findItem(R.id.invite).setVisible(false);
+                    popup.getMenu().findItem(R.id.leave).setTitle("Join");
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
 
-                            case R.id.leave:
-                                if (NetworkUtill.isNetworkAvailable(context)) {
-                                    acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 1, 0);
-                                    acceptDeclineJoinAsyncTask.execute();
-                                } else {
-                                    NetworkUtill.showNoInternetDialog(context);
-                                }
-                                break;
+                                case R.id.leave:
+                                    if (NetworkUtill.isNetworkAvailable(context)) {
+                                        acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 1, 0);
+                                        acceptDeclineJoinAsyncTask.execute();
+                                    } else {
+                                        NetworkUtill.showNoInternetDialog(context);
+                                    }
+                                    break;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                popup.show();
-                break;
+                    });
+                    popup.show();
+                    break;
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

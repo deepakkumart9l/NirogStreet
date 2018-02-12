@@ -835,8 +835,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
 
             try {
-              /*  linktitle=URLEncoder.encode(linktitle, "UTF-8");
-                linkDescription=URLEncoder.encode(linkDescription,"UTF-8");*/
+               linktitle=URLEncoder.encode(linktitle, "UTF-8");
+                linkDescription=URLEncoder.encode(linkDescription,"UTF-8");
                 refrence = URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
                 question = URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");

@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -128,9 +130,12 @@ public class VideoPlay_Activity extends AppCompatActivity {
         displayYoutubeVideo = (WebView) findViewById(R.id.webView);
 
         if (videotype.equalsIgnoreCase("native")) {
-            videoView.setVideoPath(myvideo);
+            String vidAddress = myvideo;
+            Uri vidUri = Uri.parse(vidAddress);
+            videoView.setVideoURI(vidUri);
             circularProgressBar.setVisibility(View.VISIBLE);
             MediaController mediaController = new MediaController(this);
+
             mediaController.setAnchorView(videoView);
             videoView.setMediaController(mediaController);
             try {

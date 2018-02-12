@@ -121,7 +121,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         HashMap<String, String> user = sessionManager.getUserDetails();
         String authToken = user.get(SesstionManager.AUTH_TOKEN);
         String userId = user.get(SesstionManager.USER_ID);
-        if (!group.equalsIgnoreCase("")) {
+        if (!group.equalsIgnoreCase("")&&notification_type.equalsIgnoreCase("")) {
             intent = new Intent(this, PostDetailActivity.class);
             intent.putExtra("openMain", true);
             intent.putExtra("feedId", post);
@@ -166,9 +166,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.white_noti)
+                    .setSmallIcon(R.drawable.app_icon)
                     .setContentTitle("NirogStreet")
-                    .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
+                    .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody)).setColor(getResources().getColor(R.color.white))
 
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
