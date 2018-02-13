@@ -65,7 +65,6 @@ public class DocumentWebView extends Activity {
     private static final String HTML_MIME_TYPE = "text/html";
     String url = null;
     CircularProgressBar circularProgressBar;
-    KnwledgeCompleteAsynctask knwledgeCompleteAsynctask;
     String id = null;
     Course_Detail_model course_detail_model;
     String title = null;
@@ -75,97 +74,10 @@ public class DocumentWebView extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("module",module_pos);
-        returnIntent.putExtra("topic",topic_pos);
-        returnIntent.putExtra("file",file_pos);
-        setResult( Activity.RESULT_OK,returnIntent);
-        finish();
+
         super.onBackPressed();
     }
 
-    public class KnwledgeCompleteAsynctask extends AsyncTask<Void, Void, Void> {
-        String authToken;
-        JSONObject jo;
-        String groupId, userId;
-
-        int status1;
-        HttpClient client;
-        int pos;
-        private String responseBody;
-
-
-        public void cancelAsyncTask() {
-            if (client != null && !isCancelled()) {
-                cancel(true);
-                client = null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            try {
-                if (jo != null) {
-
-
-                    if (jo.has("response") && !jo.isNull("response")) {
-                        JSONObject jsonObjectresponse = jo.getJSONObject("response");
-                        if (jsonObjectresponse.has("message") && !jsonObjectresponse.isNull("message")) {
-                            Toast.makeText(DocumentWebView.this, jsonObjectresponse.getString("message"), Toast.LENGTH_LONG).show();
-                            // addQualificationTextView.setVisibility(View.GONE);
-                            course_detail_model.getModulesModels().get(module_pos).getTopic_under_modules().get(topic_pos).getFile_under_topics().get(file_pos).setUser_completed(1);
-                            ApplicationSingleton.setCourse_detail_model(course_detail_model);
-                        }
-
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-
-
-                String url = AppUrl.BaseUrl + "knowledge/complete";
-                SSLSocketFactory sf = new SSLSocketFactory(
-                        SSLContext.getDefault(),
-                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-                Scheme sch = new Scheme("https", 443, sf);
-                client = new DefaultHttpClient();
-                client.getConnectionManager().getSchemeRegistry().register(sch);
-                HttpPost httppost = new HttpPost(url);
-                HttpResponse response;
-                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("courseID", id));
-                pairs.add(new BasicNameValuePair("userID", sesstionManager.getUserDetails().get(SesstionManager.USER_ID) + ""));
-                pairs.add(new BasicNameValuePair("status", "1"));
-                httppost.setHeader("Authorization", "Basic " + authToken);
-
-                httppost.setEntity(new UrlEncodedFormEntity(pairs));
-                response = client.execute(httppost);
-
-                responseBody = EntityUtils
-                        .toString(response.getEntity());
-                jo = new JSONObject(responseBody);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-    }
 
     public void showPDFUrl(final String pdfUrl) {
 
@@ -269,11 +181,7 @@ public class DocumentWebView extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("module",module_pos);
-                returnIntent.putExtra("topic",topic_pos);
-                returnIntent.putExtra("file",file_pos);
-                setResult( Activity.RESULT_OK,returnIntent);
+
                 finish();            }
         });
         if (getIntent().hasExtra("module_pos")) {
@@ -293,10 +201,12 @@ public class DocumentWebView extends Activity {
         });
 
         downloadImageView = (ImageView) findViewById(R.id.download);
+        downloadImageView.setVisibility(View.GONE);
         downloadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPDFUrl(url);
+
 
             }
         });

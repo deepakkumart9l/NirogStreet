@@ -108,7 +108,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     int positionat;
-    SpannableString span2, str3,spanStatus,spanStatus2;
+    SpannableString span2, str3, spanStatus, spanStatus2;
     String text, videourl, title;
 
 
@@ -121,8 +121,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     WebView webView;
     SpannableString span;
 
-    private final myWebViewClient mWebViewClient;
-    private final myWebChromeClient mWebChromeClient;
+
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
@@ -140,7 +139,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     SesstionManager sesstionManager;
     CircularProgressBar circularProgressBar;
     String groupId = "";
-    private SpannableStringBuilder builder,builder1;
+    private SpannableStringBuilder builder, builder1;
     SpannableString str2, str4;
 
     public MoreAdapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar) {
@@ -153,9 +152,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         HashMap<String, String> userDetails = sesstionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
-        mWebViewClient = new myWebViewClient();
 
-        mWebChromeClient = new myWebChromeClient();
 
     }
 
@@ -200,7 +197,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
-                // Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
 
 
                 try {
@@ -229,8 +225,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             myViewHolder.nameTv.setText(name);
                         } else {
 
-                            myViewHolder.nameTv.setText( Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),name));
-
+                            myViewHolder.nameTv.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), name));
 
 
                         }
@@ -260,7 +255,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
                 break;
             case TYPE_ITEM:
-                // viewHolder.sectionTextView.setVisibility(View.VISIBLE);
                 try {
                     final MyViewHolder viewHolder = (MyViewHolder) holder;
 
@@ -313,13 +307,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     viewHolder.playicon.setVisibility(View.VISIBLE);
                                     viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
 
-                                   /* Glide.with(context)
-                                            .load(feedModel.getUrl_image()) // Uri of the picture
-                                            .centerCrop()
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .crossFade()
-                                            .override(100, 100)
-                                            .into(viewHolder.feedImageView);*/
                                     Picasso.with(context)
                                             .load(feedModel.getUrl_image())
                                             .placeholder(R.drawable.default_)
@@ -350,8 +337,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     viewHolder.feedImageView.setVisibility(View.GONE);
                                     viewHolder.linkTitleTextView.setVisibility(View.VISIBLE);
                                     viewHolder.linkDescriptiontextView.setVisibility(View.VISIBLE);
-                                    // imageLoader.getInstance().displayImage(feedModel.getUrl_image(), holder.linkImageView, defaultOptions);
-                                    // imageLoader1.DisplayImage(context, feedModel.getUrl_image(), holder.linkImageView, null, 150, 150, R.drawable.default_image);
+
                                     if (feedModel.getUrl_title() != null && feedModel.getUrl_title().length() > 0 && !feedModel.getUrl_title().equalsIgnoreCase("")) {
                                         viewHolder.linkTitleTextView.setText(feedModel.getUrl_title());
                                     } else {
@@ -509,7 +495,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         }
                                     });
                                 }
-                            } //   imageLoader1.DisplayImage(context, feedModel.getFeed_source(), holder.feedImageView, null, 150, 150, R.drawable.default_image);
+                            }
                             break;
                         case VIDEO_UPLOADED_BY_USER:
                             viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
@@ -552,7 +538,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     context.startActivity(intent);
                                 }
                             });
-                            //  FeedMethods.setNativeVideo(holder.videoView, feedModel.getFeed_source(), context, holder.frameVideoFrameLayout);
                             break;
 
                         case FEED_TYPE_DOCUMENTS:
@@ -574,7 +559,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
                             if (feedModel != null)
                                 if (feedModel.getFeed_source() != null) {
-                                    // imageLoader.DisplayImage(context, feedModel.getDoc_Icon(), holder.docImageView, null, 150, 150, R.drawable.dummyuser);
                                     try {
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -630,8 +614,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     spanStatus = new SpannableString(feedModel.getMessage().substring(0, 170));
 
                                     spanStatus.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanStatus.length(), 0);
-                                    //  spanStatus.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    Methods.hyperlinkSet(viewHolder.statusTextView,spanStatus.toString(),context,feedModel.getIs_pin(),spanStatus);
+                                    Methods.hyperlinkSet(viewHolder.statusTextView, spanStatus.toString(), context, feedModel.getIs_pin(), spanStatus);
                                     builder1.append(spanStatus);
                                     spanStatus2 = new SpannableString(" ... view more");
                                     spanStatus2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, spanStatus2.length(), 0);
@@ -655,29 +638,21 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     };
                                     String thirdspan = spanStatus2.toString();
                                     int third = builder1.toString().indexOf(thirdspan);
-                                    //  doResizeTextView(viewHolder.statusTextView, 3, "view more", true);
                                     builder1.setSpan(clickSpan1, third, third + spanStatus2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     viewHolder.statusTextView.setText(builder1, TextView.BufferType.SPANNABLE);
                                     viewHolder.statusTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-                                    //viewHolder.statusTextView.setText(feedModel.getMessage());
-                                    //viewHolder.statusTextView.setText(feedModel.getMessage());
-                                    //  cycleTextViewExpansion(viewHolder.statusTextView);
                                     if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                                        //Methods.hyperlink(viewHolder.statusTextView, viewHolder.statusTextView.getText().toString(), context,feedModel.getIs_pin());
-                                        // Linkify.addLinks(viewHolder.statusTextView, Linkify.WEB_URLS);
+
                                     }
-                                }catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                            }
-                        //makeTextViewResizable(viewHolder.statusTextView, 3, "view more", true);
-                        else {
-                            viewHolder.statusTextView.setText(feedModel.getMessage());
+                            } else {
+                                viewHolder.statusTextView.setText(feedModel.getMessage());
 
-                        }
-                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
+                            }
+                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context, feedModel.getIs_pin());
 
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
@@ -718,11 +693,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                           /* Intent intent = new Intent(context, Dr_Profile.class);
-                            if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                intent.putExtra("UserId", userDetailModel.getUserId());
-                            context.startActivity(intent);*/
-                            Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+
+                            Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
 
                         }
                     });
@@ -732,7 +704,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context,feedModel.getIs_pin());
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context, feedModel.getIs_pin());
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -749,8 +721,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            //ApplicationSingleton.setPost_position(position);
-
                             context.startActivity(intent);
 
                         }
@@ -820,30 +790,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.GONE);
 
                     }
-          /*          if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
-                        if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
-                            if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
-                                viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
-                            } else {
-                                viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
-
-                            }
-                        } else {
-                            viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
-
-                        }
-                    } else {
-                        viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
-
-                    }*/
-                 /*   if(feedModel.getParentFeedDetail()!=null)
-                    {
-                        viewHolder.feeddeletelistingLinearLayout.setVisibility(View.GONE);
-
-                    }else {
-                        viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
-
-                    }*/
                     viewHolder.likesTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -879,7 +825,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                             name = userDetailModel.getName();
                         } else {
-                            name = Methods.getName(userDetailModel.getTitle(),userDetailModel.getName());
+                            name = Methods.getName(userDetailModel.getTitle(), userDetailModel.getName());
                         }
                         builder = new SpannableStringBuilder();
                         span = new SpannableString(name);
@@ -913,25 +859,17 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                       /* Intent intent = new Intent(context, Dr_Profile.class);
-                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                            intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);*/
-                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
                                     }
                                 });
                                 viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                      /*  Intent intent = new Intent(context, Dr_Profile.class);
-                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                            intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);*/
-                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
 
                                     }
                                 });
-                                viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
+                                viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getName()));
                                 viewHolder.parentname.setVisibility(View.VISIBLE);
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -968,10 +906,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                     @Override
                                     public void onClick(View textView) {
-                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
-                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);*/
-                                    }
+                                                                               }
                                 };
 
                                 String thirdspan = str2.toString();
@@ -987,7 +922,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         str2 = new SpannableString(feedModel.getCreatedBy().getName());
 
                                     } else {
-                                        str2 = new SpannableString(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
+                                        str2 = new SpannableString(Methods.getName(feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getName()));
                                     }
                                 }
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
@@ -1017,11 +952,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     public void onClick(View textView) {
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
 
-                                           /* Intent intent = new Intent(context, Dr_Profile.class);
-                                            if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                                intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                            context.startActivity(intent);*/
-                                            Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                            Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
                                         }
                                     }
                                 };
@@ -1178,11 +1109,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         @Override
                         public void onClick(View textView) {
-                    /*        Intent intent = new Intent(context, Dr_Profile.class);
-                            if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                intent.putExtra("UserId", userDetailModel.getUserId());
-                            context.startActivity(intent);*/
-                            Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+                            Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
 
                         }
                     };
@@ -1226,13 +1153,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     deletepostAsyncTask.execute();
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
-                    //feedId
                 }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
                 dialog.cancel();
             }
         });
@@ -1263,14 +1188,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         setDialog(feedModel);
                         break;
                 }
-                /*if (item.getTitle().equals(R.string.SharePublic)) {
 
-
-                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
-
-                } else {
-
-                }*/
                 return true;
             }
         });
@@ -1546,94 +1464,15 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class myWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            String url1 = url;
-            System.out.print(url1);
-            return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
-        }
-    }
-
-    class myWebChromeClient extends WebChromeClient {
-        private Bitmap mDefaultVideoPoster;
-        private View mVideoProgressView;
-
-        @Override
-        public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
-            super.onReceivedTouchIconUrl(view, url, precomposed);
-        }
-
-        @Override
-        public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-            return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
-        }
-
-        @Override
-        public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback) {
-
-            onShowCustomView(view, callback);    //To change body of overridden methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public void onShowCustomView(View view, CustomViewCallback callback) {
-
-            // if a view already exists then immediately terminate the new one
-            if (mCustomView != null) {
-                callback.onCustomViewHidden();
-                return;
-            }
-            mCustomView = view;
-            mCustomView.setVisibility(View.VISIBLE);
-
-            webView.setVisibility(View.GONE);
-
-            customViewContainer.setVisibility(View.VISIBLE);
-            ((MainActivity) context).setTabsVisibility(false);
-
-            customViewContainer.addView(view);
-            customViewCallback = callback;
-        }
-
-        @Override
-        public View getVideoLoadingProgressView() {
-
-            if (mVideoProgressView == null) {
-                LayoutInflater inflater = LayoutInflater.from(context);
-                mVideoProgressView = inflater.inflate(R.layout.video_progress, null);
 
 
-            }
-            return mVideoProgressView;
-        }
-
-        @Override
-        public void onHideCustomView() {
-            super.onHideCustomView();    //To change body of overridden methods use File | Settings | File Templates.
-            if (mCustomView == null)
-                return;
-
-            webView.setVisibility(View.VISIBLE);
-            customViewContainer.setVisibility(View.GONE);
-            ((MainActivity) context).setTabsVisibility(true);
-            mCustomView.setVisibility(View.GONE);
-            // Remove the custom view from its container.
-            customViewContainer.removeView(mCustomView);
-            customViewCallback.onCustomViewHidden();
-
-            mCustomView = null;
-        }
-    }
 
     public void sharePopup(LinearLayout view, final FeedModel feedModel) {
         PopupMenu popup = new PopupMenu(context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                              public boolean onMenuItemClick(MenuItem item) {
-                                                 //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-                                                 //  int index = info.position;
-                                                 //  System.out.print(index);
                                                  switch (item.getItemId()) {
                                                      case R.id.publicshare:
                                                          Intent intent = new Intent(context, PublicShare.class);
@@ -1645,12 +1484,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                          intent.putExtra("userId", userId);
                                                          context.startActivity(intent);
 
-                                                       /*  if (NetworkUtill.isNetworkAvailable(context)) {
-                                                             SharePublicAsyncTask sharePublicAsyncTask = new SharePublicAsyncTask(feedModel.getFeed_id(), userId, authToken);
-                                                             sharePublicAsyncTask.execute();
-                                                         } else {
-                                                             NetworkUtill.showNoInternetDialog(context);
-                                                         }*/
                                                          break;
                                                      case R.id.groupstimeline:
                                                          Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
@@ -1669,13 +1502,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                              if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
                                                                  text = feedModel.getMessage();
                                                              }
-       /* if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
-            if (feedModel.getFeedSourceArrayList().get(0) != null && feedModel.getFeedSourceArrayList().get(0).length() > 0) {
-                shareText = feedModel.getFeedSourceArrayList().get(0);
-            }
-        }*/
-                                                             String path = null;
-                                                             Uri imageUri = null;
                                                              ArrayList<Uri> files = new ArrayList<Uri>();
                                                              if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
                                                                  try {
@@ -1689,7 +1515,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                                          bitmapUri = Uri.parse(bitmapPath);
                                                                          files.add(bitmapUri);
                                                                      }
-                                                                     //  f.getAbsoluteFile();
                                                                  } catch (IOException e) {
                                                                      System.out.println(e);
                                                                  }
@@ -1704,7 +1529,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                              Intent shareIntent = new Intent(Intent.ACTION_SEND);
                                                              shareIntent.setType("text/plain");
                                                              if (files != null && files.size() > 0) {
-                                                                 // shareIntent.setDataAndType(imageUri,context. getContentResolver().getType(imageUri));
 
                                                                  shareIntent.putExtra(Intent.EXTRA_STREAM, files);
                                                                  shareIntent.setType("image/*");
@@ -1735,14 +1559,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                          }
                                                          break;
                                                  }
-                /*if (item.getTitle().equals(R.string.SharePublic)) {
 
-
-                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
-
-                } else {
-
-                }*/
                                                  return true;
                                              }
                                          }
@@ -1752,87 +1569,6 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         popup.show();//showing popup menu
     }
 
-    public class SharePublicAsyncTask extends AsyncTask<Void, Void, Void> {
-        String authToken;
-        JSONObject jo;
-        String feedId, userId;
-
-
-        private String responseBody;
-        HttpClient client;
-        Context context;
-
-        public void cancelAsyncTask() {
-            if (client != null && !isCancelled()) {
-                cancel(true);
-                client = null;
-            }
-        }
-
-        public SharePublicAsyncTask(String feedId, String userId, String authToken) {
-            this.feedId = feedId;
-            this.authToken = authToken;
-            this.userId = userId;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            try {
-                if (jo != null) {
-                    if (jo.has("responce") && !jo.isNull("responce")) {
-                        FeedModel feedModel = FeedParser.singleFeed(jo.getJSONObject("responce"));
-                        feedModels.add(1, feedModel);
-                        notifyItemInserted(1);
-
-                        notifyItemRangeChanged(1, feedModels.size());
-
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-
-
-                String url = AppUrl.BaseUrl + "feed/share";
-                SSLSocketFactory sf = new SSLSocketFactory(
-                        SSLContext.getDefault(),
-                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-                Scheme sch = new Scheme("https", 443, sf);
-                client = new DefaultHttpClient();
-                client.getConnectionManager().getSchemeRegistry().register(sch);
-                HttpPost httppost = new HttpPost(url);
-                HttpResponse response;
-                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
-                pairs.add(new BasicNameValuePair("userID", userId));
-                pairs.add(new BasicNameValuePair("feedID", feedId));
-                pairs.add(new BasicNameValuePair("shareType", "1"));
-                httppost.setHeader("Authorization", "Basic " + authToken);
-
-                httppost.setEntity(new UrlEncodedFormEntity(pairs));
-                response = client.execute(httppost);
-
-                responseBody = EntityUtils
-                        .toString(response.getEntity());
-                jo = new JSONObject(responseBody);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-    }
 
     public class LikePostAsynctask extends AsyncTask<Void, Void, Void> {
         String authToken;
@@ -1923,80 +1659,5 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
-        if (tv.getTag() == null) {
-            tv.setTag(tv.getText());
-        }
-        ViewTreeObserver vto = tv.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
-            @SuppressWarnings("deprecation")
-            @Override
-            public void onGlobalLayout() {
-                try {
-                    ViewTreeObserver obs = tv.getViewTreeObserver();
-                    obs.removeGlobalOnLayoutListener(this);
-                    if (maxLine == 0) {
-                        int lineEndIndex = tv.getLayout().getLineEnd(0);
-                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
-                        tv.setText(text);
-                        tv.setMovementMethod(LinkMovementMethod.getInstance());
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore), TextView.BufferType.SPANNABLE);
-                    } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
-                        int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
-                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
-                        tv.setText(text);
-                        tv.setMovementMethod(LinkMovementMethod.getInstance());
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                        viewMore), TextView.BufferType.SPANNABLE);
-                    } else {
-                        int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
-                        String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
-                        tv.setText(text);
-                        tv.setMovementMethod(LinkMovementMethod.getInstance());
-                        tv.setText(
-                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-                                        viewMore), TextView.BufferType.SPANNABLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
-    private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
-                                                                            final int maxLine, final String spanableText, final boolean viewMore) {
-        String str = strSpanned.toString();
-        SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
-
-        if (str.contains(spanableText)) {
-            ssb.setSpan(new ClickableSpan() {
-
-                @Override
-                public void onClick(View widget) {
-
-                    if (viewMore) {
-                        tv.setLayoutParams(tv.getLayoutParams());
-                        tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
-                        tv.invalidate();
-                        makeTextViewResizable(tv, -1, "view less", false);
-                    } else {
-                        tv.setLayoutParams(tv.getLayoutParams());
-                        tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
-                        tv.invalidate();
-                        makeTextViewResizable(tv, 3, "view more", true);
-                    }
-
-                }
-            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
-
-        }
-        return ssb;
-
-    }
 }

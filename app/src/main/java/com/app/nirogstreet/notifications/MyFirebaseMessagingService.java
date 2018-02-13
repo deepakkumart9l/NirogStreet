@@ -166,7 +166,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.app_icon)
+                    .setSmallIcon(R.drawable.noti_back)
                     .setContentTitle("NirogStreet")
                     .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody)).setColor(getResources().getColor(R.color.white))
 
@@ -181,7 +181,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // notificationManager.notify(1,notificationBuilder.build());
         } else {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.color_noti)
+                    .setSmallIcon(R.drawable.white_noti)
                     .setContentTitle("NirogStreet")
                     .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
                     .setAutoCancel(true)

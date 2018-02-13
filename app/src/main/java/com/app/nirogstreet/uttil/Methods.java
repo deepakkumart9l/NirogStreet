@@ -48,10 +48,7 @@ public class Methods {
 
     static ProgressBar pb;
     static Dialog dialog;
-    static int downloadedSize = 0;
     static TextView cur_val;
-
-    static int totalSize = 0;
 
     public static String getName(String title, String name) {
         String str = "";
@@ -158,7 +155,6 @@ public class Methods {
                     connection.connect();
                     int fileLength = connection.getContentLength();
 
-                    // download the file
                     input = connection.getInputStream();
                     output = new FileOutputStream("/sdcard/" + name + "." + extention);
 

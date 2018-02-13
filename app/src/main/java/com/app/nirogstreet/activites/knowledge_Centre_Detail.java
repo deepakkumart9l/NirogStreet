@@ -614,8 +614,13 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains("\\.")) {
                                                             //feedModel.setDoc_name(feedModel.getDoc_name().replace("\\.", ""));
                                                         }
+                                                        k_Module_pos = finalK;
+                                                        i_Tpoic_pos = finalI;
+                                                        j_File_pos = finalJ;
+                                                        ApplicationSingleton.setIsDocOpen(true);
+
                                                         String ext = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().substring(course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().lastIndexOf(".") + 1, course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().length());
-                                              /*         Intent intent = new Intent(Knowledge_Centre_Detail.this, DocumentWebView.class);
+                                                       Intent intent = new Intent(Knowledge_Centre_Detail.this, DocumentWebView.class);
                                                         intent.putExtra("id", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getId());
                                                         intent.putExtra("title", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getName());
                                                         intent.putExtra("course_detail_model", course_detail_model);
@@ -623,11 +628,8 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         intent.putExtra("topic_pos", finalI);
                                                         intent.putExtra("file_pos", finalJ);
                                                         intent.putExtra("url", course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file());
-                                                        startActivityForResult(intent, 1);
-*/
-                                                        k_Module_pos = finalK;
-                                                        i_Tpoic_pos = finalI;
-                                                        j_File_pos = finalJ;
+                                                        startActivity(intent);
+
                                                         String url;
                                                         if (course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file().contains(".DOC"))
 
@@ -636,8 +638,7 @@ public class Knowledge_Centre_Detail extends Activity {
                                                         } else {
                                                             url = course_detail_model.getModulesModels().get(finalK).getTopic_under_modules().get(finalI).getFile_under_topics().get(finalJ).getKc_file();
                                                         }
-                                                        ApplicationSingleton.setIsDocOpen(true);
-                                                        showPDFUrl(Knowledge_Centre_Detail.this, url, ext);
+                                                       // showPDFUrl(Knowledge_Centre_Detail.this, url, ext);
 
                                                     }
 

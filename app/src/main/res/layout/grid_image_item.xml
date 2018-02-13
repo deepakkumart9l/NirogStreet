@@ -11,14 +11,15 @@
          android:layout_height="120dp"
          android:scaleType="centerCrop"/>
  -->
-    <android.support.percent.PercentFrameLayout
+    <RelativeLayout
         android:id="@+id/toplayout"
-        android:layout_width="80dp"
-        android:layout_height="80dp">
+        android:layout_width="105dp"
+        android:layout_height="90dp">
 
         <ImageView
             android:id="@+id/gallaryimages"
             android:layout_width="80dp"
+            android:layout_marginTop="10dp"
             android:layout_height="80dp"
             android:background="@color/white"
             android:scaleType="fitXY"></ImageView>
@@ -33,10 +34,12 @@
             android:id="@+id/cancel"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="-5dp"
             android:layout_gravity="right"
-            android:padding="8dp"
-            android:src="@drawable/cancel" />
-    </android.support.percent.PercentFrameLayout>
+            android:layout_alignParentRight="true"
+            android:padding="6dp"
+            android:src="@drawable/cross_circle_" />
+    </RelativeLayout>
 
     <TextView
         android:layout_width="80dp"

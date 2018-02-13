@@ -46,6 +46,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -69,6 +70,7 @@ import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 
@@ -117,6 +119,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     String selectedVideoPath = null;
     ImageView cancel1;
     TextView docName;
+    RelativeLayout video_image;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
     RelativeLayout linkLay, imagelay;
@@ -126,7 +129,6 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     private int STORAGE_PERMISSION_CODE_DOCUMENT = 3;
     CircleImageView circleImageView;
     File photoFile;
-    private TextView mEditTextView;
     CheckBox enableCheckBox;
     private int REQUEST_CAMERA = 99;
     int REQUEST_CODE = 4;
@@ -144,6 +146,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     String linkDescription = "", linktitle = "", linkImage = "", linkUrl = "";
     ImageView linkImageView;
     PostAsyncTask postAsyncTask;
+    boolean isImageClicked = false, isVideoClicked = false, isPdfClicked = false;
     String docpath;
     ImageView imageViewSelected;
     private AskQuestionForumImagesAdapter askQuestionForumImagesAdapter;
@@ -151,9 +154,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
     TextView textViewpost;
-    MyScrollView scrollView;
+    LinearLayout imageButton,pdfBuuton;
     TextView descriptionTextView, titleTextView;
-    EditText title_QuestionEditText, editTextMessage, refernceEditText;
+    EditText editTextMessage;
     CheckBox checkBox;
     private boolean albumupdate = false;
 
@@ -163,8 +166,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.post_new);
-        scrollView = (MyScrollView) findViewById(R.id.scrol);
         backImageView = (ImageView) findViewById(R.id.back);
+        pdfBuuton=(LinearLayout)findViewById(R.id.pdfBuuton);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +176,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 imagelay.setVisibility(View.VISIBLE);
             }
         });
+        video_image=(RelativeLayout)findViewById(R.id.video_image);
+        imageButton = (LinearLayout) findViewById(R.id.imageButton);
         docName = (TextView) findViewById(R.id.docName);
         sesstionManager = new SesstionManager(PostingActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -195,14 +200,14 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         imagelay.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                scrollView.setScrolling(true);
+                //scrollView.setScrolling(true);
                 return false;
             }
         });
         linkLay.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                scrollView.setScrolling(true);
+                //scrollView.setScrolling(true);
 
                 return false;
             }
@@ -215,8 +220,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 docpath = null;
                 docName.setVisibility(View.GONE);
                 cancel1.setVisibility(View.GONE);
-                imageViewSelected.setImageResource(R.drawable.add_image_icon);
-            }
+imageViewSelected.setVisibility(View.GONE);            }
         });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
@@ -224,15 +228,17 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         if (sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC) != null) {
             String url;
             url = sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC);
-            Glide.with(PostingActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
-
+          //  Glide.with(PostingActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
+            Picasso.with(PostingActivity.this)
+                    .load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC))
+                    .placeholder(R.drawable.default_)
+                    .into(circleImageView);
         }
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
         dr_nameTextView.setText("Dr. " + sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
         publicTextView = (TextView) findViewById(R.id.public_);
-        title_QuestionEditText = (EditText) findViewById(R.id.title_Question);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
-        scrollView.setOnTouchListener(new View.OnTouchListener() {
+        /*scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 scrollView.setScrolling(true);
@@ -240,28 +246,14 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 return false;
             }
         });
+        */
         editTextMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (v.getId() == R.id.editTextMessage) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
 
-                    scrollView.setScrolling(false);
-                    return false;
-
-                    // v.getParent().requestDisallowInterceptTouchEvent(false);
-
-                }
-                return false;
-            }
-        });
-        title_QuestionEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v.getId() == R.id.title_Question) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-
-                    scrollView.setScrolling(false);
+                    // scrollView.setScrolling(false);
                     return false;
 
                     // v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -287,7 +279,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editTextMessage.getText().toString().contains(" ")) {
-                    String str=editTextMessage.getText().toString().replaceAll("\n"," ");
+                    String str = editTextMessage.getText().toString().replaceAll("\n", " ");
                     String strarr[] = str.split(" ");
                     for (int i = 0; i < strarr.length; i++) {
                         System.out.print(strarr[i]);
@@ -305,24 +297,34 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 }
             }
         });
-        refernceEditText = (EditText) findViewById(R.id.refernce);
-        refernceEditText.setOnTouchListener(new View.OnTouchListener() {
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v.getId() == R.id.refernce) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-
-                    scrollView.setScrolling(false);
-                    return false;
-
-                    // v.getParent().requestDisallowInterceptTouchEvent(false);
-
-                }
-                return false;
+            public void onClick(View v) {
+                isVideoClicked=false;
+                isPdfClicked=false;
+                isImageClicked = true;
+                checkPermission();
             }
         });
-
-
+        video_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isVideoClicked = true;
+                isImageClicked=false;
+                isPdfClicked=false;
+                checkPermission();
+            }
+        });
+        pdfBuuton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isVideoClicked = false;
+                isImageClicked=false;
+                isPdfClicked=true;
+                checkPermissionForDoc();
+            }
+        });
 /*
         TypeFaceMethods.setRegularTypeBoldFaceTextView(dr_nameTextView, PostingActivity.this);
         TypeFaceMethods.setRegularTypeFaceForTextView(publicTextView, PostingActivity.this);
@@ -342,7 +344,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         enableCheckBox.setTypeface(tf);*/
 
         imageViewSelected = (ImageView) findViewById(R.id.imgView);
-        mEditTextView = (TextView) findViewById(R.id.edit_text_field);
+      /*  mEditTextView = (TextView) findViewById(R.id.edit_text_field);
         mEditTextView.setFocusable(false);
         // TypeFaceMethods.setRegularTypeFaceForTextView(mEditTextView, PostingActivity.this);
         mEditTextView.setOnClickListener(new View.OnClickListener() {
@@ -357,7 +359,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 startActivityForResult(intent, RESULT_CODE);
 
             }
-        });
+        });*/
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(PostingActivity.this);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
@@ -379,9 +381,6 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     }
                     if (NetworkUtill.isNetworkAvailable(PostingActivity.this)) {
                         String refernce = "";
-                        if (refernceEditText.getText().toString().length() == 0) {
-                            refernce = refernceEditText.getText().toString();
-                        }
 
                         if (selectedVideoPath != null && selectedVideoPath.length() > 0) {
                             File file = new File(selectedVideoPath);
@@ -392,7 +391,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
                                 if (!isposting) {
                                     isposting = true;
-                                    postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernce);
+                                    postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), "", "");
                                     postAsyncTask.execute();
 
                                 }
@@ -402,7 +401,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                         } else {
                             if (!isposting) {
                                 isposting = true;
-                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), title_QuestionEditText.getText().toString(), refernceEditText.getText().toString());
+                                postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), "", "");
                                 postAsyncTask.execute();
                             }
                         }
@@ -418,7 +417,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         imageViewSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scrollView.setScrolling(true);
+                // scrollView.setScrolling(true);
                 checkPermission();
 
             }
@@ -427,10 +426,10 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 '_',
                 '$'
         };
-        mEditTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), null);
+        /*mEditTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), null);
         mEditTextHashTagHelper.handle(mEditTextView);
         mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), this, additionalSymbols);
-        mTextHashTagHelper.handle(mEditTextView);
+        mTextHashTagHelper.handle(mEditTextView);*/
     }
 
     public void checkPermission() {
@@ -438,7 +437,12 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.e("", " Permission Already given ");
-            chooseOption();
+            if (isImageClicked)
+                selectImage();
+            if (isVideoClicked)
+                takeVideo();
+            if (isPdfClicked)
+                checkPermissionForDoc();
         } else {
             Log.e("", "Current app does not have READ_PHONE_STATE permission");
             ActivityCompat.requestPermissions(PostingActivity.this, new String[]{Manifest.permission.CAMERA,
@@ -452,7 +456,12 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.print(requestCode);
         if (requestCode == 1) {
-            chooseOption();
+            if (isPdfClicked)
+                selectImage();
+            if (isVideoClicked)
+                takeVideo();
+            if (isPdfClicked)
+                checkPermissionForDoc();
         }
     }
 
@@ -481,6 +490,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
 
     private void takeVideo() {
+        isPdfClicked=false;
+        isVideoClicked=false;
+        isPdfClicked=false;
         selectVideoFromGallery();
     }
 
@@ -498,6 +510,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     }
 
     private void selectImage() {
+       isPdfClicked=false;
+        isVideoClicked=false;
+        isPdfClicked=false;
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PostingActivity.this);
@@ -574,6 +589,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         if (requestCode == 102 && resultCode == RESULT_OK) {
             if (data.getData() != null) {
                 Uri uri = data.getData();
+                imageViewSelected.setVisibility(View.VISIBLE);
                 cancel1.setVisibility(View.VISIBLE);
                 Glide.with(PostingActivity.this).load(uri).into(imageViewSelected);
                 try {
@@ -593,6 +609,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 selectedVideoPath = null;
                 docpath = null;
                 cancel1.setVisibility(View.VISIBLE);
+                imageViewSelected.setVisibility(View.VISIBLE);
 
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
@@ -608,6 +625,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 Uri uri = Uri.fromFile(photoFile);
                 selectedVideoPath = null;
                 docpath = null;
+                imageViewSelected.setVisibility(View.VISIBLE);
+
                 cancel1.setVisibility(View.VISIBLE);
 
                 ImageProcess obj = new ImageProcess(PostingActivity.this);
@@ -636,6 +655,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                     selectedImagePath = null;
                     selectedVideoPath = null;
                     cancel1.setVisibility(View.VISIBLE);
+                    imageViewSelected.setVisibility(View.VISIBLE);
 
              /*   Bitmap    bitmap = BitmapFactory.decodeFile(path);
                     imageViewSelected.setImageBitmap(bitmap);*/
@@ -668,7 +688,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         if (requestCode == RESULT_CODE) {
             if (data != null) {
                 String s = data.getStringExtra("friendsCsv");
-                mEditTextView.setText(s);
+                // mEditTextView.setText(s);
                 System.out.print(s);
                 servicesMultipleSelectedModels = (ArrayList<SpecializationModel>) data.getSerializableExtra("list");
 
@@ -677,6 +697,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     }
 
     public void checkPermissionForDoc() {
+        isPdfClicked=false;
+        isVideoClicked=false;
+        isPdfClicked=false;
         if (
                 ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -835,10 +858,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
 
             try {
-               linktitle=URLEncoder.encode(linktitle, "UTF-8");
-                linkDescription=URLEncoder.encode(linkDescription,"UTF-8");
-                refrence = URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
-                question = URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
+                linktitle = URLEncoder.encode(linktitle, "UTF-8");
+                linkDescription = URLEncoder.encode(linkDescription, "UTF-8");
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
                 Log.e("messageText", "" + messageText);
             } catch (UnsupportedEncodingException e) {
@@ -884,8 +905,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 entityBuilder.addTextBody("userID", userId);
                 Log.e("messageText", "inside" + messageText);
-                entityBuilder.addTextBody("Feed[title]", question.trim().toString());
-                entityBuilder.addTextBody("Feed[refrence]", refrence.trim().toString());
+                entityBuilder.addTextBody("Feed[title]", "");
+                entityBuilder.addTextBody("Feed[refrence]", "");
                 entityBuilder.addTextBody("Feed[message]", messageText.trim().toString());
                 entityBuilder.addTextBody("Feed[feed_type]", feedType());
                 entityBuilder.addTextBody("Feed[feed_source]", linkUrl.trim().toString());
@@ -1109,8 +1130,9 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                         public void onClick(View view) {
                             if (askQuestionImages.length() == 2)
                                 if (position == 0) {
+
                                     recyclerView.setVisibility(View.GONE);
-                                    imageViewSelected.setVisibility(View.VISIBLE);
+                                    imageViewSelected.setVisibility(View.GONE);
                                 }
                             askQuestionImagesarr.remove(position);
                             notifyItemRemoved(position);
@@ -1119,7 +1141,12 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 if (askQuestionImagesarr.get(i).contains("add")) {
                                     askQuestionImagesarr.remove(i);
                                 }
-                            askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");
+                            if(askQuestionImagesarr.size()!=0){
+                                if(askQuestionImagesarr.size()==1&&askQuestionImagesarr.get(0).equalsIgnoreCase("add"))
+                                {
+                                    askQuestionImagesarr=new ArrayList<String>();
+                                }else
+                                askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");}
                             askQuestionForumImagesAdapter.notifyDataSetChanged();
                         }
                     });
@@ -1251,9 +1278,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
     private boolean validate() {
         boolean check = true;
-        List<String> allHashTags = mTextHashTagHelper.getAllHashTags();
-        allHashTags.toString();
-        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0 && title_QuestionEditText.getText().length() == 0) {
+        if (selectedImagePath == null && selectedVideoPath == null && editTextMessage.getText().toString().length() == 0 && docpath == null && strings.size() == 0) {
             Toast.makeText(PostingActivity.this, "This post appears to be blank. Please write something or attach a link or photo to post", Toast.LENGTH_LONG).show();
             check = false;
         }

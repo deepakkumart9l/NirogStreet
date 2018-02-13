@@ -151,7 +151,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),nameTv.getText().toString()));
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
 
             }
 
@@ -177,7 +177,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         } else {
 
             if (!mIsTheTitleContainerVisible) {
-                textviewTitle.setText(nameTv.getText().toString());
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
                 startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
