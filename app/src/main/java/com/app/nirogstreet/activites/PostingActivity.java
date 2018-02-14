@@ -122,7 +122,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     RelativeLayout video_image;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
-    RelativeLayout linkLay, imagelay;
+    RelativeLayout linkLay, imagelay,imageButton;
     ArrayList<SpecializationModel> servicesMultipleSelectedModels = new ArrayList<>();
     String groupId = "";
     String mCurrentPhotoPath;
@@ -154,7 +154,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
     TextView textViewpost;
-    LinearLayout imageButton,pdfBuuton;
+    LinearLayout  pdfBuuton;
     TextView descriptionTextView, titleTextView;
     EditText editTextMessage;
     CheckBox checkBox;
@@ -167,7 +167,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
 
         setContentView(R.layout.post_new);
         backImageView = (ImageView) findViewById(R.id.back);
-        pdfBuuton=(LinearLayout)findViewById(R.id.pdfBuuton);
+        pdfBuuton = (LinearLayout) findViewById(R.id.pdfBuuton);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,8 +176,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 imagelay.setVisibility(View.VISIBLE);
             }
         });
-        video_image=(RelativeLayout)findViewById(R.id.video_image);
-        imageButton = (LinearLayout) findViewById(R.id.imageButton);
+        video_image = (RelativeLayout) findViewById(R.id.video_image);
+        imageButton = (RelativeLayout) findViewById(R.id.imageButton);
         docName = (TextView) findViewById(R.id.docName);
         sesstionManager = new SesstionManager(PostingActivity.this);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +220,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 docpath = null;
                 docName.setVisibility(View.GONE);
                 cancel1.setVisibility(View.GONE);
-imageViewSelected.setVisibility(View.GONE);            }
+                imageViewSelected.setVisibility(View.GONE);
+            }
         });
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         circleImageView = (CircleImageView) findViewById(R.id.dr_profile);
@@ -228,14 +229,20 @@ imageViewSelected.setVisibility(View.GONE);            }
         if (sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC) != null) {
             String url;
             url = sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC);
-          //  Glide.with(PostingActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
+            //  Glide.with(PostingActivity.this).load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC)).placeholder(R.drawable.user).into(circleImageView);
             Picasso.with(PostingActivity.this)
                     .load(sesstionManager.getProfile().get(SesstionManager.KEY_POFILE_PIC))
                     .placeholder(R.drawable.default_)
                     .into(circleImageView);
         }
         dr_nameTextView = (TextView) findViewById(R.id.dr_name);
-        dr_nameTextView.setText("Dr. " + sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
+        try {
+            dr_nameTextView.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            dr_nameTextView.setText( sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME) + " " + sesstionManager.getUserDetails().get(SesstionManager.KEY_LNAME));
+
+        }
         publicTextView = (TextView) findViewById(R.id.public_);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
         /*scrollView.setOnTouchListener(new View.OnTouchListener() {
@@ -301,8 +308,8 @@ imageViewSelected.setVisibility(View.GONE);            }
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isVideoClicked=false;
-                isPdfClicked=false;
+                isVideoClicked = false;
+                isPdfClicked = false;
                 isImageClicked = true;
                 checkPermission();
             }
@@ -311,8 +318,8 @@ imageViewSelected.setVisibility(View.GONE);            }
             @Override
             public void onClick(View v) {
                 isVideoClicked = true;
-                isImageClicked=false;
-                isPdfClicked=false;
+                isImageClicked = false;
+                isPdfClicked = false;
                 checkPermission();
             }
         });
@@ -320,8 +327,8 @@ imageViewSelected.setVisibility(View.GONE);            }
             @Override
             public void onClick(View v) {
                 isVideoClicked = false;
-                isImageClicked=false;
-                isPdfClicked=true;
+                isImageClicked = false;
+                isPdfClicked = true;
                 checkPermissionForDoc();
             }
         });
@@ -490,9 +497,9 @@ imageViewSelected.setVisibility(View.GONE);            }
 
 
     private void takeVideo() {
-        isPdfClicked=false;
-        isVideoClicked=false;
-        isPdfClicked=false;
+        isPdfClicked = false;
+        isVideoClicked = false;
+        isPdfClicked = false;
         selectVideoFromGallery();
     }
 
@@ -510,9 +517,9 @@ imageViewSelected.setVisibility(View.GONE);            }
     }
 
     private void selectImage() {
-       isPdfClicked=false;
-        isVideoClicked=false;
-        isPdfClicked=false;
+        isPdfClicked = false;
+        isVideoClicked = false;
+        isPdfClicked = false;
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PostingActivity.this);
@@ -697,9 +704,9 @@ imageViewSelected.setVisibility(View.GONE);            }
     }
 
     public void checkPermissionForDoc() {
-        isPdfClicked=false;
-        isVideoClicked=false;
-        isPdfClicked=false;
+        isPdfClicked = false;
+        isVideoClicked = false;
+        isPdfClicked = false;
         if (
                 ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(PostingActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -1141,12 +1148,12 @@ imageViewSelected.setVisibility(View.GONE);            }
                                 if (askQuestionImagesarr.get(i).contains("add")) {
                                     askQuestionImagesarr.remove(i);
                                 }
-                            if(askQuestionImagesarr.size()!=0){
-                                if(askQuestionImagesarr.size()==1&&askQuestionImagesarr.get(0).equalsIgnoreCase("add"))
-                                {
-                                    askQuestionImagesarr=new ArrayList<String>();
-                                }else
-                                askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");}
+                            if (askQuestionImagesarr.size() != 0) {
+                                if (askQuestionImagesarr.size() == 1 && askQuestionImagesarr.get(0).equalsIgnoreCase("add")) {
+                                    askQuestionImagesarr = new ArrayList<String>();
+                                } else
+                                    askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");
+                            }
                             askQuestionForumImagesAdapter.notifyDataSetChanged();
                         }
                     });

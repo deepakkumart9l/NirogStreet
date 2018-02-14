@@ -1098,10 +1098,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 return false;
             }
         }
-        if (editTextDob.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, R.string.DOB, Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
         if (editTextAbout.getText().toString().length() == 0) {
             Toast.makeText(CreateDrProfile.this, R.string.About_you, Toast.LENGTH_SHORT).show();
             return false;

@@ -590,7 +590,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
 
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
-                        if (feedModel.getMessage().length() > 120) {
+                        if (feedModel.getMessage().length() > 170) {
                             try {
                                 builder1 = new SpannableStringBuilder();
                                 spanStatus = new SpannableString(feedModel.getMessage().substring(0, 170));

@@ -151,7 +151,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
 
             }
 
@@ -177,7 +177,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         } else {
 
             if (!mIsTheTitleContainerVisible) {
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
                 startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
@@ -879,7 +879,8 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
 
             } else {
                 experinceLay.removeAllViews();
-                ExperienceSectionTv.setText("Experience");
+
+                    ExperienceSectionTv.setText("Experience");
                 ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -1097,7 +1098,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                     nameTv.setText(userDetailModel.getName());
                 } else {
-                    nameTv.setText(Methods.getName(userDetailModel.getTitle(),userDetailModel.getName()));
+                    nameTv.setText(Methods.getName(userDetailModel.getTitle(), userDetailModel.getName()));
 
                 }
             }

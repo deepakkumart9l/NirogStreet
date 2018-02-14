@@ -18,6 +18,7 @@ import com.app.nirogstreet.activites.GroupNotificationListing;
 import com.app.nirogstreet.activites.InviteNotificationListing;
 import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.activites.PostDetailActivity;
+import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -54,7 +55,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = "";
         //  Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         Iterator myVeryOwnIterator = bundle.keySet().iterator();
-        String msg = "", url = "", postId = "", groupId = "", forumId = "", course_id = "", eventId = "", appointment_id = "", notification_type = "";
+        String msg = "", url = "", postId = "", groupId = "", forumId = "", course_id = "", eventId = "", appointment_id = "", notification_type = "",server_type="";
         while (myVeryOwnIterator.hasNext()) {
             String key = (String) myVeryOwnIterator.next();
             if (key.equalsIgnoreCase("default")) {
@@ -69,6 +70,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 JSONObject msgObject = jsonObject1.getJSONObject("message");
                                 if (msgObject.has("Url") && !msgObject.isNull("Url")) {
                                     url = msgObject.getString("Url");
+                                }
+                                if(msgObject.has("server_type")&&!msgObject.isNull("server_type"))
+                                {
+                                    server_type=msgObject.getString("server_type");
                                 }
                                 if (msgObject.has("total") && !msgObject.isNull("total")) {
                                     badgeCount = msgObject.getInt("total");
@@ -96,9 +101,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 }
                                 if (msgObject.has("message") && !msgObject.isNull("message")) {
                                     msg = msgObject.getString("message");
-                                    sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id, course_id, notification_type);
+                                    if(!server_type.equalsIgnoreCase("")) {
+                                        if (server_type.equalsIgnoreCase("live") && AppUrl.AppBaseUrl.contains("api.nirogstreet.com"))//live
+                                            sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id, course_id, notification_type);
+                                        if (server_type.equalsIgnoreCase("test")&&AppUrl.AppBaseUrl.contains("nirogstreetapi.appstage.co"))//test
+                                            sendNotification(msg, url, forumId, eventId, groupId, postId, appointment_id, course_id, notification_type);
+
+                                    }
 
                                 }
+
 
 
                             }

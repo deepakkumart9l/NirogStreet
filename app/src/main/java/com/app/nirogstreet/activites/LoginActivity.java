@@ -369,6 +369,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
     public class LoginViaOTPAsync extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String phone, password;

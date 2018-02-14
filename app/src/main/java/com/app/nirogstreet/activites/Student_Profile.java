@@ -852,14 +852,13 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
             }
 
             if (userDetailModel.getExperinceModels() == null || userDetailModel.getExperinceModels().size() == 0) {
-                ExperienceSectionTv.setText("Add Experience");
+                ExperienceSectionTv.setText("Add Experience/Internship");
                 ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
                 experinceLay.removeAllViews();
 
             } else {
                 experinceLay.removeAllViews();
-                ExperienceSectionTv.setText("Experience");
-                ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
+                    ExperienceSectionTv.setText("Experience/Internship");
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
