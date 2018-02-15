@@ -77,6 +77,7 @@ dependencies {
     compile 'joda-time:joda-time:2.9.4'
     compile 'com.android.support:percent:25.2.0'
 
+    compile 'io.branch.sdk.android:library:1.14.2'
 /*
     compile 'com.jakewharton:butterknife:8.8.1'
 */

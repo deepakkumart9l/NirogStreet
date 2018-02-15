@@ -107,7 +107,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.PostDetailActivity"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+
+            <intent-filter><data android:scheme="nirogstreet" android:host="open"></data>
+            <action android:name="android.intent.action.VIEW"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activites.AlbumGallary"
             android:screenOrientation="portrait" />
@@ -271,7 +280,11 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_hiwJ6zqBZG0JaThvDNSV3cemyCbGkuMX" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_oozT8ysCWGYUgGixqPQS3kpeqzaQlt9e" />
 
+        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBs5DG6WdN3rDaCLj6aI6SumK6arLW4Kk0" />
@@ -292,6 +305,11 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

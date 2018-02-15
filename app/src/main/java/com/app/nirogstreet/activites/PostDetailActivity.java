@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -55,6 +56,10 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.util.LinkProperties;
 
 /**
  * Created by Preeti on 28-11-2017.
@@ -84,6 +89,35 @@ public class PostDetailActivity extends Activity {
     TextView sendImageView;
     private EditText editText;
     private PostCommentAsyncTask postCommentAsyncTask;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            Branch branch = Branch.getInstance();
+
+            branch.initSession(new Branch.BranchUniversalReferralInitListener() {
+                @Override
+                public void onInitFinished(BranchUniversalObject branchUniversalObject, LinkProperties linkProperties, BranchError error) {
+                    if (error == null) {
+                        // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                        // params will be empty if no data found
+                        // ... insert custom logic here ...
+                    } else {
+                        Log.i("MyApp", error.getMessage());
+                    }
+                }
+            }, this.getIntent().getData(), this);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

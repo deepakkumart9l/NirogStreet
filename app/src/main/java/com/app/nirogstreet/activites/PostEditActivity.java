@@ -173,6 +173,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.post_edit_new);
+        strings = new ArrayList<String>();
+
         cancel1 = (ImageView) findViewById(R.id.cancel1);
 
         if (getIntent().hasExtra("feedId")) {
@@ -317,7 +319,7 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                         System.out.print(strarr[i]);
                         if (Patterns.WEB_URL.matcher(strarr[i]).matches()) {
                             // Log.e("URL=", "" + Patterns.WEB_URL.matcher(sampleUrl).matches());
-                            if (selectedVideoPath == null && selectedImagePath == null) {
+                            if (selectedVideoPath == null && selectedImagePath == null&&strings.size()>0) {
                                 linkPostAsynctask = new LinkPostAsynctask(strarr[i], sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
                                 linkPostAsynctask.execute();
                             }
@@ -418,9 +420,14 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
             }
         });
 
+
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageViewSelected.setVisibility(View.GONE);
+                cancel1.setVisibility(View.GONE);
+                selectedVideoPath=null;
+                docpath=null;
                 isVideoClicked = false;
                 isPdfClicked = false;
                 isImageClicked = true;
@@ -430,6 +437,9 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         video_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                strings=new ArrayList<String>();
+                askQuestionForumImagesAdapter=null;
+                recyclerView.setVisibility(View.GONE);
                 isVideoClicked = true;
                 isImageClicked = false;
                 isPdfClicked = false;
@@ -439,6 +449,9 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         pdfBuuton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                strings=new ArrayList<String>();
+                askQuestionForumImagesAdapter=null;
+                recyclerView.setVisibility(View.GONE);
                 isVideoClicked = false;
                 isImageClicked = false;
                 isPdfClicked = true;
@@ -485,7 +498,8 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.print(requestCode);
         if (requestCode == 1) {
-            if (isPdfClicked)
+            if (isImageClicked
+                    )
                 selectImage();
             if (isVideoClicked)
                 takeVideo();
@@ -552,16 +566,22 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 if (items[item].equals("Take Photo")) {
                     takePicture();
                 } else if (items[item].equals("Choose from Library")) {
-                   /* Intent intent = new Intent(
-                            Intent.ACTION_PICK);
-                    intent.setType("image*//*");
-                    startActivityForResult(intent, SELECT_FILE);*/
-                    strings = new ArrayList<String>();
-
-
-                    Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
-                    intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 3);
-                    startActivityForResult(intent, Constants.REQUEST_CODE);
+                    if(strings.size()==0) {
+                        Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
+                        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 3);
+                        startActivityForResult(intent, Constants.REQUEST_CODE);
+                    }else if(strings.size()==1)
+                    {
+                        Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
+                        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 2);
+                        startActivityForResult(intent, Constants.REQUEST_CODE);
+                    }else if(strings.size()==2){
+                        Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
+                        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 1);
+                        startActivityForResult(intent, Constants.REQUEST_CODE);
+                    }else {
+                        Toast.makeText(PostEditActivity.this,"You can select max 3 images ",Toast.LENGTH_SHORT).show();
+                    }
 
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -580,14 +600,16 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ArrayList<Image> imagesarr = new ArrayList<>();
+
         if (requestCode == 2000 && resultCode == Activity.RESULT_OK
                 && null != data) {
+     imagesarr=       data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             // Get the Image from data
             selectedImagePath = null;
             selectedVideoPath = null;
             docName.setVisibility(View.GONE);
             docpath = null;
-            ArrayList<Image> imagesarr = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             for (int i = 0; i < imagesarr.size(); i++) {
                 String ContentFilePath = "content://media/external/images/media/";
 
@@ -608,10 +630,16 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 for (int i = 0; i < strings.size(); i++) {
                     if (strings.get(i).contains("add")) {
                         strings.remove(i);
+
+
                     }
                 }
-                askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostEditActivity.this);
-                recyclerView.setAdapter(askQuestionForumImagesAdapter);
+                if(askQuestionForumImagesAdapter==null) {
+                    askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostEditActivity.this);
+                    recyclerView.setAdapter(askQuestionForumImagesAdapter);
+                }else {
+                    askQuestionForumImagesAdapter.notifyDataSetChanged();
+                }
             }
         }
         if (requestCode == 102 && resultCode == RESULT_OK) {
@@ -653,21 +681,28 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 Uri uri = Uri.fromFile(photoFile);
                 selectedVideoPath = null;
                 docpath = null;
-                imageViewSelected.setVisibility(View.VISIBLE);
+                imageViewSelected.setVisibility(View.GONE);
 
-                cancel1.setVisibility(View.VISIBLE);
-
+                cancel1.setVisibility(View.GONE);
+recyclerView.setVisibility(View.VISIBLE);
                 ImageProcess obj = new ImageProcess(PostEditActivity.this);
                 mCurrentPhotoPath = obj.getPath(uri);
                 selectedImagePath = mCurrentPhotoPath;
+                strings.add(selectedImagePath);
                 File fff = new File(selectedImagePath);
-                Glide.with(PostEditActivity.this)
+                if(askQuestionForumImagesAdapter==null) {
+                    askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostEditActivity.this);
+                    recyclerView.setAdapter(askQuestionForumImagesAdapter);
+                }else {
+                    askQuestionForumImagesAdapter.notifyDataSetChanged();
+                }
+               /* Glide.with(PostEditActivity.this)
                         .load(fff) // Uri of the picture
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .crossFade()
                         .override(100, 100)
-                        .into(imageViewSelected);
+                        .into(imageViewSelected);*/
 
             } catch (Exception e) {
             }
@@ -1298,8 +1333,9 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                             if (askQuestionImagesarr.size() != 0) {
                                 if (askQuestionImagesarr.size() == 1 && askQuestionImagesarr.get(0).equalsIgnoreCase("add")) {
                                     askQuestionImagesarr = new ArrayList<String>();
-                                } else
-                                    askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");
+                                } else {
+                                    //askQuestionImagesarr.add(askQuestionImagesarr.size(), "add");
+                                }
                             }
                             askQuestionForumImagesAdapter.notifyDataSetChanged();
                         }

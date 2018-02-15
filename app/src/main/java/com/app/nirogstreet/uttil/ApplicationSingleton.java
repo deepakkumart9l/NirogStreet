@@ -8,11 +8,19 @@ import com.app.nirogstreet.model.Course_Detail_model;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
 
+import io.branch.referral.Branch;
+
 /**
  * Created by Preeti on 12-09-2017.
  */
 
 public class ApplicationSingleton extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Branch.getAutoInstance(this);
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
