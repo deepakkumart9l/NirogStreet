@@ -442,8 +442,9 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 System.out.print(year);
                 isVisible = true;
-                if (isPassingClicked)
+                if (isPassingClicked) {
                     yearEditText.setText(year + "");
+                }
                 if (isStrtClicked)
                     strtyear.setText(year + "");
             }
@@ -521,9 +522,11 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 SesstionManager sesstionManager=new SesstionManager(getActivity());
 
             int year = cal.get(Calendar.YEAR);
-            if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)&&isPassingClicked) {
+            if(isPassingClicked) {
                 yearPicker.setMinValue(1917);
-
+              /*  yearPicker.setWrapSelectorWheel(true);
+                yearPicker.setValue(2010);
+*/
 
             }
             else

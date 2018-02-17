@@ -203,7 +203,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:paddingTop="5dp"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/buttonBackground"
         app:tabIndicatorHeight="0dp"

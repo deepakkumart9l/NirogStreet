@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     LoginAsync loginAsync;
     CircularProgressBar circularProgressBar;
     TextView loginHeader, loginTv, loginWithOtp;
-    LinearLayout registerHere;
+    RelativeLayout registerHere;
     private int passwordNotVisible = 1;
     ImageButton img_lock;
     LoginViaOTPAsync loginViaOTPAsync;
@@ -128,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         loginHeader = (TextView) findViewById(R.id.title_side);
         loginTv = (TextView) findViewById(R.id.loginTv);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        registerHere = (LinearLayout) findViewById(R.id.registerHere);
+        registerHere = (RelativeLayout) findViewById(R.id.registerHere);
 
         registerHere.setOnClickListener(new View.OnClickListener() {
             @Override

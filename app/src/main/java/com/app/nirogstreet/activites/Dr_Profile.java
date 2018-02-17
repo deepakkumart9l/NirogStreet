@@ -124,6 +124,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     private RelativeLayout linearlayoutTitle;
     TextView profile_complete_txt;
     private TextView textviewTitle;
+    TextView refer_pointTV;
     TextView nameTv, placeTv, emailTv, phoneTv, WebTv, yearOfBirthTv, yearOfExperienceTv, QualificationTv, aboutHeading, aboutDetail, QualificationSectionTv, SpecializationSectionHeadingTv, sepcilizationDetailTv, consultationFeesHeading, allTaxes, fee, RegistrationSectionHeadingTv, ExperienceSectionTv, clinicAddressHeading, AwardSectionTv, MemberShipSectionTv;
     CircularProgressBar circularProgressBar;
     TextView specilizationTv;
@@ -224,7 +225,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         try {
             phonelay = (RelativeLayout) findViewById(R.id.phonelay);
             emaillay = (RelativeLayout) findViewById(R.id.emaillay);
-
+refer_pointTV=(TextView)findViewById(R.id.refer_point);
             backimg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1116,6 +1117,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 webSite_icon.setVisibility(View.GONE);
             }
             if (UserId.equalsIgnoreCase("")) {
+                refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
+            }
+                if (UserId.equalsIgnoreCase("")) {
 
                 if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
                     yearOfBirthTv.setText(userDetailModel.getDob());

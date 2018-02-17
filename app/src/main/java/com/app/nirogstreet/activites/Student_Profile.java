@@ -93,6 +93,8 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
     String mCurrentPhotoPath;
     RelativeLayout experince_rel;
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
+    TextView refer_pointTV;
+    ;
     private int CAMERA_PERMISSION_CODE = 1;
     private boolean mIsTheTitleVisible = false;
     private int REQUEST_CAMERA = 99;
@@ -141,7 +143,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),nameTv.getText().toString()));
+                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), nameTv.getText().toString()));
 
             }
 
@@ -214,7 +216,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
         try {
             phonelay = (RelativeLayout) findViewById(R.id.phonelay);
             emaillay = (RelativeLayout) findViewById(R.id.emaillay);
-
+            refer_pointTV = (TextView) findViewById(R.id.refer_point);
             backimg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -330,7 +332,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                 if (userId.equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
                     nameTv.setText(userName);
                 else
-                    nameTv.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE),userName));
+                    nameTv.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), userName));
 
 
             }
@@ -663,7 +665,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                                 ApplicationSingleton.setUserDetailModel(userDetailModel);
                                 updateContactInfo();
                                 updateQualification();
-                               // updateRegistrationAndDocument();
+                                // updateRegistrationAndDocument();
                                 updateExperience();
                                 updateAwards();
                                 updateSpecilizationAndService();
@@ -672,7 +674,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                                     @Override
                                     public void onClick(View v) {
                                         Intent intent = new Intent(Student_Profile.this, SpecilizationAndService.class);
-                                        intent.putExtra("student_intrests",true);
+                                        intent.putExtra("student_intrests", true);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
                                     }
@@ -791,7 +793,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
 
     private void updateSpecilizationAndService() {
         if (userDetailModel != null) {
-            if (userDetailModel.getSpecializationModels().size() == 0 ) {
+            if (userDetailModel.getSpecializationModels().size() == 0) {
                 SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
 
             } else {
@@ -801,7 +803,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
             }
             if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
                 spcilizationCsv.setText(getSelectedNameCsv());
-               // specilizationTv.setVisibility(View.VISIBLE);
+                // specilizationTv.setVisibility(View.VISIBLE);
                 spcilizationCsv.setVisibility(View.VISIBLE);
             } else {
                 spcilizationCsv.setVisibility(View.GONE);
@@ -858,7 +860,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
 
             } else {
                 experinceLay.removeAllViews();
-                    ExperienceSectionTv.setText("Experience/Internship");
+                ExperienceSectionTv.setText("Experience/Internship");
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -980,11 +982,10 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                         TextView textView = (TextView) v.findViewById(R.id.clgName);
                         TextView degreename = (TextView) v.findViewById(R.id.degree_name);
                         TextView year = (TextView) v.findViewById(R.id.year_of_passing);
-                        if(sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE))
-                        {
-                            year.setText(userDetailModel.getQualificationModels().get(i).getSatrt_year()+ " - "+userDetailModel.getQualificationModels().get(i).getPassingYear());
+                        if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+                            year.setText(userDetailModel.getQualificationModels().get(i).getSatrt_year() + " - " + userDetailModel.getQualificationModels().get(i).getPassingYear());
 
-                        }else {
+                        } else {
                             year.setText(userDetailModel.getQualificationModels().get(i).getPassingYear());
                         }
                         degreename.setText(userDetailModel.getQualificationModels().get(i).getClgName());
@@ -1076,12 +1077,16 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
             } else {
                 experince_rel.setVisibility(View.GONE);
             }
+
+            if (UserId.equalsIgnoreCase("")) {
+                refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
+            }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                     nameTv.setText(userDetailModel.getName());
                 } else {
 
-                    nameTv.setText(Methods.getName(userDetailModel.getTitle(),userDetailModel.getName()));
+                    nameTv.setText(Methods.getName(userDetailModel.getTitle(), userDetailModel.getName()));
 
                 }
             }

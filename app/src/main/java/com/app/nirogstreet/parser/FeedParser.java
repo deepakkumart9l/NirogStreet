@@ -67,6 +67,7 @@ public class FeedParser {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                         String referral_code = "";
                         String user_type = null;
+                        String referPoint="";
 
                         JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
                         if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
@@ -114,7 +115,11 @@ public class FeedParser {
                         if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
                             user_type = userJsonObject.getString("user_type");
                         }
-                        userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
+                        if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                        {
+                            referPoint=userJsonObject.getString("referral_points");
+                        }
+                        userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type,referPoint);
 
                     }
                     if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
@@ -135,6 +140,7 @@ public class FeedParser {
                     if (jsonObject.has("parent_feed_detail") && !jsonObject.isNull("parent_feed_detail")) {
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", parent_created_by = null, city = "", title = "", website = "", name = "";
                         String referral_code = "";
+                        String referPoint="";
                         String user_type = null;
                         JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
                         if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
@@ -185,8 +191,12 @@ public class FeedParser {
                         if (userJsonObject.has("created_by") && !userJsonObject.isNull("created_by")) {
                             parent_created_by = userJsonObject.getString("created_by");
                         }
+                        if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                        {
+                            referPoint=userJsonObject.getString("referral_points");
+                        }
 
-                        parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type);
+                        parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type,referPoint);
 
                     }
 
@@ -279,6 +289,7 @@ public class FeedParser {
                     if (jsonObject.has("created_by") && !jsonObject.isNull("created_by")) {
 
                         String user_type = null;
+                        String referPoint="";
                         String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                         String referral_code = "";
                         JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
@@ -327,7 +338,11 @@ public class FeedParser {
                         if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                             city = userJsonObject.getString("city");
                         }
-                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
+                        if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                        {
+                            referPoint=userJsonObject.getString("referral_points");
+                        }
+                        cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type,referPoint);
 
 
                     }
@@ -409,6 +424,7 @@ public class FeedParser {
                                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                                     String referral_code = "";
+                                    String referPoint="";
                                     String user_type = null;
                                     JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
                                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
@@ -456,7 +472,11 @@ public class FeedParser {
                                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                                         city = userJsonObject.getString("city");
                                     }
-                                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
+                                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                                    {
+                                        referPoint=userJsonObject.getString("referral_points");
+                                    }
+                                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type,referPoint);
 
                                 }
                                 if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
@@ -478,6 +498,7 @@ public class FeedParser {
                                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", parent_created_by = null, city = "", title = "", website = "", name = "";
                                     String referral_code = "";
                                     String user_type = null;
+                                    String referPoint="";
                                     JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
                                     if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
                                         id = userJsonObject.getString("user_id");
@@ -527,7 +548,11 @@ public class FeedParser {
                                     if (userJsonObject.has("user_type") && !userJsonObject.isNull("user_type")) {
                                         user_type = userJsonObject.getString("user_type");
                                     }
-                                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type);
+                                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                                    {
+                                        referPoint=userJsonObject.getString("referral_points");
+                                    }
+                                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type,referPoint);
 
 
                                 }
@@ -620,6 +645,7 @@ public class FeedParser {
 
                                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                                     String referral_code = "";
+                                    String referPoint="";
                                     String user_type = null;
                                     JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
                                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
@@ -670,7 +696,11 @@ public class FeedParser {
                                     if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
                                         referral_code = userJsonObject.getString("referral_code");
                                     }
-                                    cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
+                                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                                    {
+                                        referPoint=userJsonObject.getString("referral_points");
+                                    }
+                                    cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type,referPoint);
 
 
                                 }
@@ -747,6 +777,7 @@ public class FeedParser {
                 if (jsonObject.has("user_id") && !jsonObject.isNull("user_id")) {
                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                     String referral_code = "";
+                    String referPoint="";
                     String user_type = null;
                     JSONObject userJsonObject = jsonObject.getJSONObject("user_id");
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
@@ -795,7 +826,11 @@ public class FeedParser {
                     if (userJsonObject.has("city") && !userJsonObject.isNull("city")) {
                         city = userJsonObject.getString("city");
                     }
-                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
+                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                    {
+                        referPoint=userJsonObject.getString("referral_points");
+                    }
+                    userDetailModel = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type,referPoint);
 
                 }
                 if (jsonObject.has("community_id") && !jsonObject.isNull("community_id")) {
@@ -817,6 +852,7 @@ public class FeedParser {
                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", parent_created_by = null, email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                     String referral_code = "";
                     String user_type = null;
+                    String referPoint="";
                     JSONObject userJsonObject = jsonObject.getJSONObject("parent_feed_detail");
                     if (userJsonObject.has("user_id") && !userJsonObject.isNull("user_id")) {
                         id = userJsonObject.getString("user_id");
@@ -866,7 +902,11 @@ public class FeedParser {
                     if (userJsonObject.has("created_by") && !userJsonObject.isNull("created_by")) {
                         parent_created_by = userJsonObject.getString("created_by");
                     }
-                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type);
+                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                    {
+                        referPoint=userJsonObject.getString("referral_points");
+                    }
+                    parentFeedDetail = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, parent_created_by, referral_code, user_type,referPoint);
 
 
                 }
@@ -961,6 +1001,7 @@ public class FeedParser {
 
                     String category = "", gender = "", experience = "", profile_picuser = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                     String referral_code = "";
+                    String referPoint="";
                     String user_type = null;
                     JSONObject userJsonObject = jsonObject.getJSONObject("created_by");
                     if (userJsonObject.has("name") && !userJsonObject.isNull("name")) {
@@ -1008,7 +1049,11 @@ public class FeedParser {
                     if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
                         referral_code = userJsonObject.getString("referral_code");
                     }
-                    cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type);
+                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                    {
+                        referPoint=userJsonObject.getString("referral_points");
+                    }
+                    cretedBy = new UserDetailModel(id, name, 1, email, mobile, gender, experience, profile_picuser, category, dob, website, about, title, city, null, null, null, null, null, null, null, null, null, referral_code, user_type,referPoint);
 
 
                 }

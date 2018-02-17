@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         searchgroupImageView.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
-                        setTabText("Knowledge Centre");
+                        setTabText("CME");
                         break;
                     case 2:
                         searchImageView.setVisibility(View.GONE);
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout tabLinearLayoutTimeline = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
 
         TextView tabOneTimeline = (TextView) tabLinearLayoutTimeline.findViewById(R.id.tab);
-        tabOneTimeline.setText("HOME");
+        tabOneTimeline.setText("FEED");
 
         tabOneTimeline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout tabLinearLayout1 = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
 
         TextView tabOneknwledge = (TextView) tabLinearLayout1.findViewById(R.id.tab);
-        tabOneknwledge.setText("KNOWLEDGE CENTRE");
+        tabOneknwledge.setText("CME");
 
         tabOneknwledge.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImglnw = (ImageView) tabLinearLayout1.findViewById(R.id.icon);
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout tabtwo = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
         TextView tabtwoText = (TextView) tabtwo.findViewById(R.id.tab);
-        tabtwoText.setText("Profile");
+        tabtwoText.setText("PROFILE");
 
         tabtwoText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView TwoImg = (ImageView) tabtwo.findViewById(R.id.icon);

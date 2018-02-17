@@ -29,6 +29,7 @@ public class UserDetailPaser {
                 JSONObject message = dataJsonObject.getJSONObject("message");
                 int profile_complete=1;
                 String user_type=null;
+                String referPoint="";
                 String category = "", gender = "", experience = "",referral_code="", profile_pic = "", createdOn = "", id = "", email = "", mobile = "", dob = "", about = "", city = "", title = "", website = "", name = "";
                 if (message.has("userDetail") && !message.isNull("userDetail")) {
                     JSONObject userJsonObject = message.getJSONObject("userDetail");
@@ -42,6 +43,10 @@ public class UserDetailPaser {
                     if(userJsonObject.has("referral_code")&&!userJsonObject.isNull("referral_code"))
                     {
                         referral_code=userJsonObject.getString("referral_code");
+                    }
+                    if(userJsonObject.has("referral_points")&&!userJsonObject.isNull("referral_points"))
+                    {
+                        referPoint=userJsonObject.getString("referral_points");
                     }
                     if(userJsonObject.has("profile_complete")&&!userJsonObject.isNull("profile_complete"))
                     {
@@ -105,7 +110,7 @@ public class UserDetailPaser {
                 awardsModels = AwardsParser.awardsParser(message);
                 ArrayList<MemberShipModel> memberShipModels = new ArrayList<>();
                 memberShipModels = MemberShipParser.memberShipParser(message);
-                userDetailModel = new UserDetailModel(id,name,profile_complete, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels,null,referral_code,user_type);
+                userDetailModel = new UserDetailModel(id,name,profile_complete, email, mobile, gender, experience, profile_pic, category, dob, website, about, title, city, specializationModels, registrationAndDocumenModels, qualificationModels, experinceModels, clinicDetailModels, awardsModels, memberShipModels, serviceModels,null,referral_code,user_type,referPoint);
 
             }
         } catch (Exception e) {

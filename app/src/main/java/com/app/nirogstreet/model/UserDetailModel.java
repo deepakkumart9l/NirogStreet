@@ -11,6 +11,15 @@ public class UserDetailModel implements Serializable {
     String userId;
     String created_by;
 
+    public String getReferPoints() {
+        return referPoints;
+    }
+
+    public void setReferPoints(String referPoints) {
+        this.referPoints = referPoints;
+    }
+
+    String referPoints;
     public String getCreated_by() {
         return created_by;
     }
@@ -251,10 +260,11 @@ public class UserDetailModel implements Serializable {
 
     String referral_code;
 
-    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels, String created_by, String referral_code, String user_Type) {
+    public UserDetailModel(String userId, String name, int profile_complete, String email, String mobile, String gender, String experience, String profile_pic, String category, String dob, String webSite, String about, String title, String city, ArrayList<SpecializationModel> specializationModels, ArrayList<RegistrationAndDocumenModel> registrationAndDocumenModels, ArrayList<QualificationModel> qualificationModels, ArrayList<ExperinceModel> experinceModels, ArrayList<ClinicDetailModel> clinicDetailModels, ArrayList<AwardsModel> awardsModels, ArrayList<MemberShipModel> memberShipModels, ArrayList<SpecializationModel> servicesModels, String created_by, String referral_code, String user_Type,String referPoints) {
         this.name = name;
         this.userId = userId;
         this.referral_code = referral_code;
+        this.referPoints=referPoints;
         this.user_Type = user_Type;
         this.profile_complete = profile_complete;
         this.specializationModels = specializationModels;
