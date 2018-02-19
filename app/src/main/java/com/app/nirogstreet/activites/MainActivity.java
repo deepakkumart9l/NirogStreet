@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         searchgroupImageView.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
-                        setTabText("CME");
+                        setTabText("Learning");
                         break;
                     case 2:
                         searchImageView.setVisibility(View.GONE);
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout tabLinearLayout1 = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
 
         TextView tabOneknwledge = (TextView) tabLinearLayout1.findViewById(R.id.tab);
-        tabOneknwledge.setText("CME");
+        tabOneknwledge.setText("LEARNING");
 
         tabOneknwledge.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImglnw = (ImageView) tabLinearLayout1.findViewById(R.id.icon);

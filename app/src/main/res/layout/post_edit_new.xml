@@ -135,7 +135,7 @@
                             android:background="@null"
                             android:drawableTint="@color/textcolorgray"
                             android:gravity="left"
-                            android:hint="Share a with your peers"
+                            android:hint="Share and discuss an interesting case study..."
                             android:imeOptions="actionNext"
                             android:inputType="text|textNoSuggestions|textMultiLine|textCapSentences"
                             android:maxLines="4"

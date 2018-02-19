@@ -524,9 +524,9 @@ SesstionManager sesstionManager=new SesstionManager(getActivity());
             int year = cal.get(Calendar.YEAR);
             if(isPassingClicked) {
                 yearPicker.setMinValue(1917);
-              /*  yearPicker.setWrapSelectorWheel(true);
-                yearPicker.setValue(2010);
-*/
+           /*     yearPicker.setValue(2010);
+                yearPicker.setWrapSelectorWheel(true);*/
+
 
             }
             else

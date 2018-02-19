@@ -1117,7 +1117,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                 webSite_icon.setVisibility(View.GONE);
             }
             if (UserId.equalsIgnoreCase("")) {
-                refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
+              //  refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
             }
                 if (UserId.equalsIgnoreCase("")) {
 

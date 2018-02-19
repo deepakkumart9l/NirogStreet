@@ -1079,7 +1079,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
             }
 
             if (UserId.equalsIgnoreCase("")) {
-                refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
+               // refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
             }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {

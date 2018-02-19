@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     LoginAsync loginAsync;
     CircularProgressBar circularProgressBar;
     TextView loginHeader, loginTv, loginWithOtp;
-    RelativeLayout registerHere;
+    LinearLayout registerHere;
     private int passwordNotVisible = 1;
     ImageButton img_lock;
     LoginViaOTPAsync loginViaOTPAsync;
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         loginHeader = (TextView) findViewById(R.id.title_side);
         loginTv = (TextView) findViewById(R.id.loginTv);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        registerHere = (RelativeLayout) findViewById(R.id.registerHere);
+        registerHere = (LinearLayout) findViewById(R.id.registerHere);
 
         registerHere.setOnClickListener(new View.OnClickListener() {
             @Override

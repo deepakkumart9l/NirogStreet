@@ -656,7 +656,7 @@ if(strings.size()==0) {
                 e.printStackTrace();
             }
         }
-        if (requestCode == REQUEST_CAMERA) {
+        if (requestCode == REQUEST_CAMERA&&resultCode == RESULT_OK) {
             try {
                 Uri uri = Uri.fromFile(photoFile);
                 selectedVideoPath = null;
