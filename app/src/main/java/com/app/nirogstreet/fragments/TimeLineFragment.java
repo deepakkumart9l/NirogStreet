@@ -291,7 +291,7 @@ public class TimeLineFragment extends Fragment {
             swipeLayout.setRefreshing(false);
             //  System.out.print(feedModels.size());
             try {
-                 if (jo != null) {
+                if (jo != null) {
 
                     if (page == 1) {
                         feedModels = FeedParser.feedParserList(jo, page);

@@ -702,7 +702,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                             intent.putExtra("UserId", userDetailModel.getUserId());
                         context.startActivity(intent);*/
-                        Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+                        Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
+
                     }
                 });
                 if (feedModel.getCreated() != null) {
@@ -923,7 +924,10 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                         intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
                                     context.startActivity(intent);*/
-                                    Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                    Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+
+
+                                    //      Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
                                 }
                             });
                             viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
@@ -933,7 +937,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                         intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
                                     context.startActivity(intent);*/
-                                    Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                    Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
                                 }
                             });
                             viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
@@ -1027,7 +1031,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                             intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
                                         context.startActivity(intent);*/
-                                        Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                  //      Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                        Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
 
                                     }
                                 }
@@ -1189,7 +1194,8 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                             intent.putExtra("UserId", userDetailModel.getUserId());
                         context.startActivity(intent);*/
-                        Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+                      //  Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+                        Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
 
                     }
                 };

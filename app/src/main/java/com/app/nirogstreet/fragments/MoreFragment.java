@@ -163,7 +163,7 @@ public class MoreFragment extends Fragment {
             if (userDetailAsyncTask != null && !userDetailAsyncTask.isCancelled()) {
                 userDetailAsyncTask.cancelAsyncTask();
             }
-            if (userDetailAsyncTask != null && !userFeedsAsyncTask.isCancelled()) {
+            if (userFeedsAsyncTask != null && !userFeedsAsyncTask.isCancelled()) {
                 userFeedsAsyncTask.cancelAsyncTask();
             }
         }catch (Exception e)
@@ -465,7 +465,7 @@ public class MoreFragment extends Fragment {
                                     if (page < totalPageCount) {
                                         page++;
 
-                                        String url = AppUrl.BaseUrl + "my-activity-new";
+                                        String url = AppUrl.BaseUrl + "feed/my-activity-new";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                         userFeedsAsyncTask.execute();
                                     }

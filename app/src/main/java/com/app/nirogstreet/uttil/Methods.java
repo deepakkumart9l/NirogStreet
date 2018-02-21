@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.Dr_Profile;
+import com.app.nirogstreet.activites.MyActivities;
 import com.app.nirogstreet.activites.SearchLocationCity;
 import com.app.nirogstreet.activites.Student_Profile;
 
@@ -83,7 +84,16 @@ public class Methods {
         }
 
     }
-
+public static void openUserActivities(Context context,String userId,String name,String profile_pic,String title,String userType)
+{
+    Intent intent=new Intent(context, MyActivities.class);
+    intent.putExtra("userId",userId);
+    intent.putExtra("name",name);
+    intent.putExtra("profile_pic",profile_pic);
+    intent.putExtra("title",title);
+    intent.putExtra("userType",userType);
+    context.startActivity(intent);
+}
     public static boolean validCellPhone(String number) {
         return android.util.Patterns.PHONE.matcher(number).matches();
     }

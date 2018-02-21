@@ -72,7 +72,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.ViewHolder> 
 
                 resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.    startActivity(resultIntent);*/
-                Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
+                Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getFname(), likesModel.getUserProfile_pic(), likesModel.getTitle(),likesModel.getUser_type());
             }
         });
         //  holder.name.setText(rowItem.getName());

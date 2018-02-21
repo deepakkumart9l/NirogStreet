@@ -181,7 +181,9 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 
                 resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.startActivity(resultIntent);*/
-                Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
+                Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getName(), likesModel.getProfile_pic_url(), likesModel.getTitle(),likesModel.getUser_type());
+
+              //  Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
             }
         });
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +194,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                /* Intent resultIntent = new Intent(context, Dr_Profile.class);
                 resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.startActivity(resultIntent);*/
-                Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
+                Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getName(), likesModel.getProfile_pic_url(), likesModel.getTitle(),likesModel.getUser_type());
 
             }
         });

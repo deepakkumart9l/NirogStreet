@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -48,11 +48,11 @@
                         android:layout_height="40dp"
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="@dimen/padding_15"
-                        app:border_width="0.0dp"
-                        app:border_color="@color/gray_2nd"
                         android:layout_marginRight="10dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
+                        android:src="@drawable/user"
+                        app:border_color="@color/gray_2nd"
+                        app:border_width="0.0dp"></de.hdodenhof.circleimageview.CircleImageView>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -73,8 +73,7 @@
                         android:lineSpacingExtra="4dp"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="15sp"
-                      />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/txt"
@@ -139,6 +138,7 @@
                     </org.apmem.tools.layouts.FlowLayout>
                 </RelativeLayout>
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/statusshare"
                 android:layout_width="match_parent"
@@ -147,10 +147,10 @@
                 android:background="@color/white"
                 android:gravity="center|left"
                 android:lineSpacingExtra="7sp"
+                android:paddingBottom="5dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
-                android:paddingBottom="5dp"
                 android:text="This is Status Text"
                 android:textColor="#333333"
                 android:textColorLink="@color/cardbluebackground"
@@ -158,30 +158,32 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/sharedLay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/sharedLay"
                 android:background="#ffffff"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:id="@+id/parentLay"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profilePicparent"
                         android:layout_width="30dp"
-                        android:visibility="gone"
                         android:layout_height="30dp"
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="@dimen/padding_15"
-                        app:border_width="0.0dp"
-                        app:border_color="@color/gray_2nd"
                         android:layout_marginRight="10dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
+                        android:src="@drawable/user"
+                        android:visibility="gone"
+                        app:border_color="@color/gray_2nd"
+                        app:border_width="0.0dp"></de.hdodenhof.circleimageview.CircleImageView>
+
                     <TextView
                         android:id="@+id/parentname"
                         android:layout_width="match_parent"
@@ -191,12 +193,12 @@
                         android:gravity="left"
                         android:lineSpacingExtra="4dp"
                         android:text=""
-                        android:textStyle="bold"
-                        android:visibility="gone"
                         android:textColor="@color/black"
                         android:textSize="15sp"
-                        />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/Question"
                     android:layout_width="match_parent"
@@ -204,9 +206,9 @@
                     android:layout_marginLeft="15dp"
                     android:lineSpacingExtra="4sp"
                     android:paddingRight="15dp"
-                    android:textColorLink="@color/cardbluebackground"
-
                     android:textColor="@color/black"
+
+                    android:textColorLink="@color/cardbluebackground"
                     android:textSize="16.5sp"
                     android:textStyle="bold" />
 
@@ -216,14 +218,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@color/white"
+                    android:ellipsize="end"
                     android:gravity="center|left"
                     android:lineSpacingExtra="7sp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
-                    android:ellipsize="end"
 
-                    android:paddingBottom="5dp"
+                    android:paddingTop="10dp"
                     android:textColor="#333333"
                     android:textColorLink="@color/cardbluebackground"
                     android:textSize="15sp"
@@ -258,11 +260,11 @@
                             android:id="@+id/feedImage"
                             android:layout_width="match_parent"
                             android:layout_height="270dp"
-                            android:adjustViewBounds="true"
                             android:layout_marginTop="3dp"
+                            android:adjustViewBounds="true"
 
                             android:background="@color/white"
-                            android:scaleType="fitXY"
+                            android:scaleType="centerCrop"
 
                             android:visibility="gone" />
 
@@ -356,8 +358,8 @@
                                 android:id="@+id/docImage"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_margin="-4dp"
                                 android:layout_centerInParent="true"
+                                android:layout_margin="-4dp"
                                 android:src="@drawable/pdf_image" />
 
                         </RelativeLayout>
@@ -921,6 +923,64 @@
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#f9f9f9"
+                    android:paddingLeft="15dp"
+                    android:visibility="gone"
+                    android:id="@+id/comment_section"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="15dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/profileImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/user"
+                        android:visibility="visible" />
+
+                    <RelativeLayout
+                        android:id="@+id/comment_lay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+
+                        android:layout_toRightOf="@+id/profileImage">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:id="@+id/commenter_name"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="35dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/user_comment_time"
+                            android:textSize="12sp"
+                            android:layout_alignParentRight="true"
+                            android:textColor="#9d9d9d" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/comment_lay"
+                        android:id="@+id/user_comment"
+                        android:layout_toRightOf="@+id/profileImage"
+                        android:textColor="#000000"
+                        android:layout_marginLeft="8dp"
+                        android:lineSpacingExtra="7sp"
+                        android:textSize="15sp"
+
+                        />
+                </RelativeLayout>
             </LinearLayout>
 
 

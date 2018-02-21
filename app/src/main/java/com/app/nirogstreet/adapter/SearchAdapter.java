@@ -98,7 +98,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
                     intent.putExtra("UserId", rowItem.getId());
                 context.startActivity(intent);*/
-                Methods.profileUser(rowItem.getUser_type(),context,rowItem.getId());
+              //  Methods.profileUser(rowItem.getUser_type(),context,rowItem.getId());
+                Methods.openUserActivities(context, rowItem.getId(), rowItem.getFname(), rowItem.getProfileimage(), rowItem.getTitle(),rowItem.getUser_type());
+
+
             }
         });
     }
