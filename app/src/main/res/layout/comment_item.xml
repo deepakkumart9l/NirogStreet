@@ -32,15 +32,27 @@
         android:layout_toRightOf="@+id/imageLayout"
         android:orientation="vertical"
         android:paddingLeft="10dp">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold" />
+    <ImageView
+        android:layout_width="25dp"
+        android:src="@drawable/etc"
+        android:id="@+id/del_edit"
+        android:visibility="gone"
+        android:padding="3dp"
+        android:layout_alignParentRight="true"
+        android:layout_height="25dp" />
+</RelativeLayout>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="15dp"
-            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/comment_text"

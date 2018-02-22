@@ -66,6 +66,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
     RecyclerView commentsrecyclerview;
     ImageView backImageView;
     CommentsModel commentsModel;
+    String type;
     CommentsRecyclerAdapter commentsAdapter;
     LinearLayoutManager linearLayoutManager1;
     String userId, authToken, feedId;
@@ -94,6 +95,10 @@ public class CommentsRepilesActivity extends AppCompatActivity {
             commentsModel = (CommentsModel) getIntent().getSerializableExtra("commentModel");
 
 
+        }
+        if(getIntent().hasExtra("type"))
+        {
+            type=getIntent().getStringExtra("type");
         }
         sendImageView = (TextView) findViewById(R.id.commentTV);
         sendImageView.setEnabled(false);
@@ -151,7 +156,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
 
         if (commentsModel != null && commentsModel.getCommentsModels() != null && commentsModel.getCommentsModels().size() > 0) {
             commentsModels = commentsModel.getCommentsModels();
-            commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId, false);
+            commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId, false,type);
             commentsrecyclerview.setAdapter(commentsAdapter);
         }
     }
@@ -236,7 +241,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                                 for (int k = 0; k < subComments.length(); k++) {
                                     JSONObject sub_commentObject = subComments.getJSONObject(k);
                                     String User_type=null,title=null;
-                                    String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
+                                    String userIdSubComment = "", fnameSubComment = "",subCommentId="", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                     if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                         JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
                                         {
@@ -271,8 +276,10 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                                     if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                         subCommentCreatedOn = sub_commentObject.getString("created");
                                     }
-
-                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
+                                    if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
+                                        subCommentCreatedOn = sub_commentObject.getString("created");
+                                    }
+                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, "", userIdSubComment, subCommentId, userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
 
                                 }
                             }
@@ -309,7 +316,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                             commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment,user_type_comment,title_comment));
 
                             if (commentsAdapter == null) {
-                                commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId, false);
+                                commentsAdapter = new CommentsRecyclerAdapter(CommentsRepilesActivity.this, commentsModels, feedId, false,type);
                                 commentsrecyclerview.setAdapter(commentsAdapter);
                             } else {
                                 commentsAdapter.notifyDataSetChanged();
@@ -355,6 +362,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
                 pairs.add(new BasicNameValuePair("message", msg));
+                pairs.add(new BasicNameValuePair("post_type",type));
                 pairs.add(new BasicNameValuePair("commentID", commentID));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 

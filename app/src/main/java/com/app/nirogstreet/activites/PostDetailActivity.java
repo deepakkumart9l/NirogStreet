@@ -402,7 +402,7 @@ public class PostDetailActivity extends Activity {
 
                 if (commentsAdapter == null && commentsModels.size() > 0) {
 
-                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true);
+                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true,"1");
                     commentsrecyclerview.setAdapter(commentsAdapter);
                     /*final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)
                             collapsingToolbarLayout.getLayoutParams();
@@ -413,7 +413,7 @@ public class PostDetailActivity extends Activity {
                     collapsingToolbarLayout.setLayoutParams(params);*/
                 } else {
                     if (commentsModels.size() > 0)
-                        commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true);
+                        commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true,"1");
                     commentsrecyclerview.setAdapter(commentsAdapter);
                 }
             }
@@ -520,6 +520,7 @@ public class PostDetailActivity extends Activity {
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
                 pairs.add(new BasicNameValuePair("message", msg));
+                pairs.add(new BasicNameValuePair("post_type","1"));
                 pairs.add(new BasicNameValuePair("show_comment", "1"));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
@@ -662,7 +663,7 @@ String user_type_comment=null,title_comment=null;
 
                                 commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment,user_type_comment,title_comment));
                                 if (commentsAdapter == null && commentsModels.size() > 0) {
-                                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true);
+                                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true,"1");
                                     commentsrecyclerview.setAdapter(commentsAdapter);
                               /*  final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)
                                         collapsingToolbarLayout.getLayoutParams();

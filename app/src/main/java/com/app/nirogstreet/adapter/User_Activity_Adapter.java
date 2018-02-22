@@ -728,6 +728,8 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type","1");
+
                             context.startActivity(intent);
 
                         }
@@ -786,7 +788,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                             deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
                         }
                     });
-                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))||feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                         viewHolder.delImageView.setVisibility(View.VISIBLE);
                     } else {
                         viewHolder.delImageView.setVisibility(View.GONE);
@@ -810,6 +812,8 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View v) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type","1");
+
                             ApplicationSingleton.setPost_position(position);
 
                             context.startActivity(intent);
@@ -820,6 +824,8 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type","1");
+
                             ApplicationSingleton.setPost_position(position);
 
                             context.startActivity(intent);
@@ -1327,7 +1333,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
         if (viewType == TYPE_HEADER) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_item_more, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_item_more_activity, parent, false);
             return new HeaderView(v);
         } else if (viewType == TYPE_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_activity_feed, parent, false);

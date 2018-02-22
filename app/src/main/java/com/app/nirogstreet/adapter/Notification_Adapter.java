@@ -22,6 +22,7 @@ import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -92,7 +93,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
                 genericViewHolder.name.setText(item.getMessage());
 
             } else {
-                genericViewHolder.name.setText(Html.fromHtml("<b>" + "Dr. " + item.getName() + "</b>" + " " + item.getMessage()));
+                genericViewHolder.name.setText(Html.fromHtml("<b>" + Methods.getName(item.getTitle(),item.getName())+ "</b>" + " " + item.getMessage()));
             }
             genericViewHolder.time.setText(item.getTime());
 

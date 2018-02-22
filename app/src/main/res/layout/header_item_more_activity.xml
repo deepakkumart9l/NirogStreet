@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <RelativeLayout
+                android:id="@+id/profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:background="#fff">
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/roundimg"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/padding_15"
+                    android:layout_marginRight="@dimen/padding_15"
+                    android:layout_marginTop="@dimen/padding_15">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profilePic"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@+id/roundimg"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:text=""
+                        android:textColor="#000"
+                        android:textSize="17sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="30dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/view_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:lineSpacingExtra="4dp"
+                            android:text="View Profile"
+                            android:textColor="#696969"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="40dp"
+                    android:src="@drawable/arrow_right" />
+            </RelativeLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/about"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginTop="3dp"
+                        android:text="About"
+                        android:textColor="@color/cardbluebackground"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:id="@+id/editInfo"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="-5dp"
+                        android:padding="6dp"
+                        android:src="@drawable/edit"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imgPublic_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="3dp"
+
+                        android:src="@drawable/specilization" />
+
+                    <TextView
+                        android:id="@+id/QualificationTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@+id/imgPublic_icon"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/mail_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:paddingLeft="2dp"
+                        android:src="@drawable/work_experience" />
+
+                    <TextView
+                        android:id="@+id/yearOfExperienceTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_toRightOf="@+id/mail_icon"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/birthday_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/birthday" />
+
+                    <TextView
+                        android:id="@+id/yearOfBirthTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_toRightOf="@+id/birthday_icon"
+
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/webSite_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:padding="2dp"
+                        android:src="@drawable/web" />
+
+                    <TextView
+                        android:id="@+id/WebTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="7dp"
+                        android:layout_toRightOf="@+id/webSite_icon"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/phone_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:padding="3dp"
+                        android:src="@drawable/phione" />
+
+                    <TextView
+                        android:id="@+id/phoneTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_toRightOf="@+id/phone_icon"
+
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/Email_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:padding="3dp"
+                        android:src="@drawable/mailid" />
+
+                    <TextView
+                        android:id="@+id/emailTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="7dp"
+                        android:layout_toRightOf="@+id/Email_icon"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:padding="20dp"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="20dp"
+                    android:id="@+id/icon"
+                    android:src="@drawable/refer_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif"
+                    android:layout_marginLeft="15dp"
+                    android:textStyle="normal"
+                    android:layout_toRightOf="@+id/icon"
+                    android:text="Refer &amp; Invite"
+                    android:textColor="#cc000000"
+                    android:lineSpacingExtra="6sp"
+                    />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/arrow_right" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f8f9fb"
+            android:layout_marginTop="20dp"
+
+            android:paddingLeft="15dp">
+
+            <TextView
+                android:id="@+id/myActivities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:text="My Activities"
+                android:textColor="@color/black"
+                android:textSize="16.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

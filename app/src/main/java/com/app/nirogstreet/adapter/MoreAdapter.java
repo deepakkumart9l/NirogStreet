@@ -713,6 +713,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, CommentsActivity.class);
                                 intent.putExtra("feedId", feedModel.getFeed_id());
+                                intent.putExtra("type","1");
+
                                 context.startActivity(intent);
                             }
                         });
@@ -762,6 +764,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type","1");
+
                             context.startActivity(intent);
 
                         }
@@ -820,7 +824,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
                         }
                     });
-                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))||feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                         viewHolder.delImageView.setVisibility(View.VISIBLE);
                     } else {
                         viewHolder.delImageView.setVisibility(View.GONE);
@@ -844,6 +848,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View v) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type","1");
+
                             ApplicationSingleton.setPost_position(position);
 
                             context.startActivity(intent);
@@ -854,6 +860,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type","1");
+
                             ApplicationSingleton.setPost_position(position);
 
                             context.startActivity(intent);

@@ -938,7 +938,7 @@
                         android:id="@+id/comment_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="1dp"
 
                         android:layout_toRightOf="@+id/profileImage">
 
@@ -967,7 +967,7 @@
                         android:layout_below="@+id/comment_lay"
                         android:id="@+id/user_comment"
                         android:layout_toRightOf="@+id/profileImage"
-                        android:textColor="#000000"
+                        android:textColor="#333333"
                         android:layout_marginLeft="8dp"
                         android:lineSpacingExtra="7sp"
                         android:textSize="15sp"

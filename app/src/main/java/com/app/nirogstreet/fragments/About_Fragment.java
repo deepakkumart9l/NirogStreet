@@ -89,10 +89,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class About_Fragment extends Fragment {
     View view;
     TextView infoTextView;
-    ArrayList<UserList> userLists=new ArrayList<>();
+    ArrayList<UserList> userLists = new ArrayList<>();
     boolean isMemberOfGroup = false;
     private LetterTileProvider mLetterTileProvider;
-TextView privacyTextView;
+    TextView privacyTextView;
     NestedScrollView scrollView;
     String privacyCheck;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
@@ -127,7 +127,7 @@ TextView privacyTextView;
         super.onResume();
 
         if (ApplicationSingleton.isGroupUpdated()) {
-            userLists=new ArrayList<>();
+            userLists = new ArrayList<>();
 
             if (NetworkUtill.isNetworkAvailable(context)) {
                 getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
@@ -152,10 +152,10 @@ TextView privacyTextView;
         infoTextView = (TextView) view.findViewById(R.id.info);
         sesstionManager = new SesstionManager(context);
         mLetterTileProvider = new LetterTileProvider(context);
-        mRecyclerView = (RecyclerView)view. findViewById(R.id.recyclerview);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        scrollView=(NestedScrollView) view.findViewById(R.id.scrol);
-        privacyTextView=(TextView)view.findViewById(R.id.privacy);
+        scrollView = (NestedScrollView) view.findViewById(R.id.scrol);
+        privacyTextView = (TextView) view.findViewById(R.id.privacy);
         LinearLayoutManager llm = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -163,8 +163,8 @@ TextView privacyTextView;
         authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
-       // TypeFaceMethods.setRegularTypeFaceForTextView(infoTextView, context);
-       // andminTextView = (TextView) view.findViewById(R.id.adminname);
+        // TypeFaceMethods.setRegularTypeFaceForTextView(infoTextView, context);
+        // andminTextView = (TextView) view.findViewById(R.id.adminname);
         //TypeFaceMethods.setRegularTypeFaceForTextView(andminTextView, context);
 
 
@@ -285,7 +285,7 @@ TextView privacyTextView;
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
-                              String user_type_created_by=null,title_created_by=null;
+                            String user_type_created_by = null, title_created_by = null;
 
                             String name = null, invite_note = null, description = null, banner = null, privacy = null, created_profile = null, createdBy_id = null, createdBy_name = null;
                             JSONObject groupDetailJsonObject = jsonObject.getJSONObject("groupDetail");
@@ -356,12 +356,10 @@ TextView privacyTextView;
                             if (groupDetailJsonObject.has("privacy") && !groupDetailJsonObject.isNull("privacy")) {
                                 privacy = groupDetailJsonObject.getString("privacy");
                                 privacyCheck = privacy;
-                                if(privacyCheck.equalsIgnoreCase("0"))
-                                {
+                                if (privacyCheck.equalsIgnoreCase("0")) {
                                     privacyTextView.setText("PUBLIC GROUP");
                                 }
-                                if(privacyCheck.equalsIgnoreCase("1"))
-                                {
+                                if (privacyCheck.equalsIgnoreCase("1")) {
                                     privacyTextView.setText("PRIVATE GROUP");
                                 }
                             }
@@ -383,17 +381,14 @@ TextView privacyTextView;
                                     created_profile = created_ByObject.getString("profile_pic");
 
 
-
                                 }
-                                if(created_ByObject.has("user_type")&&!created_ByObject.isNull("user_type"))
-                                {
-                                    user_type_created_by=created_ByObject.getString("user_type");
+                                if (created_ByObject.has("user_type") && !created_ByObject.isNull("user_type")) {
+                                    user_type_created_by = created_ByObject.getString("user_type");
                                 }
-                                if(created_ByObject.has("Title")&&!created_ByObject.isNull("Title"))
-                                {
-                                    title_created_by=created_ByObject.getString("Title");
+                                if (created_ByObject.has("Title") && !created_ByObject.isNull("Title")) {
+                                    title_created_by = created_ByObject.getString("Title");
                                 }
-                                userLists.add(new UserList(createdBy_id,createdBy_name,created_profile,user_type_created_by,title_created_by));
+                                userLists.add(new UserList(createdBy_id, createdBy_name, created_profile, user_type_created_by, title_created_by));
 
                             }
                             final ArrayList<UserList> userDetailModels = new ArrayList<>();
@@ -401,7 +396,7 @@ TextView privacyTextView;
                                 JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
                                 if (jsonArray != null && jsonArray.length() > 0) {
                                     for (int i = 0; i < jsonArray.length(); i++) {
-                                        String userId = null, userName = null, profile_pic = null,user_Type=null,title=null;
+                                        String userId = null, userName = null, profile_pic = null, user_Type = null, title = null;
                                         JSONObject object = jsonArray.getJSONObject(i);
                                         if (object.has("user_id") && !object.isNull("user_id")) {
                                             JSONObject userDetail = object.getJSONObject("user_id");
@@ -409,13 +404,11 @@ TextView privacyTextView;
                                                 userId = userDetail.getString("id");
 
                                             }
-                                            if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
-                                            {
-                                                user_Type=userDetail.getString("user_type");
+                                            if (userDetail.has("user_type") && !userDetail.isNull("user_type")) {
+                                                user_Type = userDetail.getString("user_type");
                                             }
-                                            if(userDetail.has("Title")&&!userDetail.isNull("Title"))
-                                            {
-                                                title=userDetail.getString("Title");
+                                            if (userDetail.has("Title") && !userDetail.isNull("Title")) {
+                                                title = userDetail.getString("Title");
                                             }
                                             if (userDetail.has("name") && !userDetail.isNull("name")) {
                                                 userName = userDetail.getString("name");
@@ -424,13 +417,13 @@ TextView privacyTextView;
                                             if (userDetail.has("profile_pic") && !userDetail.isNull("profile_pic")) {
                                                 profile_pic = userDetail.getString("profile_pic");
                                             }
-                                            if(!userId.equalsIgnoreCase(createdBy_id))
-                                            userLists.add(new UserList(userId, userName, profile_pic,user_Type,title));
-                                            userDetailModels.add(new UserList(userId, userName, profile_pic,user_Type,title));
+                                            if (!userId.equalsIgnoreCase(createdBy_id))
+                                                userLists.add(new UserList(userId, userName, profile_pic, user_Type, title));
+                                            userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title));
                                         }
                                     }
                                     if (userLists.size() > 0) {
-                                        MemberListingAdapter memberListingAdapter=new MemberListingAdapter(context,userLists);
+                                        MemberListingAdapter memberListingAdapter = new MemberListingAdapter(context, userLists);
                                         mRecyclerView.setAdapter(memberListingAdapter);
 
                                     }
@@ -753,8 +746,7 @@ TextView privacyTextView;
                     popup.show();
                     break;
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

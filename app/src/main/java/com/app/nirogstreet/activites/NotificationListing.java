@@ -219,7 +219,7 @@ public class NotificationListing extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", courseID="",forum_id = "";
                                 int unread = 0;
-                                String notificationType="";
+                                String notificationType="",Title="";
                                 String appointment_id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 if (jsonObject1.has("profile_pic") && !jsonObject1.isNull("profile_pic")) {
@@ -227,6 +227,10 @@ public class NotificationListing extends AppCompatActivity {
                                 }
                                 if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
                                     id = jsonObject1.getString("id");
+                                }
+                                if(jsonObject1.has("title")&&!jsonObject1.isNull("title"))
+                                {
+                                    Title=jsonObject1.getString("title");
                                 }
                                 if (jsonObject1.has("message") && !jsonObject1.isNull("message")) {
                                     message = jsonObject1.getString("message");
@@ -268,7 +272,7 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("notification_type") && !jsonObject1.isNull("notification_type")) {
                                     notificationType = jsonObject1.getString("notification_type");
                                 }
-                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id,courseID,notificationType));
+                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id,courseID,notificationType,Title));
                             }
                         } else {
                             no_notifications.setVisibility(View.VISIBLE);

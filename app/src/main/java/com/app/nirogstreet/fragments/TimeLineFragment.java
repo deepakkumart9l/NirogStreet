@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.MainActivity;
@@ -66,7 +68,7 @@ public class TimeLineFragment extends Fragment {
     CircularProgressBar circularProgressBar;
     TimelineAdapter feedsAdapter;
     private SwipeRefreshLayout swipeLayout;
-
+FrameLayout floatingActionButton;
     private LinearLayoutManager linearLayoutManager;
 
     View view;
@@ -173,7 +175,15 @@ public class TimeLineFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setNestedScrollingEnabled(true);
         customViewContainer = (FrameLayout) view.findViewById(R.id.customViewContainer);
+floatingActionButton=(FrameLayout)view.findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PostingActivity.class);
 
+                context.startActivity(intent);
+            }
+        });
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         swipeLayout.setColorScheme(R.color.gplus_color_1,
                 R.color.gplus_color_2,
@@ -330,6 +340,13 @@ public class TimeLineFragment extends Fragment {
 
                                 int totalItemCount = linearLayoutManager.getItemCount();
                                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                                if(linearLayoutManager.findFirstVisibleItemPosition()==0)
+                                {
+                                    floatingActionButton.setVisibility(View.GONE);
+                                }
+                                else {
+                                    floatingActionButton.setVisibility(View.VISIBLE);
+                                }
                                 if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
                                     try {
                                         String has_more = "";

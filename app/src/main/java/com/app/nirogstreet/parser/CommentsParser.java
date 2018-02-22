@@ -34,7 +34,7 @@ public class CommentsParser {
                             for (int k = 0; k < subComments.length(); k++) {
                                 JSONObject sub_commentObject = subComments.getJSONObject(k);
 String User_type=null,title=null;
-                                String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
+                                String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "",subcommentId="", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                 if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                     JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
                                     {
@@ -73,7 +73,10 @@ String User_type=null,title=null;
                                 if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                     subCommentCreatedOn = sub_commentObject.getString("created");
                                 }
-                                subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
+                                if (sub_commentObject.has("id") && !sub_commentObject.isNull("id")) {
+                                    subcommentId = sub_commentObject.getString("id");
+                                }
+                                subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, subcommentId, userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
 
                             }
                         }

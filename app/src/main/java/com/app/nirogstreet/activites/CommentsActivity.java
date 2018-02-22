@@ -73,6 +73,7 @@ public class CommentsActivity extends AppCompatActivity{
     boolean commentOnComment = true;
     String userId, authToken, feedId;
     private boolean albumupdate = false;
+    String type;
     private  boolean isHideCommentSection=false;
     private PostCommentAsyncTask postCommentAsyncTask;
 
@@ -107,6 +108,10 @@ public class CommentsActivity extends AppCompatActivity{
         }
         if (getIntent().hasExtra("commentsOnComment")) {
             commentOnComment = getIntent().getBooleanExtra("commentsOnComment", false);
+        }
+        if(getIntent().hasExtra("type"))
+        {
+            type=getIntent().getStringExtra("type");
         }
         circularProgressBar = (CircularProgressBar) findViewById(R.id.scroll);
         commentsrecyclerview = (RecyclerView) findViewById(R.id.recyclerview);
@@ -203,7 +208,7 @@ public class CommentsActivity extends AppCompatActivity{
                 commentsModels = new ArrayList<>();
                 commentsModels = CommentsParser.commentsParser(jo);
                 if (commentsAdapter == null) {
-                    commentsAdapter = new CommentsRecyclerAdapter(CommentsActivity.this, commentsModels, feedId, commentOnComment);
+                    commentsAdapter = new CommentsRecyclerAdapter(CommentsActivity.this, commentsModels, feedId, commentOnComment,type);
                     commentsrecyclerview.setAdapter(commentsAdapter);
                     /*listView.setAdapter(commentsAdapter);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -334,7 +339,7 @@ public class CommentsActivity extends AppCompatActivity{
                                     JSONObject sub_commentObject = subComments.getJSONObject(k);
                                     String User_type=null;
                                     String title=null;
-                                    String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
+                                    String userIdSubComment = "",subCommentId="", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                     if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                         JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
                                         {
@@ -367,10 +372,13 @@ public class CommentsActivity extends AppCompatActivity{
                                     if (sub_commentObject.has("message") && !sub_commentObject.isNull("message")) {
                                         subCommentmsg = sub_commentObject.getString("message");
                                     }
+                                    if (sub_commentObject.has("id") && !sub_commentObject.isNull("id")) {
+                                        subCommentId = sub_commentObject.getString("id");
+                                    }
                                     if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                         subCommentCreatedOn = sub_commentObject.getString("created");
                                     }
-                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
+                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, "", userIdSubComment, subCommentId, userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
 
                                 }
                             }
@@ -448,6 +456,7 @@ public class CommentsActivity extends AppCompatActivity{
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
                 pairs.add(new BasicNameValuePair("message", msg));
+                pairs.add(new BasicNameValuePair("post_type",type));
                 pairs.add(new BasicNameValuePair("show_comment","1"));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
