@@ -47,8 +47,35 @@
             android:name=".activites.InviteNotificationListing"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".BharamTool.BharmTool_Cat"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BharamTool.Diseas_sub_cat_sub"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BharamTool.Disease_Cat"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activites.Journals"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".BharamTool.Disease_Detail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BharamTool.SwarnBhoota_Cat"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BharamTool.SwarnBhoota_Detail"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activites.CoursesListing"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".BharamTool.SwarnBhoota_Yog_Type"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activites.OpenDocument"
             android:screenOrientation="portrait" />
+        <activity android:name=".BharamTool.Disease_Sub_Cat"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activites.EditCommentActivity"
             android:screenOrientation="portrait" />

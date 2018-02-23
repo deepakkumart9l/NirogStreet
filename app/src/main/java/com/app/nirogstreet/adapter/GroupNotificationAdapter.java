@@ -216,6 +216,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
+                pairs.add(new BasicNameValuePair("added_by",sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 pairs.add(new BasicNameValuePair("addedType", addedType + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 

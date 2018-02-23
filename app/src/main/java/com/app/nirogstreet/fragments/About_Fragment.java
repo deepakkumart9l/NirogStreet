@@ -95,6 +95,7 @@ public class About_Fragment extends Fragment {
     TextView privacyTextView;
     NestedScrollView scrollView;
     String privacyCheck;
+    boolean isLogedInUser_Admin=false;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
     String statusData = "";
     ArrayList<LikesModel> membersModel = new ArrayList<>();
@@ -388,7 +389,7 @@ public class About_Fragment extends Fragment {
                                 if (created_ByObject.has("Title") && !created_ByObject.isNull("Title")) {
                                     title_created_by = created_ByObject.getString("Title");
                                 }
-                                userLists.add(new UserList(createdBy_id, createdBy_name, created_profile, user_type_created_by, title_created_by));
+                                userLists.add(new UserList(createdBy_id, createdBy_name, created_profile, user_type_created_by, title_created_by, "1"));
 
                             }
                             final ArrayList<UserList> userDetailModels = new ArrayList<>();
@@ -396,6 +397,7 @@ public class About_Fragment extends Fragment {
                                 JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
                                 if (jsonArray != null && jsonArray.length() > 0) {
                                     for (int i = 0; i < jsonArray.length(); i++) {
+                                        String is_admin = null;
                                         String userId = null, userName = null, profile_pic = null, user_Type = null, title = null;
                                         JSONObject object = jsonArray.getJSONObject(i);
                                         if (object.has("user_id") && !object.isNull("user_id")) {
@@ -417,13 +419,28 @@ public class About_Fragment extends Fragment {
                                             if (userDetail.has("profile_pic") && !userDetail.isNull("profile_pic")) {
                                                 profile_pic = userDetail.getString("profile_pic");
                                             }
+                                            if (object.has("is_admin") && !object.isNull("is_admin")) {
+                                                is_admin = object.getString("is_admin");
+                                            }
                                             if (!userId.equalsIgnoreCase(createdBy_id))
-                                                userLists.add(new UserList(userId, userName, profile_pic, user_Type, title));
-                                            userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title));
+                                                userLists.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
+
+
+                                            userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
+                                        }
+                                    }
+                                    for (int k=0;k<userLists.size();k++)
+                                    {
+                                        if(userLists.get(k).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                        {
+                                            if(userLists.get(k).getIs_admin()!=null&&userLists.get(k).getIs_admin().equalsIgnoreCase("1"))
+                                            {
+                                                isLogedInUser_Admin=true;
+                                            }
                                         }
                                     }
                                     if (userLists.size() > 0) {
-                                        MemberListingAdapter memberListingAdapter = new MemberListingAdapter(context, userLists);
+                                        MemberListingAdapter memberListingAdapter = new MemberListingAdapter(context, userLists,groupId,isLogedInUser_Admin);
                                         mRecyclerView.setAdapter(memberListingAdapter);
 
                                     }
@@ -572,8 +589,10 @@ public class About_Fragment extends Fragment {
                                     }
                                 }
                             }
-                            if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
-                                createdBy = true;
+                            if (isLogedInUser_Admin) {
+                              //  if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+
+                                    createdBy = true;
                                 CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -676,12 +695,7 @@ public class About_Fragment extends Fragment {
                                     break;
                                 case R.id.leave:
                                     setDialog();
-                               /* if (NetworkUtill.isNetworkAvailable(context)) {
-                                    acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
-                                    acceptDeclineJoinAsyncTask.execute();
-                                } else {
-                                    NetworkUtill.showNoInternetDialog(context);
-                                }*/
+
                                     break;
 
                             }

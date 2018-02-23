@@ -1486,7 +1486,7 @@ recyclerView.setVisibility(View.VISIBLE);
                 } else if (feedModel.getFeedSourceArrayList().size() < 3) {
                     strings = feedModel.getFeedSourceArrayList();
 
-                    strings.add("add");
+                   // strings.add("add");
                 }
                 askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(feedModel.getFeedSourceArrayList(), PostEditActivity.this);
 

@@ -243,6 +243,7 @@ public class CommentsActivity extends AppCompatActivity{
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
+                pairs.add(new BasicNameValuePair("post_type",type));
                 httppost.setHeader("Authorization", "Basic " + authToken);
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);

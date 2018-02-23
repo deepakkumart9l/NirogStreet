@@ -49,6 +49,7 @@ public class EditCommentActivity extends Activity {
     SesstionManager sessionManager;
     EditText editTextMessage;
     ImageView backImageView;
+    boolean is_sub_comment = false;
     CircularProgressBar circularProgressBar;
     TextView postTextView;
     String type = "";
@@ -88,6 +89,9 @@ public class EditCommentActivity extends Activity {
         Intent intent = getIntent();
         if (intent.hasExtra("commentId")) {
             commentId = intent.getStringExtra("commentId");
+        }
+        if (getIntent().hasExtra("is_sub_comment")) {
+            is_sub_comment = getIntent().getBooleanExtra("is_sub_comment", false);
         }
         if (intent.hasExtra("msg")) {
             msg = intent.getStringExtra("msg");
@@ -177,11 +181,14 @@ public class EditCommentActivity extends Activity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("userID", userId));
-                pairs.add(new BasicNameValuePair("commentID", commentId));
+                if (is_sub_comment)
+                    pairs.add(new BasicNameValuePair("subcommentID", commentId));
+                else
+                    pairs.add(new BasicNameValuePair("commentID", commentId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
                 pairs.add(new BasicNameValuePair("message", text));
                 pairs.add(new BasicNameValuePair("post_type", type));
-                pairs.add(new BasicNameValuePair("show_comment","1"));
+                pairs.add(new BasicNameValuePair("show_comment", "1"));
 
                 httppost.setHeader("Authorization", "Basic " + authToken);
 

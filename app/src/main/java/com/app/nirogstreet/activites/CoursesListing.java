@@ -75,8 +75,6 @@ public class CoursesListing extends Activity {
     TextView myGroupTextView, otherGroupTextView;
     private boolean isLoading = false;
     ImageView imageViewBack;
-    View view;
-    Context context;
     SesstionManager sessionManager;
 
     @Override
@@ -89,33 +87,39 @@ public class CoursesListing extends Activity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
-        sessionManager = new SesstionManager(context);
-        linearLayout1 = (LinearLayout) view.findViewById(R.id.linearLayout1);
-        no_list = (LinearLayout) view.findViewById(R.id.no_list);
-        button=(Button)view.findViewById(R.id.join_com);
+
+        sessionManager = new SesstionManager(CoursesListing.this);
+        linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
+        no_list = (LinearLayout) findViewById(R.id.no_list);
+        button=(Button)findViewById(R.id.join_com);
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         logedinuserId = userDetails.get(SesstionManager.USER_ID);
         userId = userDetails.get(SesstionManager.USER_ID);
-        myGroupTextView = (TextView) view.findViewById(R.id.myGroup);
+        myGroupTextView = (TextView) findViewById(R.id.myGroup);
         myGroupTextView.setText("My Courses");
-        circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
-        otherGroupTextView = (TextView) view.findViewById(R.id.otherGroup);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
+        otherGroupTextView = (TextView) findViewById(R.id.otherGroup);
         otherGroupTextView.setText("All Courses");
-        userView = (View) view.findViewById(R.id.userview);
-        allView = (View) view.findViewById(R.id.allview);
+        userView = (View) findViewById(R.id.userview);
+        allView = (View) findViewById(R.id.allview);
         userView.setSelected(true);
-        imageViewback = (ImageView) view.findViewById(R.id.back);
+        imageViewback = (ImageView) findViewById(R.id.back);
+        imageViewback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
         otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
-        TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-        TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+
         myGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerView.removeAllViews();
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, context);
+                TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, CoursesListing.this);
+                TypeFaceMethods.setRegularTypeFaceForTextView(otherGroupTextView, CoursesListing.this);
                 otherGroupTextView.setClickable(false);
                 userView.setSelected(true);
                 allView.setSelected(false);
@@ -127,13 +131,13 @@ public class CoursesListing extends Activity {
                 recyclerView.setVisibility(View.GONE);
                 myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
-                if (NetworkUtill.isNetworkAvailable(context)) {
+                if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                     String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
                     groupsOfUserAsyncTask.execute();
                 } else {
-                    NetworkUtill.showNoInternetDialog(context);
+                    NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
                     otherGroupTextView.setClickable(true);
 
@@ -144,8 +148,8 @@ public class CoursesListing extends Activity {
             @Override
             public void onClick(View view) {
                 page = 1;
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
+              /*  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, CoursesListing.this);
+                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);*/
                 groupModelsTotal = new ArrayList<CoursesModel>();
                 userView.setSelected(false);
                 no_list.setVisibility(View.GONE);
@@ -158,12 +162,12 @@ public class CoursesListing extends Activity {
                 otherGroupTextView.setSelected(true);
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
-                if (NetworkUtill.isNetworkAvailable(context)) {
+                if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
                     groupsOfUserAsyncTask.execute();
                 } else {
-                    NetworkUtill.showNoInternetDialog(context);
+                    NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
                     otherGroupTextView.setClickable(true);
 
@@ -174,8 +178,6 @@ public class CoursesListing extends Activity {
             @Override
             public void onClick(View v) {
                 page = 1;
-                TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, context);
-                TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);
                 groupModelsTotal = new ArrayList<CoursesModel>();
                 userView.setSelected(false);
                 recyclerView.removeAllViews();
@@ -189,21 +191,21 @@ public class CoursesListing extends Activity {
                 otherGroupTextView.setSelected(true);
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
-                if (NetworkUtill.isNetworkAvailable(context)) {
+                if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
                     groupsOfUserAsyncTask.execute();
                 } else {
-                    NetworkUtill.showNoInternetDialog(context);
+                    NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
                     otherGroupTextView.setClickable(true);
 
                 }
             }
         });
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        linearLayoutManager = new LinearLayoutManager(CoursesListing.this);
 
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerView.setHasFixedSize(true);
@@ -216,25 +218,25 @@ public class CoursesListing extends Activity {
         recyclerView.setLayoutManager(linearLayoutManager);
         try{
             if (logedinuserId.equals(userId))
-                if (NetworkUtill.isNetworkAvailable(context)) {
+                if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                     String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
                     groupsOfUserAsyncTask.execute();
                 } else {
-                    NetworkUtill.showNoInternetDialog(context);
+                    NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
                     otherGroupTextView.setClickable(true);
 
                 }
             else {
-                if (NetworkUtill.isNetworkAvailable(context)) {
+                if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
                     groupsOfUserAsyncTask.execute();
                 } else {
-                    NetworkUtill.showNoInternetDialog(context);
+                    NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
                     otherGroupTextView.setClickable(true);
 
@@ -259,14 +261,14 @@ public class CoursesListing extends Activity {
             myGroupTextView.setTextColor(getResources().getColor(R.color.black));
 
             otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
-            if (NetworkUtill.isNetworkAvailable(context)) {
+            if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                 String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
-                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
+                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
                 groupsOfUserAsyncTask.execute();
 
             } else {
-                NetworkUtill.showNoInternetDialog(context);
+                NetworkUtill.showNoInternetDialog(CoursesListing.this);
             }
             ApplicationSingleton.setCourseSubscribe(false);
         }

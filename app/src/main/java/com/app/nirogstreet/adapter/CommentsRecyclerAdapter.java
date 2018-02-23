@@ -410,6 +410,8 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 Intent intent=new Intent(context,EditCommentActivity.class);
                         intent.putExtra("feedId",feedId);
                         intent.putExtra("type","1");
+                        if(!isVisible)
+                        intent.putExtra("is_sub_comment",true);
                         intent.putExtra("commentId",commentsModel.getCommentId());
                         intent.putExtra("msg",commentsModel.getComment());
                         context.startActivity(intent);

@@ -28,6 +28,15 @@ public class UserList implements Serializable {
     public String getTitle() {
         return title;
     }
+String is_admin;
+
+    public String getIs_admin() {
+        return is_admin;
+    }
+
+    public void setIs_admin(String is_admin) {
+        this.is_admin = is_admin;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -36,12 +45,13 @@ public class UserList implements Serializable {
     String user_type;
     String title;
     String profile_pic;
-    public UserList(String id, String name,String profile_pic,String user_type,String title) {
+    public UserList(String id, String name,String profile_pic,String user_type,String title,String is_admin) {
         this.id = id;
         this.name = name;
         this.profile_pic=profile_pic;
         this.user_type=user_type;
         this.title=title;
+        this.is_admin=is_admin;
     }
 
     String name;
