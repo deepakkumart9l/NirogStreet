@@ -25,6 +25,7 @@ import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.BuildConfig;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONObject;
 
@@ -66,10 +67,10 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sesstionManager = new SesstionManager(Splash.this);
-        if (!AppUrl.AppBaseUrl.contains("appstage"))
+        if (!AppUrl.AppBaseUrl.contains("appstage")) {
             Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
-
-
+            //FirebaseCrash.setCrashCollectionEnabled(false);
+        }
         setContentView(R.layout.splash_screen);
         PackageInfo pInfo = null;
         try {

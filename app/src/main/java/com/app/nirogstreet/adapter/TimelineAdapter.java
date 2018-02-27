@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -100,6 +101,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -117,6 +119,13 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
+import io.branch.referral.util.ContentMetadata;
+import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
 
 /**
  * Created by Preeti on 26-10-2017.
@@ -688,6 +697,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         viewHolder.profileImageView.setImageResource(R.drawable.user);
                     }
                     if (feedModel.commentsModel != null) {
+                        viewHolder.comment_section.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, CommentsActivity.class);
+                                intent.putExtra("feedId", feedModel.getFeed_id());
+                                intent.putExtra("type","1");
+                                context.startActivity(intent);                            }
+                        });
                         viewHolder.comment_section.setVisibility(View.VISIBLE);
                         if (feedModel.getCommentsModel().getProfile_pic_url() != null) {
                             Picasso.with(context)
@@ -1549,6 +1566,50 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                          try {
                                                              if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
                                                                  text = feedModel.getMessage();
+                                                                 /*BranchUniversalObject buo = new BranchUniversalObject()
+                                                                         .setCanonicalIdentifier("content/12345")
+                                                                         .setTitle("My Content Title")
+                                                                         .setContentDescription("My Content Description")
+                                                                         .setContentImageUrl("https://lorempixel.com/400/400")
+                                                                         .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                                         //.setLocalIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                                         .setContentMetadata(new ContentMetadata().addCustomMetadata("postId", feedModel.getFeed_id()));
+
+                                                                 LinkProperties lp = new LinkProperties()
+                                                                         .setChannel("facebook")
+                                                                         .setFeature("sharing")
+                                                                         //.setCampaign("content 123 launch")
+                                                                         .setStage("new user")
+                                                                         .addControlParameter("$desktop_url", "http://example.com/home")
+                                                                         .addControlParameter("custom", "data")
+                                                                         .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
+
+                                                                 ShareSheetStyle ss = new ShareSheetStyle(context, "Check this out!", "This stuff is awesome: ")
+                                                                         .setCopyUrlStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
+                                                                         .setMoreOptionStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_search), "Show more")
+                                                                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                                                                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
+                                                                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE).setAsFullWidthStyle(true)
+                                                                         .setSharingTitle("Share With");
+                                                                         //.addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT)
+
+
+                                                                 buo.showShareSheet(activity, lp,  ss,  new Branch.BranchLinkShareListener() {
+                                                                     @Override
+                                                                     public void onShareLinkDialogLaunched() {
+                                                                     }
+                                                                     @Override
+                                                                     public void onShareLinkDialogDismissed() {
+                                                                     }
+                                                                     @Override
+                                                                     public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                                                                         System.out.print(sharedLink);
+                                                                     }
+                                                                     @Override
+                                                                     public void onChannelSelected(String channelName) {
+                                                                     }
+
+                                                                 });*/
                                                              }
 
                                                              String path = null;
@@ -1601,7 +1662,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                                                  }
                                                                  shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
-                                                                 context.startActivity(Intent.createChooser(shareIntent,
+                                                                context.startActivity(Intent.createChooser(shareIntent,
                                                                          context.getResources().getString(R.string.share_with)));
 
 

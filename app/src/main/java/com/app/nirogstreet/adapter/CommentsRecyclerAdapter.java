@@ -87,168 +87,173 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 
     @Override
     public void onBindViewHolder(final MyHolderView holder, final int position) {
-        final CommentsModel rowItem = commentsModels.get(position);
         try {
-            Picasso.with(context)
-                    .load(rowItem.getProfile_pic_url())
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
-                    .into(holder.imageView);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
-
-            if (rowItem.getFname() != null) {
-                if (rowItem.getLname() != null)
-                    holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());
-                else
-                    holder.name.setText(rowItem.getFname());
+            final CommentsModel rowItem = commentsModels.get(position);
+            try {
+                Picasso.with(context)
+                        .load(rowItem.getProfile_pic_url())
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into(holder.imageView);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } else {
-            if (rowItem.getFname() != null) {
-                if (rowItem.getLname() != null)
-                    holder.name.setText(Methods.getName(rowItem.getTitle(), rowItem.getFname() + " " + rowItem.getLname()));
-                else
-                    holder.name.setText(Methods.getName(rowItem.getTitle(), rowItem.getFname()));
-            }
-        }
-        if (commentsModels.get(position).isUserLiked()) {
-            holder.like.setText("Unlike");
-        } else {
-            holder.like.setText("Like");
 
-        }
-        if (rowItem.getUserId().equalsIgnoreCase(sessionManager.getUserDetails().get(SesstionManager.USER_ID)) || rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
-            holder.del_editImageView.setVisibility(View.VISIBLE);
-            holder.del_editImageView.setOnClickListener(new View.OnClickListener() {
+            if (rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+
+                if (rowItem.getFname() != null) {
+                    if (rowItem.getLname() != null)
+                        holder.name.setText(rowItem.getFname() + " " + rowItem.getLname());
+                    else
+                        holder.name.setText(rowItem.getFname());
+                }
+            } else {
+                if (rowItem.getFname() != null) {
+                    if (rowItem.getLname() != null)
+                        holder.name.setText(Methods.getName(rowItem.getTitle(), rowItem.getFname() + " " + rowItem.getLname()));
+                    else
+                        holder.name.setText(Methods.getName(rowItem.getTitle(), rowItem.getFname()));
+                }
+            }
+            if (commentsModels.get(position).isUserLiked()) {
+                holder.like.setText("Unlike");
+            } else {
+                holder.like.setText("Like");
+
+            }
+            if (rowItem.getUserId().equalsIgnoreCase(sessionManager.getUserDetails().get(SesstionManager.USER_ID)) || rowItem.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                holder.del_editImageView.setVisibility(View.VISIBLE);
+                holder.del_editImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteOrEditPopup(holder.del_editImageView, rowItem, position);
+
+                    }
+                });
+            } else {
+                holder.del_editImageView.setVisibility(View.GONE);
+
+            }
+
+            holder.numberOfReplies.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    deleteOrEditPopup(holder.del_editImageView, rowItem, position);
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, CommentsRepilesActivity.class);
+                    intent.putExtra("commentModel", commentsModels.get(position));
+                    intent.putExtra("type", "1");
 
+                    intent.putExtra("feedId", feedId);
+                    context.startActivity(intent);
                 }
             });
-        } else {
-            holder.del_editImageView.setVisibility(View.GONE);
+            holder.reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, CommentsRepilesActivity.class);
+                    intent.putExtra("commentModel", commentsModels.get(position));
+                    intent.putExtra("feedId", feedId);
+                    intent.putExtra("type", "1");
 
-        }
+                    context.startActivity(intent);
+                }
+            });
+            if (commentsModels.get(position).getCommentsModels() != null && commentsModels.get(position).getCommentsModels().size() >= 1) {
+                holder.subComment.setVisibility(View.VISIBLE);
+                if (rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
 
-        holder.numberOfReplies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, CommentsRepilesActivity.class);
-                intent.putExtra("commentModel", commentsModels.get(position));
-                intent.putExtra("type", "1");
+                    holder.subCommntName.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
+                else
+                    holder.subCommntName.setText(Methods.getName(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getTitle(), rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname()));
 
-                intent.putExtra("feedId", feedId);
-                context.startActivity(intent);
-            }
-        });
-        holder.reply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, CommentsRepilesActivity.class);
-                intent.putExtra("commentModel", commentsModels.get(position));
-                intent.putExtra("feedId", feedId);
-                intent.putExtra("type", "1");
+                Glide.with(context)
+                        .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()).placeholder(R.drawable.user) // Uri of the picture
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .crossFade()
+                        .override(100, 100)
+                        .into(holder.subcommentimg);
+                // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
+                holder.subcommnt.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment());
+                Methods.hyperlink(holder.subcommnt, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment(), context, 0);
 
-                context.startActivity(intent);
-            }
-        });
-        if (commentsModels.get(position).getCommentsModels() != null && commentsModels.get(position).getCommentsModels().size() >= 1) {
-            holder.subComment.setVisibility(View.VISIBLE);
-            if (rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
+                if (commentsModels.get(position).getCommentsModels().size() > 1) {
+                    holder.numberOfReplies.setVisibility(View.VISIBLE);
+                    int noOfReply = commentsModels.get(position).getCommentsModels().size() - 1;
+                    if (noOfReply == 1) {
+                        holder.numberOfReplies.setText("View " + noOfReply + " previous reply");
 
-                holder.subCommntName.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname());
-            else
-                holder.subCommntName.setText(Methods.getName(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getTitle(), rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getFname()));
+                    } else {
+                        holder.numberOfReplies.setText("View " + noOfReply + " previous replies");
 
-            Glide.with(context)
-                    .load(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url()).placeholder(R.drawable.user) // Uri of the picture
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .crossFade()
-                    .override(100, 100)
-                    .into(holder.subcommentimg);
-            // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
-            holder.subcommnt.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment());
-            Methods.hyperlink(holder.subcommnt, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment(), context, 0);
-
-            if (commentsModels.get(position).getCommentsModels().size() > 1) {
-                holder.numberOfReplies.setVisibility(View.VISIBLE);
-                int noOfReply = commentsModels.get(position).getCommentsModels().size() - 1;
-                if (noOfReply == 1) {
-                    holder.numberOfReplies.setText("View " + noOfReply + " previous reply");
-
+                    }
                 } else {
-                    holder.numberOfReplies.setText("View " + noOfReply + " previous replies");
+                    holder.numberOfReplies.setVisibility(View.GONE);
 
                 }
             } else {
-                holder.numberOfReplies.setVisibility(View.GONE);
+                holder.subComment.setVisibility(View.GONE);
 
             }
-        } else {
-            holder.subComment.setVisibility(View.GONE);
+            if (isVisible) {
+                holder.likeslayout.setVisibility(View.VISIBLE);
+                url = AppUrl.BaseUrl + "feed/delete-comment";
+            } else {
+                holder.likeslayout.setVisibility(View.GONE);
+                url = AppUrl.BaseUrl + "feed/delete-sub-comment";
+            }
 
-        }
-        if (isVisible) {
-            holder.likeslayout.setVisibility(View.VISIBLE);
-            url = AppUrl.BaseUrl + "feed/delete-comment";
-        } else {
-            holder.likeslayout.setVisibility(View.GONE);
-            url = AppUrl.BaseUrl + "feed/delete-sub-comment";
-        }
-
-        holder.name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommentsModel likesModel = commentsModels.get(position);
+            holder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommentsModel likesModel = commentsModels.get(position);
                /* Intent resultIntent = new Intent(context, Dr_Profile.class);
 
                 resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.startActivity(resultIntent);*/
-                Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getName(), likesModel.getProfile_pic_url(), likesModel.getTitle(), likesModel.getUser_type());
+                    Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getName(), likesModel.getProfile_pic_url(), likesModel.getTitle(), likesModel.getUser_type());
 
-                //  Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
-            }
-        });
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CommentsModel likesModel = commentsModels.get(position);
+                    //  Methods.profileUser(likesModel.getUser_type(),context,likesModel.getUserId());
+                }
+            });
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CommentsModel likesModel = commentsModels.get(position);
 
                /* Intent resultIntent = new Intent(context, Dr_Profile.class);
                 resultIntent.putExtra("UserId", likesModel.getUserId());
                 context.startActivity(resultIntent);*/
-                Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getName(), likesModel.getProfile_pic_url(), likesModel.getTitle(), likesModel.getUser_type());
+                    Methods.openUserActivities(context, likesModel.getUserId(), likesModel.getName(), likesModel.getProfile_pic_url(), likesModel.getTitle(), likesModel.getUser_type());
 
-            }
-        });
-        //  holder.name.setText(rowItem.getName());
-        holder.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LikeCommentAsynctask likeCommentAsynctask = new LikeCommentAsynctask(commentsModels.get(position).getCommentId(), userId, authToken, position);
-                likeCommentAsynctask.execute();
-            }
-        });
-        holder.time.setText(rowItem.getTimeStamp());
-        holder.totalLike.setText(commentsModels.get(position).getTotalLikes() + "");
-        holder.message.setText(rowItem.getComment());
-        Methods.hyperlink(holder.message, rowItem.getComment(), context, 0);
-        // imageLoader.DisplayImage(context, rowItem.getProfile_pic_url(), holder.imageView, null, 150, 150, R.drawable.profile_default);
-        holder.subComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, CommentsRepilesActivity.class);
-                intent.putExtra("commentModel", commentsModels.get(position));
-                intent.putExtra("feedId", feedId);
-                intent.putExtra("type", type);
-                context.startActivity(intent);
-            }
-        });
+                }
+            });
+            //  holder.name.setText(rowItem.getName());
+            holder.like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LikeCommentAsynctask likeCommentAsynctask = new LikeCommentAsynctask(commentsModels.get(position).getCommentId(), userId, authToken, position);
+                    likeCommentAsynctask.execute();
+                }
+            });
+            holder.time.setText(rowItem.getTimeStamp());
+            holder.totalLike.setText(commentsModels.get(position).getTotalLikes() + "");
+            holder.message.setText(rowItem.getComment());
+            Methods.hyperlink(holder.message, rowItem.getComment(), context, 0);
+            // imageLoader.DisplayImage(context, rowItem.getProfile_pic_url(), holder.imageView, null, 150, 150, R.drawable.profile_default);
+            holder.subComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, CommentsRepilesActivity.class);
+                    intent.putExtra("commentModel", commentsModels.get(position));
+                    intent.putExtra("feedId", feedId);
+                    intent.putExtra("type", type);
+                    context.startActivity(intent);
+                }
+            });
+        }catch (Exception   e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

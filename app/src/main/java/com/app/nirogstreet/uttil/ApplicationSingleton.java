@@ -4,9 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.app.nirogstreet.BuildConfig;
 import com.app.nirogstreet.model.Course_Detail_model;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.google.firebase.crash.FirebaseCrash;
 
 import io.branch.referral.Branch;
 
@@ -18,7 +20,14 @@ public class ApplicationSingleton extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Branch.enableLogging();
+
+        // Branch object initialization
         Branch.getAutoInstance(this);
+
+
+          FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
+
     }
 
     @Override

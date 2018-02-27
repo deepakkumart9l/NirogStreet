@@ -170,40 +170,41 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        switch (holder.getItemViewType()) {
-            case TYPE_HEADER:
-                HeaderView myViewHolder = (HeaderView) holder;
-                // Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
-                myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, PostingActivity.class);
-                        if (!groupId.equalsIgnoreCase("")) {
-                            intent.putExtra("groupId", groupId);
+        try {
+            switch (holder.getItemViewType()) {
+                case TYPE_HEADER:
+                    HeaderView myViewHolder = (HeaderView) holder;
+                    // Glide.with(context).load(askQuestionImages).into(myViewHolder.circleImageView);
+                    myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, PostingActivity.class);
+                            if (!groupId.equalsIgnoreCase("")) {
+                                intent.putExtra("groupId", groupId);
+                            }
+                            context.startActivity(intent);
+
                         }
-                        context.startActivity(intent);
+                    });
+                    break;
+                case TYPE_ITEM:
 
+
+                    final MyViewHolder viewHolder = (MyViewHolder) holder;
+
+                    int feed_type = 0;
+                    final FeedModel feedModel = feedModels.get(position);
+                    if (feedModel.getFeed_type() != null)
+                        feed_type =
+                                Integer.parseInt(feedModel.getFeed_type());
+                    int link_type = 0;
+                    if (feedModel.getLink_type() != null) {
+                        link_type = Integer.parseInt(feedModel.getLink_type());
                     }
-                });
-                break;
-            case TYPE_ITEM:
-
-
-                final MyViewHolder viewHolder = (MyViewHolder) holder;
-
-                int feed_type = 0;
-                final FeedModel feedModel = feedModels.get(position);
-                if (feedModel.getFeed_type() != null)
-                    feed_type =
-                            Integer.parseInt(feedModel.getFeed_type());
-                int link_type = 0;
-                if (feedModel.getLink_type() != null) {
-                    link_type = Integer.parseInt(feedModel.getLink_type());
-                }
-                switch (feed_type) {
-                    case FEED_TYPE_YOUTUBEVIDEO_LINK:
-                        switch (link_type) {
-                            case LINK_TYPE_YOUTUBE_VIDEO:
+                    switch (feed_type) {
+                        case FEED_TYPE_YOUTUBEVIDEO_LINK:
+                            switch (link_type) {
+                                case LINK_TYPE_YOUTUBE_VIDEO:
                                /* viewHolder.playicon.setVisibility(View.GONE);
                                 viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
                                 viewHolder.linkImageView.setVisibility(View.GONE);
@@ -269,24 +270,24 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                                */
-                                viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                                viewHolder.left_view.setVisibility(View.GONE);
-                                viewHolder.right_view.setVisibility(View.GONE);
-                                viewHolder.bottom_view.setVisibility(View.GONE);
-                                viewHolder.playicon.setVisibility(View.VISIBLE);
-                                viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                                viewHolder.linkImageView.setVisibility(View.GONE);
-                                viewHolder.linkTitleTextView.setVisibility(View.GONE);
-                                viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
-                                viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                                viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                                viewHolder.docTypeLayout.setVisibility(View.GONE);
-                                viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                                viewHolder.anniversaryLinearLayout.setVisibility(View.GONE);
-                                viewHolder.anniverasaryLayoutImage.setVisibility(View.GONE);
-                                viewHolder.videoView.setVisibility(View.GONE);
-                                viewHolder.playicon.setVisibility(View.VISIBLE);
-                                viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+                                    viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                                    viewHolder.left_view.setVisibility(View.GONE);
+                                    viewHolder.right_view.setVisibility(View.GONE);
+                                    viewHolder.bottom_view.setVisibility(View.GONE);
+                                    viewHolder.playicon.setVisibility(View.VISIBLE);
+                                    viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                                    viewHolder.linkImageView.setVisibility(View.GONE);
+                                    viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                                    viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                                    viewHolder.feedImageView.setVisibility(View.VISIBLE);
+                                    viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                                    viewHolder.docTypeLayout.setVisibility(View.GONE);
+                                    viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                                    viewHolder.anniversaryLinearLayout.setVisibility(View.GONE);
+                                    viewHolder.anniverasaryLayoutImage.setVisibility(View.GONE);
+                                    viewHolder.videoView.setVisibility(View.GONE);
+                                    viewHolder.playicon.setVisibility(View.VISIBLE);
+                                    viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
 
                                /* Glide.with(context)
                                         .load(feedModel.getUrl_image()) // Uri of the picture
@@ -295,369 +296,369 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         .crossFade()
                                         .override(100, 100)
                                         .into(viewHolder.feedImageView);*/
-                                Picasso.with(context)
-                                        .load(feedModel.getUrl_image())
-                                        .placeholder(R.drawable.default_)
+                                    Picasso.with(context)
+                                            .load(feedModel.getUrl_image())
+                                            .placeholder(R.drawable.default_)
+                                            .into(viewHolder.feedImageView);
+
+                                    viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(context, YoutubeVideo_Play.class);
+                                            intent.putExtra("videourl", feedModel.getFeed_source());
+                                            context.startActivity(intent);
+                                        }
+                                    });
+                                    break;
+                                case LINK_TYPE_WEB_LINK:
+                                    viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                                    viewHolder.playicon.setVisibility(View.GONE);
+                                    viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                                    viewHolder.link_title_des_lay.setVisibility(View.VISIBLE);
+                                    viewHolder.left_view.setVisibility(View.VISIBLE);
+                                    viewHolder.right_view.setVisibility(View.VISIBLE);
+                                    viewHolder.bottom_view.setVisibility(View.VISIBLE);
+                                    viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+
+                                    viewHolder.videoView.setVisibility(View.GONE);
+                                    viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                                    viewHolder.linkImageView.setVisibility(View.VISIBLE);
+                                    viewHolder.feedImageView.setVisibility(View.GONE);
+                                    viewHolder.linkTitleTextView.setVisibility(View.VISIBLE);
+                                    viewHolder.linkDescriptiontextView.setVisibility(View.VISIBLE);
+                                    // imageLoader.getInstance().displayImage(feedModel.getUrl_image(), holder.linkImageView, defaultOptions);
+                                    // imageLoader1.DisplayImage(context, feedModel.getUrl_image(), holder.linkImageView, null, 150, 150, R.drawable.default_image);
+                                    if (feedModel.getUrl_title() != null && feedModel.getUrl_title().length() > 0 && !feedModel.getUrl_title().equalsIgnoreCase("")) {
+                                        viewHolder.linkTitleTextView.setText(feedModel.getUrl_title());
+                                    } else {
+                                        viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                                    }
+                                    viewHolder.linkDescriptiontextView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            String urlString = feedModel.getFeed_source();
+                                            Intent i = new Intent(Intent.ACTION_VIEW);
+                                            i.setData(Uri.parse(urlString));
+                                            context.startActivity(i);
+                                        }
+                                    });
+                                    viewHolder.linkTitleTextView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            String urlString = feedModel.getFeed_source();
+                                            Intent i = new Intent(Intent.ACTION_VIEW);
+                                            i.setData(Uri.parse(urlString));
+                                            context.startActivity(i);
+                                        }
+                                    });
+                                    viewHolder.linkDescriptiontextView.setText(feedModel.getUrl_description());
+                                    viewHolder.linkImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            String urlString = feedModel.getFeed_source();
+                                            Intent i = new Intent(Intent.ACTION_VIEW);
+                                            i.setData(Uri.parse(urlString));
+                                            context.startActivity(i);
+                                        }
+                                    });
+
+
+                                    Picasso.with(context)
+                                            .load(feedModel.getUrl_image())
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_)
+                                            .into(viewHolder.linkImageView);
+                                    break;
+                            }
+                            break;
+                        case FEED_TYPE_IMAGE:
+                            viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                            viewHolder.playicon.setVisibility(View.GONE);
+                            viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.linkImageView.setVisibility(View.GONE);
+                            viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+
+                            viewHolder.bottom_view.setVisibility(View.GONE);
+
+                            viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                            viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.docTypeLayout.setVisibility(View.GONE);
+                            viewHolder.videoView.setVisibility(View.GONE);
+                            String extension = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("."));
+
+                            if (extension.equalsIgnoreCase(".gif")) {
+                                viewHolder.feedImageView.setVisibility(View.VISIBLE);
+                                Glide.with(context)
+                                        .load(feedModel.getFeed_source())
+                                        .asGif().placeholder(R.drawable.default_)
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .into(viewHolder.feedImageView);
 
+
+                                viewHolder.feedImageView.setVisibility(View.VISIBLE);
                                 viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        Intent intent = new Intent(context, YoutubeVideo_Play.class);
-                                        intent.putExtra("videourl", feedModel.getFeed_source());
+                                        Intent intent = new Intent(context, FullScreenImage.class);
+                                        intent.putExtra("ImageUrl", feedModel.getFeed_source());
                                         context.startActivity(intent);
+
                                     }
                                 });
-                                break;
-                            case LINK_TYPE_WEB_LINK:
-                                viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                                viewHolder.playicon.setVisibility(View.GONE);
-                                viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                                viewHolder.link_title_des_lay.setVisibility(View.VISIBLE);
-                                viewHolder.left_view.setVisibility(View.VISIBLE);
-                                viewHolder.right_view.setVisibility(View.VISIBLE);
-                                viewHolder.bottom_view.setVisibility(View.VISIBLE);
-                                viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+                            } else {
+                                if (feedModel.getFeedSourceArrayList().size() > 1) {
+                                    ArrayList<String> strings = feedModel.getFeedSourceArrayList();
+                                    if (strings.size() > 1) {
+                                        if (strings.size() > 2) {
+                                            viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
+                                            int num = strings.size() - 1;
+                                            viewHolder.moreviewTextView.setText("+" + num + "");
+                                        } else {
+                                            viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
+                                            viewHolder.moreLinearLayout.setVisibility(View.GONE);
+                                            int num = strings.size() - 1;
+                                            viewHolder.moreviewTextView.setText("+" + num + "");
+                                        }
+                                        viewHolder.two_or_moreLinearLayout.setVisibility(View.VISIBLE);
+                                        viewHolder.feedImageView.setVisibility(View.GONE);
 
-                                viewHolder.videoView.setVisibility(View.GONE);
-                                viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                                viewHolder.linkImageView.setVisibility(View.VISIBLE);
-                                viewHolder.feedImageView.setVisibility(View.GONE);
-                                viewHolder.linkTitleTextView.setVisibility(View.VISIBLE);
-                                viewHolder.linkDescriptiontextView.setVisibility(View.VISIBLE);
-                                // imageLoader.getInstance().displayImage(feedModel.getUrl_image(), holder.linkImageView, defaultOptions);
-                                // imageLoader1.DisplayImage(context, feedModel.getUrl_image(), holder.linkImageView, null, 150, 150, R.drawable.default_image);
-                                if (feedModel.getUrl_title() != null && feedModel.getUrl_title().length() > 0 && !feedModel.getUrl_title().equalsIgnoreCase("")) {
-                                    viewHolder.linkTitleTextView.setText(feedModel.getUrl_title());
+
+                                        Picasso.with(context)
+                                                .load(strings.get(1))
+                                                .placeholder(R.drawable.default_)
+                                                .error(R.drawable.default_)
+                                                .into(viewHolder.imageFirstImageView);
+                                        Picasso.with(context)
+                                                .load(strings.get(0))
+                                                .placeholder(R.drawable.default_)
+                                                .error(R.drawable.default_)
+                                                .into(viewHolder.imageSecImageView);
+
+                                    } else {
+                                        String singleImageUrl = strings.get(0);
+                                        viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+
+
+                                        Picasso.with(context)
+                                                .load(singleImageUrl)
+                                                .placeholder(R.drawable.default_)
+                                                .error(R.drawable.default_)
+                                                .into(viewHolder.feedImageView);
+
+
+                                    }
+
+                                    viewHolder.two_or_moreLinearLayout.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(context, AlbumGallary.class);
+                                            intent.putExtra("position", 0);
+                                            intent.putExtra("images", feedModel.getFeedSourceArrayList());
+                                            context.startActivity(intent);
+                                        }
+                                    });
+                                    viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            Intent intent = new Intent(context, AlbumGallary.class);
+                                            intent.putExtra("position", 0);
+                                            intent.putExtra("images", feedModel.getFeedSourceArrayList());
+                                            context.startActivity(intent);
+                                        }
+                                    });
                                 } else {
-                                    viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                                    viewHolder.feedImageView.setVisibility(View.VISIBLE);
+
+
+                                    Picasso.with(context)
+                                            .load(feedModel.getFeedSourceArrayList().get(0))
+                                            .placeholder(R.drawable.default_)
+                                            .error(R.drawable.default_).into(viewHolder.feedImageView);
+
+                                    viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(context, AlbumGallary.class);
+                                            intent.putExtra("position", 0);
+                                            intent.putExtra("images", feedModel.getFeedSourceArrayList());
+                                            context.startActivity(intent);
+                                        }
+                                    });
                                 }
-                                viewHolder.linkDescriptiontextView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        String urlString = feedModel.getFeed_source();
-                                        Intent i = new Intent(Intent.ACTION_VIEW);
-                                        i.setData(Uri.parse(urlString));
-                                        context.startActivity(i);
-                                    }
-                                });
-                                viewHolder.linkTitleTextView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        String urlString = feedModel.getFeed_source();
-                                        Intent i = new Intent(Intent.ACTION_VIEW);
-                                        i.setData(Uri.parse(urlString));
-                                        context.startActivity(i);
-                                    }
-                                });
-                                viewHolder.linkDescriptiontextView.setText(feedModel.getUrl_description());
-                                viewHolder.linkImageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        String urlString = feedModel.getFeed_source();
-                                        Intent i = new Intent(Intent.ACTION_VIEW);
-                                        i.setData(Uri.parse(urlString));
-                                        context.startActivity(i);
-                                    }
-                                });
+                            } //   imageLoader1.DisplayImage(context, feedModel.getFeed_source(), holder.feedImageView, null, 150, 150, R.drawable.default_image);
+                            break;
+                        case VIDEO_UPLOADED_BY_USER:
+                            viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                            viewHolder.playicon.setVisibility(View.VISIBLE);
+                            viewHolder.linkImageView.setVisibility(View.GONE);
+                            viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                            viewHolder.feedImageView.setVisibility(View.VISIBLE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.GONE);
 
-
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.bottom_view.setVisibility(View.GONE);
+                            viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                            viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.videoView.setVisibility(View.GONE);
+                            viewHolder.webView.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+                            if (feedModel.getUrl_image() != null && !feedModel.getUrl_image().equalsIgnoreCase("")) {
                                 Picasso.with(context)
                                         .load(feedModel.getUrl_image())
                                         .placeholder(R.drawable.default_)
                                         .error(R.drawable.default_)
-                                        .into(viewHolder.linkImageView);
-                                break;
-                        }
-                        break;
-                    case FEED_TYPE_IMAGE:
-                        viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                        viewHolder.playicon.setVisibility(View.GONE);
-                        viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                        viewHolder.linkImageView.setVisibility(View.GONE);
-                        viewHolder.linkTitleTextView.setVisibility(View.GONE);
-                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                        viewHolder.left_view.setVisibility(View.GONE);
-                        viewHolder.right_view.setVisibility(View.GONE);
-                        viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
-
-                        viewHolder.bottom_view.setVisibility(View.GONE);
-
-                        viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
-                        viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.docTypeLayout.setVisibility(View.GONE);
-                        viewHolder.videoView.setVisibility(View.GONE);
-                        String extension = feedModel.getFeed_source().substring(feedModel.getFeed_source().lastIndexOf("."));
-
-                        if (extension.equalsIgnoreCase(".gif")) {
-                            viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                            Glide.with(context)
-                                    .load(feedModel.getFeed_source())
-                                    .asGif().placeholder(R.drawable.default_)
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .into(viewHolder.feedImageView);
-
-
-                            viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                            viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(context, FullScreenImage.class);
-                                    intent.putExtra("ImageUrl", feedModel.getFeed_source());
-                                    context.startActivity(intent);
-
-                                }
-                            });
-                        } else {
-                            if (feedModel.getFeedSourceArrayList().size() > 1) {
-                                ArrayList<String> strings = feedModel.getFeedSourceArrayList();
-                                if (strings.size() > 1) {
-                                    if (strings.size() > 2) {
-                                        viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
-                                        int num = strings.size() - 1;
-                                        viewHolder.moreviewTextView.setText("+" + num + "");
-                                    } else {
-                                        viewHolder.moreLinearLayout.setVisibility(View.VISIBLE);
-                                        viewHolder.moreLinearLayout.setVisibility(View.GONE);
-                                        int num = strings.size() - 1;
-                                        viewHolder.moreviewTextView.setText("+" + num + "");
-                                    }
-                                    viewHolder.two_or_moreLinearLayout.setVisibility(View.VISIBLE);
-                                    viewHolder.feedImageView.setVisibility(View.GONE);
-
-
-                                    Picasso.with(context)
-                                            .load(strings.get(1))
-                                            .placeholder(R.drawable.default_)
-                                            .error(R.drawable.default_)
-                                            .into(viewHolder.imageFirstImageView);
-                                    Picasso.with(context)
-                                            .load(strings.get(0))
-                                            .placeholder(R.drawable.default_)
-                                            .error(R.drawable.default_)
-                                            .into(viewHolder.imageSecImageView);
-
-                                } else {
-                                    String singleImageUrl = strings.get(0);
-                                    viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-
-
-                                    Picasso.with(context)
-                                            .load(singleImageUrl)
-                                            .placeholder(R.drawable.default_)
-                                            .error(R.drawable.default_)
-                                            .into(viewHolder.feedImageView);
-
-
-                                }
-
-                                viewHolder.two_or_moreLinearLayout.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Intent intent = new Intent(context, AlbumGallary.class);
-                                        intent.putExtra("position", 0);
-                                        intent.putExtra("images", feedModel.getFeedSourceArrayList());
-                                        context.startActivity(intent);
-                                    }
-                                });
-                                viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                        Intent intent = new Intent(context, AlbumGallary.class);
-                                        intent.putExtra("position", 0);
-                                        intent.putExtra("images", feedModel.getFeedSourceArrayList());
-                                        context.startActivity(intent);
-                                    }
-                                });
+                                        .into(viewHolder.feedImageView);
                             } else {
-                                viewHolder.feedImageView.setVisibility(View.VISIBLE);
-
-
-                                Picasso.with(context)
-                                        .load(feedModel.getFeedSourceArrayList().get(0))
-                                        .placeholder(R.drawable.default_)
-                                        .error(R.drawable.default_).into(viewHolder.feedImageView);
-
-                                viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Intent intent = new Intent(context, AlbumGallary.class);
-                                        intent.putExtra("position", 0);
-                                        intent.putExtra("images", feedModel.getFeedSourceArrayList());
-                                        context.startActivity(intent);
-                                    }
-                                });
+                                viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
                             }
-                        } //   imageLoader1.DisplayImage(context, feedModel.getFeed_source(), holder.feedImageView, null, 150, 150, R.drawable.default_image);
-                        break;
-                    case VIDEO_UPLOADED_BY_USER:
-                        viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                        viewHolder.playicon.setVisibility(View.VISIBLE);
-                        viewHolder.linkImageView.setVisibility(View.GONE);
-                        viewHolder.linkTitleTextView.setVisibility(View.GONE);
-                        viewHolder.feedImageView.setVisibility(View.VISIBLE);
-                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                        viewHolder.relativeLayout1.setVisibility(View.GONE);
-
-                        viewHolder.left_view.setVisibility(View.GONE);
-                        viewHolder.right_view.setVisibility(View.GONE);
-                        viewHolder.bottom_view.setVisibility(View.GONE);
-                        viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                        viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                        viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
-                        viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.videoView.setVisibility(View.GONE);
-                        viewHolder.webView.setVisibility(View.GONE);
-                        viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
-                        if (feedModel.getUrl_image() != null && !feedModel.getUrl_image().equalsIgnoreCase("")) {
-                            Picasso.with(context)
-                                    .load(feedModel.getUrl_image())
-                                    .placeholder(R.drawable.default_)
-                                    .error(R.drawable.default_)
-                                    .into(viewHolder.feedImageView);
-                        } else {
-                            viewHolder.feedImageView.setImageResource(R.drawable.default_videobg);
-                        }
                         /*  Bitmap bmThumbnail;
                         bmThumbnail = ThumbnailUtils.createVideoThumbnail(feedModel.getUrl_image(), MediaStore.Video.Thumbnails.MINI_KIND);
                         viewHolder.feedImageView.setImageBitmap(bmThumbnail);*/
-                        viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(context, VideoPlay_Activity.class);
-                                intent.putExtra("video", feedModel.getFeed_source());
-                                intent.putExtra("videotype", "native");
-                                intent.putExtra("feedVideo", true);
-                                context.startActivity(intent);
-                            }
-                        });
-                        //  FeedMethods.setNativeVideo(holder.videoView, feedModel.getFeed_source(), context, holder.frameVideoFrameLayout);
-                        break;
-
-                    case FEED_TYPE_DOCUMENTS:
-                        viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                        viewHolder.playicon.setVisibility(View.GONE);
-                        viewHolder.docTypeLayout.setVisibility(View.VISIBLE);
-                        viewHolder.videoView.setVisibility(View.GONE);
-                        viewHolder.linkImageView.setVisibility(View.GONE);
-                        viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                        viewHolder.linkTitleTextView.setVisibility(View.GONE);
-                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                        viewHolder.left_view.setVisibility(View.GONE);
-                        viewHolder.right_view.setVisibility(View.GONE);
-                        viewHolder.bottom_view.setVisibility(View.GONE);
-                        viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
-
-                        viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
-                        viewHolder.feedImageView.setVisibility(View.GONE);
-                        viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                        if (feedModel != null)
-                            if (feedModel.getFeed_source() != null) {
-                                // imageLoader.DisplayImage(context, feedModel.getDoc_Icon(), holder.docImageView, null, 150, 150, R.drawable.dummyuser);
-                                try {
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                            viewHolder.feedImageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(context, VideoPlay_Activity.class);
+                                    intent.putExtra("video", feedModel.getFeed_source());
+                                    intent.putExtra("videotype", "native");
+                                    intent.putExtra("feedVideo", true);
+                                    context.startActivity(intent);
                                 }
-                                if (feedModel.getDoc_name() != null) {
-                                    viewHolder.docNameTextView.setText(feedModel.getDoc_name());
-                                }
-                                if (feedModel.getDoc_Type() != null) {
-                                    viewHolder.docTypeTextView.setText(feedModel.getDoc_Type());
-                                }
-                                viewHolder.docNameTextView.setVisibility(View.VISIBLE);
+                            });
+                            //  FeedMethods.setNativeVideo(holder.videoView, feedModel.getFeed_source(), context, holder.frameVideoFrameLayout);
+                            break;
 
-                                viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(context, OpenDocument.class);
-                                        intent.putExtra("url", feedModel.getFeed_source());
-                                        context.startActivity(intent);
+                        case FEED_TYPE_DOCUMENTS:
+                            viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                            viewHolder.playicon.setVisibility(View.GONE);
+                            viewHolder.docTypeLayout.setVisibility(View.VISIBLE);
+                            viewHolder.videoView.setVisibility(View.GONE);
+                            viewHolder.linkImageView.setVisibility(View.GONE);
+                            viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.bottom_view.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.VISIBLE);
+
+                            viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                            viewHolder.feedImageView.setVisibility(View.GONE);
+                            viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                            if (feedModel != null)
+                                if (feedModel.getFeed_source() != null) {
+                                    // imageLoader.DisplayImage(context, feedModel.getDoc_Icon(), holder.docImageView, null, 150, 150, R.drawable.dummyuser);
+                                    try {
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                });
-                            }
-                        break;
-                    case TEXT_ONLY:
-                        viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
-                        viewHolder.playicon.setVisibility(View.GONE);
-                        viewHolder.docTypeLayout.setVisibility(View.VISIBLE);
-                        viewHolder.videoView.setVisibility(View.GONE);
-                        viewHolder.linkImageView.setVisibility(View.GONE);
-                        viewHolder.link_title_des_lay.setVisibility(View.GONE);
-                        viewHolder.left_view.setVisibility(View.GONE);
-                        viewHolder.right_view.setVisibility(View.GONE);
-                        viewHolder.relativeLayout1.setVisibility(View.GONE);
+                                    if (feedModel.getDoc_name() != null) {
+                                        viewHolder.docNameTextView.setText(feedModel.getDoc_name());
+                                    }
+                                    if (feedModel.getDoc_Type() != null) {
+                                        viewHolder.docTypeTextView.setText(feedModel.getDoc_Type());
+                                    }
+                                    viewHolder.docNameTextView.setVisibility(View.VISIBLE);
 
-                        viewHolder.bottom_view.setVisibility(View.GONE);
-                        viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
-                        viewHolder.docTypeLayout.setVisibility(View.GONE
-                        );
-                        viewHolder.linkTitleTextView.setVisibility(View.GONE);
-                        viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
-                        viewHolder.feedImageView.setVisibility(View.GONE);
-                        viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
-                        viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
-                        break;
+                                    viewHolder.buttondownload.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(context, OpenDocument.class);
+                                            intent.putExtra("url", feedModel.getFeed_source());
+                                            context.startActivity(intent);
+                                        }
+                                    });
+                                }
+                            break;
+                        case TEXT_ONLY:
+                            viewHolder.frameVideoFrameLayout.setVisibility(View.GONE);
+                            viewHolder.playicon.setVisibility(View.GONE);
+                            viewHolder.docTypeLayout.setVisibility(View.VISIBLE);
+                            viewHolder.videoView.setVisibility(View.GONE);
+                            viewHolder.linkImageView.setVisibility(View.GONE);
+                            viewHolder.link_title_des_lay.setVisibility(View.GONE);
+                            viewHolder.left_view.setVisibility(View.GONE);
+                            viewHolder.right_view.setVisibility(View.GONE);
+                            viewHolder.relativeLayout1.setVisibility(View.GONE);
 
-                }
+                            viewHolder.bottom_view.setVisibility(View.GONE);
+                            viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
+                            viewHolder.docTypeLayout.setVisibility(View.GONE
+                            );
+                            viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                            viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
+                            viewHolder.feedImageView.setVisibility(View.GONE);
+                            viewHolder.CommentSectionLinearLayout.setVisibility(View.VISIBLE);
+                            viewHolder.profileSectionLinearLayout.setVisibility(View.VISIBLE);
+                            break;
 
-                if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
-                    viewHolder.statusTextView.setText(feedModel.getMessage());
-                   Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context,feedModel.getIs_pin());
-
-                    viewHolder.statusTextView.setVisibility(View.VISIBLE);
-                } else {
-                    viewHolder.statusTextView.setVisibility(View.GONE);
-
-                }
-
-                if (feedModel.getTotal_likes() != null) {
-                    ApplicationSingleton.setTotalLike(Integer.parseInt(feedModel.getTotal_likes()));
-
-                    if (feedModel.getTotal_likes().equalsIgnoreCase("0") || feedModel.getTotal_likes().equalsIgnoreCase("1"))
-                        viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
-                    else
-                        viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Likes");
-
-                } else {
-                    viewHolder.likesTextView.setText("0 Likes");
-
-                }
-                if (feedModel.getTotal_comments() != null) {
-                    if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
-
-                        viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comment");
-                    else
-                        viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comments");
-
-                } else {
-                    viewHolder.commntsTextView.setText("0 Comments");
-
-                }
-                viewHolder.likesTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, LikesDisplayActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);
                     }
-                });
-                viewHolder.commntsTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, CommentsActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        intent.putExtra("type","1");
 
-                        ApplicationSingleton.setPost_position(position);
+                    if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
+                        viewHolder.statusTextView.setText(feedModel.getMessage());
+                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context, feedModel.getIs_pin());
 
-                        context.startActivity(intent);
+                        viewHolder.statusTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.statusTextView.setVisibility(View.GONE);
+
                     }
-                });
+
+                    if (feedModel.getTotal_likes() != null) {
+                        ApplicationSingleton.setTotalLike(Integer.parseInt(feedModel.getTotal_likes()));
+
+                        if (feedModel.getTotal_likes().equalsIgnoreCase("0") || feedModel.getTotal_likes().equalsIgnoreCase("1"))
+                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Like");
+                        else
+                            viewHolder.likesTextView.setText(feedModel.getTotal_likes() + " Likes");
+
+                    } else {
+                        viewHolder.likesTextView.setText("0 Likes");
+
+                    }
+                    if (feedModel.getTotal_comments() != null) {
+                        if (feedModel.getTotal_comments().equalsIgnoreCase("0") || feedModel.getTotal_comments().equalsIgnoreCase("1"))
+
+                            viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comment");
+                        else
+                            viewHolder.commntsTextView.setText(feedModel.getTotal_comments() + " Comments");
+
+                    } else {
+                        viewHolder.commntsTextView.setText("0 Comments");
+
+                    }
+                    viewHolder.likesTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, LikesDisplayActivity.class);
+                            intent.putExtra("feedId", feedModel.getFeed_id());
+                            context.startActivity(intent);
+                        }
+                    });
+                    viewHolder.commntsTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, CommentsActivity.class);
+                            intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type", "1");
+
+                            ApplicationSingleton.setPost_position(position);
+
+                            context.startActivity(intent);
+                        }
+                    });
                /* if (feedModel.getParentFeedDetail() != null && feedModel.getUserDetailModel_creator() != null) {
                     if (feedModel.getParentFeedDetail().getUserId() != null && !feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase("") && feedModel.getUserDetailModel_creator().getUserId() != null && !feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase("")) {
                         if (feedModel.getParentFeedDetail().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
@@ -682,432 +683,481 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     viewHolder.feeddeletelistingLinearLayout.setVisibility(View.VISIBLE);
 
                 }*/
-                final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
+                    final UserDetailModel userDetailModel = feedModel.getUserDetailModel_creator();
 
-                if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
-                  try {
-                      Picasso.with(context)
-                              .load(userDetailModel.getProfile_pic())
-                              .placeholder(R.drawable.user)
-                              .error(R.drawable.user)
-                              .into(viewHolder.profileImageView);
-                  }catch (Exception e)
-                  {
-                      e.printStackTrace();
-                  }
-                }
+                    if (userDetailModel.getProfile_pic() != null && !userDetailModel.getProfile_pic().equalsIgnoreCase("")) {
+                        try {
+                            Picasso.with(context)
+                                    .load(userDetailModel.getProfile_pic())
+                                    .placeholder(R.drawable.user)
+                                    .error(R.drawable.user)
+                                    .into(viewHolder.profileImageView);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                        /* Intent intent = new Intent(context, Dr_Profile.class);
                         if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                             intent.putExtra("UserId", userDetailModel.getUserId());
                         context.startActivity(intent);*/
-                        Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
+
+                        }
+                    });
+                    if (feedModel.getCreated() != null) {
+                        viewHolder.timeStampTextView.setText(feedModel.getCreated());
+                    }
+                    if (feedModel.getUser_has_liked() == 1) {
+                        ApplicationSingleton.setCurruntUserLiked(true);
+                        viewHolder.feedlikeimg.setSelected(true);
+                    } else {
+                        viewHolder.feedlikeimg.setSelected(false);
+                        ApplicationSingleton.setCurruntUserLiked(true);
+
 
                     }
-                });
-                if (feedModel.getCreated() != null) {
-                    viewHolder.timeStampTextView.setText(feedModel.getCreated());
-                }
-                if (feedModel.getUser_has_liked() == 1) {
-                    ApplicationSingleton.setCurruntUserLiked(true);
-                    viewHolder.feedlikeimg.setSelected(true);
-                } else {
-                    viewHolder.feedlikeimg.setSelected(false);
-                    ApplicationSingleton.setCurruntUserLiked(true);
+                    if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
+                        viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
+                        viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context, feedModel.getIs_pin());
 
+                    } else {
+                        viewHolder.QuestionTextView.setVisibility(View.GONE);
 
-                }
-                if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
-                    viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
-                    viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                    Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context,feedModel.getIs_pin());
-
-                } else {
-                    viewHolder.QuestionTextView.setVisibility(View.GONE);
-
-                }
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    }
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                            /* */
-                        try{
-                            if (position == 1 && feedModel.getIs_pin() == 1) {
-
+                            try {
+                                if (position == 1 && feedModel.getIs_pin() == 1) {
 
 
 // Receiving side
-                                String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+                                    String q = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
 
-                                String str = Methods.getUrl(feedModel.getMessage());
-                                str=str+"?userId="+q;
-                                if (!str.equalsIgnoreCase("")) {
+                                    String str = Methods.getUrl(feedModel.getMessage());
+                                    str = str + "?userId=" + q;
+                                    if (!str.equalsIgnoreCase("")) {
 
 
-
-                                    Uri uri = Uri.parse(str)
-                                            .buildUpon()
-                                            .build();
-                                    Intent i = new Intent(Intent.ACTION_VIEW);
-                                    i.setData(uri);
-                                    context.startActivity(i);
+                                        Uri uri = Uri.parse(str)
+                                                .buildUpon()
+                                                .build();
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(uri);
+                                        context.startActivity(i);
+                                    }
                                 }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    viewHolder.feedcommentlisting.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, CommentsActivity.class);
+                            intent.putExtra("feedId", feedModel.getFeed_id());
+                            intent.putExtra("type", "1");
+
+                            //ApplicationSingleton.setPost_position(position);
+
+                            context.startActivity(intent);
+
+                        }
+                    });
+                    viewHolder.likeFeedLinearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            positionat = position;
+                            if (NetworkUtill.isNetworkAvailable(context)) {
+                                LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
+                                likePostAsynctask.execute();
+                            } else {
+                                NetworkUtill.showNoInternetDialog(context);
                             }
 
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();}
-                    }
-                });
-                viewHolder.feedcommentlisting.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(context, CommentsActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        intent.putExtra("type","1");
-
-                        //ApplicationSingleton.setPost_position(position);
-
-                        context.startActivity(intent);
-
-                    }
-                });
-                viewHolder.likeFeedLinearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        positionat = position;
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                            likePostAsynctask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
                         }
+                    });
+                    viewHolder.feeddeletelistingLinearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sharePopup(viewHolder.feeddeletelistingLinearLayout, feedModel);
 
-                    }
-                });
-                viewHolder.feeddeletelistingLinearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        sharePopup(viewHolder.feeddeletelistingLinearLayout, feedModel);
-
-                    }
-                });
-
-                viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
-                    }
-                });
-                if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))||feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
-                    viewHolder.delImageView.setVisibility(View.VISIBLE);
-                } else {
-                    viewHolder.delImageView.setVisibility(View.GONE);
-                }
-                viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        positionat = position;
-                        if (NetworkUtill.isNetworkAvailable(context)) {
-                            LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                            likePostAsynctask.execute();
-                        } else {
-                            NetworkUtill.showNoInternetDialog(context);
                         }
-                    }
-                });
+                    });
 
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    viewHolder.delImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
+                        }
+                    });
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)) || feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                        viewHolder.delImageView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.delImageView.setVisibility(View.GONE);
+                    }
+                    viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            positionat = position;
+                            if (NetworkUtill.isNetworkAvailable(context)) {
+                                LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
+                                likePostAsynctask.execute();
+                            } else {
+                                NetworkUtill.showNoInternetDialog(context);
+                            }
+                        }
+                    });
+
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                            /* */
-                        try{
-                            if (position == 1 && feedModel.getIs_pin() == 1) {
-
+                            try {
+                                if (position == 1 && feedModel.getIs_pin() == 1) {
 
 
 // Receiving side
-                                String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+                                    String q = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
 
-                                String str = Methods.getUrl(feedModel.getMessage()+"?userId="+q);
-                                if (!str.equalsIgnoreCase("")) {
+                                    String str = Methods.getUrl(feedModel.getMessage() + "?userId=" + q);
+                                    if (!str.equalsIgnoreCase("")) {
 
 
-
-                                    Uri uri = Uri.parse(str)
-                                            .buildUpon()
-                                            .build();
-                                    Intent i = new Intent(Intent.ACTION_VIEW);
-                                    i.setData(uri);
-                                    context.startActivity(i);
+                                        Uri uri = Uri.parse(str)
+                                                .buildUpon()
+                                                .build();
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(uri);
+                                        context.startActivity(i);
+                                    }
                                 }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();}
+                        }
+                    });
+                    try {
+                        if (feedModel.getTotal_comments() != null)
+                            ApplicationSingleton.setNoOfComment(Integer.parseInt(feedModel.getTotal_comments()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-                try {
-                    if (feedModel.getTotal_comments() != null)
-                        ApplicationSingleton.setNoOfComment(Integer.parseInt(feedModel.getTotal_comments()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
-                    viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
+                    if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
+                        viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
 
-                } else {
-                    viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.noOfCommentTextView.setVisibility(View.VISIBLE);
 
-                }
-
-                viewHolder.feedlikeLinearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(context, LikesDisplayActivity.class);
-                        intent.putExtra("feedId", feedModel.getFeed_id());
-                        context.startActivity(intent);
                     }
-                });
-                viewHolder.feedcommentlistingLinearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+
+                    viewHolder.feedlikeLinearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, LikesDisplayActivity.class);
+                            intent.putExtra("feedId", feedModel.getFeed_id());
+                            context.startActivity(intent);
+                        }
+                    });
+                    viewHolder.feedcommentlistingLinearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
                       /*  Intent intent = new Intent(context, CommentsActivity.class);
                         intent.putExtra("feedId", feedModel.getFeed_id());
                         ApplicationSingleton.setPost_position(position);
 
                         context.startActivity(intent);
                */
-                    }
-                });
+                        }
+                    });
 
 
-                if (userDetailModel != null && userDetailModel.getName() != null) {
-                    String name;
-                    if(userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID))
-                    {
-                        name = userDetailModel.getName();
-                    }else {
-                        name = Methods.getName(userDetailModel.getTitle(),userDetailModel.getName());
-                    }                    builder = new SpannableStringBuilder();
-                    span = new SpannableString(name);
-                    span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
-                    span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    builder.append(span);
-                    // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
-                    String xxx = feedModel.getCommunity_Id();
-                    if (feedModel.getParent_feed() != null) {
+                    if (userDetailModel != null && userDetailModel.getName() != null) {
+                        String name;
+                        if (userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                            name = userDetailModel.getName();
+                        } else {
+                            name = Methods.getName(userDetailModel.getTitle(), userDetailModel.getName());
+                        }
+                        builder = new SpannableStringBuilder();
+                        span = new SpannableString(name);
+                        span.setSpan(new ForegroundColorSpan(Color.BLACK), 0, span.length(), 0);
+                        span.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.append(span);
+                        // viewHolder.nameTextView.setText("Dr. " + userDetailModel.getName().trim());
+                        String xxx = feedModel.getCommunity_Id();
                         if (feedModel.getParent_feed() != null) {
-                            if (feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0) {
-                                if (feedModel.getShareWithModels().get(0).getShareMessage() != null && !feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
-                                    viewHolder.statusshare.setText(feedModel.getShareWithModels().get(0).getShareMessage());
-                                    viewHolder.statusshare.setVisibility(View.VISIBLE);
-                                    viewHolder.parentLay.setVisibility(View.VISIBLE);
+                            if (feedModel.getParent_feed() != null) {
+                                if (feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0) {
+                                    if (feedModel.getShareWithModels().get(0).getShareMessage() != null && !feedModel.getShareWithModels().get(0).getShareMessage().equalsIgnoreCase("")) {
+                                        viewHolder.statusshare.setText(feedModel.getShareWithModels().get(0).getShareMessage());
+                                        viewHolder.statusshare.setVisibility(View.VISIBLE);
+                                        viewHolder.parentLay.setVisibility(View.VISIBLE);
+                                    }
                                 }
-                            }
-                            if (feedModel.getCreatedBy().getProfile_pic() != null && !feedModel.getCreatedBy().getProfile_pic().equalsIgnoreCase("")) {
-                                Picasso.with(context)
-                                        .load(feedModel.getCreatedBy().getProfile_pic())
-                                        .placeholder(R.drawable.user)
-                                        .error(R.drawable.user)
-                                        .into(viewHolder.profilePicparent);
-                                viewHolder.profilePicparent.setVisibility(View.VISIBLE);
+                                if (feedModel.getCreatedBy().getProfile_pic() != null && !feedModel.getCreatedBy().getProfile_pic().equalsIgnoreCase("")) {
+                                    Picasso.with(context)
+                                            .load(feedModel.getCreatedBy().getProfile_pic())
+                                            .placeholder(R.drawable.user)
+                                            .error(R.drawable.user)
+                                            .into(viewHolder.profilePicparent);
+                                    viewHolder.profilePicparent.setVisibility(View.VISIBLE);
 
-                            } else {
-                                viewHolder.profilePicparent.setImageResource(R.drawable.user);
-                                viewHolder.profilePicparent.setVisibility(View.VISIBLE);
+                                } else {
+                                    viewHolder.profilePicparent.setImageResource(R.drawable.user);
+                                    viewHolder.profilePicparent.setVisibility(View.VISIBLE);
 
-                            }
-                            viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                                }
+                                viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
                                   /*  Intent intent = new Intent(context, Dr_Profile.class);
                                     if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                         intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
                                     context.startActivity(intent);*/
-                                    Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
 
-                                    //      Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
-                                }
-                            });
-                            viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                                        //      Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                    }
+                                });
+                                viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
                                    /* Intent intent = new Intent(context, Dr_Profile.class);
                                     if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                                         intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
                                     context.startActivity(intent);*/
-                                    Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
-                                }
-                            });
-                            viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
-                            viewHolder.parentname.setVisibility(View.VISIBLE);
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            params.setMargins(5, 0, 5, 5);
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
+                                    }
+                                });
+                                viewHolder.parentname.setText(Methods.getName(feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getName()));
+                                viewHolder.parentname.setVisibility(View.VISIBLE);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params.setMargins(5, 0, 5, 5);
 
-                            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            params1.setMargins(0, 0, 0, 0);
-                            viewHolder.relativeLayout1.setLayoutParams(params1);
-                            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    500
-                            );
+                                LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params1.setMargins(0, 0, 0, 0);
+                                viewHolder.relativeLayout1.setLayoutParams(params1);
+                                RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
+                                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                                        500
+                                );
 
-                            params2.setMargins(0, 0, 0, 0);
-                            viewHolder.feedImageView.setLayoutParams(params2);
-                            viewHolder.sharedLay.setLayoutParams(params);
-                            str2 = new SpannableString(" shared ");
-                            str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+                                params2.setMargins(0, 0, 0, 0);
+                                viewHolder.feedImageView.setLayoutParams(params2);
+                                viewHolder.sharedLay.setLayoutParams(params);
+                                str2 = new SpannableString(" shared ");
+                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
-                            viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
-                            builder.append(str2);
-                            ClickableSpan clickSpan1 = new ClickableSpan() {
-                                @Override
-                                public void updateDrawState(TextPaint ds) {
-                                    ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                    ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-                                    ds.setUnderlineText(false);// this remove the underline
-                                }
-
-                                @Override
-                                public void onClick(View textView) {
-                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
-                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                            context.startActivity(intent);*/
-                                }
-                            };
-
-                            String thirdspan = str2.toString();
-                            int third = builder.toString().indexOf(thirdspan);
-                            builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                            viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-                            if (feedModel.getCreatedBy() != null && feedModel.getCreatedBy().getUserId() != null) {
-                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
-                                    str2 = new SpannableString("their");
-                                else
-                                if(feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
-                                    str2 = new SpannableString(feedModel.getCreatedBy().getName());
-                                }else {
-                                    str2 = new SpannableString(Methods.getName(feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getName()));
-
-                                }
-                            }
-                            str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-
-                            viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
-                            builder.append(str2);
-
-                            ClickableSpan clickSpan12;
-
-                            clickSpan12 = new ClickableSpan() {
-                                @Override
-                                public void updateDrawState(TextPaint ds) {
-                                    if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
-                                        ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
-                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                                        ds.setUnderlineText(false);// this remove the underline
-
-                                    } else {
+                                viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                builder.append(str2);
+                                ClickableSpan clickSpan1 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
                                         ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
                                         ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                         ds.setUnderlineText(false);// this remove the underline
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
+                                           /* Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);*/
+                                    }
+                                };
+
+                                String thirdspan = str2.toString();
+                                int third = builder.toString().indexOf(thirdspan);
+                                builder.setSpan(clickSpan1, third, third + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                if (feedModel.getCreatedBy() != null && feedModel.getCreatedBy().getUserId() != null) {
+                                    if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()))
+                                        str2 = new SpannableString("their");
+                                    else if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                                        str2 = new SpannableString(feedModel.getCreatedBy().getName());
+                                    } else {
+                                        str2 = new SpannableString(Methods.getName(feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getName()));
 
                                     }
                                 }
-
-                                @Override
-                                public void onClick(View textView) {
-                                    if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
-
-                                        /*Intent intent = new Intent(context, Dr_Profile.class);
-                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                            intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
-                                        context.startActivity(intent);*/
-                                  //      Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
-                                        Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
-
-                                    }
-                                }
-                            };
-
-
-                            String fourthspan = str2.toString();
-                            int fourth = builder.toString().indexOf(fourthspan);
-                            builder.setSpan(clickSpan12, fourth, fourth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                            viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-                            if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
-                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase(""))
-
-                                    str2 = new SpannableString(" post in ");
-                                else
-                                    str2 = new SpannableString(" post ");
-
-                            } else {
-                                if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
-
-                                    str2 = new SpannableString("'s post in ");
-                                else
-                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
-                                    str2 = new SpannableString(" post ");
-
-                                }else {
-                                    str2 = new SpannableString("'s post ");
-
-
-                                }
-
-
-                            }str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
-
-                            viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
-                            builder.append(str2);
-
-                            ClickableSpan clickSpan13 = new ClickableSpan() {
-                                @Override
-                                public void updateDrawState(TextPaint ds) {
-                                    ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
-                                    ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-                                    ds.setUnderlineText(false);// this remove the underline
-                                }
-
-                                @Override
-                                public void onClick(View textView) {
-
-                                }
-                            };
-
-                            String fifthspan = str2.toString();
-                            int fifth = builder.toString().indexOf(fifthspan);
-                            builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                            viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                            if (feedModel.getCommunity_Id() != null&&!feedModel.getCommunity_Id().equalsIgnoreCase("")&&feedModel.getCommunity_name()!=null&&!feedModel.getCommunity_name().equalsIgnoreCase("")&&feedModel.getShareWithModels()!=null&&feedModel.getShareWithModels().size()>0&&!feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
-                            {   str2 = new SpannableString(feedModel.getCommunity_name());
                                 str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
 
                                 viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
                                 builder.append(str2);
 
-                                ClickableSpan clickSpan14 = new ClickableSpan() {
+                                ClickableSpan clickSpan12;
+
+                                clickSpan12 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                            ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+
+                                        } else {
+                                            ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                            ds.setUnderlineText(false);// this remove the underline
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+
+                                        /*Intent intent = new Intent(context, Dr_Profile.class);
+                                        if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
+                                            intent.putExtra("UserId", feedModel.getCreatedBy().getUserId());
+                                        context.startActivity(intent);*/
+                                            //      Methods.profileUser(feedModel.getCreatedBy().getUser_Type(),context,feedModel.getCreatedBy().getUserId());
+                                            Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
+
+                                        }
+                                    }
+                                };
+
+
+                                String fourthspan = str2.toString();
+                                int fourth = builder.toString().indexOf(fourthspan);
+                                builder.setSpan(clickSpan12, fourth, fourth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+                                if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()) && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
+                                    if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase(""))
+
+                                        str2 = new SpannableString(" post in ");
+                                    else
+                                        str2 = new SpannableString(" post ");
+
+                                } else {
+                                    if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("") && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share"))
+
+                                        str2 = new SpannableString("'s post in ");
+                                    else if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
+                                        str2 = new SpannableString(" post ");
+
+                                    } else {
+                                        str2 = new SpannableString("'s post ");
+
+
+                                    }
+
+
+                                }
+                                str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+
+                                viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                builder.append(str2);
+
+                                ClickableSpan clickSpan13 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        ds.setColor(context.getResources().getColor(R.color.share_n_postcolor));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setUnderlineText(false);// this remove the underline
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
+
+                                    }
+                                };
+
+                                String fifthspan = str2.toString();
+                                int fifth = builder.toString().indexOf(fifthspan);
+                                builder.setSpan(clickSpan13, fifth, fifth + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                                if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("") && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
+                                    str2 = new SpannableString(feedModel.getCommunity_name());
+                                    str2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str2.length(), 0);
+
+                                    viewHolder.sharedLay.setBackgroundResource(R.drawable.round_new);
+                                    builder.append(str2);
+
+                                    ClickableSpan clickSpan14 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(context, CommunitiesDetails.class);
+                                            intent.putExtra("groupId", feedModel.getCommunity_Id());
+                                            context.startActivity(intent);
+                                        }
+                                    };
+
+                                    String sixthspan = str2.toString();
+                                    int six = builder.toString().indexOf(sixthspan);
+                                    builder.setSpan(clickSpan14, six, six + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                }
+                            }
+                        } else {
+                            viewHolder.statusshare.setVisibility(View.GONE);
+                            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    500
+                            );
+                            viewHolder.parentLay.setVisibility(View.GONE);
+                            params2.setMargins(0, 0, 0, 0);
+                            viewHolder.feedImageView.setLayoutParams(params2);
+                            viewHolder.sharedLay.setBackgroundResource(0);
+                            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params1.setMargins(0, 10, 0, 0);
+                            viewHolder.relativeLayout1.setLayoutParams(params1);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params.setMargins(0, 0, 0, 0);
+                            viewHolder.sharedLay.setLayoutParams(params);
+                            if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
+                                str3 = new SpannableString(" posted in ");
+                                str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
+                                builder.append(str3);
+
+                                str4 = new SpannableString(feedModel.getCommunity_name());
+                                str4.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str4.length(), 0);
+                                builder.append(str4);
+
+                                ClickableSpan clickSpan1 = new ClickableSpan() {
                                     @Override
                                     public void updateDrawState(TextPaint ds) {
                                         ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
-                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
                                         ds.setUnderlineText(false);// this remove the underline
                                     }
 
@@ -1119,96 +1169,44 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     }
                                 };
 
-                                String sixthspan = str2.toString();
-                                int six = builder.toString().indexOf(sixthspan);
-                                builder.setSpan(clickSpan14, six, six + str2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                String thirdspan = str4.toString();
+                                int third = builder.toString().indexOf(thirdspan);
+                                builder.setSpan(clickSpan1, third, third + str4.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
                                 viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
                             }
                         }
-                    } else {
-                        viewHolder.statusshare.setVisibility(View.GONE);
-                        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
-                                RelativeLayout.LayoutParams.MATCH_PARENT,
-                                500
-                        );
-                        viewHolder.parentLay.setVisibility(View.GONE);
-                        params2.setMargins(0, 0, 0, 0);
-                        viewHolder.feedImageView.setLayoutParams(params2);
-                        viewHolder.sharedLay.setBackgroundResource(0);
-                        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                        );
-                        params1.setMargins(0, 10, 0, 0);
-                        viewHolder.relativeLayout1.setLayoutParams(params1);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                        );
-                        params.setMargins(0, 0, 0, 0);
-                        viewHolder.sharedLay.setLayoutParams(params);
-                        if (feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase("")) {
-                            str3 = new SpannableString(" posted in ");
-                            str3.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str3.length(), 0);
-                            builder.append(str3);
 
-                            str4 = new SpannableString(feedModel.getCommunity_name());
-                            str4.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, str4.length(), 0);
-                            builder.append(str4);
-
-                            ClickableSpan clickSpan1 = new ClickableSpan() {
-                                @Override
-                                public void updateDrawState(TextPaint ds) {
-                                    ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
-                                    ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
-                                    ds.setUnderlineText(false);// this remove the underline
-                                }
-
-                                @Override
-                                public void onClick(View textView) {
-                                    Intent intent = new Intent(context, CommunitiesDetails.class);
-                                    intent.putExtra("groupId", feedModel.getCommunity_Id());
-                                    context.startActivity(intent);
-                                }
-                            };
-
-                            String thirdspan = str4.toString();
-                            int third = builder.toString().indexOf(thirdspan);
-                            builder.setSpan(clickSpan1, third, third + str4.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                            viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
+                    }
+                    ClickableSpan clickSpan = new ClickableSpan() {
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
+                            ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+                            ds.setUnderlineText(false);// this remove the underline
                         }
-                    }
 
-                }
-                ClickableSpan clickSpan = new ClickableSpan() {
-                    @Override
-                    public void updateDrawState(TextPaint ds) {
-                        ds.setColor(context.getResources().getColor(R.color.black));// you can use custom color
-                        ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
-                        ds.setUnderlineText(false);// this remove the underline
-                    }
-
-                    @Override
-                    public void onClick(View textView) {
+                        @Override
+                        public void onClick(View textView) {
                       /*  Intent intent = new Intent(context, Dr_Profile.class);
                         if (!userDetailModel.getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
                             intent.putExtra("UserId", userDetailModel.getUserId());
                         context.startActivity(intent);*/
-                      //  Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
-                        Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
+                            //  Methods.profileUser(userDetailModel.getUser_Type(),context,userDetailModel.getUserId());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
 
-                    }
-                };
-                builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
-                viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                        }
+                    };
+                    builder.setSpan(clickSpan, 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    viewHolder.nameTextView.setText(builder, TextView.BufferType.SPANNABLE);
+                    viewHolder.nameTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
-
 
     }
 

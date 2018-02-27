@@ -215,7 +215,7 @@ public class Disease_Detail extends AppCompatActivity {
                     if (jo != null && jo.length() > 0) {
                         mParent_layout.setVisibility(View.VISIBLE);
                         String totalcomment=jo.getJSONObject("response").getString("total_comment");
-                        comment_count_txt.setText(totalcomment);
+                        comment_count_txt.setText(totalcomment +"Comments");
                         JSONObject joj = jo.getJSONObject("response").getJSONObject("name");
                         JSONArray jsonArray = jo.getJSONObject("response").getJSONArray("disease_sub_list");
                         String image = joj.getString("img");
@@ -428,7 +428,7 @@ public class Disease_Detail extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair("feedID", feedId));
                 pairs.add(new BasicNameValuePair("message", msg));
                 pairs.add(new BasicNameValuePair("post_type", "2"));
-                pairs.add(new BasicNameValuePair("show_comment", "1"));
+                pairs.add(new BasicNameValuePair("show_comment", "2"));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));

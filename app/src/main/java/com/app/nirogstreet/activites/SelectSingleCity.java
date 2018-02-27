@@ -361,20 +361,24 @@ filter(s.toString());
         }
     }
     void filter(String text) {
-        ArrayList<SpecializationModel> temp = new ArrayList();
-        for (SpecializationModel d : searchModels) {
-            //or use .equal(text) with you want equal match
-            //use .toLowerCase() for better matches
-            if (d.getSpecializationName().toLowerCase(Locale.getDefault()).contains(text.toLowerCase())) {
-                temp.add(d);
+        try {
+            ArrayList<SpecializationModel> temp = new ArrayList();
+            for (SpecializationModel d : searchModels) {
+                //or use .equal(text) with you want equal match
+                //use .toLowerCase() for better matches
+                if (d.getSpecializationName().toLowerCase(Locale.getDefault()).contains(text.toLowerCase())) {
+                    temp.add(d);
+                }
             }
-        }
-        //update recyclerview
-        searchAdapterMultiSelect.updateList(temp);
-        if(temp.size()==0)
+            //update recyclerview
+            searchAdapterMultiSelect.updateList(temp);
+            if (temp.size() == 0) {
+                addQualificationTextView.setText("+Add " + "(" + searchET.getText().toString() + ")");
+                addQualificationTextView.setVisibility(View.VISIBLE);
+            }
+        }catch (Exception e)
         {
-            addQualificationTextView.setText("+Add " + "(" + searchET.getText().toString() + ")");
-            addQualificationTextView.setVisibility(View.VISIBLE);
+            e.printStackTrace();
         }
     }
 

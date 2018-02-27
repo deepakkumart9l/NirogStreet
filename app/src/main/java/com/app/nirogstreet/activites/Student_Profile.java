@@ -753,41 +753,44 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (ApplicationSingleton.getUserDetailModel() != null) {
-            userDetailModel = ApplicationSingleton.getUserDetailModel();
-        }
-        if (ApplicationSingleton.isContactInfoUpdated()) {
-            updateContactInfo();
-        }
+        try {
+            if (ApplicationSingleton.getUserDetailModel() != null) {
+                userDetailModel = ApplicationSingleton.getUserDetailModel();
+            }
+            if (ApplicationSingleton.isContactInfoUpdated()) {
+                updateContactInfo();
+            }
        /* if (ApplicationSingleton.isClinicUpdated()) {
             updateClinicInfo();
             ApplicationSingleton.setIsClinicUpdated(false);
         }*/
-        if (ApplicationSingleton.isMemberShipUpdated()) {
-            updateMemberShip();
-            ApplicationSingleton.setIsMemberShipUpdated(false);
-        }
-        if (ApplicationSingleton.isAwardUpdated()) {
-            updateAwards();
-            ApplicationSingleton.setIsAwardUpdated(false);
-        }
-        if (ApplicationSingleton.isExperinceUpdated()) {
-            updateExperience();
-            ApplicationSingleton.setIsExperinceUpdated(false);
-        }
-        if (ApplicationSingleton.isServicesAndSpecializationUpdated()) {
+            if (ApplicationSingleton.isMemberShipUpdated()) {
+                updateMemberShip();
+                ApplicationSingleton.setIsMemberShipUpdated(false);
+            }
+            if (ApplicationSingleton.isAwardUpdated()) {
+                updateAwards();
+                ApplicationSingleton.setIsAwardUpdated(false);
+            }
+            if (ApplicationSingleton.isExperinceUpdated()) {
+                updateExperience();
+                ApplicationSingleton.setIsExperinceUpdated(false);
+            }
+            if (ApplicationSingleton.isServicesAndSpecializationUpdated()) {
 
-            updateSpecilizationAndService();
-            ApplicationSingleton.setServicesAndSpecializationUpdated(false);
-        }
-        if (ApplicationSingleton.isQualificationUpdated()) {
-            updateQualification();
-            ApplicationSingleton.setIsQualificationUpdated(false);
-        }
-        if (ApplicationSingleton.isRegistrationUpdated()) {
-            updateRegistrationAndDocument();
-            ApplicationSingleton.setRegistrationUpdated(false);
+                updateSpecilizationAndService();
+                ApplicationSingleton.setServicesAndSpecializationUpdated(false);
+            }
+            if (ApplicationSingleton.isQualificationUpdated()) {
+                updateQualification();
+                ApplicationSingleton.setIsQualificationUpdated(false);
+            }
+            if (ApplicationSingleton.isRegistrationUpdated()) {
+                updateRegistrationAndDocument();
+                ApplicationSingleton.setRegistrationUpdated(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1079,7 +1082,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
             }
 
             if (UserId.equalsIgnoreCase("")) {
-               // refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
+                // refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
             }
             if (userDetailModel.getName() != null && !userDetailModel.getName().equalsIgnoreCase("")) {
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {

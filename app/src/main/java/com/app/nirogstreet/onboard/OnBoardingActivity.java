@@ -96,7 +96,9 @@ public class OnBoardingActivity extends AppCompatActivity {
                 int pos = position + 1;
 
                 if (pos == dotsCount && previous_pos == (dotsCount - 1))
-                    show_animation();
+                   // show_animation();
+                    btn_get_started.setVisibility(View.VISIBLE);
+
                 else if (pos == (dotsCount - 1) && previous_pos == dotsCount)
                     hide_animation();
 

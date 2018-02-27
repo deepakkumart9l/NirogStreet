@@ -281,6 +281,7 @@ public class CommunitiesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+        if(logedinuserId!=null)
         if (logedinuserId.equals(userId))
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/index";

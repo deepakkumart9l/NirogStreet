@@ -119,7 +119,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     String selectedVideoPath = null;
     ImageView cancel1;
     TextView docName;
-    RelativeLayout video_image;
+    LinearLayout video_image;
     ArrayList<String> strings = new ArrayList<>();
     RecyclerView recyclerView;
     RelativeLayout linkLay, imagelay,imageButton;
@@ -154,7 +154,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
     TextView textViewpost;
-    LinearLayout  pdfBuuton;
+    RelativeLayout  pdfBuuton;
     TextView descriptionTextView, titleTextView;
     EditText editTextMessage;
     CheckBox checkBox;
@@ -169,7 +169,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
         strings = new ArrayList<String>();
 
         backImageView = (ImageView) findViewById(R.id.back);
-        pdfBuuton = (LinearLayout) findViewById(R.id.pdfBuuton);
+        pdfBuuton = (RelativeLayout) findViewById(R.id.pdfBuuton);
         cancelImageView = (ImageView) findViewById(R.id.cancel);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +178,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 imagelay.setVisibility(View.VISIBLE);
             }
         });
-        video_image = (RelativeLayout) findViewById(R.id.video_image);
+        video_image = (LinearLayout) findViewById(R.id.video_image);
         imageButton = (RelativeLayout) findViewById(R.id.imageButton);
         docName = (TextView) findViewById(R.id.docName);
         sesstionManager = new SesstionManager(PostingActivity.this);
@@ -220,6 +220,8 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 selectedImagePath = null;
                 selectedVideoPath = null;
                 docpath = null;
+                docName.setVisibility(View.GONE);
+
                 docName.setVisibility(View.GONE);
                 cancel1.setVisibility(View.GONE);
                 imageViewSelected.setVisibility(View.GONE);
@@ -313,6 +315,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 imageViewSelected.setVisibility(View.GONE);
                 cancel1.setVisibility(View.GONE);
                 selectedVideoPath=null;
+
                 docpath=null;
                 isVideoClicked = false;
                 isPdfClicked = false;
@@ -481,6 +484,11 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                 takeVideo();
             if (isPdfClicked)
                 checkPermissionForDoc();
+        }
+        else if(requestCode==3)
+        {
+            checkPermissionForDoc();
+
         }
     }
 

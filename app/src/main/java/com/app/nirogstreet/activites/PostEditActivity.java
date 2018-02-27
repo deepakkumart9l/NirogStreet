@@ -149,15 +149,15 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     ImageView linkImageView;
     PostAsyncTask postAsyncTask;
     String docpath;
-    RelativeLayout video_image,imageButton;
-
+    RelativeLayout imageButton;
+LinearLayout video_image;
 
     ImageView imageViewSelected;
     private AskQuestionForumImagesAdapter askQuestionForumImagesAdapter;
     private HashTagHelper mEditTextHashTagHelper;
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
-    LinearLayout  pdfBuuton;
+    RelativeLayout  pdfBuuton;
 
     // MyScrollView myScrollView;
     TextView textViewpost;
@@ -218,9 +218,9 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
                 return false;
             }
         });
-        pdfBuuton = (LinearLayout) findViewById(R.id.pdfBuuton);
+        pdfBuuton = (RelativeLayout) findViewById(R.id.pdfBuuton);
 
-        video_image = (RelativeLayout) findViewById(R.id.video_image);
+        video_image = (LinearLayout) findViewById(R.id.video_image);
 
         imageButton = (RelativeLayout) findViewById(R.id.imageButton);
 
@@ -498,13 +498,17 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.print(requestCode);
         if (requestCode == 1) {
-            if (isImageClicked
-                    )
+            if (isImageClicked)
                 selectImage();
             if (isVideoClicked)
                 takeVideo();
             if (isPdfClicked)
                 checkPermissionForDoc();        }
+        else if(requestCode==3)
+        {
+            checkPermissionForDoc();
+
+        }
     }
 
     private void chooseOption() {

@@ -68,7 +68,7 @@ public class TimeLineFragment extends Fragment {
     CircularProgressBar circularProgressBar;
     TimelineAdapter feedsAdapter;
     private SwipeRefreshLayout swipeLayout;
-FrameLayout floatingActionButton;
+    FrameLayout floatingActionButton;
     private LinearLayoutManager linearLayoutManager;
 
     View view;
@@ -175,7 +175,7 @@ FrameLayout floatingActionButton;
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setNestedScrollingEnabled(true);
         customViewContainer = (FrameLayout) view.findViewById(R.id.customViewContainer);
-floatingActionButton=(FrameLayout)view.findViewById(R.id.fab);
+        floatingActionButton = (FrameLayout) view.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -340,11 +340,9 @@ floatingActionButton=(FrameLayout)view.findViewById(R.id.fab);
 
                                 int totalItemCount = linearLayoutManager.getItemCount();
                                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                                if(linearLayoutManager.findFirstVisibleItemPosition()==0)
-                                {
+                                if (linearLayoutManager.findFirstVisibleItemPosition() == 0) {
                                     floatingActionButton.setVisibility(View.GONE);
-                                }
-                                else {
+                                } else {
                                     floatingActionButton.setVisibility(View.VISIBLE);
                                 }
                                 if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
