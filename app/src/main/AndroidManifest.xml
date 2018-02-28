@@ -87,10 +87,10 @@
         <activity
             android:name=".activites.MyActivities"
             android:launchMode="standard"
+            android:theme="@android:style/Theme.Translucent"
+
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activites.CoursesListing"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activites.Splash"
             android:screenOrientation="portrait" />
@@ -142,10 +142,12 @@
 
         <activity
             android:name=".activites.CommunitySearchActivity"
+            android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.PostDetailActivity"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
+            android:theme="@android:style/Theme.Translucent"
             android:screenOrientation="portrait">
 
             <intent-filter>
@@ -170,6 +172,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.CommunitiesDetails"
+
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Timings"
@@ -182,6 +185,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.MainActivity"
+
             android:screenOrientation="portrait" />
         <activity
             android:name=".activites.Multi_Select_Search_specialization"
@@ -323,18 +327,18 @@
             </intent-filter>
         </receiver>
 
-        <meta-data
+       <!-- <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_hiwJ6zqBZG0JaThvDNSV3cemyCbGkuMX" />
         <meta-data
             android:name="io.branch.sdk.BranchKey.test"
             android:value="key_test_oozT8ysCWGYUgGixqPQS3kpeqzaQlt9e" />
 
-        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
+        &lt;!&ndash; Branch testing (TestMode "true" to simulate fresh installs on dev environment) &ndash;&gt;
         <meta-data
             android:name="io.branch.sdk.TestMode"
             android:value="false" />
-        <meta-data
+    -->    <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBs5DG6WdN3rDaCLj6aI6SumK6arLW4Kk0" />
         <meta-data
@@ -354,14 +358,14 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <receiver
+      <!--  <receiver
             android:name="io.branch.referral.InstallListener"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-    </application>
+   --> </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

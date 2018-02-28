@@ -375,9 +375,11 @@
                     android:gravity="left|center"
                     android:padding="5dp"
                     android:singleLine="true"
+                    android:letterSpacing="0.02"
+
                     android:text="Image"
                     android:textColor="#cc000000"
-                    android:textSize="13.5sp" />
+                    android:textSize="14sp" />
 
                 <View
                     android:layout_width="0.5dp"
@@ -418,9 +420,11 @@
                     android:gravity="left|center"
                     android:padding="5dp"
                     android:singleLine="true"
+                    android:letterSpacing="0.02"
+
                     android:text="Video"
                     android:textColor="#cc000000"
-                    android:textSize="13.5sp" />
+                    android:textSize="14sp" />
 
 
             </LinearLayout>
@@ -461,9 +465,11 @@
                     android:gravity="left|center"
                     android:padding="5dp"
                     android:singleLine="true"
+                    android:letterSpacing="0.02"
+
                     android:text="PDF"
                     android:textColor="#cc000000"
-                    android:textSize="13.5sp" />
+                    android:textSize="14sp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

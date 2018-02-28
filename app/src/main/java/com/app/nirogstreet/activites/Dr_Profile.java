@@ -802,39 +802,44 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
     }
 
     private void updateSpecilizationAndService() {
-        if (userDetailModel != null) {
-            if (userDetailModel.getSpecializationModels().size() == 0 && userDetailModel.getServicesModels().size() == 0) {
-                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
+        try {
+            if (userDetailModel != null) {
+                if (userDetailModel.getSpecializationModels().size() == 0 && userDetailModel.getServicesModels().size() == 0) {
+                    SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.add));
 
-            } else {
-                SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
+                } else {
+                    SpecilizationsevicesEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
+                    SpecilizationsevicesTextView.setText("Services & Specialization");
+
+                }
+                if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
+                    spcilizationCsv.setText(getSelectedNameCsv());
+                    specilizationTv.setVisibility(View.VISIBLE);
+                    spcilizationCsv.setVisibility(View.VISIBLE);
+                } else {
+                    spcilizationCsv.setVisibility(View.GONE);
+                    specilizationTv.setVisibility(View.GONE);
+                }
+                if (userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() != 0) {
+                    sevicesCsvTextView.setText(getSelectedServicesCsv());
+                    QualificationTv.setText(getSelectedNameCsv());
+                    imgPublic_icon.setVisibility(View.VISIBLE);
+                    sevicesCsvTextView.setVisibility(View.VISIBLE);
+                    sevicesTextView.setVisibility(View.VISIBLE);
+
+                } else {
+                    sevicesCsvTextView.setVisibility(View.GONE);
+                    sevicesTextView.setVisibility(View.GONE);
+                }
+
+            }
+            if (!UserId.equalsIgnoreCase("")) {
                 SpecilizationsevicesTextView.setText("Services & Specialization");
 
             }
-            if (userDetailModel.getSpecializationModels() != null && userDetailModel.getSpecializationModels().size() != 0) {
-                spcilizationCsv.setText(getSelectedNameCsv());
-                specilizationTv.setVisibility(View.VISIBLE);
-                spcilizationCsv.setVisibility(View.VISIBLE);
-            } else {
-                spcilizationCsv.setVisibility(View.GONE);
-                specilizationTv.setVisibility(View.GONE);
-            }
-            if (userDetailModel.getServicesModels() != null && userDetailModel.getServicesModels().size() != 0) {
-                sevicesCsvTextView.setText(getSelectedServicesCsv());
-                QualificationTv.setText(getSelectedNameCsv());
-                imgPublic_icon.setVisibility(View.VISIBLE);
-                sevicesCsvTextView.setVisibility(View.VISIBLE);
-                sevicesTextView.setVisibility(View.VISIBLE);
-
-            } else {
-                sevicesCsvTextView.setVisibility(View.GONE);
-                sevicesTextView.setVisibility(View.GONE);
-            }
-
-        }
-        if (!UserId.equalsIgnoreCase("")) {
-            SpecilizationsevicesTextView.setText("Services & Specialization");
-
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

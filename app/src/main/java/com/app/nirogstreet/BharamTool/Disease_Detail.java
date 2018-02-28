@@ -169,7 +169,7 @@ public class Disease_Detail extends AppCompatActivity {
                 String url = "";
                 url = AppUrl.BaseUrl + "knowledge/disease-detail";
                 ContentValues values = new ContentValues();
-                values.put("appID", "NRGSRT$(T(L5830FRU@!^AUSER");
+                values.put("appID", AppUrl.APP_ID_VALUE_POST);
                 values.put("sub_cat_id", mDiseassub_cat_id);
                 URL uri = new URL(url);
                 httpURLConnection = (HttpURLConnection) uri.openConnection();
@@ -215,7 +215,7 @@ public class Disease_Detail extends AppCompatActivity {
                     if (jo != null && jo.length() > 0) {
                         mParent_layout.setVisibility(View.VISIBLE);
                         String totalcomment=jo.getJSONObject("response").getString("total_comment");
-                        comment_count_txt.setText(totalcomment +"Comments");
+                        comment_count_txt.setText(totalcomment +" Comments");
                         JSONObject joj = jo.getJSONObject("response").getJSONObject("name");
                         JSONArray jsonArray = jo.getJSONObject("response").getJSONArray("disease_sub_list");
                         String image = joj.getString("img");
@@ -234,7 +234,7 @@ public class Disease_Detail extends AppCompatActivity {
                         } else {
                             mDiseasimg.setVisibility(View.GONE);
                         }
-                        if (Html.fromHtml(des) != null && Html.fromHtml(des).length() > 170)
+                        if (Html.fromHtml(des) != null && Html.fromHtml(des).length() > 270)
                             makeTextViewResizable(mDescrptn_txt, 4, "view more", true);
                         else {
                             mTitle_txt.setText(Html.fromHtml(des));

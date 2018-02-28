@@ -34,12 +34,12 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:gravity="center"
+                android:gravity="left"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text=""
+                android:layout_marginLeft="40dp"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 

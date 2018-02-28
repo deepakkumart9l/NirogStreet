@@ -8,6 +8,7 @@
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
         <item name="colorPrimary">@color/statusbarcolor</item>
         <item name="colorPrimaryDark">@color/statusbarcolor</item>
         <item name="colorAccent">@color/buttonBackground</item>

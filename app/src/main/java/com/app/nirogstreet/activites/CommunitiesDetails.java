@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,6 +49,8 @@ public class CommunitiesDetails extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.communication_detail);
         proo=(CircleImageView)findViewById(R.id.proo);
         if(getIntent().hasExtra("openMain"))

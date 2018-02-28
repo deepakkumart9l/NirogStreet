@@ -21,7 +21,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="10dp"
                 android:padding="8dp"
 
                 android:src="@drawable/back"
@@ -33,9 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="45dp"
+                android:layout_marginLeft="47dp"
                 android:paddingBottom="@dimen/padding_10"
-                android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
                 android:text="Bharam Tool"
@@ -61,7 +60,8 @@
             android:text="Swanbhoota Yog"
             android:textColor="@color/black"
             android:drawableRight="@drawable/learning_arr"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
+android:paddingRight="10dp"
             android:textSize="18dp" />
     </LinearLayout>
 
@@ -87,8 +87,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Disease"
+
             android:drawableRight="@drawable/learning_arr"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
+            android:paddingRight="10dp"
+
             android:textColor="@color/black"
             android:textSize="18dp" />
     </LinearLayout>

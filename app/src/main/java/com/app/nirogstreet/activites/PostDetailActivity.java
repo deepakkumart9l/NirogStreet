@@ -93,7 +93,7 @@ public class PostDetailActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        try {
+  /*      try {
             Branch branch = Branch.getInstance();
 
             branch.initSession(new Branch.BranchUniversalReferralInitListener() {
@@ -111,7 +111,7 @@ public class PostDetailActivity extends Activity {
         }catch (Exception e)
         {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -122,6 +122,10 @@ public class PostDetailActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+//Remove notification bar
+       // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.post_detail);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();

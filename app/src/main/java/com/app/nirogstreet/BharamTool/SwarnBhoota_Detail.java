@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.Query_Method;
 import com.app.nirogstreet.uttil.SesstionManager;
+import com.google.common.base.Utf8;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -45,6 +48,7 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
     CircularProgressBar mCircularProgressBar;
     private SesstionManager session;
     String res;
+    ImageView backImageView;
     String authToken, userId;
     String mimeType = "text/html";
     String encoding = "utf-8";
@@ -60,6 +64,13 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swarnbhoota_detail);
+        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mSwarnbhoota_cat_id = getIntent().getIntExtra("sub_cat_id", 0);
         mCircularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
@@ -149,6 +160,7 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
             return null;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(Void r) {
             super.onPostExecute(r);
@@ -163,7 +175,7 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
                         String des = joj.getString("ingredients");
                         webView.loadDataWithBaseURL("fake://not/needed", des, mimeType, encoding, "");
                         if(joj.getString("ingredients")!=null && joj.getString("ingredients").length()>0) {
-                            mDose_descrptn_txt.setText(joj.getString("ingredients"));
+                            mDose_descrptn_txt.setText(Html.fromHtml(joj.getString("ingredients")));
                         }else{
                             webView.setVisibility(View.GONE);
                         }

@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e4edf0"
+
     android:orientation="vertical">
 
     <RelativeLayout
@@ -21,7 +23,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="8dp"
                 android:padding="8dp"
 
                 android:src="@drawable/back"
@@ -35,9 +37,11 @@
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
                 android:gravity="left"
-android:paddingTop="5dp"                android:paddingBottom="@dimen/padding_10"
+                android:paddingBottom="@dimen/padding_10"
+                android:paddingLeft="50dp"
 
-android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
+                android:paddingTop="7dp"
+                android:text="Swanbhoota Yog Detail"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -56,29 +60,41 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/header"
-            android:visibility="gone"
+            android:orientation="vertical"
 
-            android:orientation="vertical">
+            android:visibility="gone">
 
-            <WebView
-                android:id="@+id/webview1"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fff">
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/white">
 
-            </WebView>
+                <WebView
+                    android:id="@+id/webview1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="#fff">
+
+                </WebView>
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                ></View>
+                android:layout_height="10dp"></View>
 
             <LinearLayout
                 android:id="@+id/dose_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <TextView
                     android:id="@+id/dose_name"
@@ -87,8 +103,9 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="15dp"
                     android:text="Dose"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
 
@@ -96,26 +113,27 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:id="@+id/dose_descrptn_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-               ></View>
+                android:layout_height="10dp"></View>
 
             <LinearLayout
                 android:id="@+id/indiction_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <TextView
                     android:id="@+id/indication_name"
@@ -124,7 +142,9 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:textStyle="bold"
+
+                    android:paddingTop="15dp"
                     android:text="Indication"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -133,26 +153,27 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:id="@+id/indication_descrptn_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-              ></View>
+                android:layout_height="10dp"></View>
 
             <LinearLayout
                 android:id="@+id/action_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <TextView
                     android:id="@+id/action_name"
@@ -160,8 +181,10 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
+                    android:textStyle="bold"
+
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="15dp"
                     android:text="Action"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -170,26 +193,27 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:id="@+id/action_descrptn_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-               ></View>
+                android:layout_height="10dp"></View>
 
             <LinearLayout
                 android:id="@+id/contraindiction_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <TextView
                     android:id="@+id/contraindications_name"
@@ -197,8 +221,10 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
+                    android:textStyle="bold"
+
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="15dp"
                     android:text="Contraindications"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
@@ -207,25 +233,27 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:id="@+id/contraindications_descrptn_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                ></View>
+                android:layout_height="10dp"></View>
 
             <LinearLayout
                 android:id="@+id/anupan_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <TextView
                     android:id="@+id/anupan_name"
@@ -234,8 +262,9 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="15dp"
                     android:text="Anupan"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
 
@@ -243,12 +272,12 @@ android:paddingLeft="50dp"                android:text="Swanbhoota Yog Detail"
                     android:id="@+id/anupan_descrptn_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
             </LinearLayout>
 

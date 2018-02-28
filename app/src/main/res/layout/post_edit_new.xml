@@ -127,7 +127,6 @@
                             android:inputType="text|textNoSuggestions|textMultiLine|textCapSentences"
                             android:overScrollMode="always"
                             android:padding="13dp"
-
                             android:scrollbarStyle="insideInset"
                             android:textColor="@color/black"
                             android:textColorHint="@color/textcolorgray"
@@ -378,8 +377,10 @@
                     android:padding="5dp"
                     android:singleLine="true"
                     android:text="Image"
+                    android:letterSpacing="0.02"
+
                     android:textColor="#cc000000"
-                    android:textSize="13.5sp" />
+                    android:textSize="14sp" />
 
                 <View
                     android:layout_width="0.5dp"
@@ -407,7 +408,7 @@
                     android:id="@+id/imageViewfavattr"
                     android:layout_width="30dp"
                     android:layout_height="24dp"
-
+android:layout_marginTop="-2dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/video_icon" />
 
@@ -420,9 +421,11 @@
                     android:gravity="left|center"
                     android:padding="5dp"
                     android:singleLine="true"
+                    android:letterSpacing="0.02"
+
                     android:text="Video"
                     android:textColor="#cc000000"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
 
 
             </LinearLayout>
@@ -464,8 +467,10 @@
                     android:padding="5dp"
                     android:singleLine="true"
                     android:text="PDF"
+                    android:letterSpacing="0.02"
+
                     android:textColor="#cc000000"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

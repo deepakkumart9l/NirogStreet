@@ -15,8 +15,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="47dp"
+            android:layout_height="57dp"
             android:adjustViewBounds="true"
             android:src="@drawable/courses" />
 
@@ -28,6 +28,7 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:text="Courses"
+               android:textStyle="bold"
            android:layout_marginLeft="10dp"
            android:textColor="@color/black"
            android:textSize="18dp" />
@@ -36,7 +37,6 @@
                android:layout_height="wrap_content"
                android:text="Enroll and complete specialized Ayurveda courses created by expert doctors."
                android:layout_marginLeft="10dp"
-               android:textColor="@color/black"
                android:textSize="14dp" /></LinearLayout>
     </LinearLayout>
 
@@ -59,8 +59,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="47dp"
+            android:layout_height="57dp"
             android:adjustViewBounds="true"
             android:src="@drawable/bhramatool" />
         <LinearLayout
@@ -72,6 +72,8 @@
             android:layout_height="wrap_content"
             android:text="Bhram Tools"
             android:textColor="@color/black"
+            android:textStyle="bold"
+
             android:layout_marginLeft="10dp"
             android:textSize="18dp" />
         <TextView
@@ -79,7 +81,6 @@
             android:layout_height="wrap_content"
             android:text="Find extensive knowledge resources on various diseases and herbs."
             android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
             android:textSize="14dp" /></LinearLayout>
     </LinearLayout>
 
@@ -103,8 +104,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="47dp"
+            android:layout_height="57dp"
             android:adjustViewBounds="true"
             android:src="@drawable/journals" />
         <LinearLayout
@@ -116,6 +117,8 @@
             android:layout_height="wrap_content"
             android:text="Journals"
             android:layout_marginLeft="10dp"
+            android:textStyle="bold"
+
             android:textColor="@color/black"
             android:textSize="18dp" />
 
@@ -124,7 +127,6 @@
             android:layout_height="wrap_content"
             android:text="Discover latest researches and breakthroughs in Ayurveda."
             android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
             android:textSize="14dp" /></LinearLayout>
     </LinearLayout>
 

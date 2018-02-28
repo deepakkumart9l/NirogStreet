@@ -491,8 +491,8 @@ if(getIntent().hasExtra("role"))
                                         }
                                         if (userJsonObject.has("referral_code") && !userJsonObject.isNull("referral_code")) {
                                             referral_code = userJsonObject.getString("referral_code");
-                                        } if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
-                                            title = userJsonObject.getString("Title");
+                                        } if (userJsonObject.has("title") && !userJsonObject.isNull("title")) {
+                                            title = userJsonObject.getString("title");
                                         }
                                         sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code,title);
                                         Intent intent = new Intent(OtpActivity.this, MainActivity.class);
