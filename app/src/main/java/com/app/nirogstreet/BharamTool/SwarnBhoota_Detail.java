@@ -72,8 +72,16 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
             }
         });
         mSwarnbhoota_cat_id = getIntent().getIntExtra("sub_cat_id", 0);
-        mCircularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
+
+        String title;
+        if(getIntent().hasExtra("name"))
+        {
+            title=getIntent().getStringExtra("name");
+            title_side_left.setText(title);
+
+        }
+        mCircularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         mIndiction_layout=(LinearLayout)findViewById(R.id.indiction_layout);
         mDose_layout=(LinearLayout)findViewById(R.id.dose_layout);
         mAction_layout=(LinearLayout)findViewById(R.id.action_layout);

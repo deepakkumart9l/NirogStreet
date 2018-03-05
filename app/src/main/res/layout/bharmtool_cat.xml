@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
 
-    android:orientation="vertical">
+    >
 
     <RelativeLayout
         android:id="@+id/header"
@@ -37,7 +38,8 @@
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:text="Bharam Tool"
+                android:textStyle="bold"
+                android:text="Bharm Tool"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 

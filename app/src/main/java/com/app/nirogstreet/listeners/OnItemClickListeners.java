@@ -5,5 +5,5 @@ package com.app.nirogstreet.listeners;
  */
 public interface OnItemClickListeners {
 
-    public void onItemClick(String v, int position,String totalcomment);
+    public void onItemClick(String v, int position,String totalcomment,String name);
 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.nirogstreet.R;
@@ -43,6 +44,7 @@ public class Disease_Cat extends AppCompatActivity implements OnItemClickListene
     RecyclerView mTypelist;
     private List<Bharam_Model> listing_models;
     String res;
+    TextView title_sideTextView;
     BharamTool_Adapter adapter;
     ImageView backImageView;
     int productquantity;
@@ -55,6 +57,8 @@ public class Disease_Cat extends AppCompatActivity implements OnItemClickListene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swarnbhoota_yog_type);
+        title_sideTextView=(TextView)findViewById(R.id.title_side_left);
+        title_sideTextView.setText("Disease");
         backImageView=(ImageView)findViewById(R.id.back) ;
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +87,11 @@ public class Disease_Cat extends AppCompatActivity implements OnItemClickListene
     }
 
     @Override
-    public void onItemClick(String v, int id,String total) {
+    public void onItemClick(String v, int id,String total,String name) {
         // Toast.makeText(Disease_Cat.this, "Position " + position, Toast.LENGTH_SHORT).show();
         Intent newIntent = new Intent(Disease_Cat.this, Disease_Sub_Cat.class);
         newIntent.putExtra("diseas_id",id);
+        newIntent.putExtra("name",name);
         startActivity(newIntent);
 
     }

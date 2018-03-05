@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -59,7 +61,6 @@ public class MyActivities extends Activity {
     UserFeedsAsyncTask userFeedsAsyncTask;
     FrameLayout customViewContainer;
     private boolean isLoading = false;
-
     int page = 1;
     CircularProgressBar circularProgressBar;
     User_Activity_Adapter feedsAdapter;
@@ -78,6 +79,12 @@ public class MyActivities extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.more_new);
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
+        }
         session = new SesstionManager(MyActivities.this);
         customViewContainer = (FrameLayout) findViewById(R.id.customViewContainer);
         backImageView = (ImageView) findViewById(R.id.back);

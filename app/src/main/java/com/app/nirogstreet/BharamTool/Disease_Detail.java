@@ -16,6 +16,7 @@ import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -77,7 +78,7 @@ public class Disease_Detail extends AppCompatActivity {
     private List<Bharam_Model> listing_models;
     ImageView mDiseasimg;
     int mDiseassub_cat_id;
-    TextView mTitle_txt, mDescrptn_txt, mShoola_of_txt;
+    TextView mTitle_txt, mDescrptn_txt, mShoola_of_txt,title_side_left;
     LinearLayout mDiseassubcat_layout, mParent_layout;
     String lSubcat_id;
     EditText msgEditText;
@@ -88,14 +89,25 @@ public class Disease_Detail extends AppCompatActivity {
     String lId, totalcomment;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.disaes_detail);
         backImageView = (ImageView) findViewById(R.id.back);
+        title_side_left=(TextView)findViewById(R.id.title_side_left);
         msgEditText = (EditText) findViewById(R.id.etMessageBox);
         totalcomment = getIntent().getStringExtra("totalcomment");
         comment_count_txt = (TextView) findViewById(R.id.comment_count_txt);
         comment = (LinearLayout) findViewById(R.id.comment);
+        if(getIntent().hasExtra("name"))
+        {
+            title_side_left.setText(getIntent().getStringExtra("name"));
+        }
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

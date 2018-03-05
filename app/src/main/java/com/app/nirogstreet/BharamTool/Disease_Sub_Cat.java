@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
@@ -47,6 +48,7 @@ public class Disease_Sub_Cat extends AppCompatActivity implements OnItemClickLis
     ImageView backImageView;
     CircularProgressBar mCircularProgressBar;
     String authToken, userId;
+    TextView title_side_left;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +64,13 @@ public class Disease_Sub_Cat extends AppCompatActivity implements OnItemClickLis
         diseas_id = getIntent().getIntExtra("diseas_id", 0);
         mTypelist = (RecyclerView) findViewById(R.id.typelist);
         mTypelist.setHasFixedSize(true);
+        title_side_left=(TextView)findViewById(R.id.title_side_left);
         LinearLayoutManager llm = new LinearLayoutManager(Disease_Sub_Cat.this);
         mCircularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-
+if(getIntent().hasExtra("name"))
+{
+    title_side_left.setText(getIntent().getStringExtra("name"));
+}
         mTypelist.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mTypelist.setNestedScrollingEnabled(false);
@@ -82,10 +88,11 @@ public class Disease_Sub_Cat extends AppCompatActivity implements OnItemClickLis
     }
 
     @Override
-    public void onItemClick(String v, int id,String totalcomment) {
+    public void onItemClick(String v, int id,String totalcomment,String name) {
         Intent newIntent = new Intent(Disease_Sub_Cat.this, Disease_Detail.class);
         newIntent.putExtra("sub_cat_id", id);
         newIntent.putExtra("totalcomment",totalcomment);
+        newIntent.putExtra("name",name);
         startActivity(newIntent);
     }
 

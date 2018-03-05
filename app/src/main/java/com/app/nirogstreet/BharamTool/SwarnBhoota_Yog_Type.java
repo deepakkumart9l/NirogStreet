@@ -101,11 +101,11 @@ public class SwarnBhoota_Yog_Type extends AppCompatActivity implements OnItemCli
     }
 
     @Override
-    public void onItemClick(String v, int id,String totalcomment) {
+    public void onItemClick(String v, int id,String totalcomment,String name) {
         Intent newIntent = new Intent(SwarnBhoota_Yog_Type.this, SwarnBhoota_Detail.class);
         newIntent.putExtra("sub_cat_id", id);
 
-
+newIntent.putExtra("name",name);
         startActivity(newIntent);
     }
 

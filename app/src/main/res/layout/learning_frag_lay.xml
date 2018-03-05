@@ -70,7 +70,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bhram Tools"
+            android:text="Bharm Tool"
             android:textColor="@color/black"
             android:textStyle="bold"
 
@@ -79,7 +79,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Find extensive knowledge resources on various diseases and herbs."
+            android:text="Evidence Based Learning resources on various diseases and herbs."
             android:layout_marginLeft="10dp"
             android:textSize="14dp" /></LinearLayout>
     </LinearLayout>

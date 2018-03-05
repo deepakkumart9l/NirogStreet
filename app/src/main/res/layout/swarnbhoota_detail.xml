@@ -41,6 +41,8 @@
                 android:paddingLeft="50dp"
 
                 android:paddingTop="7dp"
+                android:textStyle="bold"
+
                 android:text="Swanbhoota Yog Detail"
                 android:textColor="@color/white"
                 android:textSize="16sp" />

@@ -38,6 +38,8 @@
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
                 android:paddingRight="18dp"
+                android:textStyle="bold"
+
                 android:paddingTop="@dimen/padding_10"
                 android:layout_marginLeft="40dp"
                 android:textColor="@color/white"

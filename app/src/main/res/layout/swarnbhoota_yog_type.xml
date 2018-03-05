@@ -31,8 +31,11 @@
                 android:id="@+id/title_side_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:textStyle="bold"
+
                 android:layout_marginLeft="45dp"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingRight="18dp"

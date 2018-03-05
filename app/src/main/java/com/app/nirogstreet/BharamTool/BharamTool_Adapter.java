@@ -65,7 +65,7 @@ public class BharamTool_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     if (onLoadMoreListener != null) {
-                        onLoadMoreListener.onItemClick("itemclick", item.getId(),item.getTotal_comment());
+                        onLoadMoreListener.onItemClick("itemclick", item.getId(),item.getTotal_comment(),item.getName());
                     }
                 }
             });
