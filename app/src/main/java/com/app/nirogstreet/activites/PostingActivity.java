@@ -298,7 +298,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                             // Log.e("URL=", "" + Patterns.WEB_URL.matcher(sampleUrl).matches());
                             if (selectedVideoPath == null && selectedImagePath == null&&strings.size()==0) {
                                 linkPostAsynctask = new LinkPostAsynctask(strarr[i], sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
-                                linkPostAsynctask.execute();
+                                linkPostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
                         } else {
                             linkLay.setVisibility(View.GONE);
@@ -414,7 +414,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                                 if (!isposting) {
                                     isposting = true;
                                     postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), "", "");
-                                    postAsyncTask.execute();
+                                    postAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                                 }
                             } else {
@@ -424,7 +424,7 @@ public class PostingActivity extends Activity implements HashTagHelper.OnHashTag
                             if (!isposting) {
                                 isposting = true;
                                 postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), "", "");
-                                postAsyncTask.execute();
+                                postAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
                         }
                     } else {

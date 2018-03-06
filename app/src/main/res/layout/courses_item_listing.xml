@@ -76,6 +76,7 @@
                             android:id="@+id/pro_image"
                             android:layout_width="12dp"
                             android:layout_height="12dp"
+                            android:visibility="gone"
                             android:layout_marginTop="3dp"
                             android:src="@drawable/user" />
 
@@ -83,7 +84,7 @@
                             android:id="@+id/dr_name_csv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginLeft="0dp"
                             android:layout_marginTop="1dp"
                             android:text="ghgh"
                             android:textColor="@color/cardbluebackground"

@@ -95,6 +95,7 @@ public class Courses_Listing_Adapter extends
         if (coursesModel.getAuthor_detail_module() != null) {
             holder.dr_name_csv.setText("by Dr. " + coursesModel.getAuthor_detail_module().getName());
           //  TypeFaceMethods.setRegularTypeBoldFaceTextView(holder.dr_name_csv, context);
+            holder.circleImageView.setVisibility(View.GONE);
             if (coursesModel.getAuthor_detail_module().getProfile_pic() != null) {
 /*
                 Picasso.with(context)

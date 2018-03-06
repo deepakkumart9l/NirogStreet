@@ -152,8 +152,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
-
+                if(nameTv.getText().toString().length()!=0) {
+                    textviewTitle.setText(nameTv.getText().toString());
+                }
             }
 
         } else {
@@ -178,7 +179,9 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         } else {
 
             if (!mIsTheTitleContainerVisible) {
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), sesstionManager.getUserDetails().get(SesstionManager.KEY_FNAME)));
+                if(nameTv.getText().toString().length()!=0) {
+                    textviewTitle.setText(nameTv.getText().toString());
+                }
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
                 startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
@@ -1104,7 +1107,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                 if (userDetailModel.getUserId() != null && userDetailModel.getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
                     nameTv.setText(userDetailModel.getName());
                 } else {
-                    nameTv.setText(Methods.getName(userDetailModel.getTitle(), userDetailModel.getName()));
+                    nameTv.setText(Methods.getName(userDetailModel.getTitle(), userDetailModel.getName()).trim());
 
                 }
             }

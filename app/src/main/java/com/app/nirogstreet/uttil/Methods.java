@@ -66,23 +66,24 @@ public class Methods {
     }
 
     public static void profileUser(String userType, Context context, String userId) {
-        SesstionManager sesstionManager = new SesstionManager(context);
-        if (userType.equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
-            Intent intent = new Intent(context, Dr_Profile.class);
-            if (!userId.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
-                intent.putExtra("UserId", userId);
+        if(userType!=null) {
+            SesstionManager sesstionManager = new SesstionManager(context);
+            if (userType.equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
+                Intent intent = new Intent(context, Dr_Profile.class);
+                if (!userId.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                    intent.putExtra("UserId", userId);
 
-            }
-            context.startActivity(intent);
-        } else if (userType.equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
-            Intent intent = new Intent(context, Student_Profile.class);
-            if (!userId.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
-                intent.putExtra("UserId", userId);
+                }
+                context.startActivity(intent);
+            } else if (userType.equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+                Intent intent = new Intent(context, Student_Profile.class);
+                if (!userId.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                    intent.putExtra("UserId", userId);
 
+                }
+                context.startActivity(intent);
             }
-            context.startActivity(intent);
         }
-
     }
 public static void openUserActivities(Context context,String userId,String name,String profile_pic,String title,String userType)
 {

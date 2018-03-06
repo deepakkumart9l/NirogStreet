@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -126,9 +127,9 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
     String groupId = "";
     private SpannableStringBuilder builder, builder1;
     SpannableString str2, str4;
-    String name, profile_pic, title1,userType;
+    String name, profile_pic, title1, userType;
 
-    public User_Activity_Adapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar, String name, String profile_pic, String title,String userType,String userId) {
+    public User_Activity_Adapter(Context context, ArrayList<FeedModel> feedModel, Activity activity, String s, FrameLayout customViewContainer, CircularProgressBar circularProgressBar, String name, String profile_pic, String title, String userType, String userId) {
         this.context = context;
         this.feedModels = feedModel;
         this.activity = activity;
@@ -137,12 +138,12 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
         sesstionManager = new SesstionManager(context);
         HashMap<String, String> userDetails = sesstionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
-      this.  userId =userId ;
+        this.userId = userId;
 
         this.name = name;
         this.profile_pic = profile_pic;
         this.title1 = title;
-        this.userType=userType;
+        this.userType = userType;
     }
 
     @Override
@@ -184,7 +185,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                             Intent intent = new Intent(context, Student_Profile.class);
                             context.startActivity(intent);
                         }*/
-                      Methods.profileUser(userType,context,userId);
+                        Methods.profileUser(userType, context, userId);
                     }
                 });
 
@@ -212,10 +213,10 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                     });
                     if (name != null)
                         if (userId.equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
-                            myViewHolder.nameTv.setText(name);
+                            myViewHolder.nameTv.setText(name.trim());
                         } else {
 
-                            myViewHolder.nameTv.setText(Methods.getName(title1, name));
+                            myViewHolder.nameTv.setText(Methods.getName(title1, name).trim());
 
 
                         }
@@ -701,12 +702,22 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View v) {
                             activity.finish();
                             //     Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
-                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(),userDetailModel.getUser_Type());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
 
                         }
                     });
                     if (feedModel.getCreated() != null) {
-                        viewHolder.timeStampTextView.setText(feedModel.getCreated());
+                        try {
+                            long now = System.currentTimeMillis();
+                            long datetime1 = Integer.parseInt(feedModel.getCreated()) * 1000L;
+                            CharSequence relavetime1 = DateUtils.getRelativeTimeSpanString(
+                                    datetime1,
+                                    now,
+                                    DateUtils.SECOND_IN_MILLIS);
+                            viewHolder.timeStampTextView.setText(relavetime1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
@@ -728,7 +739,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             context.startActivity(intent);
 
@@ -788,10 +799,15 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                             deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
                         }
                     });
-                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))||feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
                         viewHolder.delImageView.setVisibility(View.VISIBLE);
                     } else {
-                        viewHolder.delImageView.setVisibility(View.GONE);
+                        if (sesstionManager.getUserDetails().get(SesstionManager.USER_ID).equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                            viewHolder.delImageView.setVisibility(View.VISIBLE);
+
+
+                        } else
+                            viewHolder.delImageView.setVisibility(View.GONE);
                     }
                     if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.VISIBLE);
@@ -812,7 +828,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View v) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             ApplicationSingleton.setPost_position(position);
 
@@ -824,7 +840,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             ApplicationSingleton.setPost_position(position);
 
@@ -875,7 +891,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                                         //  Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
                                         activity.finish();
 
-                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
                                     }
                                 });
@@ -884,7 +900,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                                     public void onClick(View v) {
                                         activity.finish();
 
-                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
                                         //Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
 
@@ -975,7 +991,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             activity.finish();
 
                                             //  Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
-                                            Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                            Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
                                         }
                                     }
@@ -1136,7 +1152,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                             //    Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
                             activity.finish();
 
-                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(),userDetailModel.getUser_Type());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
 
                         }
                     };

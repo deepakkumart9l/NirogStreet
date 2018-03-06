@@ -23,6 +23,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -742,8 +743,17 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     });
                     if (feedModel.getCreated() != null) {
-                        viewHolder.timeStampTextView.setText(feedModel.getCreated());
-                    }
+                        try {
+                            long now = System.currentTimeMillis();
+                            long datetime1 = Integer.parseInt(feedModel.getCreated()) * 1000L;
+                            CharSequence relavetime1 = DateUtils.getRelativeTimeSpanString(
+                                    datetime1,
+                                    now,
+                                    DateUtils.SECOND_IN_MILLIS);
+                            viewHolder.timeStampTextView.setText(relavetime1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }                    }
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
@@ -824,10 +834,15 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
                         }
                     });
-                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))||feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
                         viewHolder.delImageView.setVisibility(View.VISIBLE);
                     } else {
-                        viewHolder.delImageView.setVisibility(View.GONE);
+                        if (sesstionManager.getUserDetails().get(SesstionManager.USER_ID).equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                            viewHolder.delImageView.setVisibility(View.VISIBLE);
+
+
+                        } else
+                            viewHolder.delImageView.setVisibility(View.GONE);
                     }
                     if (feedModel.getEnable_comment().equalsIgnoreCase("1")) {
                         viewHolder.feedcommentlistingLinearLayout.setVisibility(View.VISIBLE);

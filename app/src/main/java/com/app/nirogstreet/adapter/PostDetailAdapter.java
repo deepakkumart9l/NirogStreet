@@ -21,6 +21,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -709,8 +710,17 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     });
                     if (feedModel.getCreated() != null) {
-                        viewHolder.timeStampTextView.setText(feedModel.getCreated());
-                    }
+                        try {
+                            long now = System.currentTimeMillis();
+                            long datetime1 = Integer.parseInt(feedModel.getCreated()) * 1000L;
+                            CharSequence relavetime1 = DateUtils.getRelativeTimeSpanString(
+                                    datetime1,
+                                    now,
+                                    DateUtils.SECOND_IN_MILLIS);
+                            viewHolder.timeStampTextView.setText(relavetime1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }                    }
                     if (feedModel.getUser_has_liked() == 1) {
                         ApplicationSingleton.setCurruntUserLiked(true);
                         viewHolder.feedlikeimg.setSelected(true);
@@ -799,10 +809,15 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             deleteOrEditPopup(viewHolder.delImageView, feedModel, position);
                         }
                     });
-                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)) || feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                    if (feedModel.getUserDetailModel_creator().getUserId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
                         viewHolder.delImageView.setVisibility(View.VISIBLE);
                     } else {
-                        viewHolder.delImageView.setVisibility(View.GONE);
+                        if (sesstionManager.getUserDetails().get(SesstionManager.USER_ID).equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                            viewHolder.delImageView.setVisibility(View.VISIBLE);
+
+
+                        } else
+                            viewHolder.delImageView.setVisibility(View.GONE);
                     }
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                         @Override

@@ -143,8 +143,9 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                textviewTitle.setText(Methods.getName(sesstionManager.getUserDetails().get(SesstionManager.TITLE), nameTv.getText().toString()));
-
+                if(nameTv.getText().toString().length()!=0) {
+                    textviewTitle.setText(nameTv.getText().toString());
+                }
             }
 
         } else {
@@ -169,8 +170,9 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
         } else {
 
             if (!mIsTheTitleContainerVisible) {
-                textviewTitle.setText(nameTv.getText().toString());
-                backimg.setVisibility(View.VISIBLE);
+                if(nameTv.getText().toString().length()!=0) {
+                    textviewTitle.setText(nameTv.getText().toString());
+                }                backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
                 startAlphaAnimation(logout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
 
