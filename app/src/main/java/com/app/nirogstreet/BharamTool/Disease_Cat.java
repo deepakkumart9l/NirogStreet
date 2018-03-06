@@ -80,7 +80,7 @@ public class Disease_Cat extends AppCompatActivity implements OnItemClickListene
             userId = userDetail.get(SesstionManager.USER_ID);
         }
         if (NetworkUtill.isNetworkAvailable(Disease_Cat.this)) {
-            new Asyank_Listing().execute();
+            new Asyank_Listing().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(Disease_Cat.this);
         }

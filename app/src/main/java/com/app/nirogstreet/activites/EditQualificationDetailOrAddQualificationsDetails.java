@@ -289,7 +289,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
 
                         deleteQualificationAsynctask = new DeleteQualificationAsynctask(qualificationModel.getId());
-                        deleteQualificationAsynctask.execute();
+                        deleteQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
                     } else {
@@ -307,7 +307,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                             id = qualificationModel.getId();
 
                             AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), clgEt.getText().toString(), id);
-                            addOrUpdateQualificationAsynctask.execute();
+                            addOrUpdateQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                     } else {
@@ -336,7 +336,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
 
 
                             AddOrUpdateQualificationAsynctask addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), clgEt.getText().toString(), "");
-                            addOrUpdateQualificationAsynctask.execute();
+                            addOrUpdateQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                     } else {

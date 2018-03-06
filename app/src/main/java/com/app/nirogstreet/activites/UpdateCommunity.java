@@ -145,7 +145,7 @@ public class UpdateCommunity extends Activity {
                 if (NetworkUtill.isNetworkAvailable(UpdateCommunity.this)) {
                     if (isValidated()) {
                         createGroupAsyncTask = new CreateGroupAsyncTask(userId, authToken);
-                        createGroupAsyncTask.execute();
+                        createGroupAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(UpdateCommunity.this);
                     }
@@ -170,7 +170,7 @@ public class UpdateCommunity extends Activity {
         if (!groupId.equalsIgnoreCase(""))
             if (NetworkUtill.isNetworkAvailable(UpdateCommunity.this)) {
                 GetCommunityDetailAsyncTask getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
-                getCommunityDetailAsyncTask.execute();
+                getCommunityDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(UpdateCommunity.this);
             }

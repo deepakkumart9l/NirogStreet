@@ -90,7 +90,7 @@ public class AppointmentActivity extends Activity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         if (NetworkUtill.isNetworkAvailable(AppointmentActivity.this)) {
             getAppointmentAsynctask = new GetAppointmentAsynctask("");
-            getAppointmentAsynctask.execute();
+            getAppointmentAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(AppointmentActivity.this);
         }

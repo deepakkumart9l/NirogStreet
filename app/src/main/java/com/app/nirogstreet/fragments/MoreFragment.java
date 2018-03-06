@@ -335,7 +335,7 @@ public class MoreFragment extends Fragment {
                                 if (NetworkUtill.isNetworkAvailable(context)) {
                                     String url = AppUrl.BaseUrl + "feed/my-activity-new";
                                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                                    userFeedsAsyncTask.execute();
+                                    userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 } else {
                                     NetworkUtill.showNoInternetDialog(context);
                                 }
@@ -467,7 +467,7 @@ public class MoreFragment extends Fragment {
 
                                         String url = AppUrl.BaseUrl + "feed/my-activity-new";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                                        userFeedsAsyncTask.execute();
+                                        userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();

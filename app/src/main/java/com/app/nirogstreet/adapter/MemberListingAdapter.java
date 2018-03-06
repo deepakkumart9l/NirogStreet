@@ -161,7 +161,7 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
                         if (NetworkUtill.isNetworkAvailable(context)) {
 
                             MakeAdminAsynctask makeAdminAsynctask = new MakeAdminAsynctask(groupId, userList.getId(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), position);
-                            makeAdminAsynctask.execute();
+                            makeAdminAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
                         }

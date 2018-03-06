@@ -240,7 +240,7 @@ public class Knowledge_Centre_Detail extends Activity {
         }
         if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
             corseDetailAsynctask = new CorseDetailAsynctask("", "");
-            corseDetailAsynctask.execute();
+            corseDetailAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else {
             NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
@@ -250,7 +250,7 @@ public class Knowledge_Centre_Detail extends Activity {
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask();
-                    acceptDeclineJoinAsyncTask.execute();
+                    acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
                 }
@@ -496,7 +496,7 @@ public class Knowledge_Centre_Detail extends Activity {
                 if (course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getUser_completed() != 1)
                     if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
                         knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getId(), k_Module_pos, i_Tpoic_pos, j_File_pos, course_detail_model.getModulesModels().get(k_Module_pos).getTopic_under_modules().get(i_Tpoic_pos).getFile_under_topics().get(j_File_pos).getRoot_id());
-                        knwledgeCompleteAsynctask.execute();
+                        knwledgeCompleteAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
                     }
@@ -795,7 +795,7 @@ public class Knowledge_Centre_Detail extends Activity {
                 if (course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getUser_completed() != 1)
                     if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
                         knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask(course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getId(), module, topic, file, course_detail_model.getModulesModels().get(module).getTopic_under_modules().get(topic).getFile_under_topics().get(file).getRoot_id());
-                        knwledgeCompleteAsynctask.execute();
+                        knwledgeCompleteAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(Knowledge_Centre_Detail.this);
                     }

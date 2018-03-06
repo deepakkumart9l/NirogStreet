@@ -338,7 +338,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
             }
             if (NetworkUtill.isNetworkAvailable(Student_Profile.this)) {
                 userDetailAsyncTask = new UserDetailAsyncTask();
-                userDetailAsyncTask.execute();
+                userDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(Student_Profile.this);
             }

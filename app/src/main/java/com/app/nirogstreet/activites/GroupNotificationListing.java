@@ -110,7 +110,7 @@ public class GroupNotificationListing extends Activity {
         if(NetworkUtill.isNetworkAvailable(GroupNotificationListing.this))
         {
             notificationAsyncTask=new NotificationAsyncTask(userId,authToken);
-            notificationAsyncTask.execute();
+            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }else {
             NetworkUtill.showNoInternetDialog(GroupNotificationListing.this);
         }

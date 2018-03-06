@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                     HashMap<String, String> userDetails = sesstionManager.getUserDetails();
                     String userId = userDetails.get(SesstionManager.USER_ID);
                     NotificationAsyncTaskNew notificationAsyncTaskNew = new NotificationAsyncTaskNew(userId, "", "");
-                    notificationAsyncTaskNew.execute();
+                    notificationAsyncTaskNew.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(MainActivity.this);
                 }
@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
             tv.setText("12");
             if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
                 notificationAsyncTask = new NotificationAsyncTask(userId, "", "");
-                notificationAsyncTask.execute();
+                notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             } else {
                 NetworkUtill.showNoInternetDialog(MainActivity.this);
@@ -376,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                 // User clicked OK button
                 if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
                     logoutAsyncTask = new LogoutAsyncTask("");
-                    logoutAsyncTask.execute();
+                    logoutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(MainActivity.this);
                     NetworkUtill.showNoInternetDialog(MainActivity.this);
@@ -726,7 +726,7 @@ public class MainActivity extends AppCompatActivity {
             if (NetworkUtill.isNetworkAvailable(MainActivity.this)) {
                 notificationAsyncTask = new NotificationAsyncTask(
                         userId, "", "");
-                notificationAsyncTask.execute();
+                notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             } else {
                 NetworkUtill.showNoInternetDialog(MainActivity.this);

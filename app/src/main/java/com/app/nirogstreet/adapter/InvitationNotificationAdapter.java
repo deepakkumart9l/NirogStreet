@@ -93,7 +93,7 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position,6);
-                    acceptDeclineJoinAsyncTask.execute();
+                    acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -104,7 +104,7 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position,5);
-                    acceptDeclineJoinAsyncTask.execute();
+                    acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }

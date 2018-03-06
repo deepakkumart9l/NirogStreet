@@ -95,7 +95,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position, 3);
-                    acceptDeclineJoinAsyncTask.execute();
+                    acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -106,7 +106,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position, 4);
-                    acceptDeclineJoinAsyncTask.execute();
+                    acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }

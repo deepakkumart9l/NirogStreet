@@ -106,7 +106,7 @@ public class EditCommentActivity extends Activity {
                 if (NetworkUtill.isNetworkAvailable(EditCommentActivity.this)) {
                     if (editTextMessage.getText().toString() != null && editTextMessage.getText().toString().length() > 0) {
                         editFeedPostAsyncTak = new EditFeedPostAsyncTak(feedId, sessionManager.getUserDetails().get(SesstionManager.USER_ID), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
-                        editFeedPostAsyncTak.execute();
+                        editFeedPostAsyncTak.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         Toast.makeText(EditCommentActivity.this, "Enter some text", Toast.LENGTH_LONG).show();
                     }

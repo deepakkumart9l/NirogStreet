@@ -194,7 +194,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                         if (validate()) {
 
                             addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), experinceModel.getId());
-                            addOrUpdateQualificationAsynctask.execute();
+                            addOrUpdateQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditExperience.this);
@@ -206,7 +206,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
                         deleteQualificationAsynctask = new DeleteQualificationAsynctask(experinceModel.getId());
-                        deleteQualificationAsynctask.execute();
+                        deleteQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
             });
@@ -220,7 +220,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                     if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
                         if (validate()) {
                             addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), "");
-                            addOrUpdateQualificationAsynctask.execute();
+                            addOrUpdateQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditExperience.this);

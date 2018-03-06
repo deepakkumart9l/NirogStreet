@@ -92,7 +92,7 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
                     if (NetworkUtill.isNetworkAvailable(PublicShare.this)) {
 
                         shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
-                        shareOnFriendsTimeLineAsyncTask.execute();
+                        shareOnFriendsTimeLineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         Toast.makeText(PublicShare.this, "Select friends", Toast.LENGTH_LONG).show();
                     }

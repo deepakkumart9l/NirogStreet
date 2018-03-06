@@ -148,7 +148,7 @@ public class Communication_Feed_Fragment extends Fragment {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/timeline";
                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                    userFeedsAsyncTask.execute();
+                    userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -196,7 +196,7 @@ public class Communication_Feed_Fragment extends Fragment {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/timeline";
                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                    userFeedsAsyncTask.execute();
+                    userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -220,7 +220,7 @@ public class Communication_Feed_Fragment extends Fragment {
         if (NetworkUtill.isNetworkAvailable(context)) {
             String url = AppUrl.BaseUrl + "group/timeline";
             userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-            userFeedsAsyncTask.execute();
+            userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(context);
         }
@@ -337,7 +337,7 @@ public class Communication_Feed_Fragment extends Fragment {
 
                                         String url = AppUrl.BaseUrl + "group/timeline";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                                        userFeedsAsyncTask.execute();
+                                        userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();

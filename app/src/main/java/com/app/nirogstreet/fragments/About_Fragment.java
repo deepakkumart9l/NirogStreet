@@ -132,7 +132,7 @@ public class About_Fragment extends Fragment {
 
             if (NetworkUtill.isNetworkAvailable(context)) {
                 getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
-                getCommunityDetailAsyncTask.execute();
+                getCommunityDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(context);
             }
@@ -171,7 +171,7 @@ public class About_Fragment extends Fragment {
 
         if (NetworkUtill.isNetworkAvailable(context)) {
             getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
-            getCommunityDetailAsyncTask.execute();
+            getCommunityDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(context);
         }
@@ -748,7 +748,7 @@ public class About_Fragment extends Fragment {
                                 case R.id.leave:
                                     if (NetworkUtill.isNetworkAvailable(context)) {
                                         acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 1, 0);
-                                        acceptDeclineJoinAsyncTask.execute();
+                                        acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     } else {
                                         NetworkUtill.showNoInternetDialog(context);
                                     }
@@ -906,7 +906,7 @@ public class About_Fragment extends Fragment {
                 // User clicked OK button
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
-                    acceptDeclineJoinAsyncTask.execute();
+                    acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }

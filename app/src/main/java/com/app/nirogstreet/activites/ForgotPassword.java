@@ -94,7 +94,7 @@ public class ForgotPassword
                     if (Methods.isValidEmailAddress(username.trim())) {
                         if (NetworkUtill.isNetworkAvailable(ForgotPassword.this)) {
                             loginAsync = new LoginAsync();
-                            loginAsync.execute();
+                            loginAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         } else
                             NetworkUtill.showNoInternetDialog(ForgotPassword.this);
                     }else {

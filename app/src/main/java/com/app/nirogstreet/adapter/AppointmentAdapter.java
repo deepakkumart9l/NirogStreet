@@ -40,7 +40,6 @@ public class AppointmentAdapter extends
     HashMap<String, String> userDetails;
     SesstionManager sessionManager;
 
-
     public AppointmentAdapter(ArrayList<AppointmentModel> appointmentModels, Context context) {
         this.appointmentModels = appointmentModels;
         this.context = context;

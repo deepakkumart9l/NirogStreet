@@ -110,7 +110,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (searchET.getText().toString().length() != 0) {
                     if (NetworkUtill.isNetworkAvailable(SearchActivity.this)) {
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(SearchActivity.this);
                     }
@@ -142,7 +142,7 @@ public class SearchActivity extends AppCompatActivity {
                         searchAsync.execute();
                     } else {
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(SearchActivity.this);
@@ -178,7 +178,7 @@ public class SearchActivity extends AppCompatActivity {
         });
 */
         searchAsync = new SearchAsync("");
-        searchAsync.execute();
+        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -318,7 +318,7 @@ public class SearchActivity extends AppCompatActivity {
                                                     page++;
 
                                                     searchAsync = new SearchAsync("");
-                                                    searchAsync.execute();
+                                                    searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                                                 }
                                             } catch (Exception e) {

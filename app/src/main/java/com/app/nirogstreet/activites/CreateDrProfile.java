@@ -283,7 +283,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         // spinnerCategory.setSelection(0);
         if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
             userDetailAsyncTask = new UserDetailAsyncTask();
-            userDetailAsyncTask.execute();
+            userDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(CreateDrProfile.this);
         }

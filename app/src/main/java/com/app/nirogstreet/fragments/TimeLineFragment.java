@@ -14,6 +14,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.PostingActivity;
@@ -37,9 +48,12 @@ import com.google.android.gms.cast.framework.SessionManager;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
@@ -53,6 +67,9 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import okhttp3.internal.http.HttpMethod;
+
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
 /**
  * Created by Preeti on 27-10-2017.
@@ -63,6 +80,7 @@ public class TimeLineFragment extends Fragment {
     RecyclerView recyclerView;
     int totalPageCount;
     private boolean isLoading = false;
+    StringRequest stringRequest;
     FrameLayout customViewContainer;
     int page = 1;
     CircularProgressBar circularProgressBar;
@@ -144,8 +162,9 @@ public class TimeLineFragment extends Fragment {
                 editor.commit();
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "feed/home";
+                    // volley(url);
                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                    userFeedsAsyncTask.execute();
+                    userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -201,8 +220,9 @@ public class TimeLineFragment extends Fragment {
                 page = 1;
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "feed/home";
+                   //  volley(url);
                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                    userFeedsAsyncTask.execute();
+                    userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }
@@ -228,8 +248,10 @@ public class TimeLineFragment extends Fragment {
         }
         if (NetworkUtill.isNetworkAvailable(context)) {
             String url = AppUrl.BaseUrl + "feed/home";
+           // volley(url);
             userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-            userFeedsAsyncTask.execute();
+            userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else {
             NetworkUtill.showNoInternetDialog(context);
         }
@@ -263,6 +285,8 @@ public class TimeLineFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             //circularProgressBar.setVisibility(View.VISIBLE);
+            String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+            System.out.print("Strat Time" + currentDateTimeString);
             swipeLayout.setRefreshing(true);
             super.onPreExecute();
         }
@@ -270,11 +294,12 @@ public class TimeLineFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
+            /*    SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-                Scheme sch = new Scheme("https", 443, sf);
+                Scheme sch = new Scheme("https", 443, sf);*/
                 client = new DefaultHttpClient();
-                client.getConnectionManager().getSchemeRegistry().register(sch);
+                // client.getConnectionManager().getSchemeRegistry().register(sch);
+                //  HttpMethod method = new HeadMethod("http://stackoverflow.com/");
                 HttpPost httppost = new HttpPost(url);
                 HttpResponse response;
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
@@ -288,6 +313,7 @@ public class TimeLineFragment extends Fragment {
                 jo = new JSONObject(responseBody);
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e(TAG, "doInBackground: ", e);
             }
             return null;
         }
@@ -295,6 +321,9 @@ public class TimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+            System.out.print("end Time" + currentDateTimeString);
+            //  System.out.println(String.format("%s %s %d: %s", method.getName(), method.getURI(), method.getStatusCode(), watch.toString()));
             swipeLayout.setRefreshing(false);
             circularProgressBar.setVisibility(View.GONE);
 
@@ -353,7 +382,7 @@ public class TimeLineFragment extends Fragment {
 
                                             String url = AppUrl.BaseUrl + "feed/home";
                                             userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
-                                            userFeedsAsyncTask.execute();
+                                            userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -390,5 +419,141 @@ public class TimeLineFragment extends Fragment {
         if (userFeedsAsyncTask != null && !userFeedsAsyncTask.isCancelled()) {
             userFeedsAsyncTask.cancelAsyncTask();
         }
+    }
+
+
+    public void volley(String url) {
+        swipeLayout.setRefreshing(true);
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        //this is the url where you want to send the request
+        //TODO: replace with your own url to send request, as I am using my own localhost for this tutorial
+       // String url = "http://api.nirogstreet.com/v2/feed/home";
+
+        // Request a string response from the provided URL.
+         stringRequest= new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        swipeLayout.setRefreshing(false);
+                        circularProgressBar.setVisibility(View.GONE);
+
+                        swipeLayout.setRefreshing(false);
+                        // Display the response string.
+                        Log.e("eresponse", "" + response);
+                        setData(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                swipeLayout.setRefreshing(false);
+                circularProgressBar.setVisibility(View.GONE);
+
+                swipeLayout.setRefreshing(false);
+                Log.e("That didn't work!", "");
+            }
+        }) {
+            //adding parameters to the request
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST);
+                params.put("userID", userId);
+                params.put("pageNo", page+"");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(500000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+    public void setData(String response) {
+        swipeLayout.setRefreshing(false);
+        circularProgressBar.setVisibility(View.GONE);
+
+        swipeLayout.setRefreshing(false);
+        //  System.out.print(feedModels.size());
+        try {
+            String responseBody = null;
+            JSONObject jo;
+            ArrayList<FeedModel> feedModels = new ArrayList<>();
+
+
+            //  responseBody = EntityUtils.toString(response, "UTF-8");
+            jo = new JSONObject(response);
+            if (jo != null) {
+
+                if (page == 1) {
+                    feedModels = FeedParser.feedParserList(jo, page);
+                    totalFeeds.add(new FeedModel());
+
+                    recyclerView.smoothScrollToPosition(0);
+
+
+                    totalFeeds.addAll(1, feedModels);
+                } else {
+                    feedModels = FeedParser.feedParserList(jo, page);
+
+                    totalFeeds.addAll(feedModels);
+                }
+                if (jo.has("totalpage") && !jo.isNull("totalpage")) {
+                    totalPageCount = jo.getInt("totalpage");
+                }
+            } else {
+                feedModels.add(new FeedModel());
+
+                totalFeeds.addAll(feedModels);
+
+            }
+
+            isLoading = false;
+
+            if (feedsAdapter == null) {
+                // appBarLayout.setExpanded(true);
+                if (totalFeeds.size() > 0) {
+                    feedsAdapter = new TimelineAdapter(context, totalFeeds, getActivity(), "", customViewContainer, circularProgressBar);
+                    recyclerView.setAdapter(feedsAdapter);
+                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            int totalItemCount = linearLayoutManager.getItemCount();
+                            int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                            if (linearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                                floatingActionButton.setVisibility(View.GONE);
+                            } else {
+                                floatingActionButton.setVisibility(View.VISIBLE);
+                            }
+                            if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                try {
+                                    String has_more = "";
+                                    if (page < totalPageCount) {
+                                        page++;
+
+                                        String url = AppUrl.BaseUrl + "feed/home";
+                                       volley(url);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                isLoading = true;
+                            }
+                        }
+                    });
+                }
+
+            } else {
+                feedsAdapter.notifyDataSetChanged();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

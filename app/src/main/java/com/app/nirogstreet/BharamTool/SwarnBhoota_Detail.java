@@ -108,7 +108,7 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
         settings.setBuiltInZoomControls(false);
         settings.setSupportZoom(true);
         if (NetworkUtill.isNetworkAvailable(SwarnBhoota_Detail.this)) {
-            new Asyank_Listing().execute();
+            new Asyank_Listing().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(SwarnBhoota_Detail.this);
         }

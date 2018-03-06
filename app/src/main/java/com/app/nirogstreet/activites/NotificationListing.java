@@ -99,7 +99,7 @@ public class NotificationListing extends AppCompatActivity {
         userId = user.get(SesstionManager.USER_ID);
         if (NetworkUtill.isNetworkAvailable(NotificationListing.this)) {
             notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
-            notificationAsyncTask.execute();
+            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
 
         } else {
             NetworkUtill.showNoInternetDialog(NotificationListing.this);

@@ -84,7 +84,7 @@ public class LikesDisplayActivity extends AppCompatActivity{
         });
         if (NetworkUtill.isNetworkAvailable(LikesDisplayActivity.this)) {
             getLikesAsynctask = new GetLikesAsynctask(feedId);
-            getLikesAsynctask.execute();
+            getLikesAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
 
             NetworkUtill.showNoInternetDialog(LikesDisplayActivity.this);

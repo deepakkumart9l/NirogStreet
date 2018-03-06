@@ -232,7 +232,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                 @Override
                 public void onClick(View view) {
                     LikeCommentAsynctask likeCommentAsynctask = new LikeCommentAsynctask(commentsModels.get(position).getCommentId(), userId, authToken, position);
-                    likeCommentAsynctask.execute();
+                    likeCommentAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             });
             holder.time.setText(rowItem.getTimeStamp());
@@ -448,7 +448,7 @@ Intent intent=new Intent(context,EditCommentActivity.class);
                 // User clicked OK button
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getCommentId(), userId, authToken, position);
-                    deletepostAsyncTask.execute();
+                    deletepostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                     //feedId

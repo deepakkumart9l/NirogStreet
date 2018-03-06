@@ -93,7 +93,7 @@ public class SwarnBhoota_Yog_Type extends AppCompatActivity implements OnItemCli
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setNestedScrollingEnabled(false);
         if (NetworkUtill.isNetworkAvailable(SwarnBhoota_Yog_Type.this)) {
-            new Asyank_Listing().execute();
+            new Asyank_Listing().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(SwarnBhoota_Yog_Type.this);
         }

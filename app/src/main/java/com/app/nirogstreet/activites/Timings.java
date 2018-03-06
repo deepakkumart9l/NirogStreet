@@ -115,11 +115,11 @@ public class Timings extends Activity {
 
                         if (clinicDetailModel.getClinic_docID() != null && !clinicDetailModel.getClinic_docID().equalsIgnoreCase("")) {
                             updateProfileEditAsyncTask = new UpdateProfileEditAsyncTask(0);
-                            updateProfileEditAsyncTask.execute();
+                            updateProfileEditAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                         } else {
                             updateProfileAsyncTask = new UpdateProfileAsyncTask(0);
-                            updateProfileAsyncTask.execute();
+                            updateProfileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     } else {
                         NetworkUtill.showNoInternetDialog(Timings.this);

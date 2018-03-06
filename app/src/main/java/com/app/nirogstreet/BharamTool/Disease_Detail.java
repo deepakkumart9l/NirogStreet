@@ -136,7 +136,7 @@ public class Disease_Detail extends AppCompatActivity {
                         String str = msgEditText.getText().toString();
                         msgEditText.setText("");
                         postCommentAsyncTask = new PostCommentAsyncTask(mDiseassub_cat_id + "", str);
-                        postCommentAsyncTask.execute();
+                        postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(Disease_Detail.this);
                     }

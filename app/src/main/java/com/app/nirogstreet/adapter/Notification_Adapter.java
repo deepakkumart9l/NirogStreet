@@ -136,7 +136,7 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
                             isClicked = true;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
-                                readUnReadAsyncTask.execute();
+                                readUnReadAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             } else {
                                 openNotification(notificationModel);
                             }

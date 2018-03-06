@@ -140,7 +140,7 @@ public class CreateCommunity extends Activity {
                 if (NetworkUtill.isNetworkAvailable(CreateCommunity.this)) {
                     if (isValidated()) {
                         createGroupAsyncTask = new CreateGroupAsyncTask(userId, authToken);
-                        createGroupAsyncTask.execute();
+                        createGroupAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(CreateCommunity.this);
                     }

@@ -129,7 +129,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                         if(validate()) {
 
                             addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), memberShipModel.getId());
-                            addOrUpdateMembershipAsynctask.execute();
+                            addOrUpdateMembershipAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
@@ -141,7 +141,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
                         deleteMemberShipAsynctask = new DeleteMemberShipAsynctask(memberShipModel.getId());
-                        deleteMemberShipAsynctask.execute();
+                        deleteMemberShipAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);
                     }
@@ -156,7 +156,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                     if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
                         if(validate()) {
                             addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), "");
-                            addOrUpdateMembershipAsynctask.execute();
+                            addOrUpdateMembershipAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditMemberShip.this);

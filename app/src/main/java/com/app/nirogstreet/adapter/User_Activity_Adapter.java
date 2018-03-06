@@ -740,7 +740,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                             positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                                likePostAsynctask.execute();
+                                likePostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
                             }
@@ -758,7 +758,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                             positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                                likePostAsynctask.execute();
+                                likePostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
                             }
@@ -1177,7 +1177,7 @@ public class User_Activity_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
             public void onClick(DialogInterface dialog, int id) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     DeletepostAsyncTask deletepostAsyncTask = new DeletepostAsyncTask(feedModel.getFeed_id(), userId, authToken);
-                    deletepostAsyncTask.execute();
+                    deletepostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                 }

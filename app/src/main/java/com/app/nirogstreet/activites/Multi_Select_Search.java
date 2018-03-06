@@ -209,12 +209,12 @@ public class Multi_Select_Search extends Activity
                     if (searchET.getText().toString().length() == 0) {
                         searchAdapterMultiSelect = null;
                         searchAsync = new SearchAsync("");
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         searchAdapterMultiSelect = null;
 
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
@@ -273,7 +273,7 @@ public class Multi_Select_Search extends Activity
 
                                                         searchAsync = new SearchAsync("");
 
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
                                                     }
@@ -282,7 +282,7 @@ public class Multi_Select_Search extends Activity
                                                         searchAdapterMultiSelect = null;
 
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);
                                                     }
@@ -300,10 +300,10 @@ public class Multi_Select_Search extends Activity
         if (NetworkUtill.isNetworkAvailable(Multi_Select_Search.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 searchAsync = new SearchAsync(searchET.getText().toString());
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
             NetworkUtill.showNoInternetDialog(Multi_Select_Search.this);

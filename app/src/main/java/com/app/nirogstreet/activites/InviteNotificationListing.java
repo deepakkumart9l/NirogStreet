@@ -105,7 +105,7 @@ public class InviteNotificationListing extends Activity {
         if(NetworkUtill.isNetworkAvailable(InviteNotificationListing.this))
         {
             notificationAsyncTask=new NotificationAsyncTask(userId,authToken);
-            notificationAsyncTask.execute();
+            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }else {
             NetworkUtill.showNoInternetDialog(InviteNotificationListing.this);
         }

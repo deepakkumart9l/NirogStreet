@@ -294,7 +294,7 @@ degree_name.setOnClickListener(new View.OnClickListener() {
 
 
                         deleteQualificationAsynctask = new DeleteRegistrationAsynctask(registrationAndDocumenModel.getId());
-                        deleteQualificationAsynctask.execute();
+                        deleteQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
                     } else {
@@ -308,7 +308,7 @@ degree_name.setOnClickListener(new View.OnClickListener() {
                     if (NetworkUtill.isNetworkAvailable(EditRegistrationAndDocuments.this)) {
                         if (validate()) {
                             addOrUpdateRegistrationAsynctask = new AddOrUpdateRegistrationAsynctask(type, degree_name.getText().toString(), clgEt.getText().toString(), yearEditText.getText().toString(), registrationAndDocumenModel.getId());
-                            addOrUpdateRegistrationAsynctask.execute();
+                            addOrUpdateRegistrationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                     } else {
@@ -325,7 +325,7 @@ degree_name.setOnClickListener(new View.OnClickListener() {
                     if (NetworkUtill.isNetworkAvailable(EditRegistrationAndDocuments.this)) {
                         if (validate()) {
                             addOrUpdateRegistrationAsynctask = new AddOrUpdateRegistrationAsynctask(type, degree_name.getText().toString(), clgEt.getText().toString(), yearEditText.getText().toString(), "");
-                            addOrUpdateRegistrationAsynctask.execute();
+                            addOrUpdateRegistrationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                     } else {

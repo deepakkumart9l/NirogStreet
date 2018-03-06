@@ -77,7 +77,7 @@ public class Diseas_sub_cat_sub extends AppCompatActivity {
         settings.setSupportZoom(true);
 
         if (NetworkUtill.isNetworkAvailable(Diseas_sub_cat_sub.this)) {
-            new Asyank_Listing().execute();
+            new Asyank_Listing().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(Diseas_sub_cat_sub.this);
         }

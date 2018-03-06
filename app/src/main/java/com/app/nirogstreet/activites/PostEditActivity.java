@@ -186,7 +186,7 @@ LinearLayout video_image;
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
             postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
-            postDetailAsyncTask.execute();
+            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(PostEditActivity.this);
         }
@@ -321,7 +321,7 @@ LinearLayout video_image;
                             // Log.e("URL=", "" + Patterns.WEB_URL.matcher(sampleUrl).matches());
                             if (selectedVideoPath == null && selectedImagePath == null&&strings.size()>0) {
                                 linkPostAsynctask = new LinkPostAsynctask(strarr[i], sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
-                                linkPostAsynctask.execute();
+                                linkPostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
                         } else {
                             linkLay.setVisibility(View.GONE);
@@ -398,7 +398,7 @@ LinearLayout video_image;
                                 if (!isposting) {
                                     isposting = true;
                                     postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), "", "");
-                                    postAsyncTask.execute();
+                                    postAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                                 }
                             } else {
@@ -408,7 +408,7 @@ LinearLayout video_image;
                             if (!isposting) {
                                 isposting = true;
                                 postAsyncTask = new PostAsyncTask(check, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), "", "");
-                                postAsyncTask.execute();
+                                postAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
                         }
                     } else {
@@ -1518,7 +1518,7 @@ recyclerView.setVisibility(View.VISIBLE);
         if (feedModel.getFeed_type().equalsIgnoreCase("2") && feedModel.getPost_Type().equalsIgnoreCase("2") && feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
             if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
                 linkPostAsynctask = new LinkPostAsynctask(feedModel.getFeed_source(), sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
-                linkPostAsynctask.execute();
+                linkPostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(PostEditActivity.this);
             }
@@ -1526,7 +1526,7 @@ recyclerView.setVisibility(View.VISIBLE);
         if (feedModel.getFeed_type().equalsIgnoreCase("3") && feedModel.getPost_Type().equalsIgnoreCase("1") && feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("1")) {
             if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
                 linkPostAsynctask = new LinkPostAsynctask(feedModel.getFeed_source(), sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
-                linkPostAsynctask.execute();
+                linkPostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(PostEditActivity.this);
             }

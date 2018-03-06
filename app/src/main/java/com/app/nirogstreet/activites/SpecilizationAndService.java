@@ -101,7 +101,7 @@ public class SpecilizationAndService extends Activity {
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(SpecilizationAndService.this)) {
                     updateSpecializationAndServices = new UpdateSpecializationAndServices();
-                    updateSpecializationAndServices.execute();
+                    updateSpecializationAndServices.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         });

@@ -192,10 +192,10 @@ public class SelectCouncilName extends Activity
         if (NetworkUtill.isNetworkAvailable(SelectCouncilName.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 searchAsync = new SearchAsync(searchET.getText().toString());
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
             NetworkUtill.showNoInternetDialog(SelectCouncilName.this);

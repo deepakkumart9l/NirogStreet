@@ -206,12 +206,12 @@ public class MultipleSelectGroup extends Activity
                     if (searchET.getText().toString().length() == 0) {
                         searchAdapterMultiSelect=null;
                         searchAsync = new SearchAsync("");
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         searchAdapterMultiSelect=null;
 
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(MultipleSelectGroup.this);
@@ -270,7 +270,7 @@ public class MultipleSelectGroup extends Activity
 
                                                         searchAsync = new SearchAsync("");
 
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(MultipleSelectGroup.this);
                                                     }
@@ -279,7 +279,7 @@ public class MultipleSelectGroup extends Activity
                                                         searchAdapterMultiSelect=null;
 
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(MultipleSelectGroup.this);
                                                     }
@@ -297,10 +297,10 @@ public class MultipleSelectGroup extends Activity
         if (NetworkUtill.isNetworkAvailable(MultipleSelectGroup.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 searchAsync = new SearchAsync(searchET.getText().toString());
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
             NetworkUtill.showNoInternetDialog(MultipleSelectGroup.this);
@@ -459,7 +459,7 @@ public class MultipleSelectGroup extends Activity
                                                     page++;
 
                                                     searchAsync = new SearchAsync(strTobeSearch);
-                                                    searchAsync.execute();
+                                                    searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                 }
                                             } catch (Exception e) {
                                                 e.printStackTrace();

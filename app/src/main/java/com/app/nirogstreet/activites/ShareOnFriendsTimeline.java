@@ -91,7 +91,7 @@ public class ShareOnFriendsTimeline extends Activity {
                         if (!isPosted) {
                             isPosted=true;
                             shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
-                            shareOnFriendsTimeLineAsyncTask.execute();
+                            shareOnFriendsTimeLineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         } else {
                             Toast.makeText(ShareOnFriendsTimeline.this, "Select community", Toast.LENGTH_LONG).show();
                         }

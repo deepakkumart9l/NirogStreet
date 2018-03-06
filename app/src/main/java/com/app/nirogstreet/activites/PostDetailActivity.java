@@ -189,7 +189,7 @@ public class PostDetailActivity extends Activity {
                         String str=editText.getText().toString();
                         editText.setText("");
                         postCommentAsyncTask = new PostCommentAsyncTask(feedId,str);
-                        postCommentAsyncTask.execute();
+                        postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         Toast.makeText(PostDetailActivity.this, "write something", Toast.LENGTH_LONG).show();
                     }
@@ -220,7 +220,7 @@ public class PostDetailActivity extends Activity {
         }
         if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
             postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
-            postDetailAsyncTask.execute();
+            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(PostDetailActivity.this);
         }
@@ -257,7 +257,7 @@ public class PostDetailActivity extends Activity {
         super.onResume();
         if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
             postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
-            postDetailAsyncTask.execute();
+            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
         } else {
             NetworkUtill.showNoInternetDialog(PostDetailActivity.this);
         }
@@ -320,7 +320,7 @@ public class PostDetailActivity extends Activity {
                                 recyclerView.setAdapter(feedsAdapter);
                                 if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
                                     getCommentsAsynctask = new GetCommentsAsynctask(feedId);
-                                    getCommentsAsynctask.execute();
+                                    getCommentsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                                 } else {
                                     NetworkUtill.showNoInternetDialog(PostDetailActivity.this);

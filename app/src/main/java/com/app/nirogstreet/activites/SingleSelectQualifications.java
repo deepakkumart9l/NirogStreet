@@ -153,10 +153,10 @@ public class SingleSelectQualifications extends Activity
                 if (NetworkUtill.isNetworkAvailable(SingleSelectQualifications.this)) {
                     if (searchET.getText().toString().length() == 0) {
                         searchAsync = new SearchAsync("");
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(SingleSelectQualifications.this);
@@ -210,14 +210,14 @@ public class SingleSelectQualifications extends Activity
                                                 if (searchET.getText().toString().length() == 0) {
                                                     if (NetworkUtill.isNetworkAvailable(SingleSelectQualifications.this)) {
                                                         searchAsync = new SearchAsync("");
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(SingleSelectQualifications.this);
                                                     }
                                                 } else {
                                                     if (NetworkUtill.isNetworkAvailable(SingleSelectQualifications.this)) {
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(SingleSelectQualifications.this);
                                                     }
@@ -235,10 +235,10 @@ public class SingleSelectQualifications extends Activity
         if (NetworkUtill.isNetworkAvailable(SingleSelectQualifications.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 searchAsync = new SearchAsync(searchET.getText().toString());
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
             NetworkUtill.showNoInternetDialog(SingleSelectQualifications.this);

@@ -129,7 +129,7 @@ public class Module_Detail_Activity extends Activity {
 
                     if (NetworkUtill.isNetworkAvailable(Module_Detail_Activity.this)) {
                     knwledgeCompleteAsynctask = new KnwledgeCompleteAsynctask();
-                    knwledgeCompleteAsynctask.execute();
+                    knwledgeCompleteAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(Module_Detail_Activity.this);
                 }

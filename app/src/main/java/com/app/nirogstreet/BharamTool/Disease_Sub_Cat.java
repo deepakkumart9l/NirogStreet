@@ -81,7 +81,7 @@ if(getIntent().hasExtra("name"))
             userId = userDetail.get(SesstionManager.USER_ID);
         }
         if (NetworkUtill.isNetworkAvailable(Disease_Sub_Cat.this)) {
-            new Asyank_Listing().execute();
+            new Asyank_Listing().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(Disease_Sub_Cat.this);
         }

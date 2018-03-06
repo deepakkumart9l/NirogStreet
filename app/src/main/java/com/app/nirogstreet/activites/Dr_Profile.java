@@ -347,7 +347,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
             }
             if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
                 userDetailAsyncTask = new UserDetailAsyncTask();
-                userDetailAsyncTask.execute();
+                userDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(Dr_Profile.this);
             }
@@ -855,7 +855,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                     case R.id.logout:
                         if (NetworkUtill.isNetworkAvailable(Dr_Profile.this)) {
                             logoutAsyncTask = new LogoutAsyncTask("");
-                            logoutAsyncTask.execute();
+                            logoutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         } else {
                             NetworkUtill.showNoInternetDialog(Dr_Profile.this);
                         }

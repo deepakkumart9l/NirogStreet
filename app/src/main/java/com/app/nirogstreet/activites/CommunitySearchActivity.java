@@ -110,7 +110,7 @@ public class CommunitySearchActivity  extends AppCompatActivity {
                 if (searchET.getText().toString().length() != 0) {
                     if (NetworkUtill.isNetworkAvailable(CommunitySearchActivity.this)) {
                         eventListingAsyncTask = new SearchEventAsync(searchET.getText().toString(), true);
-                        eventListingAsyncTask.execute();
+                        eventListingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(CommunitySearchActivity.this);
                     }
@@ -141,10 +141,10 @@ public class CommunitySearchActivity  extends AppCompatActivity {
                 if (NetworkUtill.isNetworkAvailable(CommunitySearchActivity.this)) {
                     if (searchET.getText().toString().length() == 0) {
                         eventListingAsyncTask = new SearchEventAsync("", true);
-                        eventListingAsyncTask.execute();
+                        eventListingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                     } else {
                         eventListingAsyncTask = new SearchEventAsync(searchET.getText().toString(), true);
-                        eventListingAsyncTask.execute();
+                        eventListingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(CommunitySearchActivity.this);
@@ -166,7 +166,7 @@ public class CommunitySearchActivity  extends AppCompatActivity {
         if (NetworkUtill.isNetworkAvailable(CommunitySearchActivity.this)) {
             if (searchET.getText().toString().length() == 0) {
                 eventListingAsyncTask = new SearchEventAsync("", true);
-                eventListingAsyncTask.execute();
+                eventListingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
             }
         } else {
             NetworkUtill.showNoInternetDialog(CommunitySearchActivity.this);
@@ -285,7 +285,7 @@ public class CommunitySearchActivity  extends AppCompatActivity {
                                                 page++;
 
                                                 eventListingAsyncTask = new SearchEventAsync(strTobeSearch, false);
-                                                eventListingAsyncTask.execute();
+                                                eventListingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();

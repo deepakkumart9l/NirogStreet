@@ -142,7 +142,7 @@ public class AddOrEditAward extends AppCompatActivity {
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditAward.this)) {
                         deleteAwardAsynctask=new DeleteAwardAsynctask(awardsModel.getId());
-                        deleteAwardAsynctask.execute();
+                        deleteAwardAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditAward.this);
 
@@ -155,7 +155,7 @@ public class AddOrEditAward extends AppCompatActivity {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditAward.this)) {
                         if (validate()) {
                             addOrUpdateAwardsAsynctask = new AddOrUpdateAwardsAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), awardsModel.getId());
-                            addOrUpdateAwardsAsynctask.execute();
+                            addOrUpdateAwardsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                     } else {
@@ -171,7 +171,7 @@ public class AddOrEditAward extends AppCompatActivity {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditAward.this)) {
                         if (validate()) {
                             addOrUpdateAwardsAsynctask = new AddOrUpdateAwardsAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), "");
-                            addOrUpdateAwardsAsynctask.execute();
+                            addOrUpdateAwardsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
 
                     } else {

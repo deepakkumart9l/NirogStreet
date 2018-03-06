@@ -135,7 +135,7 @@ public class CoursesListing extends Activity {
                     String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
@@ -165,7 +165,7 @@ public class CoursesListing extends Activity {
                 if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
@@ -195,7 +195,7 @@ public class CoursesListing extends Activity {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
@@ -222,7 +222,7 @@ public class CoursesListing extends Activity {
                     String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
@@ -234,7 +234,7 @@ public class CoursesListing extends Activity {
                     String url = AppUrl.BaseUrl + "knowledge/all-courses";
 
                     groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
-                    groupsOfUserAsyncTask.execute();
+                    groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(CoursesListing.this);
                     myGroupTextView.setClickable(true);
@@ -265,7 +265,7 @@ public class CoursesListing extends Activity {
                 String url = AppUrl.BaseUrl + "knowledge/user-courses";
 
                 groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
-                groupsOfUserAsyncTask.execute();
+                groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             } else {
                 NetworkUtill.showNoInternetDialog(CoursesListing.this);
@@ -394,7 +394,7 @@ public class CoursesListing extends Activity {
                                             page++;
 
                                             groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, isHide, context, showJoin);
-                                            groupsOfUserAsyncTask.execute();
+                                            groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();

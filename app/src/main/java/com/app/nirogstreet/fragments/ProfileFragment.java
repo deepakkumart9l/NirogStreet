@@ -290,7 +290,7 @@ public class ProfileFragment extends Fragment implements AppBarLayout.OnOffsetCh
         }
         if (NetworkUtill.isNetworkAvailable(context)) {
             userDetailAsyncTask = new UserDetailAsyncTask();
-            userDetailAsyncTask.execute();
+            userDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             NetworkUtill.showNoInternetDialog(context);
         }

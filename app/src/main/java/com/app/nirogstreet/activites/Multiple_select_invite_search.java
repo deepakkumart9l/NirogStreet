@@ -166,7 +166,7 @@ public class Multiple_select_invite_search extends Activity
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
                     inviteAyncTask = new InviteAyncTask("");
-                    inviteAyncTask.execute();
+                    inviteAyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
                 }
@@ -202,12 +202,12 @@ public class Multiple_select_invite_search extends Activity
                     if (searchET.getText().toString().length() == 0) {
                         searchAdapterMultiSelect = null;
                         searchAsync = new SearchAsync("");
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         searchAdapterMultiSelect = null;
 
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
@@ -266,7 +266,7 @@ public class Multiple_select_invite_search extends Activity
 
                                                         searchAsync = new SearchAsync("");
 
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
                                                     }
@@ -275,7 +275,7 @@ public class Multiple_select_invite_search extends Activity
                                                         searchAdapterMultiSelect = null;
 
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
                                                     }
@@ -293,10 +293,10 @@ public class Multiple_select_invite_search extends Activity
         if (NetworkUtill.isNetworkAvailable(Multiple_select_invite_search.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 searchAsync = new SearchAsync(searchET.getText().toString());
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
             NetworkUtill.showNoInternetDialog(Multiple_select_invite_search.this);
@@ -550,7 +550,7 @@ public class Multiple_select_invite_search extends Activity
                                                     page++;
 
                                                     searchAsync = new SearchAsync(strTobeSearch);
-                                                    searchAsync.execute();
+                                                    searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                 }
                                             } catch (Exception e) {
                                                 e.printStackTrace();

@@ -225,10 +225,10 @@ public class Multi_Select_Search_specialization extends Activity
                 if (NetworkUtill.isNetworkAvailable(Multi_Select_Search_specialization.this)) {
                     if (searchET.getText().toString().length() == 0) {
                         searchAsync = new SearchAsync("");
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         searchAsync = new SearchAsync(searchET.getText().toString());
-                        searchAsync.execute();
+                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(Multi_Select_Search_specialization.this);
@@ -282,14 +282,14 @@ public class Multi_Select_Search_specialization extends Activity
                                                 if (searchET.getText().toString().length() == 0) {
                                                     if (NetworkUtill.isNetworkAvailable(Multi_Select_Search_specialization.this)) {
                                                         searchAsync = new SearchAsync("");
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Multi_Select_Search_specialization.this);
                                                     }
                                                 } else {
                                                     if (NetworkUtill.isNetworkAvailable(Multi_Select_Search_specialization.this)) {
                                                         searchAsync = new SearchAsync(searchET.getText().toString());
-                                                        searchAsync.execute();
+                                                        searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         NetworkUtill.showNoInternetDialog(Multi_Select_Search_specialization.this);
                                                     }
@@ -307,10 +307,10 @@ public class Multi_Select_Search_specialization extends Activity
         if (NetworkUtill.isNetworkAvailable(Multi_Select_Search_specialization.this)) {
             if (searchET.getText().toString().length() == 0) {
                 searchAsync = new SearchAsync("");
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 searchAsync = new SearchAsync(searchET.getText().toString());
-                searchAsync.execute();
+                searchAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } else {
             NetworkUtill.showNoInternetDialog(Multi_Select_Search_specialization.this);

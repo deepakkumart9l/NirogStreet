@@ -144,7 +144,7 @@ public class CommentsRepilesActivity extends AppCompatActivity {
                         String texr=editText.getText().toString();
                         editText.setText("");
                         postCommentAsyncTask = new PostSubCommentAsyncTask(feedId, texr, commentsModel.getCommentId());
-                        postCommentAsyncTask.execute();
+                        postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         Toast.makeText(CommentsRepilesActivity.this, "write somting", Toast.LENGTH_LONG).show();
                     }

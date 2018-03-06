@@ -129,7 +129,7 @@ public class GroupListingAdapter extends
                     if (groupModel.getStatusdata() == null || groupModel.getStatusdata().equalsIgnoreCase("2")) {
                         if (NetworkUtill.isNetworkAvailable(context)) {
                             SentRequrestJoinAsyncTask sentRequrestJoinAsyncTask = new SentRequrestJoinAsyncTask(groupModel.getGroupId(), position);
-                            sentRequrestJoinAsyncTask.execute();
+                            sentRequrestJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         } else {
                             NetworkUtill.showNoInternetDialog(context);
                         }
@@ -137,7 +137,7 @@ public class GroupListingAdapter extends
                 } else {
                     if (NetworkUtill.isNetworkAvailable(context)) {
                         AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupModel.getGroupId(), userId, authToken, 1, position);
-                        acceptDeclineJoinAsyncTask.execute();
+                        acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(context);
                     }

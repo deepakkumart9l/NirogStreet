@@ -22,8 +22,8 @@ android {
         applicationId "com.app.nirogstreet"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 24
-        versionName "1.23"
+        versionCode 25
+        versionName "1.24"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -61,7 +61,7 @@ dependencies {
 /*
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
 */
-
+    compile 'com.android.volley:volley:1.0.0' // dependency file for Volley
     compile 'com.amitshekhar.android:rx2-android-networking:1.0.0'
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support:multidex:1.0.1'

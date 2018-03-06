@@ -780,7 +780,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                                likePostAsynctask.execute();
+                                likePostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
                             }
@@ -799,7 +799,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                                likePostAsynctask.execute();
+                                likePostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
                             }

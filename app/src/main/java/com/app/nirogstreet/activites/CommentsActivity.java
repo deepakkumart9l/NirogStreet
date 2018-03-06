@@ -84,7 +84,7 @@ public class CommentsActivity extends AppCompatActivity {
         commentsModels = new ArrayList<>();
         if (NetworkUtill.isNetworkAvailable(CommentsActivity.this)) {
             getCommentsAsynctask = new GetCommentsAsynctask(feedId);
-            getCommentsAsynctask.execute();
+            getCommentsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
         } else {
 
             NetworkUtill.showNoInternetDialog(CommentsActivity.this);
@@ -166,7 +166,7 @@ public class CommentsActivity extends AppCompatActivity {
                         editText.setText("");
                         postCommentAsyncTask = new PostCommentAsyncTask(feedId, text);
 
-                        postCommentAsyncTask.execute();
+                        postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                     } else {
                         Toast.makeText(CommentsActivity.this, "write somting", Toast.LENGTH_LONG).show();
                     }
