@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -113,8 +114,7 @@ public class Splash extends AppCompatActivity {
                 } else {
                     try {
                         NetworkUtill.showNoInternetDialog(Splash.this);
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -166,6 +166,8 @@ public class Splash extends AppCompatActivity {
 
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
                 response = client.execute(httppost);
 
                 responseBody = EntityUtils
@@ -186,6 +188,12 @@ public class Splash extends AppCompatActivity {
 
 
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(Splash.this);
+                        }
+                    }
                     float minVersion, latestVersion;
                     if (jo.has("android") && !jo.isNull("android")) {
                         JSONObject jsonObject = jo.getJSONObject("android");

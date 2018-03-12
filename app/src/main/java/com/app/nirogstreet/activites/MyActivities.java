@@ -164,7 +164,7 @@ public class MyActivities extends Activity {
         if (NetworkUtill.isNetworkAvailable(MyActivities.this))
 
         {
-            String url = AppUrl.BaseUrl + "feed/my-activity-new";
+            String url = AppUrl.BaseUrl + "feed/activity-update";
             userFeedsAsyncTask = new UserFeedsAsyncTask(MyActivities.this, circularProgressBar, url, authToken, userId);
             userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
@@ -239,7 +239,7 @@ public class MyActivities extends Activity {
                 if (jo != null) {
 
                     if (page == 1) {
-                        feedModels = FeedParser.feedParserList(jo, page);
+                        feedModels = FeedParser.feedParserListRecent(jo, page);
                         totalFeeds.add(new FeedModel());
                         totalFeeds.addAll(1, feedModels);
                     } else {
@@ -277,7 +277,7 @@ public class MyActivities extends Activity {
                                     if (page < totalPageCount) {
                                         page++;
 
-                                        String url = AppUrl.BaseUrl + "feed/my-activity-new";
+                                        String url = AppUrl.BaseUrl + "ffeed/activity-update";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                         userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     }

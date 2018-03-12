@@ -36,12 +36,14 @@ import com.android.volley.toolbox.Volley;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.MainActivity;
 import com.app.nirogstreet.activites.PostingActivity;
+import com.app.nirogstreet.activites.Splash;
 import com.app.nirogstreet.adapter.TimelineAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.android.gms.cast.framework.SessionManager;
@@ -331,7 +333,12 @@ public class TimeLineFragment extends Fragment {
             //  System.out.print(feedModels.size());
             try {
                 if (jo != null) {
-
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(getActivity());
+                        }
+                    }
                     if (page == 1) {
                         feedModels = FeedParser.feedParserList(jo, page);
                         totalFeeds.add(new FeedModel());

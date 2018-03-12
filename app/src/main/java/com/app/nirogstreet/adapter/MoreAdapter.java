@@ -29,6 +29,8 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,6 +76,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.ProportionalImageView;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
@@ -282,6 +285,10 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                     viewHolder.docTypeLayout.setVisibility(View.GONE
                     );
+                    Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+                    DisplayMetrics outMetrics = new DisplayMetrics();
+                    display.getMetrics(outMetrics);
+                    float scWidth = outMetrics.widthPixels;
                     viewHolder.linkTitleTextView.setVisibility(View.GONE);
                     viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                     viewHolder.feedImageView.setVisibility(View.GONE);
@@ -702,10 +709,10 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.profileImage.setImageResource(R.drawable.user);
                         }
                         viewHolder.user_comment.setText(feedModel.commentsModel.getComment());
-                        if(feedModel.getCommentsModel().getTitle()!=null)
+                        if (feedModel.getCommentsModel().getTitle() != null)
                             viewHolder.commenter_name.setText(Methods.getName(feedModel.getCommentsModel().getTitle(), feedModel.getCommentsModel().getName()));
                         else
-                            viewHolder.commenter_name.setText( feedModel.getCommentsModel().getName());
+                            viewHolder.commenter_name.setText(feedModel.getCommentsModel().getName());
 
                         viewHolder.user_comment_time.setText(feedModel.getCommentsModel().getTimeStamp());
 
@@ -714,7 +721,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, CommentsActivity.class);
                                 intent.putExtra("feedId", feedModel.getFeed_id());
-                                intent.putExtra("type","1");
+                                intent.putExtra("type", "1");
 
                                 context.startActivity(intent);
                             }
@@ -722,14 +729,14 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewHolder.profileImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Methods.openUserActivities(context,feedModel.getCommentsModel().getUserId(),feedModel.getCommentsModel().getName(),feedModel.getCommentsModel().getProfile_pic_url(),feedModel.getCommentsModel().getTitle(),feedModel.getCommentsModel().getUser_type());
+                                Methods.openUserActivities(context, feedModel.getCommentsModel().getUserId(), feedModel.getCommentsModel().getName(), feedModel.getCommentsModel().getProfile_pic_url(), feedModel.getCommentsModel().getTitle(), feedModel.getCommentsModel().getUser_type());
 
                             }
                         });
                         viewHolder.commenter_name.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Methods.openUserActivities(context,feedModel.getCommentsModel().getUserId(),feedModel.getCommentsModel().getName(),feedModel.getCommentsModel().getProfile_pic_url(),feedModel.getCommentsModel().getTitle(),feedModel.getCommentsModel().getUser_type());
+                                Methods.openUserActivities(context, feedModel.getCommentsModel().getUserId(), feedModel.getCommentsModel().getName(), feedModel.getCommentsModel().getProfile_pic_url(), feedModel.getCommentsModel().getTitle(), feedModel.getCommentsModel().getUser_type());
 
                             }
                         });
@@ -737,8 +744,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
-                         //   Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
+                            //   Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
 
                         }
                     });
@@ -753,7 +760,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             viewHolder.timeStampTextView.setText(relavetime1);
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }                    }
+                        }
+                    }
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
@@ -774,7 +782,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             context.startActivity(intent);
 
@@ -863,7 +871,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View v) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             ApplicationSingleton.setPost_position(position);
 
@@ -875,7 +883,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             ApplicationSingleton.setPost_position(position);
 
@@ -925,15 +933,15 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     public void onClick(View v) {
                                         //Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
 
-                              Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
                                     }
                                 });
                                 viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                     //   Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
+                                        //   Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
 
-                                        Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
                                     }
                                 });
@@ -1019,9 +1027,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     @Override
                                     public void onClick(View textView) {
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
-                                            Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                            Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
-                                         //   Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
+                                            //   Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
                                         }
                                     }
                                 };
@@ -1178,9 +1186,9 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                         @Override
                         public void onClick(View textView) {
-                            Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
 
-                         //   Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
+                            //   Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
 
                         }
                     };
@@ -1238,7 +1246,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
         if (feedModel.getParentFeedDetail() != null) {
             popup.getMenu().getItem(0).setVisible(false);
@@ -1434,13 +1442,13 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
         LinearLayout parentLay;
-
+        ProportionalImageView feedImageView;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
-        ImageView feedImageView, linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
+        ImageView linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
         LinearLayout docTypeLayout, sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
@@ -1464,7 +1472,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             relativeLayout1 = (RelativeLayout) itemView.findViewById(R.id.relativeLayout1);
             parentname = (TextView) itemView.findViewById(R.id.parentname);
             profilePicparent = (CircleImageView) itemView.findViewById(R.id.profilePicparent);
-            commenter_name=(TextView)itemView.findViewById(R.id.commenter_name);
+            commenter_name = (TextView) itemView.findViewById(R.id.commenter_name);
 
             left_view = (View) itemView.findViewById(R.id.left_view);
             delImageView = (ImageView) itemView.findViewById(R.id.del);
@@ -1536,7 +1544,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linkDescriptiontextView = (TextView) itemView.findViewById(R.id.description);
             linkTitleTextView = (TextView) itemView.findViewById(R.id.title);
             profileImageView = (CircleImageView) itemView.findViewById(R.id.profilePic);
-            feedImageView = (ImageView) itemView.findViewById(R.id.feedImage);
+            feedImageView = (ProportionalImageView) itemView.findViewById(R.id.feedImage);
             linkImageView = (ImageView) itemView.findViewById(R.id.linkImage);
             CommentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.CommentSection);
             basicAnnouncemet_view = (View) itemView.findViewById(R.id.basicAnnouncemet_view);
@@ -1546,7 +1554,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public void sharePopup(LinearLayout view, final FeedModel feedModel) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                              public boolean onMenuItemClick(MenuItem item) {

@@ -254,7 +254,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
+                        <com.app.nirogstreet.uttil.ProportionalImageView
                             android:id="@+id/feedImage"
                             android:layout_width="match_parent"
                             android:layout_height="250dp"

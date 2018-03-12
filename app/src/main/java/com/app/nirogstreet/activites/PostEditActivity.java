@@ -184,12 +184,7 @@ LinearLayout video_image;
             position = getIntent().getIntExtra("position", -1);
         }
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
-            postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
-            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            NetworkUtill.showNoInternetDialog(PostEditActivity.this);
-        }
+
         docName = (TextView) findViewById(R.id.docName);
      /*   myScrollView = (MyScrollView) findViewById(R.id.scrol);
         myScrollView.setOnTouchListener(new View.OnTouchListener() {
@@ -365,6 +360,7 @@ LinearLayout video_image;
 
             }
         });*/
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(PostEditActivity.this);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
@@ -469,6 +465,15 @@ LinearLayout video_image;
                 '_',
                 '$'
         };
+userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
+        authToken=sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
+        if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
+
+            postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
+            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            NetworkUtill.showNoInternetDialog(PostEditActivity.this);
+        }
       /*  mEditTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), null);
         mEditTextHashTagHelper.handle(mEditTextView);
         mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.cardbluebackground), this, additionalSymbols);
@@ -809,6 +814,12 @@ recyclerView.setVisibility(View.VISIBLE);
             try {
 
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(PostEditActivity.this);
+                        }
+                    }
                     int ispostDeletd = 0;
                     if (jo.has("detail") && !jo.isNull("detail")) {
                         JSONArray jsonArray = jo.getJSONArray("detail");
@@ -1201,6 +1212,12 @@ recyclerView.setVisibility(View.VISIBLE);
             pDialog.dismiss();
             try {
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(PostEditActivity.this);
+                        }
+                    }
                     if (jo.has("detail") && !jo.isNull("detail")) {
                         JSONArray jsonArray = jo.getJSONArray("detail");
                         if (jsonArray != null) {

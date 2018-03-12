@@ -83,7 +83,7 @@ public class MemberListing extends Activity {
             }
         });
         if (searchModels.size() > 0) {
-            memberListingAdapter = new MemberListingAdapter(MemberListing.this, searchModels,"0",false);
+            memberListingAdapter = new MemberListingAdapter(MemberListing.this, searchModels,"0",false,"","");
             mRecyclerView.setAdapter(memberListingAdapter);
         }
      /*   mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

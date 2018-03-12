@@ -28,6 +28,8 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.Base64;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,6 +69,7 @@ import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.ProportionalImageView;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.bumptech.glide.Glide;
@@ -202,6 +205,12 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (feedModel.getLink_type() != null) {
                         link_type = Integer.parseInt(feedModel.getLink_type());
                     }
+                    Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+                    DisplayMetrics outMetrics = new DisplayMetrics();
+                    display.getMetrics(outMetrics);
+                    float scWidth = outMetrics.widthPixels;
+                    viewHolder.feedImageView.getLayoutParams().width = (int) scWidth;
+                    viewHolder.feedImageView.getLayoutParams().height = (int) (scWidth * 0.6f);
                     switch (feed_type) {
                         case FEED_TYPE_YOUTUBEVIDEO_LINK:
                             switch (link_type) {
@@ -1298,13 +1307,14 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView playicon;
+        ProportionalImageView feedImageView;
         TextView youHaveWishedTextView, comment_text;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
-        ImageView feedImageView, linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
+        ImageView  linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
         LinearLayout docTypeLayout, sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
@@ -1398,7 +1408,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             linkDescriptiontextView = (TextView) itemView.findViewById(R.id.description);
             linkTitleTextView = (TextView) itemView.findViewById(R.id.title);
             profileImageView = (CircleImageView) itemView.findViewById(R.id.profilePic);
-            feedImageView = (ImageView) itemView.findViewById(R.id.feedImage);
+            feedImageView = (ProportionalImageView) itemView.findViewById(R.id.feedImage);
             linkImageView = (ImageView) itemView.findViewById(R.id.linkImage);
             CommentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.CommentSection);
             basicAnnouncemet_view = (View) itemView.findViewById(R.id.basicAnnouncemet_view);
@@ -1591,7 +1601,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void sharePopup(LinearLayout view, final FeedModel feedModel) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                              public boolean onMenuItemClick(MenuItem item) {
@@ -1816,7 +1826,7 @@ public class PostDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
         if(feedModel.getParentFeedDetail()!=null)
         {

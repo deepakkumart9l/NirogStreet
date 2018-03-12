@@ -1,5 +1,6 @@
 package com.app.nirogstreet.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -52,22 +53,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Preeti on 30-11-2017.
  */
 
-public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdapter.ViewHolder> {
+public class MemberListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
     String groupId;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
 
     ArrayList<UserList> rowItems;
 
     boolean isLogedInUser_Admin = false;
     SesstionManager sesstionManager;
+    String des="";
+    String privacy="";
 
-    public MemberListingAdapter(Context context, ArrayList<UserList> items, String groupId, boolean isLogedInUser_Admin) {
+    public MemberListingAdapter(Context context, ArrayList<UserList> items, String groupId, boolean isLogedInUser_Admin,String des,String privacy) {
         this.context = context;
         this.rowItems = items;
         this.groupId = groupId;
         this.isLogedInUser_Admin = isLogedInUser_Admin;
         sesstionManager = new SesstionManager(context);
+        this.des=des;
+        this.privacy=privacy;
     }
 
 
@@ -86,50 +93,78 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
 
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        final View v = layoutInflater.inflate(R.layout.search_item_view, parent, false);
-        return new ViewHolder(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder = null;
+        if (viewType == TYPE_HEADER) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_member, parent, false);
+            return new HeaderView(v);
+        } else if (viewType == TYPE_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item_view, parent, false);
+            return new ViewHolder(v);
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final UserList rowItem = rowItems.get(position);
-        holder.txtTitle.setText(Methods.getName(rowItem.getTitle(), rowItem.getName()));
-        //ImageLoader imageLoader=new ImageLoader(context);
-        if (position == 0 || rowItem.getIs_admin() != null && rowItem.getIs_admin().equalsIgnoreCase("1")) {
-            holder.department.setVisibility(View.VISIBLE);
-        } else {
-            holder.department.setVisibility(View.GONE);
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        switch (holder.getItemViewType()) {
+            case TYPE_HEADER:
+                final HeaderView  headerView=(HeaderView) holder;
+                headerView.postAn.setText(des);
+                headerView.privacy.setText(privacy);
+                break;
+            case TYPE_ITEM:
+                final ViewHolder viewHolder = (ViewHolder) holder;
 
-        }
+                final UserList rowItem = rowItems.get(position);
+                viewHolder.txtTitle.setText(Methods.getName(rowItem.getTitle(), rowItem.getName()));
+                //ImageLoader imageLoader=new ImageLoader(context);
+                if (position == 0 || rowItem.getIs_admin() != null && rowItem.getIs_admin().equalsIgnoreCase("1")) {
+                    viewHolder.department.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.department.setVisibility(View.GONE);
 
-        String imgUrl = rowItem.getProfile_pic();
-        if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
+                }
 
-            Picasso.with(context)
-                    .load(imgUrl)
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
-                    .into(holder.imageView);
-        else
-            Picasso.with(context)
-                    .load(R.drawable.user)
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
-                    .into(holder.imageView);
-        // imageLoader.DisplayImage(context,imgUrl,holder.imageView,null,150,150,R.drawable.profile_default);
-        ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                String imgUrl = rowItem.getProfile_pic();
+                if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
+
+                    Picasso.with(context)
+                            .load(imgUrl)
+                            .placeholder(R.drawable.user)
+                            .error(R.drawable.user)
+                            .into(viewHolder.imageView);
+                else
+                    Picasso.with(context)
+                            .load(R.drawable.user)
+                            .placeholder(R.drawable.user)
+                            .error(R.drawable.user)
+                            .into(viewHolder.imageView);
+                // imageLoader.DisplayImage(context,imgUrl,holder.imageView,null,150,150,R.drawable.profile_default);
+                ((RecyclerView.ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
               /*  Intent intent = new Intent(context, Dr_Profile.class);
                 if (!rowItem.getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
 
                     intent.putExtra("UserId", rowItem.getId());
                 context.startActivity(intent);*/
-                menu_popup(((RecyclerView.ViewHolder) holder).itemView, rowItem, position);
-            }
-        });
+                        menu_popup(((RecyclerView.ViewHolder) viewHolder).itemView, rowItem, position);
+                    }
+                });
+                break;
+        }
+    }
+
+    public class HeaderView extends RecyclerView.ViewHolder {
+        CircleImageView circleImageView;
+        TextView postAn,privacy;
+
+        public HeaderView(View itemView) {
+            super(itemView);
+            postAn = (TextView) itemView.findViewById(R.id.info);
+            privacy=(TextView)itemView.findViewById(R.id.privacy);
+        }
     }
 
 
@@ -139,11 +174,11 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
     }
 
     public void menu_popup(View view, final UserList userList, final int position) {
-        PopupMenu popup = new PopupMenu(context, view, Gravity.CENTER);
+        PopupMenu popup = new PopupMenu((Activity)context, view, Gravity.CENTER);
         popup.getMenuInflater().inflate(R.menu.view_profile_make_admin, popup.getMenu());
         if (isLogedInUser_Admin) {
             popup.getMenu().findItem(R.id.make_admin).setVisible(true);
-            if (userList.getIs_admin()!=null&&userList.getIs_admin().equalsIgnoreCase("1")) {
+            if (userList.getIs_admin() != null && userList.getIs_admin().equalsIgnoreCase("1")) {
                 popup.getMenu().findItem(R.id.make_admin).setVisible(false);
             }
         } else {
@@ -179,18 +214,32 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
 
         popup.show();//showing popup menu
     }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
+    }
+
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position, List<Object> payloads) {
+    public int getItemViewType(int position) {
+        if (isPositionHeader(position)) {
+            return TYPE_HEADER;
+        }
+        return TYPE_ITEM;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
 
         if (!payloads.isEmpty()) {
+            ViewHolder viewHolder = (ViewHolder) holder;
 
             if (payloads.get(0) instanceof String) {
-                if (String.valueOf(payloads.get(0)).equalsIgnoreCase("1")){
-                              holder.department.setVisibility(View.VISIBLE);
+                if (String.valueOf(payloads.get(0)).equalsIgnoreCase("1")) {
+                    viewHolder.department.setVisibility(View.VISIBLE);
 
 
-                }else {
-                    holder.department.setVisibility(View.GONE);
+                } else {
+                    viewHolder.department.setVisibility(View.GONE);
 
                 }
 
@@ -232,9 +281,8 @@ public class MemberListingAdapter extends RecyclerView.Adapter<MemberListingAdap
                 if (jo != null) {
 
 
-                   rowItems.get(pos).setIs_admin("1");
+                    rowItems.get(pos).setIs_admin("1");
                     notifyItemChanged(pos, new String(rowItems.get(pos).getIs_admin()));
-
 
 
                 }

@@ -30,6 +30,7 @@ import com.app.nirogstreet.model.CommentsModel;
 import com.app.nirogstreet.parser.CommentsParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 
@@ -202,7 +203,14 @@ public class CommentsActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
+            try{
             if (jo != null) {
+                if (jo.has("code") && !jo.isNull("code")) {
+                    int code = jo.getInt("code");
+                    if (code == AppUrl.INVALID_AUTH_CODE) {
+                        Methods.logOutUser(CommentsActivity.this);
+                    }
+                }
                 commentsModels = new ArrayList<>();
                 commentsModels = CommentsParser.commentsParser(jo);
                 if (commentsAdapter == null) {
@@ -219,6 +227,9 @@ public class CommentsActivity extends AppCompatActivity {
                         }
                     });*/
                 }
+            }}catch (Exception e)
+            {
+                e.printStackTrace();
             }
 
         }
@@ -294,6 +305,12 @@ public class CommentsActivity extends AppCompatActivity {
             circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(CommentsActivity.this);
+                        }
+                    }
                     if (jo.has("responce") && !jo.isNull("responce")) {
                         JSONObject response = jo.getJSONObject("responce");
                         int totalLikes = 0;

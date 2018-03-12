@@ -257,16 +257,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
+                        <com.app.nirogstreet.uttil.ProportionalImageView
                             android:id="@+id/feedImage"
                             android:layout_width="match_parent"
                             android:layout_height="270dp"
                             android:layout_marginTop="3dp"
                             android:adjustViewBounds="true"
-
                             android:background="@color/white"
-                            android:scaleType="centerCrop"
-
+                            android:maxHeight="320dp"
                             android:visibility="gone" />
 
                         <LinearLayout
@@ -928,7 +926,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#f9f9f9"
+                    android:background="#efefef"
                     android:paddingLeft="15dp"
                     android:visibility="gone"
                     android:id="@+id/comment_section"

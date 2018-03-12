@@ -16,10 +16,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +31,7 @@ import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.parser.CommentsParser;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 
@@ -293,6 +292,12 @@ public class PostDetailActivity extends Activity {
             super.onPostExecute(aVoid);
             try {
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(PostDetailActivity.this);
+                        }
+                    }
                     int ispostDeletd = 0;
                     if (jo.has("detail") && !jo.isNull("detail")) {
                         JSONArray jsonArray = jo.getJSONArray("detail");
@@ -401,13 +406,20 @@ public class PostDetailActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
-            if (jo != null) {
-                commentsModels = CommentsParser.commentsParser(jo);
+            try {
+                if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(PostDetailActivity.this);
+                        }
+                    }
+                    commentsModels = CommentsParser.commentsParser(jo);
 
-                if (commentsAdapter == null && commentsModels.size() > 0) {
+                    if (commentsAdapter == null && commentsModels.size() > 0) {
 
-                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true,"1");
-                    commentsrecyclerview.setAdapter(commentsAdapter);
+                        commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true, "1");
+                        commentsrecyclerview.setAdapter(commentsAdapter);
                     /*final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)
                             collapsingToolbarLayout.getLayoutParams();
                     params.setScrollFlags(
@@ -415,11 +427,15 @@ public class PostDetailActivity extends Activity {
                                     | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                     );
                     collapsingToolbarLayout.setLayoutParams(params);*/
-                } else {
-                    if (commentsModels.size() > 0)
-                        commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true,"1");
-                    commentsrecyclerview.setAdapter(commentsAdapter);
+                    } else {
+                        if (commentsModels.size() > 0)
+                            commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true, "1");
+                        commentsrecyclerview.setAdapter(commentsAdapter);
+                    }
                 }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
 
         }

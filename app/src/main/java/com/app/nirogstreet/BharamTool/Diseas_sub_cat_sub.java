@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class Diseas_sub_cat_sub extends AppCompatActivity {
     private SesstionManager session;
     TextView mName_txt, mShort_des_txt, title_side_left;
     String res, name;
+    ImageView backImageView;
     String mDiseas_cat_sub_cat_id, mSubcat_id;
     WebView webView;
 
@@ -59,7 +61,13 @@ public class Diseas_sub_cat_sub extends AppCompatActivity {
         mSubcat_id = getIntent().getStringExtra("subcat_id");
         mDiseas_cat_sub_cat_id = getIntent().getStringExtra("id");
         name = getIntent().getStringExtra("name");
-
+backImageView=(ImageView)findViewById(R.id.back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         title_side_left = (TextView) findViewById(R.id.title_side_left);
         title_side_left.setText(name);
         session = new SesstionManager(Diseas_sub_cat_sub.this);

@@ -1,5 +1,6 @@
 package com.app.nirogstreet.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,12 +65,12 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
     String url;
 
 
-    public CommentsRecyclerAdapter(Context context, ArrayList<CommentsModel> commentsModels, String feedId, boolean isvisible,String type) {
+    public CommentsRecyclerAdapter(Context context, ArrayList<CommentsModel> commentsModels, String feedId, boolean isvisible, String type) {
         this.commentsModels = commentsModels;
         this.context = context;
         this.feedId = feedId;
         this.isVisible = isvisible;
-        this.type=type;
+        this.type = type;
         sessionManager = new SesstionManager(context);
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
@@ -131,8 +132,18 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                     }
                 });
             } else {
-                holder.del_editImageView.setVisibility(View.GONE);
+                if (sessionManager.getUserDetails().get(SesstionManager.USER_ID).equalsIgnoreCase(AppUrl.NIROGSTREET_DESK_ID)) {
+                    holder.del_editImageView.setVisibility(View.VISIBLE);
+                    holder.del_editImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteOrEditPopup(holder.del_editImageView, rowItem, position);
 
+                        }
+                    });
+
+                } else
+                    holder.del_editImageView.setVisibility(View.GONE);
             }
 
             holder.numberOfReplies.setOnClickListener(new View.OnClickListener() {
@@ -250,8 +261,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                     context.startActivity(intent);
                 }
             });
-        }catch (Exception   e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -403,7 +413,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
     }
 
     public void deleteOrEditPopup(ImageView view, final CommentsModel commentsModel, final int position) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
 
 
@@ -412,13 +422,13 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 
                 switch (item.getItemId()) {
                     case R.id.edit:
-Intent intent=new Intent(context,EditCommentActivity.class);
-                        intent.putExtra("feedId",feedId);
-                        intent.putExtra("type","1");
-                        if(!isVisible)
-                        intent.putExtra("is_sub_comment",true);
-                        intent.putExtra("commentId",commentsModel.getCommentId());
-                        intent.putExtra("msg",commentsModel.getComment());
+                        Intent intent = new Intent(context, EditCommentActivity.class);
+                        intent.putExtra("feedId", feedId);
+                        intent.putExtra("type", "1");
+                        if (!isVisible)
+                            intent.putExtra("is_sub_comment", true);
+                        intent.putExtra("commentId", commentsModel.getCommentId());
+                        intent.putExtra("msg", commentsModel.getComment());
                         context.startActivity(intent);
                         break;
                     case R.id.del:

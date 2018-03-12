@@ -333,7 +333,7 @@ public class MoreFragment extends Fragment {
                                 feedsAdapter = null;
                                 page = 1;
                                 if (NetworkUtill.isNetworkAvailable(context)) {
-                                    String url = AppUrl.BaseUrl + "feed/my-activity-new";
+                                    String url = AppUrl.BaseUrl + "feed/activity-update";
                                     userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                     userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                 } else {
@@ -427,7 +427,7 @@ public class MoreFragment extends Fragment {
                 if (jo != null) {
 
                     if (page == 1) {
-                        feedModels = FeedParser.feedParserList(jo, page);
+                        feedModels = FeedParser.feedParserListRecent(jo, page);
                         totalFeeds.add(new FeedModel());
                         totalFeeds.addAll(1, feedModels);
                     } else {
@@ -465,7 +465,7 @@ public class MoreFragment extends Fragment {
                                     if (page < totalPageCount) {
                                         page++;
 
-                                        String url = AppUrl.BaseUrl + "feed/my-activity-new";
+                                        String url = AppUrl.BaseUrl + "activity-update";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                         userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                                     }

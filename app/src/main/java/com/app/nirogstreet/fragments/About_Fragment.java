@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -91,22 +93,32 @@ public class About_Fragment extends Fragment {
     TextView infoTextView;
     ArrayList<UserList> userLists = new ArrayList<>();
     boolean isMemberOfGroup = false;
+    int totalCount;
     private LetterTileProvider mLetterTileProvider;
+    MemberListingAdapter memberListingAdapter;
+    String description="";
     TextView privacyTextView;
-    NestedScrollView scrollView;
+    // NestedScrollView scrollView;
     String privacyCheck;
-    boolean isLogedInUser_Admin=false;
+    String privacytext = "";
+    boolean isLogedInUser_Admin = false;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
     String statusData = "";
+    final ArrayList<UserList> userDetailModels = new ArrayList<>();
+
     ArrayList<LikesModel> membersModel = new ArrayList<>();
     Context context;
     boolean createdBy = false;
+    LinearLayoutManager llm;
+    private boolean isLoading = false;
+
     RecyclerView mRecyclerView;
     CircularProgressBar circularProgressBar;
     String groupId, authToken, userId;
     GetCommunityDetailAsyncTask getCommunityDetailAsyncTask;
     SesstionManager sesstionManager;
     String str = "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n";
+    private int page = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,9 +167,9 @@ public class About_Fragment extends Fragment {
         mLetterTileProvider = new LetterTileProvider(context);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        scrollView = (NestedScrollView) view.findViewById(R.id.scrol);
+        //  scrollView = (NestedScrollView) view.findViewById(R.id.scrol);
         privacyTextView = (TextView) view.findViewById(R.id.privacy);
-        LinearLayoutManager llm = new LinearLayoutManager(context);
+        llm = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -168,7 +180,7 @@ public class About_Fragment extends Fragment {
         // andminTextView = (TextView) view.findViewById(R.id.adminname);
         //TypeFaceMethods.setRegularTypeFaceForTextView(andminTextView, context);
 
-
+        mRecyclerView.setNestedScrollingEnabled(false);
         if (NetworkUtill.isNetworkAvailable(context)) {
             getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
             getCommunityDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -282,13 +294,18 @@ public class About_Fragment extends Fragment {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
             try {
+                isLoading = false;
+
                 if (jo != null) {
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
                             String user_type_created_by = null, title_created_by = null;
-
-                            String name = null, invite_note = null, description = null, banner = null, privacy = null, created_profile = null, createdBy_id = null, createdBy_name = null;
+                            if(jsonObject.has("totalpage")&&!jsonObject.isNull("totalpage"))
+                            {
+                                totalCount=jsonObject.getInt("totalpage");
+                            }
+                            String name = null, invite_note = null, banner = null, privacy = null, created_profile = null, createdBy_id = null, createdBy_name = null;
                             JSONObject groupDetailJsonObject = jsonObject.getJSONObject("groupDetail");
                             if (groupDetailJsonObject.has("name") && !groupDetailJsonObject.isNull("name")) {
                                 name = groupDetailJsonObject.getString("name");
@@ -359,9 +376,11 @@ public class About_Fragment extends Fragment {
                                 privacyCheck = privacy;
                                 if (privacyCheck.equalsIgnoreCase("0")) {
                                     privacyTextView.setText("PUBLIC GROUP");
+                                    privacytext = "PUBLIC GROUP";
                                 }
                                 if (privacyCheck.equalsIgnoreCase("1")) {
                                     privacyTextView.setText("PRIVATE GROUP");
+                                    privacytext = "PRIVATE GROUP";
                                 }
                             }
                             if (name != null && banner != null && !banner.contains("tempimages")) {
@@ -392,7 +411,7 @@ public class About_Fragment extends Fragment {
                                 userLists.add(new UserList(createdBy_id, createdBy_name, created_profile, user_type_created_by, title_created_by, "1"));
 
                             }
-                            final ArrayList<UserList> userDetailModels = new ArrayList<>();
+
                             if (groupDetailJsonObject.has("members") && !groupDetailJsonObject.isNull("members")) {
                                 JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
                                 if (jsonArray != null && jsonArray.length() > 0) {
@@ -429,19 +448,40 @@ public class About_Fragment extends Fragment {
                                             userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
                                         }
                                     }
-                                    for (int k=0;k<userLists.size();k++)
-                                    {
-                                        if(userLists.get(k).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                                        {
-                                            if(userLists.get(k).getIs_admin()!=null&&userLists.get(k).getIs_admin().equalsIgnoreCase("1"))
-                                            {
-                                                isLogedInUser_Admin=true;
+                                    for (int k = 0; k < userLists.size(); k++) {
+                                        if (userLists.get(k).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                                            if (userLists.get(k).getIs_admin() != null && userLists.get(k).getIs_admin().equalsIgnoreCase("1")) {
+                                                isLogedInUser_Admin = true;
                                             }
                                         }
                                     }
                                     if (userLists.size() > 0) {
-                                        MemberListingAdapter memberListingAdapter = new MemberListingAdapter(context, userLists,groupId,isLogedInUser_Admin);
+                                        memberListingAdapter = new MemberListingAdapter(context, userLists, groupId, isLogedInUser_Admin, description, privacytext);
                                         mRecyclerView.setAdapter(memberListingAdapter);
+                                        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                                            @Override
+                                            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                                                int totalItemCount = llm.getItemCount();
+                                                int lastVisibleItem = llm.findLastVisibleItemPosition();
+
+                                                if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                                    try {
+                                                        String has_more = "";
+                                                        if (page < totalItemCount) {
+                                                            page++;
+
+                                                            String url = AppUrl.BaseUrl + "feed/home";
+                                                            GetMemberListingAsynctask getMemberListingAsynctask = new GetMemberListingAsynctask();
+                                                            getMemberListingAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    isLoading = true;
+                                                }
+
+                                            }
+                                        });
 
                                     }
 
@@ -590,9 +630,9 @@ public class About_Fragment extends Fragment {
                                 }
                             }
                             if (isLogedInUser_Admin) {
-                              //  if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                                //  if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
 
-                                    createdBy = true;
+                                createdBy = true;
                                 CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -924,4 +964,157 @@ public class About_Fragment extends Fragment {
 // Create the AlertDialog
         AlertDialog dialog = builder.create();
     }
+
+    public class GetMemberListingAsynctask extends AsyncTask<Void, Void, Void> {
+        JSONObject jo;
+        String feedId;
+
+
+        private String responseBody;
+        HttpClient client;
+
+        public void cancelAsyncTask() {
+            if (client != null && !isCancelled()) {
+                cancel(true);
+                client = null;
+            }
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            circularProgressBar.setVisibility(View.GONE);
+            try {
+                isLoading=false;
+                if (jo != null) {
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if(jsonObject.has("totalpage")&&!jsonObject.isNull("totalpage"))
+                        {
+                            totalCount=jsonObject.getInt("totalpage");
+                        }
+                        if (jsonObject.has("members") && !jsonObject.isNull("members")) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("members");
+                            if (jsonArray != null && jsonArray.length() > 0) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    String is_admin = null;
+                                    String userId = null, userName = null, profile_pic = null, user_Type = null, title = null;
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    if (object.has("user_id") && !object.isNull("user_id")) {
+                                        JSONObject userDetail = object.getJSONObject("user_id");
+                                        if (userDetail.has("id") && !userDetail.isNull("id")) {
+                                            userId = userDetail.getString("id");
+
+                                        }
+                                        if (userDetail.has("user_type") && !userDetail.isNull("user_type")) {
+                                            user_Type = userDetail.getString("user_type");
+                                        }
+                                        if (userDetail.has("Title") && !userDetail.isNull("Title")) {
+                                            title = userDetail.getString("Title");
+                                        }
+                                        if (userDetail.has("name") && !userDetail.isNull("name")) {
+                                            userName = userDetail.getString("name");
+
+                                        }
+                                        if (userDetail.has("profile_pic") && !userDetail.isNull("profile_pic")) {
+                                            profile_pic = userDetail.getString("profile_pic");
+                                        }
+                                        if (object.has("is_admin") && !object.isNull("is_admin")) {
+                                            is_admin = object.getString("is_admin");
+                                        }
+
+
+                                        userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
+                                    }
+                                }
+                                if (page == 3) {
+                                    memberListingAdapter = new MemberListingAdapter(context, userDetailModels, groupId, isLogedInUser_Admin, description, privacytext);
+                                    mRecyclerView.setAdapter(memberListingAdapter);
+                                    mRecyclerView.scrollToPosition(memberListingAdapter.getItemCount()-1);
+                                    mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                                        @Override
+                                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                                            int totalItemCount = llm.getItemCount();
+                                            int lastVisibleItem = llm.findLastVisibleItemPosition();
+
+                                            if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                                try {
+                                                    String has_more = "";
+                                                    if (page < totalCount) {
+                                                        page++;
+
+                                                        String url = AppUrl.BaseUrl + "feed/home";
+                                                        GetMemberListingAsynctask getMemberListingAsynctask = new GetMemberListingAsynctask();
+                                                        getMemberListingAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                isLoading = true;
+                                            }
+
+                                        }
+                                    });
+
+                                } else {
+                                    synchronized (memberListingAdapter) {
+                                        memberListingAdapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                for (int k = 0; k < userLists.size(); k++) {
+                                    if (userLists.get(k).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                                        if (userLists.get(k).getIs_admin() != null && userLists.get(k).getIs_admin().equalsIgnoreCase("1")) {
+                                            isLogedInUser_Admin = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String url = AppUrl.BaseUrl + "group/members";
+                SSLSocketFactory sf = new SSLSocketFactory(
+                        SSLContext.getDefault(),
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                Scheme sch = new Scheme("https", 443, sf);
+                client = new DefaultHttpClient();
+                client.getConnectionManager().getSchemeRegistry().register(sch);
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse response;
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
+                pairs.add(new BasicNameValuePair("userID", userId));
+                pairs.add(new BasicNameValuePair("groupID", groupId));
+                pairs.add(new BasicNameValuePair("pageNo", page + ""));
+                httppost.setHeader("Authorization", "Basic " + authToken);
+
+                httppost.setEntity(new UrlEncodedFormEntity(pairs));
+                response = client.execute(httppost);
+
+                responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                jo = new JSONObject(responseBody);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            circularProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

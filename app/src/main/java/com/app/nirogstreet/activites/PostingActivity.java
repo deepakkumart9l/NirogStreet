@@ -1066,6 +1066,12 @@ recyclerView.setVisibility(View.VISIBLE);
             pDialog.dismiss();
             try {
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(PostingActivity.this);
+                        }
+                    }
                     if (jo.has("responce") && !jo.isNull("responce")) {
                         JSONObject jsonObject = jo.getJSONObject("responce");
                         if (jsonObject.has("message") && !jsonObject.isNull("message")) {

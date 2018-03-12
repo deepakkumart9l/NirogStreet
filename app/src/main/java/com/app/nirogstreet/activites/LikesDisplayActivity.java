@@ -19,6 +19,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.parser.LikeParser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 
@@ -44,7 +45,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 /**
  * Created by Preeti on 27-10-2017.
  */
-public class LikesDisplayActivity extends AppCompatActivity{
+public class LikesDisplayActivity extends AppCompatActivity {
     SesstionManager sessionManager;
     GetLikesAsynctask getLikesAsynctask;
     CircularProgressBar circularProgressBar;
@@ -65,7 +66,7 @@ public class LikesDisplayActivity extends AppCompatActivity{
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
         circularProgressBar = (CircularProgressBar) findViewById(R.id.scroll);
-        recyclerView = (RecyclerView)findViewById(R.id.lv);
+        recyclerView = (RecyclerView) findViewById(R.id.lv);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(LikesDisplayActivity.this);
         recyclerView.setLayoutManager(llm);
@@ -116,13 +117,20 @@ public class LikesDisplayActivity extends AppCompatActivity{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
-            if (jo != null) {
-                ArrayList<LikesModel> likesModels = new ArrayList<>();
-                likesModels = LikeParser.likesParser(jo);
-                if (likesAdapter == null) {
-                    likesAdapter = new LikesAdapter(LikesDisplayActivity.this, likesModels);
-                    recyclerView.setAdapter(likesAdapter);
-                    final ArrayList<LikesModel> finalLikesModels = likesModels;
+            try {
+                if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(LikesDisplayActivity.this);
+                        }
+                    }
+                    ArrayList<LikesModel> likesModels = new ArrayList<>();
+                    likesModels = LikeParser.likesParser(jo);
+                    if (likesAdapter == null) {
+                        likesAdapter = new LikesAdapter(LikesDisplayActivity.this, likesModels);
+                        recyclerView.setAdapter(likesAdapter);
+                        final ArrayList<LikesModel> finalLikesModels = likesModels;
                  /*   recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -132,7 +140,10 @@ public class LikesDisplayActivity extends AppCompatActivity{
                             startActivity(resultIntent);
                         }
                     });*/
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }

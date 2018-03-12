@@ -38,8 +38,10 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,6 +90,7 @@ import com.app.nirogstreet.uttil.GoToURLSpan;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
+import com.app.nirogstreet.uttil.ProportionalImageView;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -266,6 +269,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.two_or_moreLinearLayout.setVisibility(View.GONE);
                     viewHolder.docTypeLayout.setVisibility(View.GONE
                     );
+                    Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+                    DisplayMetrics outMetrics = new DisplayMetrics();
+                    display.getMetrics(outMetrics);
+                    float scWidth = outMetrics.widthPixels;
+                    viewHolder.feedImageView.getLayoutParams().width = (int) scWidth;
+                    viewHolder.feedImageView.getLayoutParams().height = (int) (scWidth * 0.6f);
                     viewHolder.linkTitleTextView.setVisibility(View.GONE);
                     viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                     viewHolder.feedImageView.setVisibility(View.GONE);
@@ -1272,12 +1281,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView likesTextView, commntsTextView;
         TextView statusTextView;
         CircleImageView profilePicparent;
+        ProportionalImageView  feedImageView;
         TextView nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
-        ImageView feedImageView, linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
+        ImageView  linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
         LinearLayout docTypeLayout, sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
@@ -1370,7 +1380,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             linkDescriptiontextView = (TextView) itemView.findViewById(R.id.description);
             linkTitleTextView = (TextView) itemView.findViewById(R.id.title);
             profileImageView = (CircleImageView) itemView.findViewById(R.id.profilePic);
-            feedImageView = (ImageView) itemView.findViewById(R.id.feedImage);
+            feedImageView = (ProportionalImageView) itemView.findViewById(R.id.feedImage);
             linkImageView = (ImageView) itemView.findViewById(R.id.linkImage);
             CommentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.CommentSection);
             basicAnnouncemet_view = (View) itemView.findViewById(R.id.basicAnnouncemet_view);
@@ -1408,6 +1418,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(context);
+                        }
+                    }
                     if (jo.has("responce") && !jo.isNull("responce")) {
                         JSONObject jsonObject = jo.getJSONObject("responce");
                         if (jsonObject.has("totalLikes") && !jsonObject.isNull("totalLikes")) {
@@ -1538,7 +1554,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void sharePopup(LinearLayout view, final FeedModel feedModel) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                              public boolean onMenuItemClick(MenuItem item) {
@@ -1706,7 +1722,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
-        PopupMenu popup = new PopupMenu(context, view);
+        PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
 
         if (feedModel.getParentFeedDetail() != null) {

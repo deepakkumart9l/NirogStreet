@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.Dr_Profile;
+import com.app.nirogstreet.activites.LoginActivity;
 import com.app.nirogstreet.activites.MyActivities;
 import com.app.nirogstreet.activites.SearchLocationCity;
 import com.app.nirogstreet.activites.Student_Profile;
@@ -66,7 +67,7 @@ public class Methods {
     }
 
     public static void profileUser(String userType, Context context, String userId) {
-        if(userType!=null) {
+        if (userType != null) {
             SesstionManager sesstionManager = new SesstionManager(context);
             if (userType.equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
                 Intent intent = new Intent(context, Dr_Profile.class);
@@ -85,16 +86,32 @@ public class Methods {
             }
         }
     }
-public static void openUserActivities(Context context,String userId,String name,String profile_pic,String title,String userType)
-{
-    Intent intent=new Intent(context, MyActivities.class);
-    intent.putExtra("userId",userId);
-    intent.putExtra("name",name);
-    intent.putExtra("profile_pic",profile_pic);
-    intent.putExtra("title",title);
-    intent.putExtra("userType",userType);
-    context.startActivity(intent);
-}
+
+    public static void logOutUser(Context context) {
+        try {
+            SesstionManager sesstionManager = new SesstionManager(context);
+            sesstionManager.logoutUser();
+            sesstionManager.languageLogOut();
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+            ((Activity) context).finish();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void openUserActivities(Context context, String userId, String name, String profile_pic, String title, String userType) {
+        Intent intent = new Intent(context, MyActivities.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("name", name);
+        intent.putExtra("profile_pic", profile_pic);
+        intent.putExtra("title", title);
+        intent.putExtra("userType", userType);
+        context.startActivity(intent);
+    }
+
     public static boolean validCellPhone(String number) {
         return android.util.Patterns.PHONE.matcher(number).matches();
     }
@@ -253,10 +270,10 @@ public static void openUserActivities(Context context,String userId,String name,
         return "";
     }
 
-    public static void hyperlinkSet(TextView textView, String s, Context context,int is_pin,SpannableString spannableString) {
+    public static void hyperlinkSet(TextView textView, String s, Context context, int is_pin, SpannableString spannableString) {
         try {
             int i = 0;
-            boolean isValidTrue=false;
+            boolean isValidTrue = false;
 
             Matcher urlMatcher = Patterns.WEB_URL.matcher(s);
             while (urlMatcher.find()) {
@@ -264,25 +281,24 @@ public static void openUserActivities(Context context,String userId,String name,
                 int start = urlMatcher.start(i);
                 int end = urlMatcher.end(i++);
                 if (isValidUrl(url)) {
-                    isValidTrue=true;
-                    if (url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http")||url.startsWith("Www.")) {
-                        if(is_pin==1) {
-                            SesstionManager sesstionManager=new SesstionManager(context);
-                            String q             = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
+                    isValidTrue = true;
+                    if (url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http") || url.startsWith("Www.")) {
+                        if (is_pin == 1) {
+                            SesstionManager sesstionManager = new SesstionManager(context);
+                            String q = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
 
-                            spannableString.setSpan(new GoToURLSpan(url+"?userId="+q, context), start, end, 0);
-                        }else {
+                            spannableString.setSpan(new GoToURLSpan(url + "?userId=" + q, context), start, end, 0);
+                        } else {
                             spannableString.setSpan(new GoToURLSpan(url, context), start, end, 0);
 
                         }
                     }
-                }else {
+                } else {
 
                 }
 
             }
-            if(!isValidTrue)
-            {
+            if (!isValidTrue) {
                 spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             }
@@ -294,7 +310,7 @@ public static void openUserActivities(Context context,String userId,String name,
         }
     }
 
-    public static void hyperlink(TextView textView, String s, Context context,int is_pin) {
+    public static void hyperlink(TextView textView, String s, Context context, int is_pin) {
         try {
             int i = 0;
             SpannableString spannableString = new SpannableString(s);
@@ -311,8 +327,8 @@ public static void openUserActivities(Context context,String userId,String name,
             }
 
             textView.setText(spannableString);
-            if(is_pin!=1)
-            textView.setMovementMethod(new LinkMovementMethod());
+            if (is_pin != 1)
+                textView.setMovementMethod(new LinkMovementMethod());
 
         } catch (Exception e) {
             e.printStackTrace();
