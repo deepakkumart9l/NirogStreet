@@ -51,22 +51,32 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  */
 public class NotificationListing extends AppCompatActivity {
     SesstionManager sessionManager;
-    ArrayList<NotificationModel> notificationModels;
+    int groupRquest = -1, inviteRequest = -1;
+
+    ArrayList<NotificationModel> notificationModels, notificationModelstotal;
     RecyclerView listView;
     CircularProgressBar circularProgressBar;
     TextView searchButtonTextView;
     NotificationAsyncTask notificationAsyncTask;
+    private boolean isLoading = false;
+
+    int totalPageCount;
     private ImageView backImageView;
     String userId;
     LinearLayout no_notifications;
+    LinearLayoutManager llm;
     RecyclerView rv;
+    Notification_Adapter adapter;
     TextView info, info1;
     CardView first, second;
+    private int page = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_list_one);
+        notificationModelstotal = new ArrayList<>();
+        notificationModelstotal.add(new NotificationModel("", "", "", "", "", "", "", "", "", "", "", -1, "", "", "", ""));
         no_notifications = (LinearLayout) findViewById(R.id.no_list);
         first = (CardView) findViewById(R.id.first);
         second = (CardView) findViewById(R.id.second);
@@ -81,7 +91,7 @@ public class NotificationListing extends AppCompatActivity {
         }
         rv = (RecyclerView) findViewById(R.id.lv);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(NotificationListing.this);
+        llm = new LinearLayoutManager(NotificationListing.this);
         rv.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         info1 = (TextView) findViewById(R.id.info1);
@@ -99,7 +109,8 @@ public class NotificationListing extends AppCompatActivity {
         userId = user.get(SesstionManager.USER_ID);
         if (NetworkUtill.isNetworkAvailable(NotificationListing.this)) {
             notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
-            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
+            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ;
 
         } else {
             NetworkUtill.showNoInternetDialog(NotificationListing.this);
@@ -159,7 +170,7 @@ public class NotificationListing extends AppCompatActivity {
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                 pairs.add(new BasicNameValuePair("userID", userId));
-
+                pairs.add(new BasicNameValuePair("pageNo", page + ""));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
@@ -183,12 +194,15 @@ public class NotificationListing extends AppCompatActivity {
                 notificationModels = new ArrayList<>();
 
                 if (jo != null) {
-                    int groupRquest = -1, inviteRequest = -1;
+                    if (jo.has("totalpage") && !jo.isNull("totalpage")) {
+                        totalPageCount = jo.getInt("totalpage");
+
+                    }
                     if (jo.has("notificationdetail") && !jo.isNull("notificationdetail")) {
                         JSONObject jsonObject = jo.getJSONObject("notificationdetail");
                         if (jsonObject.has("groupRequest") && !jsonObject.isNull("groupRequest")) {
                             groupRquest = jsonObject.getInt("groupRequest");
-                            first.setVisibility(View.VISIBLE);
+                            first.setVisibility(View.GONE);
                             info.setText(groupRquest + "");
                             ApplicationSingleton.setGroupRequestCount(groupRquest);
                             first.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +216,7 @@ public class NotificationListing extends AppCompatActivity {
 
                         if (jsonObject.has("inviteCount") && !jsonObject.isNull("inviteCount")) {
                             inviteRequest = jsonObject.getInt("inviteCount");
-                            second.setVisibility(View.VISIBLE);
+                            second.setVisibility(View.GONE);
                             info1.setText(inviteRequest + "");
                             ApplicationSingleton.setInvitationRequestCount(inviteRequest);
                             second.setOnClickListener(new View.OnClickListener() {
@@ -217,9 +231,9 @@ public class NotificationListing extends AppCompatActivity {
                         if (jsonObject.has("notification") && !jsonObject.isNull("notification")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("notification");
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", courseID="",forum_id = "";
+                                String id = "", profile_pic = "", message = "", link_url = "", name = "", slug = "", time = "", post_id = "", event_id = "", group_id = "", courseID = "", forum_id = "";
                                 int unread = 0;
-                                String notificationType="",Title="";
+                                String notificationType = "", Title = "";
                                 String appointment_id = "";
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 if (jsonObject1.has("profile_pic") && !jsonObject1.isNull("profile_pic")) {
@@ -228,9 +242,8 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("id") && !jsonObject1.isNull("id")) {
                                     id = jsonObject1.getString("id");
                                 }
-                                if(jsonObject1.has("title")&&!jsonObject1.isNull("title"))
-                                {
-                                    Title=jsonObject1.getString("title");
+                                if (jsonObject1.has("title") && !jsonObject1.isNull("title")) {
+                                    Title = jsonObject1.getString("title");
                                 }
                                 if (jsonObject1.has("message") && !jsonObject1.isNull("message")) {
                                     message = jsonObject1.getString("message");
@@ -259,9 +272,8 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("community_id") && !jsonObject1.isNull("community_id")) {
                                     group_id = jsonObject1.getString("community_id");
                                 }
-                                if(jsonObject1.has("course_id")&&!jsonObject1.isNull("course_id"))
-                                {
-                                    courseID=jsonObject1.getString("course_id");
+                                if (jsonObject1.has("course_id") && !jsonObject1.isNull("course_id")) {
+                                    courseID = jsonObject1.getString("course_id");
                                 }
                                 if (jsonObject1.has("forum_id") && !jsonObject1.isNull("forum_id")) {
                                     forum_id = jsonObject1.getString("forum_id");
@@ -272,20 +284,54 @@ public class NotificationListing extends AppCompatActivity {
                                 if (jsonObject1.has("notification_type") && !jsonObject1.isNull("notification_type")) {
                                     notificationType = jsonObject1.getString("notification_type");
                                 }
-                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id,courseID,notificationType,Title));
+                                notificationModels.add(new NotificationModel(profile_pic, message, link_url, name, slug, time, post_id, group_id, event_id, forum_id, id, unread, appointment_id, courseID, notificationType, Title));
                             }
                         } else {
                             no_notifications.setVisibility(View.VISIBLE);
                         }
                     }
                 }
+                notificationModelstotal.addAll(notificationModels);
+                isLoading = false;
 
-                if (notificationModels != null && notificationModels.size() > 0) {
-                    final Notification_Adapter adapter = new Notification_Adapter(NotificationListing.this, notificationModels, authToken);
-                    rv.setAdapter(adapter);
+                if (notificationModelstotal != null && notificationModelstotal.size() > 0) {
+                    if (adapter == null) {
+                        adapter = new Notification_Adapter(NotificationListing.this, notificationModelstotal, authToken, groupRquest, inviteRequest);
+                        rv.setAdapter(adapter);
+                        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
 
+                                int totalItemCount = llm.getItemCount();
+                                int lastVisibleItem = llm.findLastVisibleItemPosition();
+
+                                if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                    try {
+                                        String has_more = "";
+                                        if (page < totalPageCount) {
+                                            page++;
+
+                                            notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
+                                            notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    isLoading = true;
+                                }
+                            }
+                        });
+                    } else {
+                        adapter.notifyDataSetChanged();
+
+                    }
                 } else {
-                    no_notifications.setVisibility(View.VISIBLE);
+                    if (adapter == null)
+                        no_notifications.setVisibility(View.VISIBLE);
+                    else
+                        adapter.notifyDataSetChanged();
+
 
                 }
             } catch (Exception e) {
@@ -302,13 +348,14 @@ public class NotificationListing extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (ApplicationSingleton.getGroupRequestCount() != -1 && ApplicationSingleton.getGroupRequestCount() > 0) {
-            info.setText(ApplicationSingleton.getGroupRequestCount() + "");
+            adapter = new Notification_Adapter(NotificationListing.this, notificationModelstotal, sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), ApplicationSingleton.getGroupRequestCount(), inviteRequest);
+            rv.setAdapter(adapter);
         } else {
             first.setVisibility(View.GONE);
         }
         if (ApplicationSingleton.getInvitationRequestCount() != -1 && ApplicationSingleton.getInvitationRequestCount() > 0) {
-            info1.setText(ApplicationSingleton.getInvitationRequestCount() + "");
-        } else {
+            adapter = new Notification_Adapter(NotificationListing.this, notificationModelstotal, sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), groupRquest, ApplicationSingleton.getInvitationRequestCount());
+            rv.setAdapter(adapter);        } else {
             second.setVisibility(View.GONE);
         }
     }

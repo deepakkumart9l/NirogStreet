@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.AppointmentActivity;
 import com.app.nirogstreet.activites.CommunitiesDetails;
+import com.app.nirogstreet.activites.GroupNotificationListing;
+import com.app.nirogstreet.activites.InviteNotificationListing;
 import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.model.NotificationModel;
@@ -55,12 +58,15 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
     ArrayList<NotificationModel> notificationModels;
     Context context;
     boolean isClicked = false;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
     ReadUnReadAsyncTask readUnReadAsyncTask;
     SesstionManager sessionManager;
     String userId;
     String authToken;
+    int groupRequest, inviterequest;
 
-    public Notification_Adapter(Context context, ArrayList<NotificationModel> notificationModels, String authToken) {
+    public Notification_Adapter(Context context, ArrayList<NotificationModel> notificationModels, String authToken, int groupRequset, int inviteRequest) {
         this.context = context;
         this.notificationModels = notificationModels;
         this.authToken = authToken;
@@ -70,87 +76,131 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
         HashMap<String, String> user = sessionManager.getUserDetails();
         authToken = user.get(SesstionManager.AUTH_TOKEN);
         userId = user.get(SesstionManager.USER_ID);
+        this.groupRequest = groupRequset;
+        this.inviterequest = inviteRequest;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        final View v = layoutInflater.inflate(R.layout.notificationitem, parent, false);
-        return new MyViewHolder(v);
+        if (viewType == TYPE_HEADER) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.noti_list_header, parent, false);
+            return new HeaderView(v);
+        } else if (viewType == TYPE_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.notificationitem, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        return null;
+    }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return notificationModels.size();
+        if (isPositionHeader(position)) {
+            return TYPE_HEADER;
+        }
+        return TYPE_ITEM;
     }
+
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        MyViewHolder genericViewHolder = (MyViewHolder) holder;
-        final NotificationModel item = notificationModels.get(position);
-        try {
-            if (item.getNotification_type().equalsIgnoreCase("12")) {
-                genericViewHolder.name.setText(item.getMessage());
+        switch (holder.getItemViewType()) {
+            case TYPE_HEADER:
+                final HeaderView headerView = (HeaderView) holder;
+                if (groupRequest != -1) {
+                    headerView.cardViewfirst.setVisibility(View.VISIBLE);
+                    headerView.info.setText(groupRequest + "");
+                }
+                if (inviterequest != -1) {
+                    headerView.cardViewsecond.setVisibility(View.VISIBLE);
+                    headerView.name1.setText(inviterequest + "");
+                }
+                headerView.cardViewfirst.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, GroupNotificationListing.class);
+                        context.startActivity(intent);
+                    }
+                });
+                headerView.  cardViewsecond.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, InviteNotificationListing.class);
+                       context. startActivity(intent);
+                    }
+                });
+                break;
+            case TYPE_ITEM:
+                MyViewHolder genericViewHolder = (MyViewHolder) holder;
+                final NotificationModel item = notificationModels.get(position);
+                try {
+                    if (item.getNotification_type().equalsIgnoreCase("12")) {
+                        genericViewHolder.name.setText(item.getMessage());
 
-            } else {
-                genericViewHolder.name.setText(Html.fromHtml("<b>" + Methods.getName(item.getTitle(),item.getName())+ "</b>" + " " + item.getMessage()));
-            }
-            genericViewHolder.time.setText(item.getTime());
+                    } else {
+                        genericViewHolder.name.setText(Html.fromHtml("<b>" + Methods.getName(item.getTitle(), item.getName()) + "</b>" + " " + item.getMessage()));
+                    }
+                    genericViewHolder.time.setText(item.getTime());
 
-            String imgUrl = item.getProfile_pic();
-            try {
-                if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
-                    Glide.with(context)
-                            .load(imgUrl).placeholder(R.drawable.user) // Uri of the picture
-                            .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .crossFade()
-                            .override(100, 100)
-                            .into(genericViewHolder.imageView);
-                else
-                    Glide.with(context)
-                            .load(R.drawable.user) // Uri of the picture
-                            .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .crossFade()
-                            .override(100, 100)
-                            .into(genericViewHolder.imageView);
-                //  imageLoader.DisplayImage(context, imgUrl, genericViewHolder.imageView, null, 150, 150, R.drawable.profile_default);
+                    String imgUrl = item.getProfile_pic();
+                    try {
+                        if (imgUrl != null && !imgUrl.equalsIgnoreCase(""))
+                            Glide.with(context)
+                                    .load(imgUrl).placeholder(R.drawable.user) // Uri of the picture
+                                    .centerCrop()
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .crossFade()
+                                    .override(100, 100)
+                                    .into(genericViewHolder.imageView);
+                        else
+                            Glide.with(context)
+                                    .load(R.drawable.user) // Uri of the picture
+                                    .centerCrop()
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .crossFade()
+                                    .override(100, 100)
+                                    .into(genericViewHolder.imageView);
+                        //  imageLoader.DisplayImage(context, imgUrl, genericViewHolder.imageView, null, 150, 150, R.drawable.profile_default);
 
-            } catch (Exception e) {
+                    } catch (Exception e) {
 
-            }
-            if (notificationModels.get(position).getUnread() == 0)
-                genericViewHolder.itemView.setBackgroundColor(Color.WHITE);
-            else
-                genericViewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
-            // else
-            //  genericViewHolder.itemView.setBackgroundColor(R.color.background);
+                    }
+                    if (notificationModels.get(position).getUnread() == 0)
+                        genericViewHolder.itemView.setBackgroundColor(Color.WHITE);
+                    else
+                        genericViewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                    // else
+                    //  genericViewHolder.itemView.setBackgroundColor(R.color.background);
 
-            genericViewHolder.mainitem_noti.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NotificationModel notificationModel = notificationModels.get(position);
-                    if (notificationModel.getUnread() == 1) {
-                        if (!isClicked) {
-                            isClicked = true;
-                            if (NetworkUtill.isNetworkAvailable(context)) {
-                                readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
-                                readUnReadAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    genericViewHolder.mainitem_noti.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            NotificationModel notificationModel = notificationModels.get(position);
+                            if (notificationModel.getUnread() == 1) {
+                                if (!isClicked) {
+                                    isClicked = true;
+                                    if (NetworkUtill.isNetworkAvailable(context)) {
+                                        readUnReadAsyncTask = new ReadUnReadAsyncTask(notificationModel, userId, authToken, position);
+                                        readUnReadAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    } else {
+                                        openNotification(notificationModel);
+                                    }
+                                }
                             } else {
+
                                 openNotification(notificationModel);
                             }
                         }
-                    } else {
+                    });
 
-                        openNotification(notificationModel);
-                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -158,6 +208,21 @@ public class Notification_Adapter extends RecyclerView.Adapter<RecyclerView.View
     public int getItemCount() {
         return notificationModels.size();
     }
+
+    public class HeaderView extends RecyclerView.ViewHolder {
+        public CardView cardViewfirst, cardViewsecond;
+        TextView info, name1;
+
+        public HeaderView(View view) {
+            super(view);
+            cardViewfirst = (CardView) view.findViewById(R.id.first);
+            cardViewsecond = (CardView) view.findViewById(R.id.second);
+            info = (TextView) view.findViewById(R.id.info);
+            name1 = (TextView) view.findViewById(R.id.info1);
+
+        }
+    }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View view;

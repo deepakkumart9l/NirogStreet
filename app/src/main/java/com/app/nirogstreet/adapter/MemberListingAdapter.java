@@ -119,7 +119,7 @@ public class MemberListingAdapter extends RecyclerView.Adapter<RecyclerView.View
                 final UserList rowItem = rowItems.get(position);
                 viewHolder.txtTitle.setText(Methods.getName(rowItem.getTitle(), rowItem.getName()));
                 //ImageLoader imageLoader=new ImageLoader(context);
-                if (position == 0 || rowItem.getIs_admin() != null && rowItem.getIs_admin().equalsIgnoreCase("1")) {
+                if (position == 1|| rowItem.getIs_admin() != null && rowItem.getIs_admin().equalsIgnoreCase("1")) {
                     viewHolder.department.setVisibility(View.VISIBLE);
                 } else {
                     viewHolder.department.setVisibility(View.GONE);

@@ -708,7 +708,49 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         } else {
                             viewHolder.profileImage.setImageResource(R.drawable.user);
                         }
-                        viewHolder.user_comment.setText(feedModel.commentsModel.getComment());
+                        if (feedModel.commentsModel.getComment().length() > 120) {
+                            try {
+                                builder1 = new SpannableStringBuilder();
+                                spanStatus = new SpannableString(feedModel.commentsModel.getComment().substring(0, 120));
+
+                                spanStatus.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanStatus.length(), 0);
+                                //  spanStatus.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Methods.hyperlinkSet(viewHolder.user_comment, spanStatus.toString(), context,0, spanStatus);
+                                builder1.append(spanStatus);
+                                spanStatus2 = new SpannableString(" ... view more");
+                                spanStatus2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, spanStatus2.length(), 0);
+
+                                builder1.append(spanStatus2);
+                                ClickableSpan clickSpan1 = new ClickableSpan() {
+                                    @Override
+                                    public void updateDrawState(TextPaint ds) {
+                                        ds.setColor(context.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                                        ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                        ds.setUnderlineText(false);// this remove the underline
+                                    }
+
+                                    @Override
+                                    public void onClick(View textView) {
+                                       /* ApplicationSingleton.setPostSelectedPostion(position);
+                                        Intent intent = new Intent(context, PostDetailActivity.class);
+                                        intent.putExtra("feedId", feedModel.getFeed_id());
+                                        context.startActivity(intent);*/
+                                    }
+                                };
+                                String thirdspan = spanStatus2.toString();
+                                int third = builder1.toString().indexOf(thirdspan);
+                                builder1.setSpan(clickSpan1, third, third + spanStatus2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                viewHolder.user_comment.setText(builder1, TextView.BufferType.SPANNABLE);
+                                viewHolder.user_comment.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            viewHolder.user_comment.setText(feedModel.getCommentsModel().getComment());
+
+                        }
                         if (feedModel.getCommentsModel().getTitle() != null)
                             viewHolder.commenter_name.setText(Methods.getName(feedModel.getCommentsModel().getTitle(), feedModel.getCommentsModel().getName()));
                         else

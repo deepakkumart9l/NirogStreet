@@ -53,15 +53,22 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class GroupNotificationListing extends Activity {
     SesstionManager sessionManager;
-    ArrayList<GroupNotificationModel> notificationModels;
+    GroupNotificationAdapter adapter;
+    ArrayList<GroupNotificationModel> notificationModels, notificationModelsTotal;
     RecyclerView listView;
+    int page = 1;
+    private boolean isLoading = false;
+
+    int totalPageCount;
+
     CircularProgressBar circularProgressBar;
     TextView searchButtonTextView;
+    LinearLayoutManager llm;
     NotificationAsyncTask notificationAsyncTask;
 
     private ImageView backImageView;
     String userId;
-    boolean openMain=false;
+    boolean openMain = false;
     LinearLayout no_notifications;
     RecyclerView rv;
 
@@ -69,12 +76,11 @@ public class GroupNotificationListing extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_list);
-
+        notificationModelsTotal = new ArrayList<>();
         no_notifications = (LinearLayout) findViewById(R.id.no_list);
         searchButtonTextView = (TextView) findViewById(R.id.searchButton);
-        if(getIntent().hasExtra("openMain"))
-        {
-            openMain=getIntent().getBooleanExtra("openMain",false);
+        if (getIntent().hasExtra("openMain")) {
+            openMain = getIntent().getBooleanExtra("openMain", false);
         }
         searchButtonTextView.setText("Notification");
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -85,7 +91,7 @@ public class GroupNotificationListing extends Activity {
         }
         rv = (RecyclerView) findViewById(R.id.lv);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(GroupNotificationListing.this);
+        llm = new LinearLayoutManager(GroupNotificationListing.this);
         rv.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -94,8 +100,7 @@ public class GroupNotificationListing extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(openMain)
-                {
+                if (openMain) {
                     Intent intent1 = new Intent(GroupNotificationListing.this, MainActivity.class);
                     startActivity(intent1);
                     finish();
@@ -107,19 +112,17 @@ public class GroupNotificationListing extends Activity {
         HashMap<String, String> user = sessionManager.getUserDetails();
         String authToken = user.get(SesstionManager.AUTH_TOKEN);
         userId = user.get(SesstionManager.USER_ID);
-        if(NetworkUtill.isNetworkAvailable(GroupNotificationListing.this))
-        {
-            notificationAsyncTask=new NotificationAsyncTask(userId,authToken);
+        if (NetworkUtill.isNetworkAvailable(GroupNotificationListing.this)) {
+            notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
             notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }else {
+        } else {
             NetworkUtill.showNoInternetDialog(GroupNotificationListing.this);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(openMain)
-        {
+        if (openMain) {
             Intent intent1 = new Intent(GroupNotificationListing.this, MainActivity.class);
             startActivity(intent1);
             finish();
@@ -178,7 +181,7 @@ public class GroupNotificationListing extends Activity {
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                 pairs.add(new BasicNameValuePair("userID", userId));
-
+pairs.add(new BasicNameValuePair("pageNo",page+""));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
@@ -200,17 +203,54 @@ public class GroupNotificationListing extends Activity {
             circularProgressBar.setVisibility(View.GONE);
             try {
                 notificationModels = new ArrayList<>();
+                isLoading = false;
 
                 if (jo != null) {
-                    notificationModels= GroupNotificationParser.groupNotificationModels(jo);
-                }
 
-                if (notificationModels != null && notificationModels.size() > 0) {
-                    final GroupNotificationAdapter adapter = new GroupNotificationAdapter(GroupNotificationListing.this, notificationModels, authToken);
+                    if(jo.has("response")&&!jo.isNull("response")) {
+                        JSONObject jsonObject=jo.getJSONObject("response");
+                        if (jsonObject.has("totalpage") && !jsonObject.isNull("totalpage")) {
+                            totalPageCount = jsonObject.getInt("totalpage");
+                        }
+                    }
+                    notificationModels = GroupNotificationParser.groupNotificationModels(jo);
+                    notificationModelsTotal.addAll(notificationModels);
+                }
+                isLoading = false;
+
+                if (notificationModelsTotal != null && notificationModelsTotal.size() > 0) {
+                    adapter = new GroupNotificationAdapter(GroupNotificationListing.this, notificationModelsTotal, authToken);
                     rv.setAdapter(adapter);
+                    rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            int totalItemCount = llm.getItemCount();
+                            int lastVisibleItem = llm.findLastVisibleItemPosition();
+
+                            if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                try {
+                                    String has_more = "";
+                                    if (page < totalPageCount) {
+                                        page++;
+
+                                        notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
+                                        notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                isLoading = true;
+                            }
+                        }
+                    });
 
                 } else {
-                    no_notifications.setVisibility(View.VISIBLE);
+                    if (adapter == null)
+                        no_notifications.setVisibility(View.VISIBLE);
+                    else
+                        adapter.notifyDataSetChanged();
 
                 }
             } catch (Exception e) {

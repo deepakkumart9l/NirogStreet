@@ -386,6 +386,8 @@ public class About_Fragment extends Fragment {
                             if (name != null && banner != null && !banner.contains("tempimages")) {
                                 CommunitiesDetails.setNameAndCoverPic(name, banner);
                             }
+                            userLists.add(new UserList("","","","","",""));
+
                             if (groupDetailJsonObject.has("created_by") && !groupDetailJsonObject.isNull("created_by")) {
                                 JSONObject created_ByObject = groupDetailJsonObject.getJSONObject("created_by");
                                 if (created_ByObject.has("id") && !created_ByObject.isNull("id")) {
@@ -415,6 +417,7 @@ public class About_Fragment extends Fragment {
                             if (groupDetailJsonObject.has("members") && !groupDetailJsonObject.isNull("members")) {
                                 JSONArray jsonArray = groupDetailJsonObject.getJSONArray("members");
                                 if (jsonArray != null && jsonArray.length() > 0) {
+
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         String is_admin = null;
                                         String userId = null, userName = null, profile_pic = null, user_Type = null, title = null;
@@ -444,12 +447,12 @@ public class About_Fragment extends Fragment {
                                             if (!userId.equalsIgnoreCase(createdBy_id))
                                                 userLists.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
 
-
                                             userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
                                         }
                                     }
                                     for (int k = 0; k < userLists.size(); k++) {
                                         if (userLists.get(k).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+                                            if(k!=0)
                                             if (userLists.get(k).getIs_admin() != null && userLists.get(k).getIs_admin().equalsIgnoreCase("1")) {
                                                 isLogedInUser_Admin = true;
                                             }

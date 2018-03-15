@@ -49,17 +49,24 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  */
 public class InviteNotificationListing extends Activity {
     SesstionManager sessionManager;
-    ArrayList<GroupNotificationModel> notificationModels;
+    ArrayList<GroupNotificationModel> notificationModels, notificationModelsTotal;
     RecyclerView listView;
+    LinearLayoutManager llm;
+
     CircularProgressBar circularProgressBar;
     TextView searchButtonTextView;
+     InvitationNotificationAdapter adapter;
     NotificationAsyncTask notificationAsyncTask;
+    private boolean isLoading = false;
+
 
     private ImageView backImageView;
     String userId;
-    boolean openMain=false;
+    boolean openMain = false;
     LinearLayout no_notifications;
     RecyclerView rv;
+    private int totalPageCount;
+    int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +74,8 @@ public class InviteNotificationListing extends Activity {
         setContentView(R.layout.noti_list);
         no_notifications = (LinearLayout) findViewById(R.id.no_list);
         searchButtonTextView = (TextView) findViewById(R.id.searchButton);
-        if(getIntent().hasExtra("openMain"))
-        {
-            openMain=getIntent().getBooleanExtra("openMain",false);
+        if (getIntent().hasExtra("openMain")) {
+            openMain = getIntent().getBooleanExtra("openMain", false);
         }
         searchButtonTextView.setText("Notification");
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -78,9 +84,10 @@ public class InviteNotificationListing extends Activity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+        notificationModelsTotal = new ArrayList<>();
         rv = (RecyclerView) findViewById(R.id.lv);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(InviteNotificationListing.this);
+        llm = new LinearLayoutManager(InviteNotificationListing.this);
         rv.setLayoutManager(llm);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -89,8 +96,7 @@ public class InviteNotificationListing extends Activity {
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(openMain)
-                {
+                if (openMain) {
                     Intent intent1 = new Intent(InviteNotificationListing.this, MainActivity.class);
                     startActivity(intent1);
                     finish();
@@ -102,24 +108,24 @@ public class InviteNotificationListing extends Activity {
         HashMap<String, String> user = sessionManager.getUserDetails();
         String authToken = user.get(SesstionManager.AUTH_TOKEN);
         userId = user.get(SesstionManager.USER_ID);
-        if(NetworkUtill.isNetworkAvailable(InviteNotificationListing.this))
-        {
-            notificationAsyncTask=new NotificationAsyncTask(userId,authToken);
+        if (NetworkUtill.isNetworkAvailable(InviteNotificationListing.this)) {
+            notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
             notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }else {
+        } else {
             NetworkUtill.showNoInternetDialog(InviteNotificationListing.this);
         }
     }
+
     @Override
     public void onBackPressed() {
-        if(openMain)
-        {
+        if (openMain) {
             Intent intent1 = new Intent(InviteNotificationListing.this, MainActivity.class);
             startActivity(intent1);
             finish();
         }
         super.onBackPressed();
     }
+
     public class NotificationAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String email, password;
@@ -195,15 +201,50 @@ public class InviteNotificationListing extends Activity {
                 notificationModels = new ArrayList<>();
 
                 if (jo != null) {
-                    notificationModels= GroupNotificationParser.groupNotificationModels(jo);
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
+                        if (jsonObject.has("totalpage") && !jsonObject.isNull("totalpage")) {
+                            totalPageCount = jsonObject.getInt("totalpage");
+                        }
+                    }
+                    notificationModels = GroupNotificationParser.groupNotificationModels(jo);
+                    notificationModelsTotal.addAll(notificationModels);
                 }
+                isLoading = false;
 
-                if (notificationModels != null && notificationModels.size() > 0) {
-                    final InvitationNotificationAdapter adapter = new InvitationNotificationAdapter(InviteNotificationListing.this, notificationModels, authToken);
+                if (notificationModelsTotal != null && notificationModelsTotal.size() > 0) {
+                 adapter  = new InvitationNotificationAdapter(InviteNotificationListing.this, notificationModelsTotal, authToken);
                     rv.setAdapter(adapter);
+                    rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            int totalItemCount = llm.getItemCount();
+                            int lastVisibleItem = llm.findLastVisibleItemPosition();
+
+                            if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
+                                try {
+                                    String has_more = "";
+                                    if (page < totalPageCount) {
+                                        page++;
+
+                                        notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
+                                        notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                isLoading = true;
+                            }
+                        }
+                    });
 
                 } else {
-                    no_notifications.setVisibility(View.VISIBLE);
+                    if (adapter == null)
+                        no_notifications.setVisibility(View.VISIBLE);
+                    else
+                        adapter.notifyDataSetChanged();
 
                 }
             } catch (Exception e) {

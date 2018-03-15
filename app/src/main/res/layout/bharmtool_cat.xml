@@ -38,10 +38,10 @@
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_10"
-                android:textStyle="bold"
                 android:text="Brahm Tool"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -51,20 +51,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15.5dp"
-        android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="10dp"
             android:text="Swanbhoota Yog"
             android:textColor="@color/black"
-            android:drawableRight="@drawable/learning_arr"
-            android:layout_marginRight="15dp"
-android:paddingRight="10dp"
             android:textSize="18dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+
+            android:drawableRight="@drawable/learning_arr"
+
+
+            android:text="Self Prepared Ayurveda medicines."
+            android:textSize="14dp" />
     </LinearLayout>
 
     <View
@@ -80,22 +87,28 @@ android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15.5dp"
-        android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Disease"
-
-            android:drawableRight="@drawable/learning_arr"
             android:layout_marginRight="15dp"
+
             android:paddingRight="10dp"
+            android:text="Disease"
 
             android:textColor="@color/black"
             android:textSize="18dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+
+            android:drawableRight="@drawable/learning_arr"
+            android:text="Evidence Based Treatment Protocol."
+            android:textSize="14dp" />
     </LinearLayout>
 
     <View

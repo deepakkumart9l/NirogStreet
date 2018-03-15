@@ -243,7 +243,7 @@ public class MyActivities extends Activity {
                         totalFeeds.add(new FeedModel());
                         totalFeeds.addAll(1, feedModels);
                     } else {
-                        feedModels = FeedParser.feedParserList(jo, page);
+                        feedModels = FeedParser.feedParserListRecent(jo, page);
 
                         totalFeeds.addAll(feedModels);
                     }
@@ -277,7 +277,7 @@ public class MyActivities extends Activity {
                                     if (page < totalPageCount) {
                                         page++;
 
-                                        String url = AppUrl.BaseUrl + "ffeed/activity-update";
+                                        String url = AppUrl.BaseUrl + "feed/activity-update";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                         userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     }
