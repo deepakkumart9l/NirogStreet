@@ -2,6 +2,7 @@ package com.app.nirogstreet.uttil;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -14,7 +15,7 @@ import com.app.nirogstreet.R;
  * Created by Preeti on 07-02-2018.
  */
 
-public class ExpandableTextView extends TextView implements View.OnClickListener
+public class ExpandableTextView extends AppCompatTextView implements View.OnClickListener
 {
     private static final int MAX_LINES = 5;
     private int currentMaxLines = Integer.MAX_VALUE;
