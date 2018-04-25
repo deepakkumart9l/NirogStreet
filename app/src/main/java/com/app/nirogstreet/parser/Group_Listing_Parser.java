@@ -24,6 +24,7 @@ public class Group_Listing_Parser {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             UserDetailModel userDetails = null;
                             String statusdata=null;
+                            int user_invitation = 0;
                             String user_id = null, lname = null, fname = null, profile_pic = null, slug = null;
                             String id = null, name = null, totalMembers = null, banner = null, description = null, privacy = null, created = null, updated = null, updated_by = null, status = null;
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -33,6 +34,10 @@ public class Group_Listing_Parser {
                             if(jsonObject.has("statusdata")&&!jsonObject.isNull("statusdata"))
                             {
                                 statusdata=jsonObject.getString("statusdata");
+                            }
+                            if(jsonObject.has("user_invitation")&&!jsonObject.isNull("user_invitation"))
+                            {
+                                user_invitation=jsonObject.getInt("user_invitation");
                             }
                             if (jsonObject.has("totalMembers") && !jsonObject.isNull("totalMembers")) {
                                 totalMembers = jsonObject.getString("totalMembers");
@@ -84,7 +89,7 @@ public class Group_Listing_Parser {
                                 }
                                 userDetails = new UserDetailModel(user_id, name,1, "", "", "", "", profile_pic, "", "", "", "", "", "", null, null, null, null, null, null, null, null,null,null,null,"");
                             }
-                            groupModels.add(new GroupModel(id, created, name, description, totalMembers, privacy, banner, userDetails, updated, status, updated_by,showJoin,statusdata));
+                            groupModels.add(new GroupModel(id, created, name, description, totalMembers, privacy, banner, userDetails, updated, status, updated_by,showJoin,statusdata,user_invitation));
                         }
                     }
                 }

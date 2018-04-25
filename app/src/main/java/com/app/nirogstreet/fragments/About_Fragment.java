@@ -1,8 +1,10 @@
 package com.app.nirogstreet.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,6 +23,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +32,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,6 +59,7 @@ import com.app.nirogstreet.model.UserList;
 import com.app.nirogstreet.parser.CommentsParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -68,6 +74,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -83,6 +91,13 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
+import io.branch.referral.util.ContentMetadata;
+import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
 
 /**
  * Created by Preeti on 02-11-2017.
@@ -96,29 +111,23 @@ public class About_Fragment extends Fragment {
     int totalCount;
     private LetterTileProvider mLetterTileProvider;
     MemberListingAdapter memberListingAdapter;
-    String description="";
+    String description = "";
     TextView privacyTextView;
-    // NestedScrollView scrollView;
-    String privacyCheck;
     String privacytext = "";
     boolean isLogedInUser_Admin = false;
     AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask;
     String statusData = "";
     final ArrayList<UserList> userDetailModels = new ArrayList<>();
-
-    ArrayList<LikesModel> membersModel = new ArrayList<>();
     Context context;
     boolean createdBy = false;
     LinearLayoutManager llm;
     private boolean isLoading = false;
-
     RecyclerView mRecyclerView;
     CircularProgressBar circularProgressBar;
-    String groupId, authToken, userId;
+    String groupId, authToken, userId, refer_userId,community_name, community_image,privacyCheck;
     GetCommunityDetailAsyncTask getCommunityDetailAsyncTask;
     SesstionManager sesstionManager;
-    String str = "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n";
-    private int page = 2;
+    private int page = 2,user_fromLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,22 +135,21 @@ public class About_Fragment extends Fragment {
         context = getActivity();
         Bundle bundle = getArguments();
         groupId = bundle.getString("groupId");
+        user_fromLink = bundle.getInt("user_fromLink");
+        refer_userId = bundle.getString("refer_userId");
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.statusbarcolor));
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         if (ApplicationSingleton.isGroupUpdated()) {
             userLists = new ArrayList<>();
-
             if (NetworkUtill.isNetworkAvailable(context)) {
                 getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
                 getCommunityDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -181,6 +189,7 @@ public class About_Fragment extends Fragment {
         //TypeFaceMethods.setRegularTypeFaceForTextView(andminTextView, context);
 
         mRecyclerView.setNestedScrollingEnabled(false);
+
         if (NetworkUtill.isNetworkAvailable(context)) {
             getCommunityDetailAsyncTask = new GetCommunityDetailAsyncTask(groupId);
             getCommunityDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -289,6 +298,7 @@ public class About_Fragment extends Fragment {
             this.groupId = groupId;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -301,16 +311,15 @@ public class About_Fragment extends Fragment {
                         JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("groupDetail") && !jsonObject.isNull("groupDetail")) {
                             String user_type_created_by = null, title_created_by = null;
-                            if(jsonObject.has("totalpage")&&!jsonObject.isNull("totalpage"))
-                            {
-                                totalCount=jsonObject.getInt("totalpage");
+                            if (jsonObject.has("totalpage") && !jsonObject.isNull("totalpage")) {
+                                totalCount = jsonObject.getInt("totalpage");
                             }
                             String name = null, invite_note = null, banner = null, privacy = null, created_profile = null, createdBy_id = null, createdBy_name = null;
                             JSONObject groupDetailJsonObject = jsonObject.getJSONObject("groupDetail");
                             if (groupDetailJsonObject.has("name") && !groupDetailJsonObject.isNull("name")) {
                                 name = groupDetailJsonObject.getString("name");
+                                community_name = name;
                                 CommunitiesDetails.setNameAndCoverPic(name, "");
-
                             }
                             if (groupDetailJsonObject.has("statusdata") && !groupDetailJsonObject.isNull("statusdata")) {
                                 statusData = groupDetailJsonObject.getString("statusdata");
@@ -330,8 +339,8 @@ public class About_Fragment extends Fragment {
                             }
                             if (groupDetailJsonObject.has("banner") && !groupDetailJsonObject.isNull("banner")) {
                                 banner = groupDetailJsonObject.getString("banner");
+                                community_image = banner;
                                 if (banner != null && !banner.equalsIgnoreCase("")) {
-
 
                                     Transformation transformation = new RoundedTransformationBuilder()
                                             .borderColor(Color.BLACK)
@@ -340,7 +349,6 @@ public class About_Fragment extends Fragment {
                                             .oval(false)
                                             .build();
 
-
                                     Picasso.with(context)
                                             .load(banner).transform(transformation)
                                             .placeholder(R.drawable.default_)
@@ -348,7 +356,6 @@ public class About_Fragment extends Fragment {
                                             .into(CommunitiesDetails.proo);
                                     CommunitiesDetails.proo.setVisibility(View.VISIBLE);
                                     CommunitiesDetails.circleImageView.setVisibility(View.GONE);
-
 
                                     // imageLoader1.getInstance().displayImage(groupModel.getGroupBanner(),  holder.groupIconImageView, defaultOptions);
                                 } else {
@@ -386,7 +393,7 @@ public class About_Fragment extends Fragment {
                             if (name != null && banner != null && !banner.contains("tempimages")) {
                                 CommunitiesDetails.setNameAndCoverPic(name, banner);
                             }
-                            userLists.add(new UserList("","","","","",""));
+                            userLists.add(new UserList("", "", "", "", "", ""));
 
                             if (groupDetailJsonObject.has("created_by") && !groupDetailJsonObject.isNull("created_by")) {
                                 JSONObject created_ByObject = groupDetailJsonObject.getJSONObject("created_by");
@@ -452,10 +459,10 @@ public class About_Fragment extends Fragment {
                                     }
                                     for (int k = 0; k < userLists.size(); k++) {
                                         if (userLists.get(k).getId().equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
-                                            if(k!=0)
-                                            if (userLists.get(k).getIs_admin() != null && userLists.get(k).getIs_admin().equalsIgnoreCase("1")) {
-                                                isLogedInUser_Admin = true;
-                                            }
+                                            if (k != 0)
+                                                if (userLists.get(k).getIs_admin() != null && userLists.get(k).getIs_admin().equalsIgnoreCase("1")) {
+                                                    isLogedInUser_Admin = true;
+                                                }
                                         }
                                     }
                                     if (userLists.size() > 0) {
@@ -487,139 +494,6 @@ public class About_Fragment extends Fragment {
                                         });
 
                                     }
-
-                                        /*for (int i = 0; i < userDetailModels.size() + 1; i++) {
-                                            if (i == 3)
-                                                break;
-
-                                            if (i == 2) {
-                                                TextView nameTv = (TextView) view.findViewById(R.id.memberthreename);
-                                                TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
-                                                nameTv.setText("View All");
-                                                CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memthreeimg);
-                                                imageView.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Intent intent = new Intent(context, MemberListing.class);
-                                                        intent.putExtra("userList", userDetailModels);
-                                                        context.startActivity(intent);
-                                                    }
-                                                });
-                                                nameTv.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Intent intent = new Intent(context, MemberListing.class);
-                                                        intent.putExtra("userList", userDetailModels);
-                                                        context.startActivity(intent);
-                                                    }
-                                                });
-
-                                            } else {
-                                                try {
-                                                    if (i == 0) {
-                                                        TextView nameTv = (TextView) view.findViewById(R.id.memberonename);
-
-                                                        nameTv.setText(userDetailModels.get(i).getName());
-                                                        TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
-                                                        final int finalI = i;
-                                                        nameTv.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                Intent intent = new Intent(context, Dr_Profile.class);
-                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
-
-                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
-                                                                context.startActivity(intent);
-                                                            }
-                                                        });
-                                                        CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memoneimg);
-                                                        imageView.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                Intent intent = new Intent(context, Dr_Profile.class);
-                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
-
-                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
-                                                                context.startActivity(intent);
-                                                            }
-                                                        });
-                                                        if (userDetailModels.get(i).getProfile_pic() != null && !userDetailModels.get(i).getProfile_pic().equalsIgnoreCase("")) {
-                                                            Transformation transformation = new RoundedTransformationBuilder()
-                                                                    .borderColor(Color.BLACK)
-                                                                    .borderWidthDp(3)
-                                                                    .cornerRadiusDp(30)
-                                                                    .oval(false)
-                                                                    .build();
-
-
-                                                            Picasso.with(context)
-                                                                    .load(userDetailModels.get(i).getProfile_pic()).transform(transformation)
-                                                                    .placeholder(R.drawable.user)
-                                                                    .error(R.drawable.user)
-                                                                    .into(imageView);
-
-                                                        } }
-                                                    if (i == 1) {
-                                                        TextView nameTv = (TextView) view.findViewById(R.id.membertwoname);
-
-                                                        nameTv.setText(userDetailModels.get(i).getName());
-                                                        TypeFaceMethods.setRegularTypeFaceForTextView(nameTv, context);
-                                                        final int finalI = i;
-                                                        nameTv.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                Intent intent = new Intent(context, Dr_Profile.class);
-                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
-
-                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
-                                                                context.startActivity(intent);
-                                                            }
-                                                        });
-                                                        CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memtwoimg);
-                                                        imageView.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                Intent intent = new Intent(context, Dr_Profile.class);
-                                                                if (!userDetailModels.get(finalI).getId().equalsIgnoreCase(userId))
-
-                                                                    intent.putExtra("UserId", userDetailModels.get(finalI).getId());
-                                                                context.startActivity(intent);
-                                                            }
-                                                        });
-                                                        if (userDetailModels.get(i).getProfile_pic() != null && !userDetailModels.get(i).getProfile_pic().equalsIgnoreCase(""))
-
-                                                            Picasso.with(context)
-                                                                    .load(userDetailModels.get(i).getProfile_pic())
-                                                                    .placeholder(R.drawable.user)
-                                                                    .error(R.drawable.user)
-                                                                    .into(imageView);
-
-                                                    }
-                                                    if (userDetailModels.size() == 1) {
-                                                        CircleImageView imageView = (CircleImageView) view.findViewById(R.id.memtwoimg);
-                                                        TextView nameTv = (TextView) view.findViewById(R.id.membertwoname);
-                                                        imageView.setVisibility(View.GONE);
-                                                        nameTv.setVisibility(View.GONE);
-                                                        TextView nameTv1 = (TextView) view.findViewById(R.id.memberthreename);
-                                                        nameTv1.setVisibility(View.GONE);
-                                                        CircleImageView imageView1 = (CircleImageView) view.findViewById(R.id.memthreeimg);
-                                                        imageView1.setVisibility(View.GONE);
-
-                                                    }
-                                                    if (userDetailModels.size() == 2) {
-
-                                                        TextView nameTv1 = (TextView) view.findViewById(R.id.memberthreename);
-                                                        nameTv1.setVisibility(View.GONE);
-                                                        CircleImageView imageView1 = (CircleImageView) view.findViewById(R.id.memthreeimg);
-                                                        imageView1.setVisibility(View.GONE);
-
-                                                    }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        }*/
-
                                 }
 
                             }
@@ -632,8 +506,44 @@ public class About_Fragment extends Fragment {
                                     }
                                 }
                             }
-                            if (isLogedInUser_Admin) {
-                                //  if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+
+                            if (statusData.equalsIgnoreCase("1")) {
+                                if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
+
+                                    createdBy = true;
+                                    CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            setMoreMenu(1);
+
+                                        }
+                                    });
+                                } else {
+                                    CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Event_For_Firebase.getEventCount(getActivity(), "Feed_Communities_MyCommunities_Community_Feed_Screen_Menu_Click");
+                                            setMoreMenu(2);
+
+                                        }
+                                    });
+                                }
+                            } else {
+
+                                CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        setMoreMenu(3);
+
+                                    }
+                                });
+
+                            }
+
+
+
+                           /* if (isLogedInUser_Admin) {*//*
+                            if (createdBy_id.equalsIgnoreCase(sesstionManager.getUserDetails().get(SesstionManager.USER_ID))) {
 
                                 createdBy = true;
                                 CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
@@ -647,6 +557,7 @@ public class About_Fragment extends Fragment {
                                 CommunitiesDetails.moreImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Event_For_Firebase.getEventCount(getActivity(), "Feed_Communities_MyCommunities_Community_Feed_Screen_Menu_Click");
                                         setMoreMenu(2);
 
                                     }
@@ -659,7 +570,7 @@ public class About_Fragment extends Fragment {
 
                                     }
                                 });
-                            }
+                            }*/
                         }
                     }
                 }
@@ -672,11 +583,8 @@ public class About_Fragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-
-
                 String url = AppUrl.BaseUrl + "group/detail";
-                SSLSocketFactory sf = new SSLSocketFactory(
-                        SSLContext.getDefault(),
+                SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
                 Scheme sch = new Scheme("https", 443, sf);
                 client = new DefaultHttpClient();
@@ -705,11 +613,13 @@ public class About_Fragment extends Fragment {
         }
     }
 
-    public static About_Fragment getInstance(String groupId) {
+    public static About_Fragment getInstance(String groupId, int user_invitation, String refer_userId, int user_fromLink) {
         About_Fragment artistDetailFragment = new About_Fragment();
         Bundle bundle = new Bundle();
         bundle.putString("groupId", groupId);
-
+        bundle.putString("refer_userId", refer_userId);
+        bundle.putInt("user_invitation", user_invitation);
+        bundle.putInt("user_fromLink", user_fromLink);
         artistDetailFragment.setArguments(bundle);
         return artistDetailFragment;
     }
@@ -732,11 +642,106 @@ public class About_Fragment extends Fragment {
                                     context.startActivity(intent);
                                     break;
                                 case R.id.invite:
+
+                                    Event_For_Firebase.getEventCount(getActivity(), "Feed_Communities_MyCommunities_Community_Feed_Screen_InvitePeople_Click");
+
+                                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
+                                    View mView = getLayoutInflater().inflate(R.layout.dialog_login, null);
+                                    final TextView inviteapp = (TextView) mView.findViewById(R.id.etEmail);
+                                    final TextView inviteexternal = (TextView) mView.findViewById(R.id.etPassword);
+                                    mBuilder.setView(mView);
+                                    final AlertDialog dialog = mBuilder.create();
+                                    dialog.show();
+
+                                    inviteapp.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
+                                            intent1.putExtra("groupId", groupId);
+                                            context.startActivity(intent1);
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    inviteexternal.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+                                                BranchUniversalObject buo = new BranchUniversalObject()
+                                                        .setCanonicalIdentifier("content/12345")
+                                                        .setContentImageUrl("https://lorempixel.com/400/400")
+                                                        .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                        //.setLocalIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                        .setContentMetadata(new ContentMetadata().addCustomMetadata("userId", userId));
+
+                                                LinkProperties lp = new LinkProperties()
+                                                        .setChannel("facebook")
+                                                        .setFeature("sharing")
+                                                        //.setCampaign("content 123 launch")
+                                                        .setStage("new user")
+                                                        .addControlParameter("$desktop_url", "http://example.com/home")
+                                                        .addControlParameter("custom", "data")
+                                                        .addControlParameter("groupId", groupId)
+                                                        .addControlParameter("community_image", community_image)
+                                                        .addControlParameter("community_name", community_name)
+                                                        .addControlParameter("user_fromLink", "1")
+
+                                                        .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
+                                                buo.generateShortUrl(context, lp, new Branch.BranchLinkCreateListener() {
+                                                    @Override
+                                                    public void onLinkCreate(String url, BranchError error) {
+                                                        if (error == null) {
+                                                            Log.i("BRANCH SDK", "got my Branch link to share: " + url);
+                                                        }
+                                                    }
+                                                });
+                                                ShareSheetStyle ss = new ShareSheetStyle(context, "Check this out!", "Click on this link to read ")
+                                                        .setCopyUrlStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
+                                                        .setMoreOptionStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_search), "Show more")
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
+
+                                                        .setAsFullWidthStyle(true)
+                                                        .setSharingTitle("Share With")
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT);
+
+
+                                                buo.showShareSheet((Activity) context, lp, ss, new Branch.BranchLinkShareListener() {
+                                                    @Override
+                                                    public void onShareLinkDialogLaunched() {
+                                                    }
+
+                                                    @Override
+                                                    public void onShareLinkDialogDismissed() {
+                                                    }
+
+                                                    @Override
+                                                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                                                        Log.e("sharelink", "" + sharedLink);
+                                                    }
+
+                                                    @Override
+                                                    public void onChannelSelected(String channelName) {
+                                                    }
+                                                });
+                                                dialog.cancel();
+
+                                            } catch (Exception e) {
+
+                                            }
+                                        }
+                                    });
+                                    /*Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
+                                    intent1.putExtra("groupId", groupId);
+                                    context.startActivity(intent1);*/
+                                    break;
+                                 /*
                                     Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
                                     intent1.putExtra("groupId", groupId);
-                                    context.startActivity(intent1);
-                                    break;
+                                    context.startActivity(intent1);*/
                                 case R.id.leave:
+                                    Event_For_Firebase.getEventCount(getActivity(), "Feed_Communities_MyCommunities_Community_Feed_Screen_Leave_Click");
                                     setDialog();
 
                                     break;
@@ -757,9 +762,96 @@ public class About_Fragment extends Fragment {
                             switch (item.getItemId()) {
 
                                 case R.id.invite:
-                                    Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
+                                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
+                                    View mView = getLayoutInflater().inflate(R.layout.dialog_login, null);
+                                    final TextView inviteapp = (TextView) mView.findViewById(R.id.etEmail);
+                                    final TextView inviteexternal = (TextView) mView.findViewById(R.id.etPassword);
+                                    mBuilder.setView(mView);
+                                    final AlertDialog dialog = mBuilder.create();
+                                    dialog.show();
+
+                                    inviteapp.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
+                                            intent1.putExtra("groupId", groupId);
+                                            context.startActivity(intent1);
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    inviteexternal.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+                                                BranchUniversalObject buo = new BranchUniversalObject()
+                                                        .setCanonicalIdentifier("content/12345")
+                                                        .setContentImageUrl("https://lorempixel.com/400/400")
+                                                        .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                        //.setLocalIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                        .setContentMetadata(new ContentMetadata().addCustomMetadata("userId", userId));
+
+                                                LinkProperties lp = new LinkProperties()
+                                                        .setChannel("facebook")
+                                                        .setFeature("sharing")
+                                                        //.setCampaign("content 123 launch")
+                                                        .setStage("new user")
+                                                        .addControlParameter("$desktop_url", "http://example.com/home")
+                                                        .addControlParameter("custom", "data")
+                                                        .addControlParameter("community_image", community_image)
+                                                        .addControlParameter("community_name", community_name)
+                                                        .addControlParameter("groupId", groupId)
+                                                        .addControlParameter("user_fromLink", "1")
+
+                                                        .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
+                                                buo.generateShortUrl(context, lp, new Branch.BranchLinkCreateListener() {
+                                                    @Override
+                                                    public void onLinkCreate(String url, BranchError error) {
+                                                        if (error == null) {
+                                                            Log.i("BRANCH SDK", "got my Branch link to share: " + url);
+                                                        }
+                                                    }
+                                                });
+                                                ShareSheetStyle ss = new ShareSheetStyle(context, "Check this out!", "Click on this link to read ")
+                                                        .setCopyUrlStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
+                                                        .setMoreOptionStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_search), "Show more")
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
+
+                                                        .setAsFullWidthStyle(true)
+                                                        .setSharingTitle("Share With")
+                                                        .addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT);
+
+
+                                                buo.showShareSheet((Activity) context, lp, ss, new Branch.BranchLinkShareListener() {
+                                                    @Override
+                                                    public void onShareLinkDialogLaunched() {
+                                                    }
+
+                                                    @Override
+                                                    public void onShareLinkDialogDismissed() {
+                                                    }
+
+                                                    @Override
+                                                    public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                                                        Log.e("sharelink", "" + sharedLink);
+                                                    }
+
+                                                    @Override
+                                                    public void onChannelSelected(String channelName) {
+                                                    }
+                                                });
+                                                dialog.cancel();
+
+                                            } catch (Exception e) {
+
+                                            }
+                                        }
+                                    });
+                                    /*Intent intent1 = new Intent(context, Multiple_select_invite_search.class);
                                     intent1.putExtra("groupId", groupId);
-                                    context.startActivity(intent1);
+                                    context.startActivity(intent1);*/
                                     break;
                                 case R.id.leave:
                                     setDialog();
@@ -948,6 +1040,7 @@ public class About_Fragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 if (NetworkUtill.isNetworkAvailable(context)) {
+                    Event_For_Firebase.getEventCount(getActivity(), "Feed_Communities_MyCommunities_Community_Feed_Screen_Leave_Confirm_Click");
                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupId, sesstionManager.getUserDetails().get(SesstionManager.USER_ID), authToken, 2, 0);
                     acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
@@ -958,6 +1051,8 @@ public class About_Fragment extends Fragment {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
+                Event_For_Firebase.getEventCount(getActivity(), "Feed_Communities_MyCommunities_Community_Feed_Screen_Leave_Confirm_Cancel_Click");
+
                 dialog.cancel();
             }
         });
@@ -984,18 +1079,18 @@ public class About_Fragment extends Fragment {
         }
 
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
             try {
-                isLoading=false;
+                isLoading = false;
                 if (jo != null) {
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObject = jo.getJSONObject("response");
-                        if(jsonObject.has("totalpage")&&!jsonObject.isNull("totalpage"))
-                        {
-                            totalCount=jsonObject.getInt("totalpage");
+                        if (jsonObject.has("totalpage") && !jsonObject.isNull("totalpage")) {
+                            totalCount = jsonObject.getInt("totalpage");
                         }
                         if (jsonObject.has("members") && !jsonObject.isNull("members")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("members");
@@ -1008,7 +1103,6 @@ public class About_Fragment extends Fragment {
                                         JSONObject userDetail = object.getJSONObject("user_id");
                                         if (userDetail.has("id") && !userDetail.isNull("id")) {
                                             userId = userDetail.getString("id");
-
                                         }
                                         if (userDetail.has("user_type") && !userDetail.isNull("user_type")) {
                                             user_Type = userDetail.getString("user_type");
@@ -1026,15 +1120,13 @@ public class About_Fragment extends Fragment {
                                         if (object.has("is_admin") && !object.isNull("is_admin")) {
                                             is_admin = object.getString("is_admin");
                                         }
-
-
                                         userDetailModels.add(new UserList(userId, userName, profile_pic, user_Type, title, is_admin));
                                     }
                                 }
                                 if (page == 3) {
                                     memberListingAdapter = new MemberListingAdapter(context, userDetailModels, groupId, isLogedInUser_Admin, description, privacytext);
                                     mRecyclerView.setAdapter(memberListingAdapter);
-                                    mRecyclerView.scrollToPosition(memberListingAdapter.getItemCount()-1);
+                                    mRecyclerView.scrollToPosition(memberListingAdapter.getItemCount() - 1);
                                     mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                                         @Override
                                         public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -1047,7 +1139,7 @@ public class About_Fragment extends Fragment {
                                                     if (page < totalCount) {
                                                         page++;
 
-                                                        String url = AppUrl.BaseUrl + "feed/home";
+                                                        // string url = appurl.baseurl + "feed/home";
                                                         GetMemberListingAsynctask getMemberListingAsynctask = new GetMemberListingAsynctask();
                                                         getMemberListingAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     }

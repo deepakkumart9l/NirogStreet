@@ -3,6 +3,7 @@ package com.app.nirogstreet.activites;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,6 +44,7 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.country_code.CountryPickerExample;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
@@ -51,6 +53,7 @@ import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
@@ -71,6 +74,8 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 /**
  * Created by Preeti on 17-08-2017.
@@ -81,7 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE_VIDEO = 2;
     private int CONTACT_PERMISSION_CODE = 1;
     String email = null;
+    TextView edt_country_code;
     boolean clickEnamble = true;
+    String select_countrycode;
     String role;
     String title = "1", category, gender;
 
@@ -93,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
     RadioButton doctorRadioButton, studentRadioButton;
     String fname = null, lname = null;
     EditText firstNameEt, phoneEt, emailEt, setPass, referralEt;
-    String phoneNumber = null;
+    String phoneNumber = null, mReferralcode;
     LinearLayout signIn;
     TextView registerHeader;
     LinearLayout registerAs;
@@ -115,6 +122,30 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Branch branch = Branch.getInstance();
+        // Branch init
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                    Log.i("BRANCH SDK", referringParams.toString());
+                    try {
+                        mReferralcode = referringParams.getString("refer_code");
+                        if (mReferralcode != null && mReferralcode.length() > 0) {
+                            referralEt.setText(mReferralcode);
+                        }
+                        Log.e("mReferralcode", "" + mReferralcode);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
         SesstionManager sesstionManager = new SesstionManager(RegisterActivity.this);
         if (sesstionManager.isUserLoggedIn()) {
             finish();
@@ -247,9 +278,12 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.new_register);
         img_lock = (ImageButton) findViewById(R.id.img_lock);
         doctorRadioButton = (RadioButton) findViewById(R.id.doctor);
+        edt_country_code = (TextView) findViewById(R.id.edt_country_code);
+        // mReferralcode = getIntent().getStringExtra("mReferralcode");
         roleSpinnerRadioGroup = (RadioGroup) findViewById(R.id.genderSpinner);
         studentRadioButton = (RadioButton) findViewById(R.id.student);
         referralEt = (EditText) findViewById(R.id.referalcode);
+
         spinnerTitle = (Spinner) findViewById(R.id.titleLay);
 
         img_lock.setOnClickListener(new View.OnClickListener() {
@@ -266,11 +300,19 @@ public class RegisterActivity extends AppCompatActivity {
                     passwordNotVisible = 1;
                 }
 
-
                 paswword.setSelection(paswword.length());
 
             }
         });
+        edt_country_code.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(RegisterActivity.this, CountryPickerExample.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         registerHeader = (TextView) findViewById(R.id.title_side);
@@ -372,9 +414,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     public class SendOtpAsyncTask extends AsyncTask<Void, Void, Void> {
         String responseBody;
-        String mobile, email, fname, lname, password, referral = null;
+        String mobile, email, fname, lname, password, referral = null, getcountrycode;
         CircularProgressBar bar;
-
+        String code;
         JSONObject jo;
         HttpClient client;
 
@@ -402,6 +444,12 @@ public class RegisterActivity extends AppCompatActivity {
             if (referralEt.getText().toString().length() > 0) {
                 referral = referralEt.getText().toString();
             }
+
+            getcountrycode = edt_country_code.getText().toString();
+            String string = getcountrycode;
+            String[] parts = string.split("\\+");
+            String part1 = parts[0]; // 004
+             code = parts[1]; // 034556
             super.onPreExecute();
         }
 
@@ -424,7 +472,8 @@ public class RegisterActivity extends AppCompatActivity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                pairs.add(new BasicNameValuePair("User[mobile]", mobile));
+
+                pairs.add(new BasicNameValuePair("User[mobile]", code +  mobile));
                 pairs.add(new BasicNameValuePair("device_token", refreshedToken));
                 pairs.add(new BasicNameValuePair("type", "android"));
                 pairs.add(new BasicNameValuePair("User[fname]", fname));
@@ -451,7 +500,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             circularProgressBar.setVisibility(View.GONE);
             try {
-
                 if (jo != null) {
                     JSONObject dataJsonObject;
 
@@ -466,7 +514,6 @@ public class RegisterActivity extends AppCompatActivity {
                             status = dataJsonObject.getBoolean("status");
 
                             if (status) {
-
                                 dataJsonObject = jo.getJSONObject("data");
                                 if (dataJsonObject.has("OTP") && !dataJsonObject.isNull("OTP")) {
                                     otp = dataJsonObject.getString("OTP");
@@ -474,6 +521,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
                                 intent.putExtra("fname", firstNameEt.getText().toString());
                                 intent.putExtra("otp", otp);
+                                intent.putExtra("select_countrycode",code);
                                 intent.putExtra("role", role);
                                 if (referralEt.getText().toString().length() > 0) {
                                     intent.putExtra("referral", referralEt.getText().toString());
@@ -514,9 +562,6 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (phoneEt.getText().toString().length() == 0) {
             Toast.makeText(RegisterActivity.this, "Enter mobile number", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!Methods.isValidPhoneNumber(phoneEt.getText().toString())) {
-            Toast.makeText(RegisterActivity.this, "Enter valid mobile number", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (emailEt.getText().toString().length() == 0) {
             Toast.makeText(RegisterActivity.this, "Enter email address", Toast.LENGTH_SHORT).show();
             return false;
@@ -527,6 +572,10 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
             return false;
         }
+        /*else if (!Methods.isValidPhoneNumber(phoneEt.getText().toString())) {
+            Toast.makeText(RegisterActivity.this, "Enter valid mobile number", Toast.LENGTH_SHORT).show();
+            return false;
+        } */
         int radioButtonID = roleSpinnerRadioGroup.getCheckedRadioButtonId();
         View radioButton = roleSpinnerRadioGroup.findViewById(radioButtonID);
         int idx = roleSpinnerRadioGroup.indexOfChild(radioButton);
@@ -718,4 +767,17 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                select_countrycode = data.getStringExtra("result");
+                if (select_countrycode != null && select_countrycode.length() > 0) {
+                    edt_country_code.setText(select_countrycode);
+                }
+            }
+
+        }
+    }
 }

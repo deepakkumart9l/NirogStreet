@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,8 +28,11 @@ import android.widget.Toast;
 
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.adapter.CommentsRecyclerAdapter;
+import com.app.nirogstreet.adapter.MyPostDetailAdapter;
 import com.app.nirogstreet.adapter.PostDetailAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
+import com.app.nirogstreet.listeners.OnItem2ClickListener;
+import com.app.nirogstreet.listeners.OnItemClickListeners;
 import com.app.nirogstreet.model.CommentsModel;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.parser.CommentsParser;
@@ -64,7 +71,7 @@ import io.branch.referral.util.LinkProperties;
  * Created by Preeti on 28-11-2017.
  */
 
-public class PostDetailActivity extends Activity {
+public class PostDetailActivity extends AppCompatActivity implements OnItem2ClickListener {
     String feedId;
     String id;
     SesstionManager sessionManager;
@@ -80,7 +87,7 @@ public class PostDetailActivity extends Activity {
     CommentsRecyclerAdapter commentsAdapter = null;
 
     ArrayList<CommentsModel> commentsModels = new ArrayList<>();
-    boolean openMain=false;
+    boolean openMain = false;
 
     private PostDetailAdapter feedsAdapter;
     RecyclerView commentsrecyclerview;
@@ -92,7 +99,7 @@ public class PostDetailActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-  /*      try {
+        try {
             Branch branch = Branch.getInstance();
 
             branch.initSession(new Branch.BranchUniversalReferralInitListener() {
@@ -107,10 +114,9 @@ public class PostDetailActivity extends Activity {
                     }
                 }
             }, this.getIntent().getData(), this);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     @Override
@@ -121,10 +127,9 @@ public class PostDetailActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-//Remove notification bar
-       // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //Remove notification bar
+        // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.post_detail);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
@@ -132,22 +137,19 @@ public class PostDetailActivity extends Activity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
-
         //  collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         sendImageView = (TextView) findViewById(R.id.commentTV);
         sendImageView.setEnabled(false);
         sendImageView.setClickable(false);
         backImageView = (ImageView) findViewById(R.id.back);
-        if(getIntent().hasExtra("openMain"))
-        {
-            openMain=getIntent().getBooleanExtra("openMain",false);
+        if (getIntent().hasExtra("openMain")) {
+            openMain = getIntent().getBooleanExtra("openMain", false);
         }
         noContentTextView = (TextView) findViewById(R.id.noContent);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(openMain)
-                {
+                if (openMain) {
                     Intent intent1 = new Intent(PostDetailActivity.this, MainActivity.class);
                     startActivity(intent1);
                     finish();
@@ -166,18 +168,13 @@ public class PostDetailActivity extends Activity {
                 } else {
                     sendImageView.setClickable(true);
                     sendImageView.setEnabled(true);
-
                 }
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
         sendImageView.setOnClickListener(new View.OnClickListener() {
@@ -185,12 +182,11 @@ public class PostDetailActivity extends Activity {
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
                     if (editText.getText() != null && editText.getText().length() > 0) {
-                        String str=editText.getText().toString();
+                        String str = editText.getText().toString();
                         editText.setText("");
-                        postCommentAsyncTask = new PostCommentAsyncTask(feedId,str);
+                        postCommentAsyncTask = new PostCommentAsyncTask(feedId, str);
                         postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
-                        Toast.makeText(PostDetailActivity.this, "write something", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     NetworkUtill.showNoInternetDialog(PostDetailActivity.this);
@@ -229,8 +225,7 @@ public class PostDetailActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(openMain)
-        {
+        if (openMain) {
             Intent intent1 = new Intent(PostDetailActivity.this, MainActivity.class);
             startActivity(intent1);
             finish();
@@ -256,10 +251,18 @@ public class PostDetailActivity extends Activity {
         super.onResume();
         if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
             postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
-            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
+            postDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ;
         } else {
             NetworkUtill.showNoInternetDialog(PostDetailActivity.this);
         }
+    }
+
+
+    @Override
+    public void onItemClick(ImageView v, ArrayList<FeedModel> feedModels, int position) {
+        Log.e("total=", "" + feedModels.size());
+        //  deleteOrEditPopup(v, feedModels);
     }
 
     public class PostDetailAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -317,12 +320,12 @@ public class PostDetailActivity extends Activity {
 
                                     }
                                 }
-
                                 recyclerView.setVisibility(View.VISIBLE);
                                 ArrayList<FeedModel> feedModels = new ArrayList<>();
                                 feedModels.addAll(FeedParser.singlePostFeed(jsonArray.getJSONObject(0)));
                                 feedsAdapter = new PostDetailAdapter(PostDetailActivity.this, feedModels, PostDetailActivity.this, "", customViewContainer, circularProgressBar);
                                 recyclerView.setAdapter(feedsAdapter);
+                                feedsAdapter.setListener(PostDetailActivity.this);
                                 if (NetworkUtill.isNetworkAvailable(PostDetailActivity.this)) {
                                     getCommentsAsynctask = new GetCommentsAsynctask(feedId);
                                     getCommentsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -433,8 +436,7 @@ public class PostDetailActivity extends Activity {
                         commentsrecyclerview.setAdapter(commentsAdapter);
                     }
                 }
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -462,7 +464,7 @@ public class PostDetailActivity extends Activity {
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
-                pairs.add(new BasicNameValuePair("post_type","1"));
+                pairs.add(new BasicNameValuePair("post_type", "1"));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
@@ -541,7 +543,7 @@ public class PostDetailActivity extends Activity {
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("feedID", feedId));
                 pairs.add(new BasicNameValuePair("message", msg));
-                pairs.add(new BasicNameValuePair("post_type","1"));
+                pairs.add(new BasicNameValuePair("post_type", "1"));
                 pairs.add(new BasicNameValuePair("show_comment", "1"));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
@@ -567,7 +569,7 @@ public class PostDetailActivity extends Activity {
                         int totalLikes = 0;
                         boolean isuserLiked = false;
                         ArrayList<CommentsModel> subComment = new ArrayList<>();
-String user_type_comment=null,title_comment=null;
+                        String user_type_comment = null, title_comment = null;
                         String commentId = null, message = null, createdOn = null, userId = null, fname = null, lname = null, slug = null, userProfile_pic = null;
                         InputMethodManager inputMethodManager =
                                 (InputMethodManager) PostDetailActivity.this.getSystemService(
@@ -606,7 +608,7 @@ String user_type_comment=null,title_comment=null;
                                 JSONArray subComments = jsonObject.getJSONArray("subcumment");
                                 for (int k = 0; k < subComments.length(); k++) {
                                     JSONObject sub_commentObject = subComments.getJSONObject(k);
-                                    String User_type=null,title=null;
+                                    String User_type = null, title = null;
                                     String userIdSubComment = "", fnameSubComment = "", lnameSubComment = "", userProfile_picSubComment = "", slugSubComment = "", subCommentmsg = "", subCommentCreatedOn = "";
                                     if (sub_commentObject.has("userdetail") && !sub_commentObject.isNull("userdetail")) {
                                         JSONObject userDetail = sub_commentObject.getJSONObject("userdetail");
@@ -626,13 +628,11 @@ String user_type_comment=null,title_comment=null;
                                             if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                                 slugSubComment = userDetail.getString("slug");
                                             }
-                                            if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
-                                            {
-                                                User_type=userDetail.getString("user_type");
+                                            if (userDetail.has("user_type") && !userDetail.isNull("user_type")) {
+                                                User_type = userDetail.getString("user_type");
                                             }
-                                            if(userDetail.has("Title")&&!userDetail.isNull("Title"))
-                                            {
-                                                title=userDetail.getString("Title");
+                                            if (userDetail.has("Title") && !userDetail.isNull("Title")) {
+                                                title = userDetail.getString("Title");
                                             }
                                         }
                                     }
@@ -642,7 +642,7 @@ String user_type_comment=null,title_comment=null;
                                     if (sub_commentObject.has("created") && !sub_commentObject.isNull("created")) {
                                         subCommentCreatedOn = sub_commentObject.getString("created");
                                     }
-                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null,User_type,title));
+                                    subComment.add(new CommentsModel(fnameSubComment, lnameSubComment, userIdSubComment, userIdSubComment, "", userProfile_picSubComment, "", subCommentCreatedOn, subCommentmsg, 0, false, null, User_type, title));
 
                                 }
                             }
@@ -652,13 +652,11 @@ String user_type_comment=null,title_comment=null;
                                     if (userDetail.has("id") && !userDetail.isNull("id")) {
                                         userId = userDetail.getString("id");
                                     }
-                                    if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
-                                    {
-                                        user_type_comment=userDetail.getString("user_type");
+                                    if (userDetail.has("user_type") && !userDetail.isNull("user_type")) {
+                                        user_type_comment = userDetail.getString("user_type");
                                     }
-                                    if(userDetail.has("Title")&&!userDetail.isNull("Title"))
-                                    {
-                                        title_comment=userDetail.getString("Title");
+                                    if (userDetail.has("Title") && !userDetail.isNull("Title")) {
+                                        title_comment = userDetail.getString("Title");
                                     }
                                     if (userDetail.has("name") && !userDetail.isNull("name")) {
                                         fname = userDetail.getString("name");
@@ -672,19 +670,17 @@ String user_type_comment=null,title_comment=null;
                                     if (userDetail.has("slug") && !userDetail.isNull("slug")) {
                                         slug = userDetail.getString("slug");
                                     }
-                                    if(userDetail.has("user_type")&&!userDetail.isNull("user_type"))
-                                    {
-                                        user_type_comment=userDetail.getString("user_type");
+                                    if (userDetail.has("user_type") && !userDetail.isNull("user_type")) {
+                                        user_type_comment = userDetail.getString("user_type");
                                     }
-                                    if(userDetail.has("Title")&&!userDetail.isNull("Title"))
-                                    {
-                                        title_comment=userDetail.getString("Title");
+                                    if (userDetail.has("Title") && !userDetail.isNull("Title")) {
+                                        title_comment = userDetail.getString("Title");
                                     }
                                 }
 
-                                commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment,user_type_comment,title_comment));
+                                commentsModels.add(new CommentsModel(fname, lname, slug, userId, commentId, userProfile_pic, "", createdOn, message, totalLikes, isuserLiked, subComment, user_type_comment, title_comment));
                                 if (commentsAdapter == null && commentsModels.size() > 0) {
-                                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true,"1");
+                                    commentsAdapter = new CommentsRecyclerAdapter(PostDetailActivity.this, commentsModels, feedId, true, "1");
                                     commentsrecyclerview.setAdapter(commentsAdapter);
                               /*  final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)
                                         collapsingToolbarLayout.getLayoutParams();
@@ -714,5 +710,19 @@ String user_type_comment=null,title_comment=null;
             }
         }
     }
+
+  /*  public void deleteOrEditPopup(View v, final ArrayList<FeedModel> feedModel) {
+        PopupMenu popup = new PopupMenu(PostDetailActivity.this, v);
+        popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
+        if (feedModel.get(0).getParentFeedDetail() != null) {
+            popup.getMenu().getItem(0).setVisible(false);
+        }
+        try {
+            popup.show();//showing popup menu
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("exception=", "" + e);
+        }
+    }*/
 }
 

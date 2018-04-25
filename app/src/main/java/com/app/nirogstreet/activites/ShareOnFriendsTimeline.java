@@ -17,6 +17,7 @@ import com.app.nirogstreet.R;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.MultipleSelectedItemModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ public class ShareOnFriendsTimeline extends Activity {
     private static final int RESULT_CODE = 1;
     private ImageView backImageView;
     LinearLayout lay;
-    boolean isPosted=false;
+    boolean isPosted = false;
     CircularProgressBar circularProgressBar;
     boolean shareOnGroup = false;
     TextView group_friends;
@@ -67,6 +68,7 @@ public class ShareOnFriendsTimeline extends Activity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+        Event_For_Firebase.getEventCount(ShareOnFriendsTimeline.this, "Feed_Post_Share_ShareCommunityButton_Screen_Visit");
         textTab = (TextView) findViewById(R.id.textTab);
         lay = (LinearLayout) findViewById(R.id.lay);
         group_friends = (TextView) findViewById(R.id.group_friends);
@@ -87,9 +89,10 @@ public class ShareOnFriendsTimeline extends Activity {
             @Override
             public void onClick(View view) {
                 if (NetworkUtill.isNetworkAvailable(ShareOnFriendsTimeline.this)) {
+                    Event_For_Firebase.getEventCount(ShareOnFriendsTimeline.this,"Feed_Post_Share_ShareCommunityButton_Screen_ShareButton_Click");
                     if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
                         if (!isPosted) {
-                            isPosted=true;
+                            isPosted = true;
                             shareOnFriendsTimeLineAsyncTask = new ShareOnFriendsTimeLineAsyncTask(userId, feedId);
                             shareOnFriendsTimeLineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         } else {
@@ -115,6 +118,7 @@ public class ShareOnFriendsTimeline extends Activity {
         lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Event_For_Firebase.getEventCount(ShareOnFriendsTimeline.this,"Feed_Post_Share_ShareCommunityButton_Screen_SelectCommunity_Click");
                 if (shareOnGroup) {
                     Intent intent = new Intent(ShareOnFriendsTimeline.this, MultipleSelectGroup.class);
                     if (multipleSelectedItemModels != null && multipleSelectedItemModels.size() > 0) {
@@ -238,7 +242,7 @@ public class ShareOnFriendsTimeline extends Activity {
             circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
-                    isPosted=false;
+                    isPosted = false;
                     if (jo.has("status") && !jo.isNull("status")) {
                         if (jo.has("responce") && !jo.isNull("responce")) {
                             JSONObject jsonObjectResponce = jo.getJSONObject("responce");

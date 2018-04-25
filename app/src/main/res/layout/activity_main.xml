@@ -86,6 +86,15 @@
                     android:src="@drawable/notofication"
                     android:visibility="gone" />
 
+                <ImageView
+                    android:id="@+id/setting_profile"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/more"
+                    android:layout_marginRight="5dp"
+                    android:visibility="gone" />
+
                 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:id="@+id/notiframe"

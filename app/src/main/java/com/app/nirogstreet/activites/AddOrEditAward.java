@@ -31,6 +31,7 @@ import com.app.nirogstreet.parser.AwardsParser;
 import com.app.nirogstreet.parser.RegistrationParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 
@@ -141,7 +142,7 @@ public class AddOrEditAward extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditAward.this)) {
-                        deleteAwardAsynctask=new DeleteAwardAsynctask(awardsModel.getId());
+                        deleteAwardAsynctask = new DeleteAwardAsynctask(awardsModel.getId());
                         deleteAwardAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } else {
                         NetworkUtill.showNoInternetDialog(AddOrEditAward.this);
@@ -170,6 +171,8 @@ public class AddOrEditAward extends AppCompatActivity {
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditAward.this)) {
                         if (validate()) {
+                            Event_For_Firebase.getEventCount(AddOrEditAward.this, "Feed_Profile_UserProfile_Award_Save_Click");
+                            Event_For_Firebase.logAppEventsLoggerEvent(AddOrEditAward.this,"Feed_Profile_UserProfile_Award_Save_Click");
                             addOrUpdateAwardsAsynctask = new AddOrUpdateAwardsAsynctask(degree_name.getText().toString(), yearEditText.getText().toString(), "");
                             addOrUpdateAwardsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
@@ -231,7 +234,6 @@ public class AddOrEditAward extends AppCompatActivity {
             final NumberPicker yearPicker = (NumberPicker) dialog.findViewById(R.id.picker_year);
 
 
-
             int year = cal.get(Calendar.YEAR);
             yearPicker.setMinValue(1917);
             yearPicker.setMaxValue(MAX_YEAR);
@@ -255,6 +257,7 @@ public class AddOrEditAward extends AppCompatActivity {
             return builder.create();
         }
     }
+
     public class DeleteAwardAsynctask extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String university, year, qualification, id;
@@ -345,8 +348,7 @@ public class AddOrEditAward extends AppCompatActivity {
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("awards") && !dataJsonObject.isNull("awards")) {
@@ -357,7 +359,7 @@ public class AddOrEditAward extends AppCompatActivity {
                                     userDetailModel.setAwardsModels(awardsModels);
                                     ApplicationSingleton.setUserDetailModel(userDetailModel);
                                     ApplicationSingleton.setIsAwardUpdated(true);
-                                }else {
+                                } else {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
                                     ArrayList<AwardsModel> awardsModels = null;
@@ -487,8 +489,7 @@ public class AddOrEditAward extends AppCompatActivity {
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("awards") && !dataJsonObject.isNull("awards")) {

@@ -44,6 +44,7 @@ import com.app.nirogstreet.model.Course_Detail_model;
 import com.app.nirogstreet.parser.Course_Detail_Parser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -189,6 +190,7 @@ public class Knowledge_Centre_Detail extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.knwoledge_detail);
+        Event_For_Firebase.getEventCount(Knowledge_Centre_Detail.this,"Feed_Learning_Screen_AllCourses_Course_Screen_Visit");
         title_side_Tv = (TextView) findViewById(R.id.title_side);
         dr_name_TV = (TextView) findViewById(R.id.dr_name);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -248,7 +250,9 @@ public class Knowledge_Centre_Detail extends Activity {
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (NetworkUtill.isNetworkAvailable(Knowledge_Centre_Detail.this)) {
+                    Event_For_Firebase.getEventCount(Knowledge_Centre_Detail.this,"Feed_Learning_Screen_AllCourses_Course_Screen_EnrollButton_Click");
                     acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask();
                     acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {

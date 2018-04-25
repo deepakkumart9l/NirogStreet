@@ -52,6 +52,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
@@ -152,7 +153,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
                 backimg.setVisibility(View.VISIBLE);
                 logOutHideGone();
 
-                if(nameTv.getText().toString().length()!=0) {
+                if (nameTv.getText().toString().length() != 0) {
                     textviewTitle.setText(nameTv.getText().toString());
                 }
             }
@@ -179,7 +180,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         } else {
 
             if (!mIsTheTitleContainerVisible) {
-                if(nameTv.getText().toString().length()!=0) {
+                if (nameTv.getText().toString().length() != 0) {
                     textviewTitle.setText(nameTv.getText().toString());
                 }
                 backimg.setVisibility(View.VISIBLE);
@@ -215,6 +216,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_detail);
+        Event_For_Firebase.getEventCount(Dr_Profile.this, "Feed_Profile_UserProfile_Visit");
         findViews();
 
         toolbar.setTitle("");
@@ -228,7 +230,7 @@ public class Dr_Profile extends AppCompatActivity implements AppBarLayout.OnOffs
         try {
             phonelay = (RelativeLayout) findViewById(R.id.phonelay);
             emaillay = (RelativeLayout) findViewById(R.id.emaillay);
-refer_pointTV=(TextView)findViewById(R.id.refer_point);
+            refer_pointTV = (TextView) findViewById(R.id.refer_point);
             backimg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -372,7 +374,9 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setMoreMenu(0);
+                 setMoreMenu(0);
+                /*Intent intent = new Intent(Dr_Profile.this, Setting_Activity.class);
+                startActivity(intent);*/
             }
         });
         profile_complete_txt = (TextView) findViewById(R.id.profile_complete_txt);
@@ -695,6 +699,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                                 editInfo.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Event_For_Firebase.getEventCount(Dr_Profile.this, "Feed_Profile_UserProfile_PersonalDetails_Click");
                                         Intent intent = new Intent(Dr_Profile.this, CreateDrProfile.class);
                                         intent.putExtra("userModel", (Serializable) userDetailModel);
                                         startActivity(intent);
@@ -703,6 +708,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                                 QualificationSectionEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Event_For_Firebase.getEventCount(Dr_Profile.this, "Feed_Profile_UserProfile_Qualification_Click");
                                         Intent intent = new Intent(Dr_Profile.this, Dr_Qualifications.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
@@ -719,6 +725,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                                 ExperinceEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Event_For_Firebase.getEventCount(Dr_Profile.this, "Feed_Profile_UserProfile_Experiance_Click");
                                         Intent intent = new Intent(Dr_Profile.this, Experience.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
@@ -727,6 +734,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                                 MemberShipEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Event_For_Firebase.getEventCount(Dr_Profile.this, "Feed_Profile_UserProfile_Membership_Click");
                                         Intent intent = new Intent(Dr_Profile.this, MemberShip.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
@@ -735,6 +743,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                                 AwardEdit.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Event_For_Firebase.getEventCount(Dr_Profile.this, "Feed_Profile_UserProfile_Award_Click");
                                         Intent intent = new Intent(Dr_Profile.this, Award.class);
                                         intent.putExtra("userModel", userDetailModel);
                                         startActivity(intent);
@@ -840,8 +849,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                 SpecilizationsevicesTextView.setText("Services & Specialization");
 
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -889,7 +897,7 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
             } else {
                 experinceLay.removeAllViews();
 
-                    ExperienceSectionTv.setText("Experience");
+                ExperienceSectionTv.setText("Experience");
                 ExperinceEdit.setImageDrawable(getResources().getDrawable(R.drawable.edit));
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -1125,9 +1133,9 @@ refer_pointTV=(TextView)findViewById(R.id.refer_point);
                 webSite_icon.setVisibility(View.GONE);
             }
             if (UserId.equalsIgnoreCase("")) {
-              //  refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
+                //  refer_pointTV.setText("Refer Points - "+userDetailModel.getReferPoints());
             }
-                if (UserId.equalsIgnoreCase("")) {
+            if (UserId.equalsIgnoreCase("")) {
 
                 if (userDetailModel.getDob() != null && !userDetailModel.getDob().equalsIgnoreCase("")) {
                     yearOfBirthTv.setText(userDetailModel.getDob());

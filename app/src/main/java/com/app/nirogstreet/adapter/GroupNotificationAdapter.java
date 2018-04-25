@@ -1,6 +1,7 @@
 package com.app.nirogstreet.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
     Context context;
     SesstionManager sessionManager;
     String userId;
+    String status;
     String authToken;
 
     public GroupNotificationAdapter(Context context, ArrayList<GroupNotificationModel> notificationModels, String authToken) {
@@ -177,6 +179,16 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                             JSONObject jsonObject = jsonObjectresponse.getJSONObject("message");
                             if (jsonObject.has("message") && !jsonObject.isNull("message")) {
                                 Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                if (jsonObject.has("status") && !jsonObject.isNull("status"))
+                                    status = jsonObject.getString("status");
+
+                                if (status != null && status.length() > 0) {
+                                    SharedPreferences sharedPref1 = context.getApplicationContext().getSharedPreferences("InvitationACCept", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor1 = sharedPref1.edit();
+                                    editor1.putString("InvitationACCept", status);
+                                    editor1.commit();
+                                }
                              /*   groupModels.remove(pos);
                                 notifyItemRemoved(pos);
                                 notifyItemRangeChanged(pos, groupModels.size());*/
@@ -216,7 +228,7 @@ public class GroupNotificationAdapter extends RecyclerView.Adapter<RecyclerView.
                 pairs.add(new BasicNameValuePair("userID", userId));
                 pairs.add(new BasicNameValuePair("groupID", groupId));
                 pairs.add(new BasicNameValuePair("status", status1 + ""));
-                pairs.add(new BasicNameValuePair("added_by",sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
+                pairs.add(new BasicNameValuePair("added_by", sessionManager.getUserDetails().get(SesstionManager.USER_ID)));
                 pairs.add(new BasicNameValuePair("addedType", addedType + ""));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 

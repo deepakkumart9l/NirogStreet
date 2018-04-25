@@ -16,14 +16,14 @@ import com.app.nirogstreet.R;
 
 public class BharmTool_Cat extends AppCompatActivity implements View.OnClickListener {
 
-    LinearLayout mSwanbhoota_layout, mDisease_layout;
+    LinearLayout mSwanbhoota_layout, mDisease_layout, herbal_layout, classical_layout;
     ImageView backImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bharmtool_cat);
-        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +34,10 @@ public class BharmTool_Cat extends AppCompatActivity implements View.OnClickList
         mSwanbhoota_layout.setOnClickListener(this);
         mDisease_layout = (LinearLayout) findViewById(R.id.disease_layout);
         mDisease_layout.setOnClickListener(this);
+        herbal_layout = (LinearLayout) findViewById(R.id.herbal_layout);
+        herbal_layout.setOnClickListener(this);
+        classical_layout = (LinearLayout) findViewById(R.id.classical_layout);
+        classical_layout.setOnClickListener(this);
     }
 
     @Override
@@ -46,6 +50,15 @@ public class BharmTool_Cat extends AppCompatActivity implements View.OnClickList
             case R.id.disease_layout:
                 Intent diseas = new Intent(BharmTool_Cat.this, Disease_Cat.class);
                 startActivity(diseas);
+                break;
+            case R.id.herbal_layout:
+                Intent herbal = new Intent(BharmTool_Cat.this, Herbal_Section.class);
+                startActivity(herbal);
+                break;
+            case R.id.classical_layout:
+                Intent herba2 = new Intent(BharmTool_Cat.this, Herbal_Section.class);
+                herba2.putExtra("classical",3);
+                startActivity(herba2);
                 break;
         }
     }

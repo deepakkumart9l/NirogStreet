@@ -18,6 +18,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.MemberShipModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -44,6 +45,7 @@ public class MemberShip extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.member_list);
+        Event_For_Firebase.getEventCount(MemberShip.this,"Feed_Profile_UserProfile_Membership_Visit");
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
@@ -85,6 +87,7 @@ public class MemberShip extends Activity {
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event_For_Firebase.getEventCount(MemberShip.this,"Feed_Profile_UserProfile_Membership_Add_Click");
                 Intent intent = new Intent(MemberShip.this, AddOrEditMemberShip.class);
                 startActivity(intent);
             }

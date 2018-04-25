@@ -1,6 +1,8 @@
 package com.app.nirogstreet.activites;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +24,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.NotificationModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -69,12 +72,15 @@ public class NotificationListing extends AppCompatActivity {
     Notification_Adapter adapter;
     TextView info, info1;
     CardView first, second;
+    String authToken;
     private int page = 1;
+    String InvitationACCept;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.noti_list_one);
+        Event_For_Firebase.getEventCount(NotificationListing.this, "Feed_NotificationButton_Visit");
         notificationModelstotal = new ArrayList<>();
         notificationModelstotal.add(new NotificationModel("", "", "", "", "", "", "", "", "", "", "", -1, "", "", "", ""));
         no_notifications = (LinearLayout) findViewById(R.id.no_list);
@@ -105,7 +111,7 @@ public class NotificationListing extends AppCompatActivity {
         });
         sessionManager = new SesstionManager(NotificationListing.this);
         HashMap<String, String> user = sessionManager.getUserDetails();
-        String authToken = user.get(SesstionManager.AUTH_TOKEN);
+        authToken = user.get(SesstionManager.AUTH_TOKEN);
         userId = user.get(SesstionManager.USER_ID);
         if (NetworkUtill.isNetworkAvailable(NotificationListing.this)) {
             notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
@@ -355,9 +361,28 @@ public class NotificationListing extends AppCompatActivity {
         }
         if (ApplicationSingleton.getInvitationRequestCount() != -1 && ApplicationSingleton.getInvitationRequestCount() > 0) {
             adapter = new Notification_Adapter(NotificationListing.this, notificationModelstotal, sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), groupRquest, ApplicationSingleton.getInvitationRequestCount());
-            rv.setAdapter(adapter);        } else {
+            rv.setAdapter(adapter);
+        } else {
             second.setVisibility(View.GONE);
         }
+
+        SharedPreferences sharedPref = getSharedPreferences("InvitationACCept", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        InvitationACCept = sharedPref.getString("InvitationACCept", "");
+        if (InvitationACCept != null && InvitationACCept.length() > 0) {
+            if (Integer.parseInt(InvitationACCept) == 1 || Integer.parseInt(InvitationACCept) == 2) {
+                if (NetworkUtill.isNetworkAvailable(NotificationListing.this)) {
+                    notificationAsyncTask = new NotificationAsyncTask(userId, authToken);
+                    notificationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    NetworkUtill.showNoInternetDialog(NotificationListing.this);
+                }
+                editor.remove("InvitationACCept");
+                editor.commit();
+            }
+        }
+
+
     }
 
     @Override

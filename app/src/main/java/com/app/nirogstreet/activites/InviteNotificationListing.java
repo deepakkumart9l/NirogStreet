@@ -55,7 +55,7 @@ public class InviteNotificationListing extends Activity {
 
     CircularProgressBar circularProgressBar;
     TextView searchButtonTextView;
-     InvitationNotificationAdapter adapter;
+    InvitationNotificationAdapter adapter;
     NotificationAsyncTask notificationAsyncTask;
     private boolean isLoading = false;
 
@@ -213,7 +213,7 @@ public class InviteNotificationListing extends Activity {
                 isLoading = false;
 
                 if (notificationModelsTotal != null && notificationModelsTotal.size() > 0) {
-                 adapter  = new InvitationNotificationAdapter(InviteNotificationListing.this, notificationModelsTotal, authToken);
+                    adapter = new InvitationNotificationAdapter(InviteNotificationListing.this, notificationModelsTotal, authToken);
                     rv.setAdapter(adapter);
                     rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

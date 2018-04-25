@@ -14,7 +14,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="#fff"
-        android:text="A new version NirogStreet is available please update."
+        android:text="A new version of NirogStreet is available please update."
         android:paddingTop="10dp"
         android:paddingRight="20dp"
 

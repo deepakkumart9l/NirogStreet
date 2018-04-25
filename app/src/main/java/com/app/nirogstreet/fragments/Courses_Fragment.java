@@ -252,7 +252,7 @@ public class Courses_Fragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        DividerItemDecoration      mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+        DividerItemDecoration   mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
         linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 

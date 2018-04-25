@@ -30,9 +30,9 @@
                 android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/lay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/lay"
                 android:layout_below="@+id/xxx"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
@@ -112,26 +112,53 @@
                     android:textColor="#000"
                     android:textSize="13sp" />
 
-                <EditText
-                    android:id="@+id/phoneEt"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/round_edittext"
-                    android:cursorVisible="true"
-                    android:hint="Mobile Number"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLength="10"
-                    android:padding="13dp"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true"
-                    android:text=""
-                    android:textColor="#000"
-                    android:textColorHint="#9d9d9d"
-                    android:textCursorDrawable="@drawable/blackpipe"
-                    android:textSize="14sp"
-                    android:textStyle="normal" />
+                    android:background="@drawable/round_edittext">
+
+                    <TextView
+                        android:id="@+id/edt_country_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:cursorVisible="false"
+                        android:gravity="center"
+                        android:padding="13dp"
+                        android:text="+91"
+                        android:textSize="14dp" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-5dp"
+                        android:background="#d9d9d9" />
+
+                    <EditText
+                        android:id="@+id/phoneEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:layout_marginTop="5dp"
+                        android:background="@null"
+
+                        android:cursorVisible="true"
+                        android:hint="Mobile Number"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:padding="13dp"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="#000"
+                        android:textColorHint="#9d9d9d"
+                        android:textCursorDrawable="@drawable/blackpipe"
+                        android:textSize="14sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
 
                 <View
                     android:id="@+id/textView3"
@@ -157,10 +184,13 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/round_edittext"
                     android:cursorVisible="true"
+
                     android:hint="Email id"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
-                    android:padding="13dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
                     android:text=""
@@ -195,7 +225,10 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/round_edittext"
                     android:orientation="horizontal"
-                    android:padding="13dp">
+                    android:paddingTop="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="10dp">
 
                     <EditText
                         android:id="@+id/passEt"
@@ -250,7 +283,9 @@
                     android:imeOptions="actionNext"
                     android:inputType="textCapWords|textCapSentences"
 
-                    android:padding="13dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
                     android:text=""
@@ -342,7 +377,6 @@
                 </RelativeLayout>
 
 
-
                 <!-- <ImageButton
                 android:id="@+id/imgbtnLoginFacebook"
                 android:layout_width="match_parent"
@@ -354,12 +388,13 @@
                 android:src="@drawable/fb" />-->
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/signIn"
-                android:layout_below="@+id/lay"
                 android:layout_width="match_parent"
-                android:layout_centerInParent="true"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/lay"
+                android:layout_centerInParent="true"
                 android:layout_marginBottom="50dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"

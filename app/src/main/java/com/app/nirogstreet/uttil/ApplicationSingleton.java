@@ -2,15 +2,27 @@ package com.app.nirogstreet.uttil;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.multidex.MultiDex;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.app.nirogstreet.BuildConfig;
+import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.model.Course_Detail_model;
 import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.model.UserDetailModel;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 /**
  * Created by Preeti on 12-09-2017.
@@ -20,13 +32,13 @@ public class ApplicationSingleton extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Branch.enableLogging();
+       // Branch.enableLogging();
 
         // Branch object initialization
         Branch.getAutoInstance(this);
-
-
-          FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
+        AppEventsLogger.activateApp(this);
 
     }
 
@@ -44,7 +56,8 @@ public class ApplicationSingleton extends Application {
         ApplicationSingleton.isDocOpen = isDocOpen;
     }
 
-    public static boolean isDocOpen=false;
+    public static boolean isDocOpen = false;
+
     public static boolean isGroupUpdated() {
         return isGroupUpdated;
     }
@@ -119,6 +132,7 @@ public class ApplicationSingleton extends Application {
     public static void setGroupRequestCount(int groupRequestCount) {
         ApplicationSingleton.groupRequestCount = groupRequestCount;
     }
+
     public static int getInvitationRequestCount() {
         return invitationRequestCount;
     }
@@ -127,8 +141,9 @@ public class ApplicationSingleton extends Application {
         ApplicationSingleton.invitationRequestCount = invitationRequestCount;
     }
 
-    public static int invitationRequestCount=-1;
-    public static int groupRequestCount=-1;
+    public static int invitationRequestCount = -1;
+    public static int groupRequestCount = -1;
+
     public static int getPostEditPosition() {
         return postEditPosition;
     }
@@ -176,7 +191,6 @@ public class ApplicationSingleton extends Application {
     public static void setCurruntUserLiked(boolean curruntUserLiked) {
         ApplicationSingleton.curruntUserLiked = curruntUserLiked;
     }
-
     public static boolean curruntUserLiked = false;
     public static int totalLike = -1;
 

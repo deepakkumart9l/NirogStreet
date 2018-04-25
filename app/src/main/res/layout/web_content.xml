@@ -32,15 +32,15 @@
                 android:id="@+id/title_side_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
                 android:layout_toRightOf="@id/back"
                 android:paddingBottom="@dimen/padding_10"
-                android:paddingRight="18dp"
                 android:paddingLeft="7dp"
-                android:layout_marginRight="40dp"
+                android:paddingRight="18dp"
                 android:paddingTop="@dimen/padding_15"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/white"
-android:singleLine="true"
                 android:textSize="16sp" />
 
             <TextView
@@ -48,31 +48,34 @@ android:singleLine="true"
                 android:id="@+id/title_side"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+
                 android:layout_centerVertical="true"
+
                 android:layout_marginLeft="30dp"
-
                 android:gravity="left"
-
+                android:maxLines="1"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="18dp"
                 android:paddingRight="@dimen/padding_10"
-                android:maxLines="1"
-                android:singleLine="true"
                 android:paddingTop="@dimen/padding_10"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
-<ImageView
-    android:layout_width="30dp"
-    android:src="@drawable/dw"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="10dp"
-    android:padding="4dp"
-    android:layout_marginTop="10dp"
-    android:layout_centerHorizontal="true"
-    android:id="@+id/download"
-    android:layout_height="30dp" />
+
+            <ImageView
+                android:id="@+id/download"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:src="@drawable/dw"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -82,6 +85,7 @@ android:singleLine="true"
         android:id="@+id/web"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1.0"
         android:layout_below="@+id/header"></WebView>
 
     <com.app.nirogstreet.circularprogressbar.CircularProgressBar

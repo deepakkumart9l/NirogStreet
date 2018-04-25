@@ -181,12 +181,10 @@ public class GroupNotificationListing extends Activity {
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                 pairs.add(new BasicNameValuePair("userID", userId));
-pairs.add(new BasicNameValuePair("pageNo",page+""));
+                pairs.add(new BasicNameValuePair("pageNo", page + ""));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 httppost.setHeader("Authorization", "Basic " + authToken);
-
                 response = client.execute(httppost);
-
                 responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
                 jo = new JSONObject(responseBody);
 
@@ -207,8 +205,8 @@ pairs.add(new BasicNameValuePair("pageNo",page+""));
 
                 if (jo != null) {
 
-                    if(jo.has("response")&&!jo.isNull("response")) {
-                        JSONObject jsonObject=jo.getJSONObject("response");
+                    if (jo.has("response") && !jo.isNull("response")) {
+                        JSONObject jsonObject = jo.getJSONObject("response");
                         if (jsonObject.has("totalpage") && !jsonObject.isNull("totalpage")) {
                             totalPageCount = jsonObject.getInt("totalpage");
                         }

@@ -45,6 +45,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
@@ -112,7 +113,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     String title, category, gender;
     EditText editTextDob, editTextemail, editTextName, editTextCity, editTextYearOfExpeicence, editTextWebsite, editTextAbout, editTextContactNumber;
     File photoFile;
-    private static final String[] titleArray = {"Dr.", "Mr.", "Mrs.","Ms."};
+    private static final String[] titleArray = {"Dr.", "Mr.", "Ms."};
     private static final String[] genderArray = {"Male", "Female"};
     private static final String[] categoryArray = {"Ayurveda", "Naturopathy"};
     boolean isSkip = false;
@@ -149,6 +150,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.create_dr_profile);
+        Event_For_Firebase.getEventCount(CreateDrProfile.this, "Feed_Profile_UserProfile_PersonalDetails_Visit");
         if (getIntent().hasExtra("isSkip")) {
             isSkip = getIntent().getBooleanExtra("isSkip", false);
         }
@@ -222,7 +224,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
                 if (NetworkUtill.isNetworkAvailable(CreateDrProfile.this)) {
                     if (validate()) {
-
+                        Event_For_Firebase.getEventCount(CreateDrProfile.this, "Feed_Profile_UserProfile_PersonalDetails_Save_Click");
                         updateProfileAsyncTask = new UpdateProfileAsyncTask(editTextName.getText().toString(), editTextemail.getText().toString(), editTextContactNumber.getText().toString(), title, category, editTextCity.getText().toString(), gender, editTextYearOfExpeicence.getText().toString(), editTextDob.getText().toString(), editTextWebsite.getText().toString(), editTextAbout.getText().toString());
                         updateProfileAsyncTask.execute();
                     }
@@ -556,7 +558,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 circleImageView.setImageBitmap(selectedImage);
-                if(selectedImage!=null) {
+                if (selectedImage != null) {
                     Uri selectedImagePath1 = getImageUri(CreateDrProfile.this, selectedImage);
                     selectedImagePath = getPath(selectedImagePath1, CreateDrProfile.this);
                 }
@@ -631,7 +633,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != -1) {
                     title = position + 1 + "";
-                    if (position == 0||position==1) {
+                    if (position == 0 || position == 1) {
                         maleRadioButton.setChecked(true);
                     } else {
                         femaleRadioButton.setChecked(true);
@@ -718,7 +720,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
         protected void onPreExecute() {
             circularProgressBar.setVisibility(View.VISIBLE);
             try {
-                fname= URLEncoder.encode(fname.toString(), "UTF-8");
+                fname = URLEncoder.encode(fname.toString(), "UTF-8");
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -848,7 +850,7 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
 
                                     }
                                     sesstionManager.updateProfile(ApplicationSingleton.getUserDetailModel().getProfile_pic());
-                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(), "", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE), sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE),ApplicationSingleton.getUserDetailModel().getTitle());
+                                    sesstionManager.createUserLoginSession(ApplicationSingleton.getUserDetailModel().getName(), "", userDetailModel.getEmail(), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), userDetailModel.getMobile(), "", sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE), sesstionManager.getUserDetails().get(SesstionManager.REFERRAL_CODE), ApplicationSingleton.getUserDetailModel().getTitle());
 
                                     if (userJsonObject.has("category") && !userJsonObject.isNull("category")) {
                                         ApplicationSingleton.getUserDetailModel().setCategory(userJsonObject.getString("category"));
@@ -1037,9 +1039,9 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
                                         } else if (userDetailModel.getTitle().equalsIgnoreCase("2")) {
                                             spinnerTitle.setSelection(1);
 
-                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("3")){
+                                        } else if (userDetailModel.getTitle().equalsIgnoreCase("3")) {
                                             spinnerTitle.setSelection(2);
-                                        }else {
+                                        } else {
                                             spinnerTitle.setSelection(3);
 
                                         }
@@ -1065,51 +1067,51 @@ public class CreateDrProfile extends AppCompatActivity implements DatePickerDial
     }
 
     public boolean validate() {
-        try{
-        if (title.equalsIgnoreCase("-1")) {
-            Toast.makeText(CreateDrProfile.this, R.string.seletct_title, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        int radioButtonID = genderSpinnerRadioGroup.getCheckedRadioButtonId();
-        View radioButton = genderSpinnerRadioGroup.findViewById(radioButtonID);
-        int idx = genderSpinnerRadioGroup.indexOfChild(radioButton);
-        if (idx == -1) {
-            Toast.makeText(CreateDrProfile.this, R.string.select_gender, Toast.LENGTH_SHORT).show();
+        try {
+            if (title.equalsIgnoreCase("-1")) {
+                Toast.makeText(CreateDrProfile.this, R.string.seletct_title, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            int radioButtonID = genderSpinnerRadioGroup.getCheckedRadioButtonId();
+            View radioButton = genderSpinnerRadioGroup.findViewById(radioButtonID);
+            int idx = genderSpinnerRadioGroup.indexOfChild(radioButton);
+            if (idx == -1) {
+                Toast.makeText(CreateDrProfile.this, R.string.select_gender, Toast.LENGTH_SHORT).show();
 
-            return false;
-        } else {
-            gender = idx + 1 + "";
-        }
-        if (category.equalsIgnoreCase("-1")) {
-            Toast.makeText(CreateDrProfile.this, R.string.select_category, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (editTextCity.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, R.string.enter_City, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
-            if ( editTextYearOfExpeicence.getText().toString().length() == 0) {
-                Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                gender = idx + 1 + "";
+            }
+            if (category.equalsIgnoreCase("-1")) {
+                Toast.makeText(CreateDrProfile.this, R.string.select_category, Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (editTextYearOfExpeicence.getText().length()>0&&Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
-                Toast.makeText(CreateDrProfile.this, "Experience cannot be greater than 100", Toast.LENGTH_SHORT).show();
+            if (editTextCity.getText().toString().length() == 0) {
+                Toast.makeText(CreateDrProfile.this, R.string.enter_City, Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }
+            if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
+                if (editTextYearOfExpeicence.getText().toString().length() == 0) {
+                    Toast.makeText(CreateDrProfile.this, R.string.Experience, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (editTextYearOfExpeicence.getText().length() > 0 && Integer.parseInt(editTextYearOfExpeicence.getText().toString()) > 100) {
+                    Toast.makeText(CreateDrProfile.this, "Experience cannot be greater than 100", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
 
-        if (editTextAbout.getText().toString().length() == 0) {
-            Toast.makeText(CreateDrProfile.this, R.string.About_you, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (editTextWebsite.getText().length() != 0) {
-            if (!Methods.validWebUrl(editTextWebsite.getText().toString())) {
-                Toast.makeText(CreateDrProfile.this, R.string.blog, Toast.LENGTH_SHORT).show();
+            if (editTextAbout.getText().toString().length() == 0) {
+                Toast.makeText(CreateDrProfile.this, R.string.About_you, Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }}catch (Exception e)
-        {
+            if (editTextWebsite.getText().length() != 0) {
+                if (!Methods.validWebUrl(editTextWebsite.getText().toString())) {
+                    Toast.makeText(CreateDrProfile.this, R.string.blog, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        } catch (Exception e) {
 
             e.printStackTrace();
         }

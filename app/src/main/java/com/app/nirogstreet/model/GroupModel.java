@@ -102,6 +102,7 @@ public class GroupModel {
     }
 
     String groupId,groupName,groupDescription,totalMembers,privacy,groupBanner;
+    int user_invitation;
     UserDetailModel createdByUser;
 
     public String getStatusdata() {
@@ -112,9 +113,20 @@ public class GroupModel {
         this.statusdata = statusdata;
     }
 
+
+    public int getUser_invitation() {
+        return user_invitation;
+    }
+
+    public void setUser_invitation(int user_invitation) {
+        this.user_invitation = user_invitation;
+    }
+
     String statusdata;
     String created,updated,status,updatedBy;
-    public GroupModel(String groupId, String created, String groupName, String groupDescription, String totalMembers, String privacy, String groupBanner, UserDetailModel createdByUser, String updated, String status, String updatedBy,boolean joinShow,String statusdata) {
+    public GroupModel(String groupId, String created, String groupName, String groupDescription, String totalMembers, String privacy, String groupBanner, UserDetailModel createdByUser,
+                      String updated, String status, String updatedBy,
+                      boolean joinShow,String statusdata,int user_invitation) {
         this.groupId = groupId;
         this.created = created;
         this.groupName = groupName;
@@ -128,6 +140,7 @@ public class GroupModel {
         this.updated = updated;
         this.status = status;
         this.updatedBy = updatedBy;
+        this.user_invitation=user_invitation;
     }
 
 

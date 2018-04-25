@@ -1,6 +1,7 @@
 package com.app.nirogstreet.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
     SesstionManager sessionManager;
     String userId;
     String authToken;
+    String status;
 
     public InvitationNotificationAdapter(Context context, ArrayList<GroupNotificationModel> notificationModels, String authToken) {
         this.context = context;
@@ -92,7 +94,7 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                   AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position,6);
+                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 2, position, 6);
                     acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -103,7 +105,7 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
             @Override
             public void onClick(View v) {
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position,5);
+                    AcceptDeclineJoinAsyncTask acceptDeclineJoinAsyncTask = new AcceptDeclineJoinAsyncTask(groupNotificationModel.getCommunityId(), groupNotificationModel.getUserId(), sessionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN), 1, position, 5);
                     acceptDeclineJoinAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -145,12 +147,12 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
         int addedType;
         private String responseBody;
 
-        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos,int addedType) {
+        public AcceptDeclineJoinAsyncTask(String groupId, String userId, String authToken, int status, int pos, int addedType) {
             this.groupId = groupId;
             this.status1 = status;
             this.authToken = authToken;
             this.pos = pos;
-            this.addedType=addedType;
+            this.addedType = addedType;
             this.userId = userId;
         }
 
@@ -175,13 +177,22 @@ public class InvitationNotificationAdapter extends RecyclerView.Adapter<Recycler
                             JSONObject jsonObject = jsonObjectresponse.getJSONObject("message");
                             if (jsonObject.has("message") && !jsonObject.isNull("message")) {
                                 Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                if (jsonObject.has("status") && !jsonObject.isNull("status"))
+                                     status = jsonObject.getString("status");
+
+                                if (status != null && status.length() > 0) {
+                                    SharedPreferences sharedPref1 = context.getApplicationContext().getSharedPreferences("InvitationACCept", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor1 = sharedPref1.edit();
+                                    editor1.putString("InvitationACCept", status);
+                                    editor1.commit();
+                                }
                              /*   groupModels.remove(pos);
                                 notifyItemRemoved(pos);
                                 notifyItemRangeChanged(pos, groupModels.size());*/
                                 notificationModels.remove(pos);
                                 notifyItemRemoved(pos);
                                 notifyItemRangeChanged(pos, notificationModels.size());
-
                                 ApplicationSingleton.setInvitationRequestCount(notificationModels.size());
 
                             }

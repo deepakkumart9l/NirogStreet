@@ -185,7 +185,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
                         .into(holder.subcommentimg);
                 // imageLoader.DisplayImage(context, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getProfile_pic_url(), holder.subcommentimg, null, 150, 150, R.drawable.profile_default);
                 holder.subcommnt.setText(rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment());
-                Methods.hyperlink(holder.subcommnt, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment(), context, 0);
+                Methods.hyperlink(holder.subcommnt, rowItem.getCommentsModels().get(rowItem.getCommentsModels().size() - 1).getComment(), context, 0,0);
 
                 if (commentsModels.get(position).getCommentsModels().size() > 1) {
                     holder.numberOfReplies.setVisibility(View.VISIBLE);
@@ -249,7 +249,7 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
             holder.time.setText(rowItem.getTimeStamp());
             holder.totalLike.setText(commentsModels.get(position).getTotalLikes() + "");
             holder.message.setText(rowItem.getComment());
-            Methods.hyperlink(holder.message, rowItem.getComment(), context, 0);
+            Methods.hyperlink(holder.message, rowItem.getComment(), context, 0,0);
             // imageLoader.DisplayImage(context, rowItem.getProfile_pic_url(), holder.imageView, null, 150, 150, R.drawable.profile_default);
             holder.subComment.setOnClickListener(new View.OnClickListener() {
                 @Override

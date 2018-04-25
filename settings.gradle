@@ -1,1 +1,1 @@
-include ':app',':library',':hashtag-helper',':ShortcutBadger'
+include ':app',':library',':hashtag-helper',':ShortcutBadger',':HtmlTextView'

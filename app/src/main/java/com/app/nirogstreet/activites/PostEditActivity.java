@@ -150,22 +150,23 @@ public class PostEditActivity extends Activity implements HashTagHelper.OnHashTa
     PostAsyncTask postAsyncTask;
     String docpath;
     RelativeLayout imageButton;
-LinearLayout video_image;
+    LinearLayout video_image;
 
     ImageView imageViewSelected;
     private AskQuestionForumImagesAdapter askQuestionForumImagesAdapter;
     private HashTagHelper mEditTextHashTagHelper;
     TextView dr_nameTextView, publicTextView;
     ImageView backImageView, cancelImageView;
-    RelativeLayout  pdfBuuton;
+    RelativeLayout pdfBuuton;
 
     // MyScrollView myScrollView;
     TextView textViewpost;
     TextView descriptionTextView, titleTextView;
-    EditText editTextMessage;
+    EditText editTextMessage, edt_title;
     CheckBox checkBox;
     private boolean albumupdate = false;
     TextView docName;
+    String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +180,9 @@ LinearLayout video_image;
 
         if (getIntent().hasExtra("feedId")) {
             feedId = getIntent().getStringExtra("feedId");
+        }
+        if (getIntent().hasExtra("title")) {
+            title = getIntent().getStringExtra("title");
         }
         if (getIntent().hasExtra("position")) {
             position = getIntent().getIntExtra("position", -1);
@@ -197,14 +201,17 @@ LinearLayout video_image;
         });*/
 
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
-
+        edt_title = (EditText) findViewById(R.id.edt_title);
+        if (title != null && title.length() > 0) {
+            edt_title.setText(title);
+        }
         editTextMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (v.getId() == R.id.editTextMessage) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
 
-                   // myScrollView.setScrolling(false);
+                    // myScrollView.setScrolling(false);
                     return false;
 
                     // v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -248,7 +255,7 @@ LinearLayout video_image;
         imagelay.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-               // myScrollView.setScrolling(true);
+                // myScrollView.setScrolling(true);
                 return false;
             }
         });
@@ -314,7 +321,7 @@ LinearLayout video_image;
                         System.out.print(strarr[i]);
                         if (Patterns.WEB_URL.matcher(strarr[i]).matches()) {
                             // Log.e("URL=", "" + Patterns.WEB_URL.matcher(sampleUrl).matches());
-                            if (selectedVideoPath == null && selectedImagePath == null&&strings.size()>0) {
+                            if (selectedVideoPath == null && selectedImagePath == null && strings.size() == 0) {
                                 linkPostAsynctask = new LinkPostAsynctask(strarr[i], sesstionManager.getUserDetails().get(SesstionManager.USER_ID), sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN));
                                 linkPostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
@@ -422,8 +429,8 @@ LinearLayout video_image;
             public void onClick(View v) {
                 imageViewSelected.setVisibility(View.GONE);
                 cancel1.setVisibility(View.GONE);
-                selectedVideoPath=null;
-                docpath=null;
+                selectedVideoPath = null;
+                docpath = null;
                 isVideoClicked = false;
                 isPdfClicked = false;
                 isImageClicked = true;
@@ -433,8 +440,8 @@ LinearLayout video_image;
         video_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                strings=new ArrayList<String>();
-                askQuestionForumImagesAdapter=null;
+                strings = new ArrayList<String>();
+                askQuestionForumImagesAdapter = null;
                 recyclerView.setVisibility(View.GONE);
                 isVideoClicked = true;
                 isImageClicked = false;
@@ -445,8 +452,8 @@ LinearLayout video_image;
         pdfBuuton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                strings=new ArrayList<String>();
-                askQuestionForumImagesAdapter=null;
+                strings = new ArrayList<String>();
+                askQuestionForumImagesAdapter = null;
                 recyclerView.setVisibility(View.GONE);
                 isVideoClicked = false;
                 isImageClicked = false;
@@ -458,15 +465,15 @@ LinearLayout video_image;
             @Override
             public void onClick(View view) {
                 checkPermission();
-              //  myScrollView.setScrolling(true);
+                //  myScrollView.setScrolling(true);
             }
         });
         char[] additionalSymbols = new char[]{
                 '_',
                 '$'
         };
-userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
-        authToken=sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
+        userId = sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
+        authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
         if (NetworkUtill.isNetworkAvailable(PostEditActivity.this)) {
 
             postDetailAsyncTask = new PostDetailAsyncTask(feedId, userId, authToken);
@@ -490,7 +497,8 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
             if (isVideoClicked)
                 takeVideo();
             if (isPdfClicked)
-                checkPermissionForDoc();        } else {
+                checkPermissionForDoc();
+        } else {
             Log.e("", "Current app does not have READ_PHONE_STATE permission");
             ActivityCompat.requestPermissions(PostEditActivity.this, new String[]{Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -508,9 +516,8 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
             if (isVideoClicked)
                 takeVideo();
             if (isPdfClicked)
-                checkPermissionForDoc();        }
-        else if(requestCode==3)
-        {
+                checkPermissionForDoc();
+        } else if (requestCode == 3) {
             checkPermissionForDoc();
 
         }
@@ -575,21 +582,20 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
                 if (items[item].equals("Take Photo")) {
                     takePicture();
                 } else if (items[item].equals("Choose from Library")) {
-                    if(strings.size()==0) {
+                    if (strings.size() == 0) {
                         Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
                         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 3);
                         startActivityForResult(intent, Constants.REQUEST_CODE);
-                    }else if(strings.size()==1)
-                    {
+                    } else if (strings.size() == 1) {
                         Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
                         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 2);
                         startActivityForResult(intent, Constants.REQUEST_CODE);
-                    }else if(strings.size()==2){
+                    } else if (strings.size() == 2) {
                         Intent intent = new Intent(PostEditActivity.this, AlbumSelectActivity.class);
                         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 1);
                         startActivityForResult(intent, Constants.REQUEST_CODE);
-                    }else {
-                        Toast.makeText(PostEditActivity.this,"You can select max 3 images ",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PostEditActivity.this, "You can select max 3 images ", Toast.LENGTH_SHORT).show();
                     }
 
                 } else if (items[item].equals("Cancel")) {
@@ -613,7 +619,7 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
 
         if (requestCode == 2000 && resultCode == Activity.RESULT_OK
                 && null != data) {
-     imagesarr=       data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
+            imagesarr = data.getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             // Get the Image from data
             selectedImagePath = null;
             selectedVideoPath = null;
@@ -643,10 +649,10 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
 
                     }
                 }
-                if(askQuestionForumImagesAdapter==null) {
+                if (askQuestionForumImagesAdapter == null) {
                     askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostEditActivity.this);
                     recyclerView.setAdapter(askQuestionForumImagesAdapter);
-                }else {
+                } else {
                     askQuestionForumImagesAdapter.notifyDataSetChanged();
                 }
             }
@@ -685,7 +691,7 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
                 e.printStackTrace();
             }
         }
-        if (requestCode == REQUEST_CAMERA&&resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
             try {
                 Uri uri = Uri.fromFile(photoFile);
                 selectedVideoPath = null;
@@ -693,16 +699,16 @@ userId=sesstionManager.getUserDetails().get(SesstionManager.USER_ID);
                 imageViewSelected.setVisibility(View.GONE);
 
                 cancel1.setVisibility(View.GONE);
-recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
                 ImageProcess obj = new ImageProcess(PostEditActivity.this);
                 mCurrentPhotoPath = obj.getPath(uri);
                 selectedImagePath = mCurrentPhotoPath;
                 strings.add(selectedImagePath);
                 File fff = new File(selectedImagePath);
-                if(askQuestionForumImagesAdapter==null) {
+                if (askQuestionForumImagesAdapter == null) {
                     askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(strings, PostEditActivity.this);
                     recyclerView.setAdapter(askQuestionForumImagesAdapter);
-                }else {
+                } else {
                     askQuestionForumImagesAdapter.notifyDataSetChanged();
                 }
                /* Glide.with(PostEditActivity.this)
@@ -765,7 +771,8 @@ recyclerView.setVisibility(View.VISIBLE);
                 servicesMultipleSelectedModels = (ArrayList<SpecializationModel>) data.getSerializableExtra("list");
 
             }
-        }}
+        }
+    }
 
     public void checkPermissionForDoc() {
         isPdfClicked = false;
@@ -1008,6 +1015,7 @@ recyclerView.setVisibility(View.VISIBLE);
         private String responseBody;
         private ProgressDialog pDialog;
         String refrence;
+        String txt_title;
         UrlEncodedFormEntity form;
 
         public PostAsyncTask(String iscommented, String userid, String authToken, String question, String refernce) {
@@ -1036,6 +1044,7 @@ recyclerView.setVisibility(View.VISIBLE);
                 //refrence=URLEncoder.encode(refernceEditText.getText().toString(), "UTF-8");
                 //question=URLEncoder.encode(title_QuestionEditText.getText().toString(), "UTF-8");
                 messageText = URLEncoder.encode(editTextMessage.getText().toString(), "UTF-8");
+                txt_title = URLEncoder.encode(edt_title.getText().toString(), "UTF-8");
                 Log.e("messageText", "" + messageText);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -1081,7 +1090,7 @@ recyclerView.setVisibility(View.VISIBLE);
                 entityBuilder.addTextBody("userID", userId);
                 Log.e("messageText", "inside" + messageText);
                 entityBuilder.addTextBody("feedID", feedId);
-                entityBuilder.addTextBody("Feed[title]", "");
+                entityBuilder.addTextBody("Feed[title]", txt_title.trim().toString());
                 entityBuilder.addTextBody("Feed[refrence]", "");
                 entityBuilder.addTextBody("Feed[message]", messageText.trim().toString());
                 entityBuilder.addTextBody("Feed[feed_type]", feedType());
@@ -1507,7 +1516,7 @@ recyclerView.setVisibility(View.VISIBLE);
                 } else if (feedModel.getFeedSourceArrayList().size() < 3) {
                     strings = feedModel.getFeedSourceArrayList();
 
-                   // strings.add("add");
+                    // strings.add("add");
                 }
                 askQuestionForumImagesAdapter = new AskQuestionForumImagesAdapter(feedModel.getFeedSourceArrayList(), PostEditActivity.this);
 
@@ -1579,7 +1588,7 @@ recyclerView.setVisibility(View.VISIBLE);
 
                 imageViewSelected.setVisibility(View.GONE);
             } else {
-              //  imageViewSelected.setVisibility(View.VISIBLE);
+                //  imageViewSelected.setVisibility(View.VISIBLE);
 
             }
         }

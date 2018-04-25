@@ -101,7 +101,6 @@ public class Methods {
             e.printStackTrace();
         }
     }
-
     public static void openUserActivities(Context context, String userId, String name, String profile_pic, String title, String userType) {
         Intent intent = new Intent(context, MyActivities.class);
         intent.putExtra("userId", userId);
@@ -287,9 +286,9 @@ public class Methods {
                             SesstionManager sesstionManager = new SesstionManager(context);
                             String q = Base64.encodeToString(sesstionManager.getUserDetails().get(SesstionManager.USER_ID).getBytes(), Base64.NO_WRAP);
 
-                            spannableString.setSpan(new GoToURLSpan(url + "?userId=" + q, context), start, end, 0);
+                            spannableString.setSpan(new GoToURLSpan(url + "?userId=" + q, context,0), start, end, 0);
                         } else {
-                            spannableString.setSpan(new GoToURLSpan(url, context), start, end, 0);
+                            spannableString.setSpan(new GoToURLSpan(url, context,0), start, end, 0);
 
                         }
                     }
@@ -310,7 +309,7 @@ public class Methods {
         }
     }
 
-    public static void hyperlink(TextView textView, String s, Context context, int is_pin) {
+    public static void hyperlink(TextView textView, String s, Context context, int is_pin,int in_app) {
         try {
             int i = 0;
             SpannableString spannableString = new SpannableString(s);
@@ -320,8 +319,8 @@ public class Methods {
                 int start = urlMatcher.start(i);
                 int end = urlMatcher.end(i++);
                 if (isValidUrl(url)) {
-                    if (url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http"))
-                        spannableString.setSpan(new GoToURLSpan(url, context), start, end, 0);
+                    if (url.startsWith("https") || url.startsWith("http") || url.startsWith("www.") || url.startsWith("Http"))
+                        spannableString.setSpan(new GoToURLSpan(url, context,in_app), start, end, 0);
                 }
 
             }

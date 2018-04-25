@@ -36,6 +36,7 @@ import com.app.nirogstreet.parser.ExpericenceParser;
 import com.app.nirogstreet.parser.QualificationParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -117,7 +118,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                                             }
         );
         deleteImageView = (ImageView) findViewById(R.id.delete);
-        text_to=(TextView)findViewById(R.id.text_to);
+        text_to = (TextView) findViewById(R.id.text_to);
         sesstionManager = new SesstionManager(AddOrEditExperience.this);
         if (sesstionManager.isUserLoggedIn()) {
             authToken = sesstionManager.getUserDetails().get(SesstionManager.AUTH_TOKEN);
@@ -192,7 +193,8 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditExperience.this)) {
                         if (validate()) {
-
+                            Event_For_Firebase.getEventCount(AddOrEditExperience.this, "Feed_Profile_UserProfile_Experiance_Save_Click");
+                            Event_For_Firebase.logAppEventsLoggerEvent(AddOrEditExperience.this,"Feed_Profile_UserProfile_Experiance_Save_Click");
                             addOrUpdateQualificationAsynctask = new AddOrUpdateQualificationAsynctask(fromEt.getText().toString(), toEt.getText().toString(), cityEt.getText().toString(), clinicOrhospital.getText().toString(), experinceModel.getId());
                             addOrUpdateQualificationAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
@@ -478,8 +480,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("experiences") && !dataJsonObject.isNull("experiences")) {
@@ -623,8 +624,7 @@ public class AddOrEditExperience extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("qualifications") && !dataJsonObject.isNull("qualifications")) {

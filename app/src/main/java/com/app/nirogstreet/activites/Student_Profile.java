@@ -45,6 +45,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.ImageProcess;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
@@ -205,6 +206,7 @@ public class Student_Profile extends AppCompatActivity implements AppBarLayout.O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.student_profile);
+        Event_For_Firebase.getEventCount(Student_Profile.this,"Feed_Profile_UserProfile_Visit");
         findViews();
 
         toolbar.setTitle("");

@@ -8,12 +8,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +34,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -74,6 +79,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.ProportionalImageView;
@@ -85,9 +91,12 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,6 +113,13 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
+import io.branch.referral.util.ContentMetadata;
+import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ShareSheetStyle;
 
 /**
  * Created by Preeti on 31-10-2017.
@@ -113,7 +129,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     int positionat;
     SpannableString span2, str3, spanStatus, spanStatus2;
-    String text, videourl, title;
+    String text, videourl, title,deeplink_title,deeplink_descrptn;
 
 
     FrameLayout customViewContainer;
@@ -192,9 +208,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.DOCTOR_ROLE)) {
+                            Event_For_Firebase.getEventCount(context,"Feed_Profile_UserProfile_Click");
                             Intent intent = new Intent(context, Dr_Profile.class);
                             context.startActivity(intent);
                         } else if (sesstionManager.getUserDetails().get(SesstionManager.USER_TYPE).equalsIgnoreCase(AppUrl.STUDENT_ROLE)) {
+                            Event_For_Firebase.getEventCount(context,"Feed_Profile_UserProfile_Click");
                             Intent intent = new Intent(context, Student_Profile.class);
                             context.startActivity(intent);
                         }
@@ -219,6 +237,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     myViewHolder.card.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Event_For_Firebase.getEventCount(context,"Feed_Profile_Refer_Click");
                             Intent intent = new Intent(context, ReferalActivity.class);
                             context.startActivity(intent);
                         }
@@ -289,7 +308,8 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     DisplayMetrics outMetrics = new DisplayMetrics();
                     display.getMetrics(outMetrics);
                     float scWidth = outMetrics.widthPixels;
-                    viewHolder.linkTitleTextView.setVisibility(View.GONE);
+                    viewHolder.feedImageView.getLayoutParams().width = (int) scWidth;
+                    viewHolder.feedImageView.getLayoutParams().height = (int) (scWidth * 1.8f);
                     viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                     viewHolder.feedImageView.setVisibility(View.GONE);
                     switch (feed_type) {
@@ -660,7 +680,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 viewHolder.statusTextView.setText(feedModel.getMessage());
 
                             }
-                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context, feedModel.getIs_pin());
+                        Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context, feedModel.getIs_pin(),feedModel.getIn_app());
 
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
@@ -807,7 +827,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context, feedModel.getIs_pin());
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context, feedModel.getIs_pin(),feedModel.getIn_app());
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -845,7 +865,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.feeddeletelistingLinearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            sharePopup(viewHolder.feeddeletelistingLinearLayout, feedModel);
+                            sharePopup(viewHolder.feeddeletelistingLinearLayout,viewHolder.feedImageView, feedModel);
                         }
                     });
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
@@ -1313,8 +1333,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return true;
             }
         });
+try {
+    popup.show();//showing popup menu
+}catch (Exception e){
 
-        popup.show();//showing popup menu
+}
     }
 
     public class DeletepostAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -1484,7 +1507,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         View left_view, right_view, bottom_view;
         TextView youHaveWishedTextView, comment_text;
         LinearLayout parentLay;
-        ProportionalImageView feedImageView;
+        ImageView feedImageView;
         TextView statusTextView, nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
@@ -1586,7 +1609,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linkDescriptiontextView = (TextView) itemView.findViewById(R.id.description);
             linkTitleTextView = (TextView) itemView.findViewById(R.id.title);
             profileImageView = (CircleImageView) itemView.findViewById(R.id.profilePic);
-            feedImageView = (ProportionalImageView) itemView.findViewById(R.id.feedImage);
+            feedImageView = (ImageView) itemView.findViewById(R.id.feedImage);
             linkImageView = (ImageView) itemView.findViewById(R.id.linkImage);
             CommentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.CommentSection);
             basicAnnouncemet_view = (View) itemView.findViewById(R.id.basicAnnouncemet_view);
@@ -1595,7 +1618,7 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-    public void sharePopup(LinearLayout view, final FeedModel feedModel) {
+    public void sharePopup(LinearLayout view, final ImageView imageView,final FeedModel feedModel) {
         PopupMenu popup = new PopupMenu((Activity)context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -1627,60 +1650,69 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                          break;
                                                      case R.id.share_exteraly:
                                                          try {
-                                                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
                                                                  text = feedModel.getMessage();
+                                                             deeplink_title = feedModel.getDoc_name();
+                                                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
+                                                                 deeplink_descrptn = feedModel.getMessage();
+                                                             } else {
+                                                                 deeplink_descrptn = "Read it on NirogStreet app";
                                                              }
-                                                             ArrayList<Uri> files = new ArrayList<Uri>();
-                                                             if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
-                                                                 try {
-                                                                     for (int i = 0; i < feedModel.getFeedSourceArrayList().size(); i++) {
-                                                                         URL url = new URL(feedModel.getFeedSourceArrayList().get(i));
-                                                                         Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                                             BranchUniversalObject buo = new BranchUniversalObject()
+                                                                     .setCanonicalIdentifier("content/12345")
+                                                                     .setTitle("My Content Title")
+                                                                     .setContentDescription(deeplink_descrptn)
+                                                                     .setContentImageUrl("https://s3-ap-southeast-1.amazonaws.com/nirog/images/knowledge/1519391605-dise.jpg")
+                                                                     .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                                     //.setLocalIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                                     .setContentMetadata(new ContentMetadata().addCustomMetadata("postId", feedModel.getFeed_id()));
 
-                                                                         Uri bitmapUri = null;
-
-                                                                         String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "title", null);
-                                                                         bitmapUri = Uri.parse(bitmapPath);
-                                                                         files.add(bitmapUri);
+                                                             LinkProperties lp = new LinkProperties()
+                                                                     .setChannel("facebook")
+                                                                     .setFeature("sharing")
+                                                                     //.setCampaign("content 123 launch")
+                                                                     .setStage("new user")
+                                                                     .addControlParameter("$desktop_url", "https://s3-ap-southeast-1.amazonaws.com/nirog/images/knowledge/1519391605-dise.jpg")
+                                                                     .addControlParameter("custom", "data")
+                                                                     .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
+                                                             buo.generateShortUrl(context, lp, new Branch.BranchLinkCreateListener() {
+                                                                 @Override
+                                                                 public void onLinkCreate(String url, BranchError error) {
+                                                                     if (error == null) {
+                                                                         Log.i("BRANCH SDK", "got my Branch link to share: " + url);
                                                                      }
-                                                                 } catch (IOException e) {
-                                                                     System.out.println(e);
                                                                  }
-                                                             }
-                                                             if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
-                                                                 title = feedModel.getTitleQuestion();
-                                                             }
-                                                             if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                                             });
+                                                             ShareSheetStyle ss = new ShareSheetStyle(context, "Check this out!", "This stuff is awesome: ")
+                                                                     .setCopyUrlStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
+                                                                     .setMoreOptionStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_search), "Show more")
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
 
-                                                                 videourl = feedModel.getFeed_source();
-                                                             }
-                                                             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                                                             shareIntent.setType("text/plain");
-                                                             if (files != null && files.size() > 0) {
+                                                                     .setAsFullWidthStyle(true)
+                                                                     .setSharingTitle("Share With")
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT);
 
-                                                                 shareIntent.putExtra(Intent.EXTRA_STREAM, files);
-                                                                 shareIntent.setType("image/*");
-                                                                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                                             }
-                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0 || files.size() > 0 || feedModel.getLink_type() != null) {
-                                                                 if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
-                                                                 } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text);
-                                                                 } else if (title != null && title.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
-                                                                 } else if (text != null && text.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                                                                 } else if (feedModel.getLink_type() != null) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
 
+                                                             buo.showShareSheet((Activity) context, lp, ss, new Branch.BranchLinkShareListener() {
+                                                                 @Override
+                                                                 public void onShareLinkDialogLaunched() {
                                                                  }
-                                                                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
-                                                                 context.startActivity(Intent.createChooser(shareIntent,
-                                                                         context.getResources().getString(R.string.share_with)));
 
+                                                                 @Override
+                                                                 public void onShareLinkDialogDismissed() {
+                                                                 }
 
-                                                             }
+                                                                 @Override
+                                                                 public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                                                                     Log.e("sharelink", "" + sharedLink);
+                                                                 }
+
+                                                                 @Override
+                                                                 public void onChannelSelected(String channelName) {
+                                                                 }
+                                                             });
                                                          } catch (Exception e) {
                                                              // TODO: handle exception
                                                              e.printStackTrace();
@@ -1693,8 +1725,11 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                          }
 
         );
+try {
+    popup.show();//showing popup menu
+}catch (Exception e){
 
-        popup.show();//showing popup menu
+}
     }
 
 
@@ -1787,5 +1822,29 @@ public class MoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-
+    // Returns the URI path to the Bitmap displayed in specified ImageView
+    public Uri getLocalBitmapUri(ImageView imageView) {
+        // Extract Bitmap from ImageView drawable
+        Drawable drawable = imageView.getDrawable();
+        Bitmap bmp = null;
+        if (drawable instanceof BitmapDrawable){
+            bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        } else {
+            return null;
+        }
+        // Store image to default external storage directory
+        Uri bmpUri = null;
+        try {
+            File file =  new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
+            file.getParentFile().mkdirs();
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            bmpUri = Uri.fromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
+    }
 }

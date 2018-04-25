@@ -19,6 +19,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.LikesModel;
 import com.app.nirogstreet.parser.LikeParser;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -65,6 +66,7 @@ public class LikesDisplayActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+        Event_For_Firebase.getEventCount(LikesDisplayActivity.this,"Feed_Post_Screen_Visit_Like_Click");
         circularProgressBar = (CircularProgressBar) findViewById(R.id.scroll);
         recyclerView = (RecyclerView) findViewById(R.id.lv);
         recyclerView.setHasFixedSize(true);

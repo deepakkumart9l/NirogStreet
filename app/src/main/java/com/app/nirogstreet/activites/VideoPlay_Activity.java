@@ -60,10 +60,8 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  * Created by Preeti on 07-11-2017.
  */
 public class VideoPlay_Activity extends AppCompatActivity {
-    WebView displayVideo;
     String frameVideo;
     String myvideo, videotype;
-    Bitmap bmThumbnail;
     VideoView videoView;
     WebView displayYoutubeVideo;
     String videoUrl[];

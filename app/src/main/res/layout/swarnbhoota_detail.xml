@@ -41,11 +41,11 @@
                 android:paddingLeft="50dp"
 
                 android:paddingTop="7dp"
-                android:textStyle="bold"
-
                 android:text="Swanbhoota Yog Detail"
+
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -63,15 +63,15 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/header"
             android:orientation="vertical"
-
-            android:visibility="gone">
+            android:visibility="gone"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:paddingBottom="10dp"
-                android:background="@color/white">
+                android:paddingTop="10dp">
 
                 <WebView
                     android:id="@+id/webview1"
@@ -86,9 +86,10 @@
 
 
             <View
+                android:id="@+id/dose_view"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="10dp"></View>
+                android:layout_height="10dp"
+                android:visibility="gone"></View>
 
             <LinearLayout
                 android:id="@+id/dose_layout"
@@ -106,10 +107,11 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:paddingTop="10dp"
                     android:text="Dose"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/dose_descrptn_txt"
@@ -125,6 +127,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/indication_view"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></View>
 
@@ -144,12 +147,12 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:textStyle="bold"
+                    android:paddingTop="10dp"
 
-                    android:paddingTop="15dp"
                     android:text="Indication"
                     android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/indication_descrptn_txt"
@@ -165,6 +168,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/action_view"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></View>
 
@@ -183,13 +187,13 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
-                    android:textStyle="bold"
-
                     android:paddingRight="10dp"
-                    android:paddingTop="15dp"
+
+                    android:paddingTop="10dp"
                     android:text="Action"
                     android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/action_descrptn_txt"
@@ -205,6 +209,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/contadiction_view"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></View>
 
@@ -223,13 +228,13 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
-                    android:textStyle="bold"
-
                     android:paddingRight="10dp"
-                    android:paddingTop="15dp"
+
+                    android:paddingTop="10dp"
                     android:text="Contraindications"
                     android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/contraindications_descrptn_txt"
@@ -245,6 +250,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/anupan_view"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"></View>
 
@@ -264,11 +270,11 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="15dp"
+                    android:paddingTop="10dp"
                     android:text="Anupan"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/anupan_descrptn_txt"

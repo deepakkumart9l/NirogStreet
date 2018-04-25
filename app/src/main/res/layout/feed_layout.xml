@@ -219,6 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@color/white"
+                    android:autoLink="web"
                     android:ellipsize="end"
                     android:gravity="center|left"
                     android:lineSpacingExtra="7sp"
@@ -257,14 +258,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <com.app.nirogstreet.uttil.ProportionalImageView
+                        <ImageView
                             android:id="@+id/feedImage"
                             android:layout_width="match_parent"
                             android:layout_height="270dp"
                             android:layout_marginTop="3dp"
                             android:adjustViewBounds="true"
                             android:background="@color/white"
-                            android:maxHeight="320dp"
+                            android:scaleType="centerCrop"
                             android:visibility="gone" />
 
                         <LinearLayout
@@ -924,15 +925,15 @@
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/comment_section"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#efefef"
-                    android:paddingLeft="15dp"
-                    android:visibility="gone"
-                    android:id="@+id/comment_section"
-                    android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:paddingRight="15dp">
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:visibility="gone">
 
                     <de.hdodenhof.circleimageview.CircleImageView xmlns:mk="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/profileImage"
@@ -950,33 +951,33 @@
                         android:layout_toRightOf="@+id/profileImage">
 
                         <TextView
-                            android:layout_width="wrap_content"
                             android:id="@+id/commenter_name"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:layout_marginRight="35dp"
-                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/user_comment_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/user_comment_time"
-                            android:textSize="12sp"
                             android:layout_alignParentRight="true"
-                            android:textColor="#9d9d9d" />
+                            android:textColor="#9d9d9d"
+                            android:textSize="12sp" />
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/user_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/comment_lay"
-                        android:id="@+id/user_comment"
-                        android:layout_toRightOf="@+id/profileImage"
-                        android:textColor="#333333"
                         android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/profileImage"
                         android:lineSpacingExtra="7sp"
+                        android:textColor="#333333"
                         android:textSize="15sp"
 
                         />

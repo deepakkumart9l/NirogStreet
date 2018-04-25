@@ -25,6 +25,7 @@ import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -79,6 +80,7 @@ public class Dr_Qualifications extends AppCompatActivity {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
         setContentView(R.layout.qualifications);
+        Event_For_Firebase.getEventCount(Dr_Qualifications.this,"Feed_Profile_UserProfile_Qualification_Visit");
         no_list=(LinearLayout)findViewById(R.id.no_list);
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +119,7 @@ public class Dr_Qualifications extends AppCompatActivity {
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event_For_Firebase.getEventCount(Dr_Qualifications.this,"Feed_Profile_UserProfile_Qualification_Add_Click");
                 Intent intent = new Intent(Dr_Qualifications.this, EditQualificationDetailOrAddQualificationsDetails.class);
                 startActivity(intent);
             }

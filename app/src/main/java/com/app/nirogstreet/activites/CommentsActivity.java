@@ -30,6 +30,7 @@ import com.app.nirogstreet.model.CommentsModel;
 import com.app.nirogstreet.parser.CommentsParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -85,7 +86,8 @@ public class CommentsActivity extends AppCompatActivity {
         commentsModels = new ArrayList<>();
         if (NetworkUtill.isNetworkAvailable(CommentsActivity.this)) {
             getCommentsAsynctask = new GetCommentsAsynctask(feedId);
-            getCommentsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
+            getCommentsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ;
         } else {
 
             NetworkUtill.showNoInternetDialog(CommentsActivity.this);
@@ -103,6 +105,7 @@ public class CommentsActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+        Event_For_Firebase.getEventCount(CommentsActivity.this, "Feed_Post_Comment_Click_Screen_Visit");
         if (getIntent().hasExtra("hideCommentSection")) {
             isHideCommentSection = getIntent().getBooleanExtra("hideCommentSection", false);
         }
@@ -136,17 +139,17 @@ public class CommentsActivity extends AppCompatActivity {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Event_For_Firebase.getEventCount(CommentsActivity.this, "Feed_Post_Comment_Click_Screen_WriteComment_Visit");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Event_For_Firebase.getEventCount(CommentsActivity.this, "Feed_Post_Comment_Click_Screen_WriteComment_Visit");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                Event_For_Firebase.getEventCount(CommentsActivity.this, "Feed_Post_Comment_Click_Screen_WriteComment_Visit");
             }
         });
         if (isHideCommentSection) {
@@ -161,13 +164,15 @@ public class CommentsActivity extends AppCompatActivity {
         sendImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Event_For_Firebase.getEventCount(CommentsActivity.this,"Feed_Post_Comment_Click_Screen_WriteComment_SubmitButton_Click");
                 if (NetworkUtill.isNetworkAvailable(CommentsActivity.this)) {
                     if (editText.getText() != null && editText.getText().length() > 0) {
                         String text = editText.getText().toString();
                         editText.setText("");
                         postCommentAsyncTask = new PostCommentAsyncTask(feedId, text);
 
-                        postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
+                        postCommentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        ;
                     } else {
                         Toast.makeText(CommentsActivity.this, "write somting", Toast.LENGTH_LONG).show();
                     }
@@ -203,19 +208,19 @@ public class CommentsActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             circularProgressBar.setVisibility(View.GONE);
-            try{
-            if (jo != null) {
-                if (jo.has("code") && !jo.isNull("code")) {
-                    int code = jo.getInt("code");
-                    if (code == AppUrl.INVALID_AUTH_CODE) {
-                        Methods.logOutUser(CommentsActivity.this);
+            try {
+                if (jo != null) {
+                    if (jo.has("code") && !jo.isNull("code")) {
+                        int code = jo.getInt("code");
+                        if (code == AppUrl.INVALID_AUTH_CODE) {
+                            Methods.logOutUser(CommentsActivity.this);
+                        }
                     }
-                }
-                commentsModels = new ArrayList<>();
-                commentsModels = CommentsParser.commentsParser(jo);
-                if (commentsAdapter == null) {
-                    commentsAdapter = new CommentsRecyclerAdapter(CommentsActivity.this, commentsModels, feedId, commentOnComment, type);
-                    commentsrecyclerview.setAdapter(commentsAdapter);
+                    commentsModels = new ArrayList<>();
+                    commentsModels = CommentsParser.commentsParser(jo);
+                    if (commentsAdapter == null) {
+                        commentsAdapter = new CommentsRecyclerAdapter(CommentsActivity.this, commentsModels, feedId, commentOnComment, type);
+                        commentsrecyclerview.setAdapter(commentsAdapter);
                     /*listView.setAdapter(commentsAdapter);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -226,9 +231,9 @@ public class CommentsActivity extends AppCompatActivity {
                             startActivity(resultIntent);
                         }
                     });*/
+                    }
                 }
-            }}catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

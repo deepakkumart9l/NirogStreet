@@ -37,6 +37,7 @@ import com.app.nirogstreet.model.GroupModel;
 import com.app.nirogstreet.parser.Group_Listing_Parser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -135,8 +136,8 @@ public class CommunitiesFragment extends Fragment {
             myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/all-groups-new";
-               // GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
-               groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
+                // GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
+                groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
                 groupsOfUserAsyncTaskAll.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 NetworkUtill.showNoInternetDialog(context);
@@ -158,9 +159,9 @@ public class CommunitiesFragment extends Fragment {
             if (NetworkUtill.isNetworkAvailable(context)) {
                 String url = AppUrl.BaseUrl + "group/index";
 
-               groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
+                groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                 groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-              //  GroupsOfUserVollyApi(userId, authToken, url, true, context, false);
+                //  GroupsOfUserVollyApi(userId, authToken, url, true, context, false);
 
 
             } else {
@@ -176,7 +177,7 @@ public class CommunitiesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.communities_listing, container, false);
-
+Event_For_Firebase.getEventCount(getActivity(),"Feed_Communities_MyCommunities_Screen_Visit");
         sessionManager = new SesstionManager(context);
         linearLayout1 = (LinearLayout) view.findViewById(R.id.linearLayout1);
         no_list = (LinearLayout) view.findViewById(R.id.no_list);
@@ -202,7 +203,7 @@ public class CommunitiesFragment extends Fragment {
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/all-groups-new";
-                  //  GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
+                    //  GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTaskAll.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
@@ -230,6 +231,7 @@ public class CommunitiesFragment extends Fragment {
         myGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Event_For_Firebase.getEventCount(getActivity(),"Feed_Communities_MyCommunities_Community_Click");
                 recyclerView.removeAllViews();
                 otherGroupTextView.setClickable(false);
                 //   TypeFaceMethods.setRegularTypeBoldFaceTextView(myGroupTextView, context);
@@ -247,8 +249,9 @@ public class CommunitiesFragment extends Fragment {
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/index";
-                   // GroupsOfUserVollyApi(userId, authToken, url, true, context, false);
-                   groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
+                    // GroupsOfUserVollyApi(userId, authToken, url, true, context, false);
+
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
                     groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -260,6 +263,7 @@ public class CommunitiesFragment extends Fragment {
         otherGroupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Event_For_Firebase.getEventCount(getActivity(),"Feed_Communities_AllCommunities_Click");
                 page = 1;
                 groupModelsTotal = new ArrayList<GroupModel>();
                 userView.setSelected(false);
@@ -277,9 +281,10 @@ public class CommunitiesFragment extends Fragment {
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/all-groups-new";
-                   // GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
+                    // GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
                     groupsOfUserAsyncTaskAll.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    Event_For_Firebase.getEventCount(getActivity(),"Feed_Communities_AllCommunities_Screen_Visit");
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                     myGroupTextView.setClickable(true);
@@ -298,11 +303,10 @@ public class CommunitiesFragment extends Fragment {
         if (logedinuserId != null)
             if (logedinuserId.equals(userId))
                 if (NetworkUtill.isNetworkAvailable(context)) {
-                    String url = AppUrl.BaseUrl + "group/index";
-                   // GroupsOfUserVollyApi(userId, authToken, url, true, context, false);
-
-               groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, context, false);
-                groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    String url = AppUrl.BaseUrl + "group/all-groups-new";
+                    // GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTaskAll.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
                     myGroupTextView.setClickable(true);
@@ -312,9 +316,9 @@ public class CommunitiesFragment extends Fragment {
             else {
                 if (NetworkUtill.isNetworkAvailable(context)) {
                     String url = AppUrl.BaseUrl + "group/all-groups-new";
-                  //  GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
-             groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
-                groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    //  GroupsOfAllUserVollyApi(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, false, context, true);
+                    groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 } else {
                     NetworkUtill.showNoInternetDialog(context);
@@ -394,6 +398,7 @@ public class CommunitiesFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             circularProgressBar.setVisibility(View.GONE);
+
             ArrayList<GroupModel> groupModels = new ArrayList<>();
             try {
                 myGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
@@ -410,10 +415,8 @@ public class CommunitiesFragment extends Fragment {
             super.onPostExecute(aVoid);
             try {
                 if (jo != null)
-
                 {
                     recyclerView.setVisibility(View.VISIBLE);
-
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObjectResponce = jo.getJSONObject("response");
                         if (jsonObjectResponce.has("totalpage") && !jsonObjectResponce.isNull("totalpage")) {
@@ -447,7 +450,7 @@ public class CommunitiesFragment extends Fragment {
                                         String has_more = "";
                                         if (page < totalPageCount) {
                                             page++;
-                                           // GroupsOfUserVollyApi(userId, authToken, url, isHide, context, showJoin);
+                                            // GroupsOfUserVollyApi(userId, authToken, url, isHide, context, showJoin);
                                             groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, isHide, context, showJoin);
                                             groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                         }
@@ -599,7 +602,6 @@ public class CommunitiesFragment extends Fragment {
                             @Override
                             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                                 super.onScrolled(recyclerView, dx, dy);
-
                                 int totalItemCount = linearLayoutManager.getItemCount();
                                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                                 if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
@@ -607,8 +609,8 @@ public class CommunitiesFragment extends Fragment {
                                         String has_more = "";
                                         if (page < totalPageCount) {
                                             page++;
-                                           // GroupsOfAllUserVollyApi(userId, authToken, url, isHide, context, showJoin);
-                                           groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, isHide, context, showJoin);
+                                            // GroupsOfAllUserVollyApi(userId, authToken, url, isHide, context, showJoin);
+                                            groupsOfUserAsyncTaskAll = new GroupsOfUserAsyncTaskAll(userId, authToken, url, isHide, context, showJoin);
                                             groupsOfUserAsyncTaskAll.execute();
                                         }
                                     } catch (Exception e) {
@@ -870,9 +872,9 @@ public class CommunitiesFragment extends Fragment {
                                     String has_more = "";
                                     if (page < totalPageCount) {
                                         page++;
-                                      //  GroupsOfUserVollyApi(userId, authToken, url, isHide, context, showjoin);
-                                           groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, isHide, context, showjoin);
-                                            groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                        //  GroupsOfUserVollyApi(userId, authToken, url, isHide, context, showjoin);
+                                        groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, isHide, context, showjoin);
+                                        groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -894,5 +896,3 @@ public class CommunitiesFragment extends Fragment {
         }
     }
 }
-
-

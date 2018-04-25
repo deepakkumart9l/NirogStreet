@@ -1,7 +1,9 @@
 package com.app.nirogstreet.activites;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,8 +29,11 @@ import com.app.nirogstreet.uttil.TypeFaceMethods;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.BuildConfig;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -38,6 +44,7 @@ import java.util.TimerTask;
 
 import javax.net.ssl.SSLContext;
 
+import bolts.AppLinks;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.client.HttpClient;
@@ -48,6 +55,8 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -57,12 +66,12 @@ import io.fabric.sdk.android.Fabric;
 public class Splash extends AppCompatActivity {
     SesstionManager sesstionManager;
     VersionUpdateCheckAsynctask versionUpdateCheckAsynctask;
-
     TextView thinkAyurveda, thinkNirog;
-    String version;
-
+    String version, mReferralcode;
     Dialog dialogPopUp = null;
-
+    String mBranchpostId, refer_user_mobile_number, refer_user_groupId, refer_user_userId;
+    Branch branch;
+    String user_fromLink, refer_community_name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,9 +79,18 @@ public class Splash extends AppCompatActivity {
         sesstionManager = new SesstionManager(Splash.this);
         if (!AppUrl.AppBaseUrl.contains("appstage")) {
             Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
-            //FirebaseCrash.setCrashCollectionEnabled(false);
+            FirebaseCrash.setCrashCollectionEnabled(false);
         }
+        FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.splash_screen);
+
+        AppEventsLogger logger = AppEventsLogger.newLogger(Splash.this);
+        logger.logEvent("battledAnOrc");
+
+        Uri targetUrl = AppLinks.getTargetUrlFromInboundIntent(Splash.this, getIntent());
+        if (targetUrl != null) {
+            Log.i("Activity", "App Link Target URL: " + targetUrl.toString());
+        }
         PackageInfo pInfo = null;
         try {
 
@@ -97,11 +115,79 @@ public class Splash extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
 
+        branch = Branch.getInstance(Splash.this);
+        // Branch init
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                    Log.i("BRANCH SDK", referringParams.toString());
+                    SharedPreferences sharedPref1 = getApplicationContext().getSharedPreferences("Branchid", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = sharedPref1.edit();
+                    try {
+                        if (referringParams.has("postId")) {
+                            mBranchpostId = referringParams.getString("postId");
+                            if (mBranchpostId != null && mBranchpostId.length() > 0) {
+                                editor1.putString("Branchid", mBranchpostId);
+                                editor1.commit();
+                            }
+                        }
+                        if (referringParams.has("refer_user_mobile_number")) {
+                            refer_user_mobile_number = referringParams.getString("refer_user_mobile_number");
+                            if (refer_user_mobile_number != null && refer_user_mobile_number.length() > 0) {
+                                Branch.getInstance().setIdentity(refer_user_mobile_number);
+                                editor1.putString("Refer_User_Number", refer_user_mobile_number);
+                                editor1.commit();
+                            }
+                        }
+                        if (referringParams.has("groupId")) {
+                            refer_user_groupId = referringParams.getString("groupId");
+                            if (refer_user_groupId != null && refer_user_groupId.length() > 0) {
+                                editor1.putString("Refer_User_Group_Id", refer_user_groupId);
+                                editor1.commit();
+                            }
+                        }
+                        if (referringParams.has("community_name")) {
+                            refer_community_name = referringParams.getString("community_name");
+                            if (refer_community_name != null && refer_community_name.length() > 0) {
+                                editor1.putString("refer_community_name", refer_community_name);
+                                editor1.commit();
+                            }
+                        }
+                        if (referringParams.has("userId")) {
+                            refer_user_userId = referringParams.getString("userId");
+                            if (refer_user_userId != null && refer_user_userId.length() > 0) {
+                                editor1.putString("Refer_User_Id", refer_user_userId);
+                                editor1.commit();
+                            }
+                        }
+                        if (referringParams.has("user_fromLink")) {
+                            user_fromLink = referringParams.getString("user_fromLink");
+                            if (user_fromLink != null && user_fromLink.length() > 0) {
+                                editor1.putString("user_fromLink", user_fromLink);
+                                editor1.commit();
+                            }
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        AppEventsLogger.activateApp(this);
 
 
         new Timer().schedule(new TimerTask() {
@@ -134,6 +220,11 @@ public class Splash extends AppCompatActivity {
         HttpClient client;
         String responseBody;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mReferralcode = mBranchpostId;
+        }
 
         public void cancelAsyncTask() {
             if (client != null && !isCancelled()) {
@@ -147,8 +238,7 @@ public class Splash extends AppCompatActivity {
             try {
 
                 String url = AppUrl.AppBaseUrl + "user/app-version";
-                SSLSocketFactory sf = new SSLSocketFactory(
-                        SSLContext.getDefault(),
+                SSLSocketFactory sf = new SSLSocketFactory(SSLContext.getDefault(),
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
                 Scheme sch = new Scheme("https", 443, sf);
                 client = new DefaultHttpClient();
@@ -157,14 +247,11 @@ public class Splash extends AppCompatActivity {
                 HttpPost httppost = new HttpPost(url);
                 HttpResponse response;
 
-
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 HashMap<String, String> user = sesstionManager.getUserDetails();
                 String authToken = user.get(SesstionManager.AUTH_TOKEN);
                 pairs.add(new BasicNameValuePair("auth_token", authToken));
-
-
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 httppost.setHeader("Authorization", "Basic " + authToken);
 
@@ -185,8 +272,6 @@ public class Splash extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             try {
-
-
                 if (jo != null) {
                     if (jo.has("code") && !jo.isNull("code")) {
                         int code = jo.getInt("code");
@@ -200,19 +285,40 @@ public class Splash extends AppCompatActivity {
                         if (jsonObject.has("minversion") && !jsonObject.isNull("minversion")) {
                             minVersion = Float.parseFloat(jsonObject.getString("minversion"));
                             if (Float.compare(minVersion, Float.parseFloat(version)) > 0) {
-
                                 addDialog(minVersion, true);
                             } else if (jsonObject.has("latestversion") && !jsonObject.isNull("latestversion")) {
                                 latestVersion = Float.parseFloat(jsonObject.getString("latestversion"));
                                 if (Float.compare(latestVersion, Float.parseFloat(version)) > 0) {
-                                    addDialog(latestVersion, false
-                                    );
+                                    addDialog(latestVersion, false);
                                 } else {
                                     if (sesstionManager.isUserLoggedIn()) {
-                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                        finish();
+                                        /*SharedPreferences sharedPref = getSharedPreferences("Branchid", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        mReferralcode = sharedPref.getString("Branchid", "");*/
+                                        if (refer_user_mobile_number != null && refer_user_mobile_number.length() > 0) {
+                                            branch.setIdentity(refer_user_mobile_number);
+                                        }
+                                        if (mReferralcode != null && mReferralcode.length() > 0) {
+                                            Intent intent = new Intent(Splash.this, PostDetailActivity.class);
+                                            intent.putExtra("feedId", mReferralcode);
+                                            startActivity(intent);
+                                            mBranchpostId = "";
+                                        } else if (user_fromLink != null && user_fromLink.length() > 0) {
+                                            Intent intent = new Intent(Splash.this, CommunitiesDetails.class);
+                                            intent.putExtra("when_refer_community", 1);
+                                            intent.putExtra("user_fromLink", 1);
+                                            intent.putExtra("groupId", refer_user_groupId);
+                                            intent.putExtra("refer_community_name", refer_community_name);
+                                            intent.putExtra("refer_userId", refer_user_userId);
+                                            startActivity(intent);
+                                        } else {
+                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                            finish();
+                                        }
                                     } else {
-                                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                        intent.putExtra("mReferralcode", mReferralcode);
+                                        startActivity(intent);
                                         finish();
                                     }
                                 }
@@ -298,4 +404,16 @@ public class Splash extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+    }
 }

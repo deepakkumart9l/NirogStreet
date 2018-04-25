@@ -16,14 +16,14 @@ repositories {
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.app.nirogstreet"
         minSdkVersion 17
-        targetSdkVersion 24
-        versionCode 26
-        versionName "1.25"
+        targetSdkVersion 27
+        versionCode 29
+        versionName "1.28"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -49,9 +49,11 @@ dependencies {
     })
     compile 'com.makeramen:roundedimageview:2.3.0'
 
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
-    compile 'com.android.support:cardview-v7:25.0.0'
+    compile 'com.android.support:appcompat-v7:27.1.0'
+    compile 'com.android.support:support-v4:27.0.1'
+
+    compile 'com.android.support:recyclerview-v7:27.1.0'
+    compile 'com.android.support:cardview-v7:27.1.0'
     compile 'cz.msebera.android:httpclient:4.3.6'
     compile 'org.apmem.tools:layouts:1.10@aar'
 // rxJava
@@ -60,10 +62,14 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 /*
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
-*/
+*/ compile('com.facebook.android:facebook-android-sdk:4.8.0')
+            {
+                exclude group: 'com.parse.bolts', module: 'bolts-tasks'
+                exclude group: 'com.parse.bolts', module: 'bolts-applinks';
+            }
     compile 'com.android.volley:volley:1.0.0' // dependency file for Volley
     compile 'com.amitshekhar.android:rx2-android-networking:1.0.0'
-    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:design:27.1.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.firebase:firebase-core:11.0.4'
     compile 'com.google.firebase:firebase-messaging:11.0.4'
@@ -72,11 +78,11 @@ dependencies {
     compile 'com.github.ganfra:material-spinner:1.1.1'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services:11.0.4'
-   // releaseCompile 'com.google.firebase:firebase-crash:10.0.1'
+    // releaseCompile 'com.google.firebase:firebase-crash:10.0.1'
     compile 'com.google.api-client:google-api-client-gson:+'
     compile 'com.google.android:flexbox:0.2.5'
     compile 'joda-time:joda-time:2.9.4'
-    compile 'com.android.support:percent:25.2.0'
+    compile 'com.android.support:percent:27.1.0'
 
     compile 'io.branch.sdk.android:library:2.+'
 
@@ -84,8 +90,6 @@ dependencies {
     compile 'com.android.support:customtabs:25.0.0' // Chrome Tab matching
     compile 'com.google.android.gms:play-services-ads:9+' // GAID matching
     compile 'com.google.android.gms:play-services-appindexing:9.+' // App indexing*/
-
-
 
 /*
     compile 'com.jakewharton:butterknife:8.8.1'
@@ -107,4 +111,6 @@ dependencies {
 /*
     compile 'com.google.android.gms:play-services-appindexing:10.0.1'
 */
+    compile project(path: ':HtmlTextView')
+
 }

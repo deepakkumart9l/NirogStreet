@@ -29,6 +29,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.MultipleSelectedItemModel;
 import com.app.nirogstreet.model.SpecializationModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -114,6 +115,8 @@ public class Multi_Select_Search extends Activity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(getResources().getColor(R.color.statusbarcolor));
         }
+        Event_For_Firebase.getEventCount(Multi_Select_Search.this,"Feed_Post_Share_ShareCommunityButton_Screen_SelectCommunity_Screen_Visit");
+
         specilization = (TextView) findViewById(R.id.specilization);
         searchET = (EditText) findViewById(R.id.searchET);
 
@@ -165,6 +168,8 @@ public class Multi_Select_Search extends Activity
         textViewDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Event_For_Firebase.getEventCount(Multi_Select_Search.this,"Feed_Post_Share_ShareCommunityButton_Screen_SelectCommunity_Screen_DoneButton_Click");
                 String s = getSelectedNameCsv();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchET.getWindowToken(), 0);

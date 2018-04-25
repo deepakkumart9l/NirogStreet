@@ -58,7 +58,7 @@ public class Disease_Cat extends AppCompatActivity implements OnItemClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swarnbhoota_yog_type);
         title_sideTextView=(TextView)findViewById(R.id.title_side_left);
-        title_sideTextView.setText("Disease");
+        title_sideTextView.setText("Diseases");
         backImageView=(ImageView)findViewById(R.id.back) ;
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override

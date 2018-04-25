@@ -46,13 +46,16 @@ public class OpenDocument extends Activity {
     private static final String PDF_MIME_TYPE = "application/pdf";
     private static final String HTML_MIME_TYPE = "text/html";
     String url = null;
+    String name, setting_url;
+    int setting_section;
     CircularProgressBar circularProgressBar;
     String id = null;
     Course_Detail_model course_detail_model;
     String title = null;
     ImageView backImageView;
-    int module_pos, topic_pos, file_pos;
     TextView title_side_left;
+    int in_app_url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +64,18 @@ public class OpenDocument extends Activity {
         if (getIntent().hasExtra("url")) {
             url = getIntent().getStringExtra("url");
         }
-
-
+        if (getIntent().hasExtra("in_app_url")) {
+            in_app_url = getIntent().getIntExtra("in_app_url", 0);
+        }
+        if (getIntent().hasExtra("name")) {
+            name = getIntent().getStringExtra("name");
+        }
+        if (getIntent().hasExtra("setting_section")) {
+            setting_section = getIntent().getIntExtra("setting_section", 0);
+        }
+        if (getIntent().hasExtra("setting_url")) {
+            setting_url = getIntent().getStringExtra("setting_url");
+        }
         backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +85,9 @@ public class OpenDocument extends Activity {
         });
 
         title_side_left = (TextView) findViewById(R.id.title_side_left);
-        title_side_left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        if (name != null && name.length() > 0) {
+            title_side_left.setText(name);
+        }
 
         downloadImageView = (ImageView) findViewById(R.id.download);
         downloadImageView.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +104,6 @@ public class OpenDocument extends Activity {
         if (getIntent().hasExtra("title")) {
             title = getIntent().getStringExtra("title");
             title_side_left.setText(title);
-
         }
         if (getIntent().hasExtra("id")) {
             id = getIntent().getStringExtra("id");
@@ -103,11 +113,16 @@ public class OpenDocument extends Activity {
         mwebView = (WebView) findViewById(R.id.web);
         mwebView.setWebViewClient(new AppWebViewClients());
         mwebView.getSettings().setJavaScriptEnabled(true);
-        mwebView.getSettings().setUseWideViewPort(false);
+        mwebView.getSettings().setLoadWithOverviewMode(true);
+        mwebView.getSettings().setUseWideViewPort(true);
         mwebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-
-        mwebView.loadUrl("http://docs.google.com/gview?embedded=true&url="
-                + url);
+        if (in_app_url == 1) {
+            mwebView.loadUrl(url);
+        } else if (setting_section == 2) {
+            mwebView.loadUrl(setting_url);
+        } else {
+            mwebView.loadUrl("http://docs.google.com/gview?embedded=true&url=" + url);
+        }
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -208,6 +223,7 @@ public class OpenDocument extends Activity {
         i.setDataAndType(Uri.fromFile(tempFile), PDF_MIME_TYPE);
         return getPackageManager().queryIntentActivities(i, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
+
     public class AppWebViewClients extends WebViewClient {
 
 
@@ -222,7 +238,6 @@ public class OpenDocument extends Activity {
         public void onPageFinished(WebView view, String url) {
             // TODO Auto-generated method stub
             super.onPageFinished(view, url);
-
 
 
         }

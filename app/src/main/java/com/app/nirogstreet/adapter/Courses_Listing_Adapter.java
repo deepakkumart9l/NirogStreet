@@ -18,6 +18,7 @@ import com.app.nirogstreet.activites.Knowledge_Centre_Detail;
 import com.app.nirogstreet.model.CoursesModel;
 import com.app.nirogstreet.model.GroupModel;
 import com.app.nirogstreet.uttil.AppUrl;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -131,6 +132,7 @@ public class Courses_Listing_Adapter extends
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event_For_Firebase.getEventCount(context,"Feed_Learning_Screen_AllCourses_Course_Click");
                 Intent intent = new Intent(context, Knowledge_Centre_Detail.class);
                 intent.putExtra("courseID", coursesModel.getId());
                 intent.putExtra("isHide", ishHide);

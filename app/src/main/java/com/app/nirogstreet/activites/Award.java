@@ -18,6 +18,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.AwardsModel;
 import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
 
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by Preeti on 07-09-2017.
  */
-public class Award extends AppCompatActivity{
+public class Award extends AppCompatActivity {
     CircularProgressBar circularProgressBar;
     TextView addQualificationTextView, addTextView;
     LinearLayout no_list;
@@ -51,7 +52,7 @@ public class Award extends AppCompatActivity{
             recyclerview.setAdapter(awardAdapter);
             recyclerview.setVisibility(View.VISIBLE);
             no_list.setVisibility(View.GONE);
-        }else {
+        } else {
             if (awardAdapter != null) {
                 awardAdapter.notifyItemRemoved(0);
                 awardAdapter.notifyItemRangeChanged(0, 0);
@@ -60,13 +61,16 @@ public class Award extends AppCompatActivity{
             }
             recyclerview.setVisibility(View.GONE);
             recyclerview.setVisibility(View.GONE);
-            no_list.setVisibility(View.VISIBLE);}
+            no_list.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.award_list);
+        Event_For_Firebase.getEventCount(Award.this, "Feed_Profile_UserProfile_Award_Visit");
+        Event_For_Firebase.logAppEventsLoggerEvent(Award.this,"Feed_Profile_UserProfile_Award_Visit");
         if (getIntent().hasExtra("userModel")) {
             userDetailModel = (UserDetailModel) getIntent().getSerializableExtra("userModel");
         }
@@ -77,7 +81,7 @@ public class Award extends AppCompatActivity{
                 finish();
             }
         });
-        no_list=(LinearLayout)findViewById(R.id.no_list);
+        no_list = (LinearLayout) findViewById(R.id.no_list);
 
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerview.setHasFixedSize(true);
@@ -109,12 +113,15 @@ public class Award extends AppCompatActivity{
         addQualificationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event_For_Firebase.getEventCount(Award.this, "Feed_Profile_UserProfile_Award_Add_Click");
+                Event_For_Firebase.logAppEventsLoggerEvent(Award.this,"Feed_Profile_UserProfile_Award_Add_Click");
                 Intent intent = new Intent(Award.this, AddOrEditAward.class);
                 startActivity(intent);
             }
         });
 
     }
+
     public class AwardAdapter extends RecyclerView.Adapter<AwardAdapter.MyHolderView> {
         Context context;
         UserDetailModel userDetailModel;

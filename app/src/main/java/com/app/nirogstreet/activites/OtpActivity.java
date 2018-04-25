@@ -58,7 +58,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class OtpActivity extends AppCompatActivity {
     BroadcastReceiver receiver;
-    String title="-1";
+    String title="-1",select_countrycode;
     ImageView backImageView;
     String fname, email, pass, phone, otp = null,role,referral=null;
     TextView loginHeader, resendOtp, timerTextView;
@@ -95,6 +95,11 @@ if(getIntent().hasExtra("role"))
         {
             title=getIntent().getStringExtra("title");
         }
+        if(getIntent().hasExtra("select_countrycode"))
+        {
+            select_countrycode=getIntent().getStringExtra("select_countrycode");
+        }
+
         if(getIntent().hasExtra("referral"))
         {
             referral=getIntent().getStringExtra("referral");
@@ -393,7 +398,7 @@ if(getIntent().hasExtra("role"))
                 pairs.add(new BasicNameValuePair("User[lname]", lname));
                 pairs.add(new BasicNameValuePair("User[email]", email));
                 pairs.add(new BasicNameValuePair("User[password]", password));
-                pairs.add(new BasicNameValuePair("User[mobile]", mobile));
+                pairs.add(new BasicNameValuePair("User[mobile]", select_countrycode+mobile));
                 pairs.add(new BasicNameValuePair("user_title",title));
                 pairs.add(new BasicNameValuePair("otp", otp));
                 if(referral!=null)

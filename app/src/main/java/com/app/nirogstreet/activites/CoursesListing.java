@@ -25,6 +25,7 @@ import com.app.nirogstreet.model.CoursesModel;
 import com.app.nirogstreet.parser.Courses_Parser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -91,7 +92,7 @@ public class CoursesListing extends Activity {
         sessionManager = new SesstionManager(CoursesListing.this);
         linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
         no_list = (LinearLayout) findViewById(R.id.no_list);
-        button=(Button)findViewById(R.id.join_com);
+        button = (Button) findViewById(R.id.join_com);
         HashMap<String, String> userDetails = sessionManager.getUserDetails();
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         logedinuserId = userDetails.get(SesstionManager.USER_ID);
@@ -148,10 +149,10 @@ public class CoursesListing extends Activity {
             @Override
             public void onClick(View view) {
                 page = 1;
+                Event_For_Firebase.getEventCount(CoursesListing.this,"Feed_Learning_Screen_AllCourses_Screen_Visit");
               /*  TypeFaceMethods.setRegularTypeBoldFaceTextView(otherGroupTextView, CoursesListing.this);
                 TypeFaceMethods.setRegularTypeFaceForTextView(myGroupTextView, context);*/
                 groupModelsTotal = new ArrayList<CoursesModel>();
-                userView.setSelected(false);
                 no_list.setVisibility(View.GONE);
                 recyclerView.removeAllViews();
                 isLoading = false;
@@ -160,6 +161,8 @@ public class CoursesListing extends Activity {
                 groupListingAdapter = null;
                 recyclerView.setVisibility(View.GONE);
                 otherGroupTextView.setSelected(true);
+                userView.setSelected(false);
+
                 otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
                 myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
                 if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
@@ -211,17 +214,22 @@ public class CoursesListing extends Activity {
         recyclerView.setHasFixedSize(true);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
         recyclerView.setLayoutManager(linearLayoutManager);
-        try{
+        try {
             if (logedinuserId.equals(userId))
                 if (NetworkUtill.isNetworkAvailable(CoursesListing.this)) {
-                    String url = AppUrl.BaseUrl + "knowledge/user-courses";
+                    otherGroupTextView.setSelected(true);
+                    userView.setSelected(false);
+                    allView.setSelected(true);
 
-                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, true, CoursesListing.this, false);
+                    otherGroupTextView.setTextColor(getResources().getColor(R.color.buttonBackground));
+                    myGroupTextView.setTextColor(getResources().getColor(R.color.unselectedtext));
+
+                    String url = AppUrl.BaseUrl + "knowledge/all-courses";
+                    groupsOfUserAsyncTask = new GroupsOfUserAsyncTask(userId, authToken, url, false, CoursesListing.this, true);
                     groupsOfUserAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     NetworkUtill.showNoInternetDialog(CoursesListing.this);
@@ -241,8 +249,8 @@ public class CoursesListing extends Activity {
                     otherGroupTextView.setClickable(true);
 
                 }
-            }}catch (Exception e)
-        {
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -251,7 +259,7 @@ public class CoursesListing extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (ApplicationSingleton.isCourseSubscribe() ) {
+        if (ApplicationSingleton.isCourseSubscribe()) {
             userView.setSelected(true);
             allView.setSelected(false);
             page = 1;
@@ -274,6 +282,7 @@ public class CoursesListing extends Activity {
         }
 
     }
+
     public class GroupsOfUserAsyncTask extends AsyncTask<Void, Void, Void> {
         Context context;
         HttpClient client;
@@ -345,16 +354,14 @@ public class CoursesListing extends Activity {
             groupModels = Courses_Parser.groupListingParser(jo);
             otherGroupTextView.setClickable(true);
             myGroupTextView.setClickable(true);
-            if(page==1)
-            {
-                groupModelsTotal=new ArrayList<>();
+            if (page == 1) {
+                groupModelsTotal = new ArrayList<>();
             }
             groupModelsTotal.addAll(groupModels);
 
             super.onPostExecute(aVoid);
             try {
-                if (jo != null)
-                {
+                if (jo != null) {
                     recyclerView.setVisibility(View.VISIBLE);
 
                     if (jo.has("response") && !jo.isNull("response")) {
@@ -371,8 +378,7 @@ public class CoursesListing extends Activity {
                         recyclerView.setVisibility(View.VISIBLE);
 
                     }
-                    if(isHide&&groupModelsTotal.size()==0)
-                    {
+                    if (isHide && groupModelsTotal.size() == 0) {
                         recyclerView.setVisibility(View.GONE);
                         no_list.setVisibility(View.VISIBLE);
                     }

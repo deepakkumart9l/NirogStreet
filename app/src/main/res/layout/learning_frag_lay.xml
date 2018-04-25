@@ -115,17 +115,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Journals"
+            android:text="E-Library"
             android:layout_marginLeft="10dp"
             android:textStyle="bold"
-
             android:textColor="@color/black"
             android:textSize="18dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Discover latest researches and breakthroughs in Ayurveda."
+            android:text="Digital Library with Ayurveda related Journals,e books,videos and audios."
             android:layout_marginLeft="10dp"
             android:textSize="14dp" /></LinearLayout>
     </LinearLayout>

@@ -17,6 +17,7 @@ import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.MultipleSelectedItemModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 
 import org.json.JSONObject;
@@ -67,6 +68,8 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbarcolor));
         }
+        Event_For_Firebase.getEventCount(PublicShare.this,"Feed_Post_Share_PublicButton_Screen_Visit");
+
         textTab = (TextView) findViewById(R.id.textTab);
         textViewmsg = (TextView) findViewById(R.id.msg);
         Intent intent = getIntent();
@@ -88,6 +91,7 @@ ShareOnFriendsTimeLineAsyncTask shareOnFriendsTimeLineAsyncTask;
             @Override
             public void onClick(View view) {
                 if (!isPosted) {
+                    Event_For_Firebase.getEventCount(PublicShare.this,"Feed_Post_Share_PublicButton_Screen_ShareButton_Click");
                     isPosted=true;
                     if (NetworkUtill.isNetworkAvailable(PublicShare.this)) {
 

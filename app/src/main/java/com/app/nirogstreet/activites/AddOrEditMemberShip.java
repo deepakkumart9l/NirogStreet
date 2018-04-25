@@ -31,6 +31,7 @@ import com.app.nirogstreet.parser.AwardsParser;
 import com.app.nirogstreet.parser.MemberShipParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.TypeFaceMethods;
@@ -126,8 +127,9 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
-                        if(validate()) {
-
+                        if (validate()) {
+                            Event_For_Firebase.getEventCount(AddOrEditMemberShip.this, "Feed_Profile_UserProfile_Membership_Save_Click");
+                            Event_For_Firebase.logAppEventsLoggerEvent(AddOrEditMemberShip.this,"Feed_Profile_UserProfile_Membership_Save_Click");
                             addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), memberShipModel.getId());
                             addOrUpdateMembershipAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
@@ -154,7 +156,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                 @Override
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(AddOrEditMemberShip.this)) {
-                        if(validate()) {
+                        if (validate()) {
                             addOrUpdateMembershipAsynctask = new AddOrUpdateMembershipAsynctask(yearEditText.getText().toString(), "");
                             addOrUpdateMembershipAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
@@ -355,8 +357,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("membership") && !dataJsonObject.isNull("membership")) {
@@ -477,8 +478,7 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                                     }
                                 }
                             } else {
-                                if(dataJsonObject.has("profile_complete")&&!dataJsonObject.isNull("profile_complete"))
-                                {
+                                if (dataJsonObject.has("profile_complete") && !dataJsonObject.isNull("profile_complete")) {
                                     ApplicationSingleton.getUserDetailModel().setProfile_complete(dataJsonObject.getInt("profile_complete"));
                                 }
                                 if (dataJsonObject.has("membership") && !dataJsonObject.isNull("membership")) {
@@ -492,7 +492,8 @@ public class AddOrEditMemberShip extends AppCompatActivity implements DatePicker
                                 } else {
                                     UserDetailModel userDetailModel = ApplicationSingleton.getUserDetailModel();
 
-                                    ArrayList<MemberShipModel> memberShipModels = MemberShipParser.memberShipParser(dataJsonObject);;
+                                    ArrayList<MemberShipModel> memberShipModels = MemberShipParser.memberShipParser(dataJsonObject);
+                                    ;
 
                                     userDetailModel.setMemberShipModels(memberShipModels);
                                     ApplicationSingleton.setUserDetailModel(userDetailModel);

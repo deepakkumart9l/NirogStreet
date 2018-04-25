@@ -11,6 +11,42 @@ public class Bharam_Model {
     private int id;
     private String name;
     private String total_comment;
+    private String detail;
+    private String thumbnail;
+    private String hindiname;
+    private String engname;
+
+    public String getHindiname() {
+        return hindiname;
+    }
+
+    public void setHindiname(String hindiname) {
+        this.hindiname = hindiname;
+    }
+
+    public String getEngname() {
+        return engname;
+    }
+
+    public void setEngname(String engname) {
+        this.engname = engname;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     public int getId() {
         return id;

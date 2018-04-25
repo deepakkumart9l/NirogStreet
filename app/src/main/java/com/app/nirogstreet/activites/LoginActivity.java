@@ -3,6 +3,7 @@ package com.app.nirogstreet.activites;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -69,9 +70,11 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout registerHere;
     private int passwordNotVisible = 1;
     ImageButton img_lock;
+    String mReferralcode;
     LoginViaOTPAsync loginViaOTPAsync;
     SesstionManager sesstionManager;
     TextView forgot;
+    String user_fromLink,refer_user_groupId,refer_user_userId,refer_community_name;
 
 
     @Override
@@ -94,8 +97,9 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Enter valid Phone No", Toast.LENGTH_LONG).show();
 
                 } else {
-                    if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {checkPermissionGeneral(); {
-
+                    if (NetworkUtill.isNetworkAvailable(LoginActivity.this)) {
+                        checkPermissionGeneral();
+                        {
                         }
                     } else {
                         NetworkUtill.showNoInternetDialog(LoginActivity.this);
@@ -135,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                intent.putExtra("mReferralcode", mReferralcode);
                 startActivity(intent);
             }
         });
@@ -186,6 +191,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
     }
+
     public void checkPermissionGeneral() {
         if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
@@ -198,6 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                     Manifest.permission.READ_SMS}, STORAGE_PERMISSION_CODE_VIDEO);
         }
     }
+
     private boolean checkWriteExternalPermission() {
 
         String permission = "android.permission.READ_SMS";
@@ -289,7 +296,7 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject dataJsonObject;
                     boolean status = false;
 
-                    String auth_token = "", createdOn = "",referral_code="", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "",title="";
+                    String auth_token = "", createdOn = "", referral_code = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "", title = "";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
 
@@ -337,13 +344,40 @@ public class LoginActivity extends AppCompatActivity {
                                         if (userJsonObject.has("title") && !userJsonObject.isNull("title")) {
                                             title = userJsonObject.getString("title");
                                         }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code,title);
-                                        Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent1);
-                                        finish();
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type, referral_code, title);
+
+                                        SharedPreferences sharedPref = getSharedPreferences("Branchid", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        mReferralcode = sharedPref.getString("Branchid", "");
+                                        user_fromLink = sharedPref.getString("user_fromLink", "");
+                                        refer_user_groupId = sharedPref.getString("Refer_User_Group_Id", "");
+                                        refer_user_userId = sharedPref.getString("Refer_User_Id", "");
+                                        refer_community_name = sharedPref.getString("refer_community_name", "");
+
+
+                                        if (mReferralcode != null && mReferralcode.length() > 0) {
+                                            Intent intent = new Intent(LoginActivity.this, PostDetailActivity.class);
+                                            intent.putExtra("feedId", mReferralcode);
+                                            startActivity(intent);
+                                            editor.remove("Branchid");
+                                            editor.commit();
+                                        } else if (user_fromLink != null && user_fromLink.length() > 0) {
+                                            Intent intent = new Intent(LoginActivity.this, CommunitiesDetails.class);
+                                            intent.putExtra("when_refer_community", 1);
+                                            intent.putExtra("user_fromLink", 1);
+                                            intent.putExtra("groupId", refer_user_groupId);
+                                            intent.putExtra("refer_userId", refer_user_userId);
+                                            intent.putExtra("refer_community_name", refer_community_name);
+                                            startActivity(intent);
+                                            editor.remove("Branchid");
+                                            editor.commit();
+                                        } else {
+                                            Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent1);
+                                            finish();
+                                        }
                                     }
                                 }
-
                             }
                         }
                     } else {
@@ -400,7 +434,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-
                 String url = AppUrl.AppBaseUrl + "user/login-via-otp";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
@@ -416,7 +449,9 @@ public class LoginActivity extends AppCompatActivity {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>();
                 pairs.add(new BasicNameValuePair(AppUrl.APP_ID_PARAM, AppUrl.APP_ID_VALUE_POST));
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+
                 pairs.add(new BasicNameValuePair("mobile", phone));
+
 
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
@@ -457,7 +492,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             } else {
                                 if (dataJsonObject.has("userID") && !dataJsonObject.isNull("userID")) {
-
                                     String userId = dataJsonObject.getString("userID");
                                     Intent intent = new Intent(LoginActivity.this, LoginWithOTP.class);
                                     intent.putExtra("UserId", userId);

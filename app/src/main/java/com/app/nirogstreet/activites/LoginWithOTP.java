@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -58,24 +59,24 @@ public class LoginWithOTP extends AppCompatActivity {
     String fname, email, pass, phone, otp = null;
     TextView loginHeader, resendOtp, timerTextView;
     Button VerifyTv;
-LoginAsync loginAsync;
-    String UserId,phoneNo;
+    LoginAsync loginAsync;
+    String UserId, phoneNo;
     SesstionManager sesstionManager;
+    String mReferralcode, user_fromLink, refer_user_groupId, refer_user_userId, refer_community_name;
     EditText editTextOtpOne, editTextOtpTwo, editTextOtpThree, editTextOtpFour, editPhone;
 
     CircularProgressBar circularProgressBar;
     private SendOtpAsyncTask sendOtpAsyncTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_otp_activity);
-        if(getIntent().hasExtra("UserId"))
-        {
-            UserId=getIntent().getStringExtra("UserId");
+        if (getIntent().hasExtra("UserId")) {
+            UserId = getIntent().getStringExtra("UserId");
         }
-        if(getIntent().hasExtra("phone"))
-        {
-            phoneNo=getIntent().getStringExtra("phone");
+        if (getIntent().hasExtra("phone")) {
+            phoneNo = getIntent().getStringExtra("phone");
         }
         sesstionManager = new SesstionManager(LoginWithOTP.this);
         backImageView = (ImageView) findViewById(R.id.back);
@@ -132,7 +133,6 @@ LoginAsync loginAsync;
             editTextOtpThree.setText(String.valueOf(arr[2]));
             editTextOtpFour.setText(String.valueOf(arr[3]));*/
         }
-
 
 
         editTextOtpOne.addTextChangedListener(new TextWatcher() {
@@ -228,7 +228,7 @@ LoginAsync loginAsync;
 
                         public void onTick(long millisUntilFinished) {
 
-                            timerTextView.setText("00:" + millisUntilFinished / 1000 +" sec");
+                            timerTextView.setText("00:" + millisUntilFinished / 1000 + " sec");
                         }
 
                         public void onFinish() {
@@ -252,8 +252,8 @@ LoginAsync loginAsync;
                     phone = editPhone.getText().toString();
                     if (NetworkUtill.isNetworkAvailable(LoginWithOTP.this)) {
                         if (phone != null && str != null) {
-                            String otp=editTextOtpOne.getText().toString()+editTextOtpTwo.getText().toString()+editTextOtpThree.getText().toString()+editTextOtpFour.getText().toString();
-                           loginAsync = new LoginAsync(str, editPhone.getText().toString());
+                            String otp = editTextOtpOne.getText().toString() + editTextOtpTwo.getText().toString() + editTextOtpThree.getText().toString() + editTextOtpFour.getText().toString();
+                            loginAsync = new LoginAsync(str, editPhone.getText().toString());
                             loginAsync.execute();
                         }
 
@@ -283,8 +283,7 @@ LoginAsync loginAsync;
                         }
 
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -305,7 +304,7 @@ LoginAsync loginAsync;
         if (editPhone.getText().toString().length() == 0) {
             Toast.makeText(LoginWithOTP.this, "Enter mobile number", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!Methods.isValidPhoneNumber(editPhone.getText().toString())||!Methods.validCellPhone(editPhone.getText().toString())) {
+        } else if (!Methods.isValidPhoneNumber(editPhone.getText().toString()) || !Methods.validCellPhone(editPhone.getText().toString())) {
             Toast.makeText(LoginWithOTP.this, "Enter valid mobile number", Toast.LENGTH_SHORT).show();
             return false;
         } else if (editTextOtpOne.getText().length() == 0 || editTextOtpTwo.getText().length() == 0 || editTextOtpThree.getText().length() == 0 || editTextOtpFour.getText().length() == 0) {
@@ -410,7 +409,7 @@ LoginAsync loginAsync;
                                     } else {
                                         if (dataJsonObject.has("userID") && !dataJsonObject.isNull("userID")) {
 
-                                            UserId=dataJsonObject.getString("userID");
+                                            UserId = dataJsonObject.getString("userID");
 
                                         }
 
@@ -430,19 +429,21 @@ LoginAsync loginAsync;
 
         }
     }
+
     public class LoginAsync extends AsyncTask<Void, Void, Void> {
         String responseBody;
         String email, password;
         CircularProgressBar bar;
         //PlayServiceHelper regId;
-String otp,phone;
+        String otp, phone;
         JSONObject jo;
         HttpClient client;
-public LoginAsync(String otp,String phone)
-{
-    this.otp=otp;
-    this.phone=phone;
-}
+
+        public LoginAsync(String otp, String phone) {
+            this.otp = otp;
+            this.phone = phone;
+        }
+
         public void cancelAsyncTask() {
             if (client != null && !isCancelled()) {
                 cancel(true);
@@ -480,9 +481,9 @@ public LoginAsync(String otp,String phone)
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                 pairs.add(new BasicNameValuePair("device_token", refreshedToken));
                 pairs.add(new BasicNameValuePair("type", "android"));
-                pairs.add(new BasicNameValuePair("userID",UserId));
-                pairs.add(new BasicNameValuePair("otp",otp));
-                pairs.add(new BasicNameValuePair("mobile",phone));
+                pairs.add(new BasicNameValuePair("userID", UserId));
+                pairs.add(new BasicNameValuePair("otp", otp));
+                pairs.add(new BasicNameValuePair("mobile", phone));
                 httppost.setEntity(new UrlEncodedFormEntity(pairs));
                 response = client.execute(httppost);
                 responseBody = EntityUtils.toString(response.getEntity());
@@ -504,11 +505,12 @@ public LoginAsync(String otp,String phone)
             circularProgressBar.setVisibility(View.GONE);
             try {
                 if (jo != null) {
+
                     JSONArray errorArray;
                     JSONObject dataJsonObject;
                     boolean status = false;
 
-                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "",referral_code="",title="";
+                    String auth_token = "", createdOn = "", id = "", email = "", mobile = "", user_type = "", lname = "", fname = "", referral_code = "", title = "";
                     if (jo.has("data") && !jo.isNull("data")) {
                         dataJsonObject = jo.getJSONObject("data");
 
@@ -556,31 +558,53 @@ public LoginAsync(String otp,String phone)
                                         if (userJsonObject.has("Title") && !userJsonObject.isNull("Title")) {
                                             title = userJsonObject.getString("Title");
                                         }
-                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type,referral_code,title);
-                                        Intent intent1 = new Intent(LoginWithOTP.this, MainActivity.class);
-                                        startActivity(intent1);
-                                        finish();
+                                        sesstionManager.createUserLoginSession(fname, lname, email, auth_token, mobile, createdOn, id, user_type, referral_code, title);
+
+                                        SharedPreferences sharedPref = getSharedPreferences("Branchid", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        mReferralcode = sharedPref.getString("Branchid", "");
+                                        user_fromLink = sharedPref.getString("user_fromLink", "");
+                                        refer_user_groupId = sharedPref.getString("Refer_User_Group_Id", "");
+                                        refer_user_userId = sharedPref.getString("Refer_User_Id", "");
+                                        refer_community_name = sharedPref.getString("refer_community_name", "");
+
+                                        if (mReferralcode != null && mReferralcode.length() > 0) {
+                                            Intent intent = new Intent(LoginWithOTP.this, PostDetailActivity.class);
+                                            intent.putExtra("feedId", mReferralcode);
+                                            startActivity(intent);
+                                            editor.remove("Branchid");
+                                            editor.commit();
+                                        } else if (user_fromLink != null && user_fromLink.length() > 0) {
+                                            Intent intent = new Intent(LoginWithOTP.this, CommunitiesDetails.class);
+                                            intent.putExtra("when_refer_community", 1);
+                                            intent.putExtra("user_fromLink", 1);
+                                            intent.putExtra("groupId", refer_user_groupId);
+                                            intent.putExtra("refer_userId", refer_user_userId);
+                                            intent.putExtra("refer_community_name", refer_community_name);
+                                            startActivity(intent);
+                                            editor.remove("Branchid");
+                                            editor.commit();
+                                        } else {
+                                            Intent intent1 = new Intent(LoginWithOTP.this, MainActivity.class);
+                                            startActivity(intent1);
+                                            finish();
+                                        }
                                     }
                                 }
-
                             }
                         }
                     } else {
                         if (jo.has("message") && !jo.isNull("message")) {
                             if (jo.getString("message").equalsIgnoreCase("OK")) {
                                 if (NetworkUtill.isNetworkAvailable(LoginWithOTP.this)) {
-                                    loginAsync = new LoginAsync(otp,phone);
+                                    loginAsync = new LoginAsync(otp, phone);
                                     loginAsync.execute();
-
                                 } else
                                     NetworkUtill.showNoInternetDialog(LoginWithOTP.this);
                             }
                         }
-
                     }
-
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -588,5 +612,6 @@ public LoginAsync(String otp,String phone)
 
         }
     }
+
 
 }

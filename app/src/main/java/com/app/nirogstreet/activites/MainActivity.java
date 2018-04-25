@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -28,20 +29,17 @@ import android.widget.Toast;
 
 
 import com.app.nirogstreet.R;
-import com.app.nirogstreet.adapter.LikesAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
-import com.app.nirogstreet.model.LikesModel;
-import com.app.nirogstreet.parser.LikeParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.CustomPagerAdapter;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
 import com.app.nirogstreet.uttil.Utils2;
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.cast.framework.SessionManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -60,57 +58,42 @@ import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
-import io.fabric.sdk.android.Fabric;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import me.leolin.shortcutbadger.ShortcutBadgeException;
 import me.leolin.shortcutbadger.ShortcutBadger;
-
 
 public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     int count = 1;
     public static ViewPager viewPager;
     Menu menu1;
-
     FrameLayout notiframe;
     TextView tv;
     RelativeLayout notifCount;
-
     int totalUnReadCount = 0;
-
     LinearLayout linearLayoutHeader;
     boolean doubleBackToExitPressedOnce = false;
     NotificationAsyncTask notificationAsyncTask;
-
     FrameLayout frameLayoutview_alert_red_circle;
     TextView view_alert_count_textviewTextView;
-
     ImageView searchImageView, notifictaionImageView;
     public TextView textViewTab, createTextView;
-
+    ImageView setting_profile;
     private CustomPagerAdapter customPagerAdapter;
     ImageView searchgroupImageView;
     CircularProgressBar circularProgressBar;
     ImageView logout;
     SesstionManager sesstionManager;
     MenuItem item1, item;
-
+    String mBranchpostId;
     LogoutAsyncTask logoutAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
-        frameLayoutview_alert_red_circle.setVisibility(View.GONE);
-        // frameLayoutview_alert_red_circle.setVisibility(View.VISIBLE);
-        view_alert_count_textviewTextView = (TextView) findViewById(R.id.view_alert_count_textview);
-        // view_alert_count_textviewTextView.setText("655");
-        frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
-        frameLayoutview_alert_red_circle.setVisibility(View.GONE);
-        textViewTab = (TextView) findViewById(R.id.textTab);
         logout = (ImageView) findViewById(R.id.logout);
         sesstionManager = new SesstionManager(MainActivity.this);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         searchgroupImageView = (ImageView) findViewById(R.id.searchgroup);
+        setting_profile = (ImageView) findViewById(R.id.setting_profile);
         searchgroupImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,10 +111,46 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        Branch branch = Branch.getInstance();
+        // Branch init
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                    Log.i("BRANCH SDK", referringParams.toString());
+                    try {
+                        mBranchpostId = referringParams.getString("postId");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+
+        pagerData();
+
+    }
+
+    public void pagerData() {
         linearLayoutHeader = (LinearLayout) findViewById(R.id.actionbar);
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
+        frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
+        frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+        view_alert_count_textviewTextView = (TextView) findViewById(R.id.view_alert_count_textview);
+        frameLayoutview_alert_red_circle = (FrameLayout) findViewById(R.id.view_alert_red_circle);
+        frameLayoutview_alert_red_circle.setVisibility(View.GONE);
+        textViewTab = (TextView) findViewById(R.id.textTab);
+
+        tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         createTextView = (TextView) findViewById(R.id.create);
-        tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager.setOffscreenPageLimit(4);
 
         customPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), tabLayout, this);
@@ -150,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.VISIBLE);
                         logout.setVisibility(View.GONE);
+                        setting_profile.setVisibility(View.GONE);
                         setTabText("Home");
                         break;
                     case 1:
@@ -158,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
                         searchgroupImageView.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
+                        setting_profile.setVisibility(View.GONE);
                         setTabText("Learning");
+                        Event_For_Firebase.getEventCount(MainActivity.this, "Feed_Learning_Click");
                         break;
                     case 2:
                         searchImageView.setVisibility(View.GONE);
@@ -166,8 +189,9 @@ public class MainActivity extends AppCompatActivity {
                         notiframe.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.VISIBLE);
-
+                        setting_profile.setVisibility(View.GONE);
                         setTabText("Community");
+                        Event_For_Firebase.getEventCount(MainActivity.this, "Feed_Communities_Click");
                       /*  createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.GONE);
@@ -176,12 +200,15 @@ public class MainActivity extends AppCompatActivity {
                         setTabText("You");*/
                         break;
                     case 3:
+
                         createTextView.setVisibility(View.GONE);
                         notiframe.setVisibility(View.GONE);
                         searchgroupImageView.setVisibility(View.GONE);
                         logout.setVisibility(View.GONE);
                         searchImageView.setVisibility(View.GONE);
+                        setting_profile.setVisibility(View.VISIBLE);
                         setTabText("Profile");
+                        Event_For_Firebase.getEventCount(MainActivity.this, "Feed_Profile_Click");
                         break;
 
                 }
@@ -209,11 +236,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        setting_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Setting_Activity.class);
+                startActivity(intent);
+            }
+        });
         LinearLayout tabLinearLayoutTimeline = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custum, null);
 
         TextView tabOneTimeline = (TextView) tabLinearLayoutTimeline.findViewById(R.id.tab);
         tabOneTimeline.setText("FEED");
-
         tabOneTimeline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         ImageView oneImgTimeline = (ImageView) tabLinearLayoutTimeline.findViewById(R.id.icon);
         oneImgTimeline.setImageResource(R.drawable.home_);
@@ -255,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NotificationListing.class);
+                Event_For_Firebase.getEventCount(MainActivity.this, "Feed_NotificationButton_Click");
                 startActivity(intent);
             }
         });
@@ -278,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                Event_For_Firebase.getEventCount(MainActivity.this, "Feed_Search_Click");
                 startActivity(intent);
             }
         });
@@ -731,11 +766,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 NetworkUtill.showNoInternetDialog(MainActivity.this);
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private static long back_pressed;
 
     @Override
@@ -757,15 +792,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 3000);*/
 
-        if (back_pressed + 2000 > System.currentTimeMillis()){
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
 
             finish();
 
             super.onBackPressed();
-        }
-        else{
+        } else {
             Toast.makeText(getBaseContext(), "Press once again to exit", Toast.LENGTH_SHORT).show();
             back_pressed = System.currentTimeMillis();
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
 }

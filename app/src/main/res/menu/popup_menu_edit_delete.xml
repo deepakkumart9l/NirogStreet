@@ -4,7 +4,6 @@
         android:id="@+id/edit"
         android:title="Edit" />
 
-
     <item
         android:id="@+id/del"
         android:title="Delete"

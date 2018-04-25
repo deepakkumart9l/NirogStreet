@@ -18,6 +18,7 @@ import com.app.nirogstreet.activites.CommunitiesDetails;
 import com.app.nirogstreet.model.GroupModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.LetterTileProvider;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -109,7 +110,7 @@ public class GroupListingAdapter extends
 
                     }
                 } else if (groupModel.getStatusdata() != null && groupModel.getStatusdata().equalsIgnoreCase("0")) {
-                    holder.join1.setText("Request sent");
+                    holder.join1.setText("Request Sent");
                     if (showJoin) {
                         holder.join1.setVisibility(View.VISIBLE);
                         holder.joinTextView.setVisibility(View.GONE);
@@ -125,6 +126,7 @@ public class GroupListingAdapter extends
         holder.joinTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event_For_Firebase.getEventCount(context, "Feed_Communities_MyCommunities_JoinCommunityButton_Click");
                 if (groupModel.getPrivacy().equalsIgnoreCase("1")) {
                     if (groupModel.getStatusdata() == null || groupModel.getStatusdata().equalsIgnoreCase("2")) {
                         if (NetworkUtill.isNetworkAvailable(context)) {
@@ -184,24 +186,29 @@ public class GroupListingAdapter extends
                 intent.putExtra("status", groupModel.getStatus());
                 ((Activity) context).startActivityForResult(intent, REQUEST_FOR_ACTIVITY_CODE);*/
                 if (showJoin)
-
-                    if (groupModel.getPrivacy().equalsIgnoreCase("0")) {
+                    if (groupModel.getPrivacy().equalsIgnoreCase("0"))
+                    {
                         Intent intent = new Intent(context, CommunitiesDetails.class);
                         intent.putExtra("groupId", groupModel.getGroupId());
+                        intent.putExtra("user_invitation", groupModel.getUser_invitation());
                         context.startActivity(intent);
                     } else {
-                        if(groupModel.getCreatedByUser().getUserId().equalsIgnoreCase(sessionManager.getUserDetails().get(SesstionManager.USER_ID)))
-                        {
+                        if (groupModel.getCreatedByUser().getUserId().equalsIgnoreCase(sessionManager.getUserDetails().get(SesstionManager.USER_ID))) {
                             Intent intent = new Intent(context, CommunitiesDetails.class);
                             intent.putExtra("groupId", groupModel.getGroupId());
+                            intent.putExtra("user_invitation", groupModel.getUser_invitation());
                             context.startActivity(intent);
-                        }else {
+                        } else if (groupModel.getStatusdata() != null && groupModel.getStatusdata().equalsIgnoreCase("0")) {
+                            Toast.makeText(context, "Request Sent", Toast.LENGTH_SHORT).show();
+                        } else {
                             Toast.makeText(context, "Request to Join", Toast.LENGTH_SHORT).show();
                         }
                     }
                 else {
+                    Event_For_Firebase.getEventCount(context, "Feed_Communities_MyCommunities_Community_Feed_Screen_Post_Click");
                     Intent intent = new Intent(context, CommunitiesDetails.class);
                     intent.putExtra("groupId", groupModel.getGroupId());
+                    intent.putExtra("user_invitation", groupModel.getUser_invitation());
                     context.startActivity(intent);
                 }
             }
@@ -253,8 +260,6 @@ public class GroupListingAdapter extends
 
                         groupModels.get(position).setJoinShow(false);
                     } else if (groupModels.get(position).getPrivacy().equalsIgnoreCase("1")) {
-
-
                         holder.joinTextView.setVisibility(View.GONE);
                         holder.join1.setVisibility(View.VISIBLE);
                         holder.join1.setText("Request Sent");
@@ -332,8 +337,6 @@ public class GroupListingAdapter extends
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-
-
                 String url = AppUrl.BaseUrl + "group/invite";
                 SSLSocketFactory sf = new SSLSocketFactory(
                         SSLContext.getDefault(),
@@ -402,7 +405,7 @@ public class GroupListingAdapter extends
 
                     if (jo.has("response") && !jo.isNull("response")) {
                         JSONObject jsonObjectresponse = jo.getJSONObject("response");
-                        ApplicationSingleton.setIsJoinedCommunity(true);
+                        //ApplicationSingleton.setIsJoinedCommunity(true);
                         notifyItemChanged(pos, new String("joined"));
 
 

@@ -1,4 +1,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_id">341750152926288</string>
+
     <string name="app_name">NirogStreet</string>
     <string name="no_internet">No internet</string>
     <string name="ob_get_started">GET STARTED</string>
@@ -58,6 +61,10 @@
     <string name="HospitalorClinic">Select Hospital or Clinic.</string>
     <string name="mdtp_ok">@android:string/ok</string>
     <string name="mdtp_cancel">@android:string/cancel</string>
+
+    <string name="want_to_logout">Do you want to logout?</string>
+    <string name="logout">Logout</string>
+    <string name="cancel">Cancel</string>
     <!--
          Content description for the hour selector in the time picker, which displays
          selectable hours of the day along the inside edge of a circle, as in an analog clock.
@@ -113,10 +120,10 @@
     <string name="mdtp_sans_serif" translatable="false">sans-serif</string>
 
     <!-- DO NOT TRANSLATE -->
-    <string name="mdtp_day_of_week_label_typeface" translatable="false">sans-serif</string>
     <string name="mdtp_from">FROM</string>
     <string name="mdtp_to">TO</string>
     <string name="post" />
     <string name="wrong">Something went wrong</string>
     <string name="share_with">Share with</string>
+
 </resources>

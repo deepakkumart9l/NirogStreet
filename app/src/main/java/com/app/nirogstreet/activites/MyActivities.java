@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -52,7 +53,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
  * Created by Preeti on 20-02-2018.
  */
 
-public class MyActivities extends Activity {
+public class MyActivities extends AppCompatActivity {
 
     private UserDetailModel userDetailModel;
     RecyclerView recyclerView;
@@ -70,7 +71,7 @@ public class MyActivities extends Activity {
 
     private ArrayList<FeedModel> totalFeeds;
     private SesstionManager session;
-    String authToken, userId, profile_pic, name, title,userType;
+    String authToken, userId, profile_pic, name, title, userType;
     ImageView backImageView;
 
     @Override
@@ -134,7 +135,7 @@ public class MyActivities extends Activity {
                 if (NetworkUtill.isNetworkAvailable(MyActivities.this))
 
                 {
-                    String url = AppUrl.BaseUrl + "my-activity-new";
+                    String url = AppUrl.BaseUrl + "feed/activity-update";
                     userFeedsAsyncTask = new UserFeedsAsyncTask(MyActivities.this, circularProgressBar, url, authToken, userId);
                     userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
@@ -155,7 +156,7 @@ public class MyActivities extends Activity {
         if (session.isUserLoggedIn()) {
             HashMap<String, String> userDetail = session.getUserDetails();
             authToken = userDetail.get(SesstionManager.AUTH_TOKEN);
-           // userId = userDetail.get(SesstionManager.USER_ID);
+            // userId = userDetail.get(SesstionManager.USER_ID);
         }
 
         totalFeeds = new ArrayList<>();
@@ -262,7 +263,7 @@ public class MyActivities extends Activity {
                 if (feedsAdapter == null && totalFeeds.size() > 0) {
                     // appBarLayout.setExpanded(true);
 
-                    feedsAdapter = new User_Activity_Adapter(context, totalFeeds, MyActivities.this, "", customViewContainer, circularProgressBar, name, profile_pic, title,userType,userId);
+                    feedsAdapter = new User_Activity_Adapter(context, totalFeeds, MyActivities.this, "", customViewContainer, circularProgressBar, name, profile_pic, title, userType, userId);
                     recyclerView.setAdapter(feedsAdapter);
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override

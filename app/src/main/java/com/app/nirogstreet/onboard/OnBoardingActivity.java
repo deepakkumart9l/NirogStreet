@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,10 +19,19 @@ import android.widget.Toast;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.LoginActivity;
 import com.app.nirogstreet.activites.MainActivity;
+import com.app.nirogstreet.activites.PostDetailActivity;
 import com.app.nirogstreet.activites.Splash;
 import com.app.nirogstreet.uttil.SesstionManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.util.LinkProperties;
 
 public class OnBoardingActivity extends AppCompatActivity {
 
@@ -30,6 +40,7 @@ public class OnBoardingActivity extends AppCompatActivity {
     private int dotsCount;
     private ImageView[] dots;
 
+    Branch branch;
 
     private ViewPager onboard_pager;
 
@@ -43,11 +54,67 @@ public class OnBoardingActivity extends AppCompatActivity {
     ArrayList<OnBoardItem> onBoardItems = new ArrayList<>();
     SesstionManager sesstionManager;
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        branch = Branch.getInstance();
+        branch.initSession(new Branch.BranchUniversalReferralInitListener() {
+            @Override
+            public void onInitFinished(BranchUniversalObject branchUniversalObject, LinkProperties linkProperties, BranchError error) {
+                if (error != null) {
+                    Log.i("BranchTestBed", "branch init failed. Caused by -" + error.getMessage());
+                } else {
+                    try{
+                    Log.i("BranchTestBed", "branch init complete!");
+                    if (branchUniversalObject != null) {
+                        Log.i("BranchTestBed", "title " + branchUniversalObject.getTitle());
+                        Log.i("BranchTestBed", "CanonicalIdentifier " + branchUniversalObject.getCanonicalIdentifier());
+                        JSONObject jsonObject= branchUniversalObject.getContentMetadata().convertToJson();
+                        System.out.print(jsonObject);
+                        if(jsonObject.has("postId")&&!jsonObject.isNull("postId"))
+                        {
+                            Intent intent = new Intent(OnBoardingActivity.this, PostDetailActivity.class);
+                            intent.putExtra("feedId", jsonObject.getString("postId"));
+                            startActivity(intent);
+                            finish();
+                        }
+                        Log.i("ContentMetaData", "metadata " + branchUniversalObject.getContentMetadata().convertToJson());
+                    }}catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
+                    if (linkProperties != null) {
+                        Log.i("BranchTestBed", "Channel " + linkProperties.getChannel());
+                        Log.i("BranchTestBed", "control params " + linkProperties.getControlParams());
+                    }
+                }
+            }
+        }, this.getIntent().getData(), this);
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_boarding);
+        if (Branch.isAutoDeepLinkLaunch(this)) {
+            Branch.getInstance().getLatestReferringParams();
+        } else {
+        }
+
+        //You can also get linked params for the intent extra.
+        if (getIntent().getExtras() != null && getIntent().getExtras().keySet() != null) {
+            Iterator<?> keys = getIntent().getExtras().keySet().iterator();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                Log.i("BranchTestBed:", "Deep Linked Param " +
+                        key + " = " + getIntent().getExtras().getString(key));
+            }
+        }
         sesstionManager = new SesstionManager(OnBoardingActivity.this);
         flag = false;
         btn_get_started = (Button) findViewById(R.id.btn_get_started);

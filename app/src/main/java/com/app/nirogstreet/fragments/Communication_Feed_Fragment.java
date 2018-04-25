@@ -70,12 +70,13 @@ public class Communication_Feed_Fragment extends Fragment {
     private SesstionManager session;
     String authToken, userId;
     String groupId;
+    int user_fromLink;
 
-    public static Communication_Feed_Fragment getInstance(String groupId) {
+    public static Communication_Feed_Fragment getInstance(String groupId,int user_fromLink) {
         Communication_Feed_Fragment artistDetailFragment = new Communication_Feed_Fragment();
         Bundle bundle = new Bundle();
         bundle.putString("groupId", groupId);
-
+        bundle.putInt("user_fromLink", user_fromLink);
         artistDetailFragment.setArguments(bundle);
         return artistDetailFragment;
     }
@@ -87,6 +88,9 @@ public class Communication_Feed_Fragment extends Fragment {
         Bundle bundle = getArguments();
         try {
             groupId = bundle.getString("groupId");
+            user_fromLink = bundle.getInt("user_fromLink");
+
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -325,16 +329,13 @@ public class Communication_Feed_Fragment extends Fragment {
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
-
                             int totalItemCount = linearLayoutManager.getItemCount();
                             int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                             if (!isLoading && (totalItemCount - 1) <= (lastVisibleItem)) {
                                 try {
                                     String has_more = "";
                                     if (page < totalPageCount) {
-
                                         page++;
-
                                         String url = AppUrl.BaseUrl + "group/timeline";
                                         userFeedsAsyncTask = new UserFeedsAsyncTask(context, circularProgressBar, url, authToken, userId);
                                         userFeedsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

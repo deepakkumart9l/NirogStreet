@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <View
+        android:id="@+id/first_view"
         android:layout_width="match_parent"
         android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"   android:background="@color/textcolorgray"
+        android:layout_marginRight="18dp"
+        android:background="@color/textcolorgray"
         android:layout_height="0.5dp"/>
     <LinearLayout
         android:id="@+id/diseas_sub_layout"
@@ -28,6 +30,13 @@
             android:textColor="@color/black"
             android:textSize="16dp" />
     </LinearLayout>
-
+    <View
+        android:id="@+id/second_view"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:visibility="gone"
+        android:background="@color/textcolorgray"
+        android:layout_height="0.5dp"/>
 
 </LinearLayout>

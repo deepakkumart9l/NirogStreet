@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -27,11 +33,14 @@ import android.widget.Toast;
 import com.app.nirogstreet.R;
 import com.app.nirogstreet.activites.CommentsActivity;
 import com.app.nirogstreet.activites.PostDetailActivity;
+import com.app.nirogstreet.activites.PostingActivity;
+import com.app.nirogstreet.activites.ViewMore_Data;
 import com.app.nirogstreet.adapter.CommentsRecyclerAdapter;
 import com.app.nirogstreet.circularprogressbar.CircularProgressBar;
 import com.app.nirogstreet.model.CommentsModel;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.Query_Method;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -39,6 +48,8 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.sufficientlysecure.htmltextview.HtmlResImageGetter;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -78,15 +89,21 @@ public class Disease_Detail extends AppCompatActivity {
     private List<Bharam_Model> listing_models;
     ImageView mDiseasimg;
     int mDiseassub_cat_id;
-    TextView mTitle_txt, mDescrptn_txt, mShoola_of_txt,title_side_left;
-    LinearLayout mDiseassubcat_layout, mParent_layout;
-    String lSubcat_id;
+    TextView mTitle_txt, mShoola_of_txt, title_side_left;
+    TextView mDescrptn_txt, txt_viewmore;
+    LinearLayout mDiseassubcat_layout, mParent_layout, mTxt_shoola_layout, layout_commentsection;
+    String lSubcat_id, des, name;
     EditText msgEditText;
     ImageView backImageView;
     LinearLayout comment;
     PostCommentAsyncTask postCommentAsyncTask;
     TextView comment_count_txt;
+    View txtshoola_view;
     String lId, totalcomment;
+    private SpannableStringBuilder builder, builder1;
+    SpannableString span, spanStatus;
+    SpannableString str2, spanStatus2;
+
 
     @Override
     protected void onResume() {
@@ -99,13 +116,15 @@ public class Disease_Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.disaes_detail);
         backImageView = (ImageView) findViewById(R.id.back);
-        title_side_left=(TextView)findViewById(R.id.title_side_left);
+        title_side_left = (TextView) findViewById(R.id.title_side_left);
+        txt_viewmore = (TextView) findViewById(R.id.txt_viewmore);
+        txtshoola_view = (View) findViewById(R.id.txtshoola_view);
         msgEditText = (EditText) findViewById(R.id.etMessageBox);
+        layout_commentsection = (LinearLayout) findViewById(R.id.layout_commentsection);
         totalcomment = getIntent().getStringExtra("totalcomment");
         comment_count_txt = (TextView) findViewById(R.id.comment_count_txt);
         comment = (LinearLayout) findViewById(R.id.comment);
-        if(getIntent().hasExtra("name"))
-        {
+        if (getIntent().hasExtra("name")) {
             title_side_left.setText(getIntent().getStringExtra("name"));
         }
         backImageView.setOnClickListener(new View.OnClickListener() {
@@ -123,8 +142,6 @@ public class Disease_Detail extends AppCompatActivity {
                 Intent intent = new Intent(Disease_Detail.this, CommentsActivity.class);
                 intent.putExtra("feedId", mDiseassub_cat_id + "");
                 intent.putExtra("type", "2");
-
-
                 startActivity(intent);
             }
         });
@@ -147,6 +164,7 @@ public class Disease_Detail extends AppCompatActivity {
         mDescrptn_txt = (TextView) findViewById(R.id.descrptn_txt);
         mShoola_of_txt = (TextView) findViewById(R.id.shoola_of_txt);
         mParent_layout = (LinearLayout) findViewById(R.id.parent_layout);
+        mTxt_shoola_layout = (LinearLayout) findViewById(R.id.txt_shoola_layout);
         mDiseassubcat_layout = (LinearLayout) findViewById(R.id.diseassubcat_layout);
         mCircularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
         session = new SesstionManager(Disease_Detail.this);
@@ -160,6 +178,17 @@ public class Disease_Detail extends AppCompatActivity {
         } else {
             NetworkUtill.showNoInternetDialog(Disease_Detail.this);
         }
+
+        txt_viewmore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Disease_Detail.this, ViewMore_Data.class);
+                intent.putExtra("name", name);
+                intent.putExtra("description", des);
+                startActivity(intent);
+            }
+        });
     }
 
     class Asyank_Listing extends AsyncTask<Void, Void, Void> {
@@ -226,16 +255,70 @@ public class Disease_Detail extends AppCompatActivity {
                 try {
                     if (jo != null && jo.length() > 0) {
                         mParent_layout.setVisibility(View.VISIBLE);
-                        String totalcomment=jo.getJSONObject("response").getString("total_comment");
-                        comment_count_txt.setText(totalcomment +" Comments");
+                        String totalcomment = jo.getJSONObject("response").getString("total_comment");
+                        comment_count_txt.setText(totalcomment + " Comments");
                         JSONObject joj = jo.getJSONObject("response").getJSONObject("name");
                         JSONArray jsonArray = jo.getJSONObject("response").getJSONArray("disease_sub_list");
                         String image = joj.getString("img");
-                        String des = joj.getString("description");
-                        final String name = joj.getString("name");
+                        des = joj.getString("description");
+                        name = joj.getString("name");
                         lSubcat_id = joj.getString("sub_cat_id");
-                        mTitle_txt.setText(name);
-                        mDescrptn_txt.setText(Html.fromHtml(des));
+                        if (name != null && name.length() > 0) {
+                            mTitle_txt.setVisibility(View.VISIBLE);
+                            mTitle_txt.setText(Html.fromHtml(name));
+                        } else {
+                            mTitle_txt.setVisibility(View.GONE);
+                        }
+                        if (des != null && des.length() > 0) {
+                            mDescrptn_txt.setVisibility(View.VISIBLE);
+                            if (des.length() > 120) {
+                                txt_viewmore.setVisibility(View.VISIBLE);
+                                try {
+                                    builder1 = new SpannableStringBuilder();
+                                    spanStatus = new SpannableString(des.substring(0, 120));
+
+                                    spanStatus.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanStatus.length(), 0);
+                                    //  spanStatus.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    Methods.hyperlinkSet(mDescrptn_txt, spanStatus.toString(), Disease_Detail.this, 0, spanStatus);
+                                    builder1.append(spanStatus);
+                                    spanStatus2 = new SpannableString("...");
+                                    spanStatus2.setSpan(new ForegroundColorSpan(Color.rgb(36, 173, 219)), 0, spanStatus2.length(), 0);
+
+                                    builder1.append(spanStatus2);
+                                    ClickableSpan clickSpan1 = new ClickableSpan() {
+                                        @Override
+                                        public void updateDrawState(TextPaint ds) {
+                                            ds.setColor(Disease_Detail.this.getResources().getColor(R.color.cardbluebackground));// you can use custom color
+                                            ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                                            ds.setUnderlineText(false);// this remove the underline
+                                        }
+
+                                        @Override
+                                        public void onClick(View textView) {
+                                            Intent intent = new Intent(Disease_Detail.this, PostingActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    };
+                                    String thirdspan = spanStatus2.toString();
+                                    int third = builder1.toString().indexOf(thirdspan);
+                                    builder1.setSpan(clickSpan1, third, third + spanStatus2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    mDescrptn_txt.setText(Html.fromHtml(builder1 + ""), TextView.BufferType.SPANNABLE);
+                                    mDescrptn_txt.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+                                mDescrptn_txt.setText(Html.fromHtml(des));
+                                txt_viewmore.setVisibility(View.GONE);
+                            }
+
+                            //  mDescrptn_txt.setHtml(des, new HtmlResImageGetter(mDescrptn_txt));
+                        } else {
+                            mDescrptn_txt.setVisibility(View.GONE);
+                        }
                         if (image != null && image.length() > 0) {
                             mDiseasimg.setVisibility(View.VISIBLE);
                             Picasso.with(Disease_Detail.this)
@@ -246,14 +329,16 @@ public class Disease_Detail extends AppCompatActivity {
                         } else {
                             mDiseasimg.setVisibility(View.GONE);
                         }
-                        if (Html.fromHtml(des) != null && Html.fromHtml(des).length() > 270)
-                            makeTextViewResizable(mDescrptn_txt, 4, "view more", true);
-                        else {
+                        if (des != null && des.length() > 270) {
+                            //makeTextViewResizable(mDescrptn_txt, 4, "view more", true);
+                        } else {
                             mTitle_txt.setText(Html.fromHtml(des));
                         }
 
                         if (jsonArray != null && jsonArray.length() > 0) {
                             mDiseassubcat_layout.setVisibility(View.VISIBLE);
+                            txtshoola_view.setVisibility(View.VISIBLE);
+                            mTxt_shoola_layout.setVisibility(View.VISIBLE);
                             mShoola_of_txt.setText("Shoola of " + name);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -288,6 +373,8 @@ public class Disease_Detail extends AppCompatActivity {
                         } else {
                             mShoola_of_txt.setVisibility(View.GONE);
                             mDiseassubcat_layout.setVisibility(View.GONE);
+                            mTxt_shoola_layout.setVisibility(View.GONE);
+                            txtshoola_view.setVisibility(View.GONE);
                         }
                     } else {
                         mParent_layout.setVisibility(View.GONE);
@@ -486,5 +573,4 @@ public class Disease_Detail extends AppCompatActivity {
             }
         }
     }
-
 }

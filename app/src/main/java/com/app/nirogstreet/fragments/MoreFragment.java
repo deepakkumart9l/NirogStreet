@@ -40,6 +40,7 @@ import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.parser.UserDetailPaser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.ImageLoader;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -176,6 +177,7 @@ public class MoreFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.more, container, false);
+        Event_For_Firebase.getEventCount(getActivity(),"Feed_Profile_Visit");
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.circularProgressBar);
         session = new SesstionManager(context);
         customViewContainer = (FrameLayout) view.findViewById(R.id.customViewContainer);

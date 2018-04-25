@@ -154,7 +154,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent = new Intent(this, InviteNotificationListing.class);
             intent.putExtra("openMain", true);
         } else if (!courseId.equalsIgnoreCase("")) {
-
             intent = new Intent(this, Knowledge_Centre_Detail.class);
             intent.putExtra("openMain", true);
             intent.putExtra("courseID", courseId);
@@ -178,7 +177,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -186,7 +185,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.noti_back)
                     .setContentTitle("NirogStreet")
-                    .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody)).setColor(getResources().getColor(R.color.white))
+                    .setContentText(messageBody).setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(messageBody)).setColor(getResources().getColor(R.color.white))
 
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)

@@ -40,6 +40,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.QualificationParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.PathUtil;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -302,6 +303,7 @@ public class EditQualificationDetailOrAddQualificationsDetails extends AppCompat
                 public void onClick(View v) {
                     if (NetworkUtill.isNetworkAvailable(EditQualificationDetailOrAddQualificationsDetails.this)) {
                         if (validate()) {
+                            Event_For_Firebase.getEventCount(EditQualificationDetailOrAddQualificationsDetails.this,"Feed_Profile_UserProfile_Qualification_Save_Click");
                             String id = "";
 
                             id = qualificationModel.getId();

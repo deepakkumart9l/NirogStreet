@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e4edf0"
-
-
     android:orientation="vertical">
 
     <RelativeLayout
@@ -39,13 +37,13 @@
                 android:layout_marginLeft="40dp"
                 android:paddingBottom="@dimen/padding_10"
                 android:paddingLeft="@dimen/padding_10"
-                android:textStyle="bold"
-
                 android:paddingRight="18dp"
+
                 android:paddingTop="@dimen/padding_10"
                 android:text="Swanbhoota Yog"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -53,7 +51,6 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_below="@+id/header"
         android:orientation="vertical">
 
@@ -61,6 +58,7 @@
             android:id="@+id/parent_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <ImageView
@@ -84,32 +82,65 @@
                 android:text="name"
                 android:textColor="#000"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/descrptn_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:paddingBottom="15dp"
+                android:visibility="gone"
+                android:lines="5"
+                android:maxLines="5"
+                android:ems="3"
+                android:ellipsize="end"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="8dp"
                 android:textSize="16dp" />
 
+            <TextView
+                android:id="@+id/txt_viewmore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@color/white"
+                android:textColor="@color/cardbluebackground"
+                android:visibility="gone"
+                android:gravity="right"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="...View More"
+                android:textSize="16dp" />
+
+            <!-- <TextView
+                 android:id="@+id/descrptn_txt"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:visibility="gone"
+                 android:background="@color/white"
+                 android:paddingBottom="15dp"
+                 android:paddingLeft="15dp"
+                 android:paddingRight="15dp"
+                 android:paddingTop="8dp"
+                 android:textSize="16dp" />-->
+
             <View
+                android:id="@+id/txtshoola_view"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-
                 android:background="#e4edf0"
-
-                ></View>
+                android:visibility="gone"></View>
 
             <LinearLayout
+                android:id="@+id/txt_shoola_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
 
                 <TextView
@@ -120,10 +151,10 @@
                     android:layout_marginLeft="15.5dp"
                     android:layout_marginRight="15.5dp"
                     android:layout_marginTop="15dp"
-                    android:textStyle="bold"
                     android:text=""
                     android:textColor="#000"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
@@ -148,6 +179,7 @@
                 android:layout_height="10dp"></View>
 
             <LinearLayout
+                android:id="@+id/layout_commentsection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -165,11 +197,11 @@
                         android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
-                        android:textStyle="bold"
                         android:paddingTop="10dp"
                         android:text="Write Comment"
                         android:textColor="@color/black"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/comment_count_txt"
@@ -180,17 +212,18 @@
                         android:paddingBottom="10dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
-                        android:textStyle="bold"
-
                         android:paddingTop="10dp"
+
                         android:text="Comment"
                         android:textColor="@color/black"
-                        android:textSize="14dp" />
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:background="@color/white">
 
                     <RelativeLayout

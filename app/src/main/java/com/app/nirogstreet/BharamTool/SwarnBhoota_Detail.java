@@ -51,20 +51,22 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
     ImageView backImageView;
     String authToken, userId;
     String mimeType = "text/html";
+
     String encoding = "utf-8";
     TextView title_side_left, mDose_descrptn_txt, mIndication_descrptn_txt, mAction_descrptn_txt,
             mContraindications_descrptn_txt, mAnupan_descrptn_txt;
-    LinearLayout mParent_layout,mDose_layout,mIndiction_layout,mAction_layout,mContraindiction_layout,mAnupan_layout;
+    LinearLayout mParent_layout, mDose_layout, mIndiction_layout, mAction_layout, mContraindiction_layout, mAnupan_layout;
 
     WebView webView;
     int mSwarnbhoota_cat_id;
+    View dose_view, indication_view, contadiction_view, action_view, anupan_view;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swarnbhoota_detail);
-        backImageView=(ImageView)findViewById(R.id.back);
+        backImageView = (ImageView) findViewById(R.id.back);
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,20 +75,24 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
         });
         mSwarnbhoota_cat_id = getIntent().getIntExtra("sub_cat_id", 0);
         title_side_left = (TextView) findViewById(R.id.title_side_left);
+        dose_view = (View) findViewById(R.id.dose_view);
+        indication_view = (View) findViewById(R.id.indication_view);
+        action_view = (View) findViewById(R.id.action_view);
+        contadiction_view = (View) findViewById(R.id.contadiction_view);
+        anupan_view = (View) findViewById(R.id.anupan_view);
 
         String title;
-        if(getIntent().hasExtra("name"))
-        {
-            title=getIntent().getStringExtra("name");
+        if (getIntent().hasExtra("name")) {
+            title = getIntent().getStringExtra("name");
             title_side_left.setText(title);
 
         }
         mCircularProgressBar = (CircularProgressBar) findViewById(R.id.circularProgressBar);
-        mIndiction_layout=(LinearLayout)findViewById(R.id.indiction_layout);
-        mDose_layout=(LinearLayout)findViewById(R.id.dose_layout);
-        mAction_layout=(LinearLayout)findViewById(R.id.action_layout);
-        mContraindiction_layout=(LinearLayout)findViewById(R.id.contraindiction_layout);
-        mAnupan_layout=(LinearLayout)findViewById(R.id.anupan_layout);
+        mIndiction_layout = (LinearLayout) findViewById(R.id.indiction_layout);
+        mDose_layout = (LinearLayout) findViewById(R.id.dose_layout);
+        mAction_layout = (LinearLayout) findViewById(R.id.action_layout);
+        mContraindiction_layout = (LinearLayout) findViewById(R.id.contraindiction_layout);
+        mAnupan_layout = (LinearLayout) findViewById(R.id.anupan_layout);
 
         mDose_descrptn_txt = (TextView) findViewById(R.id.dose_descrptn_txt);
         mIndication_descrptn_txt = (TextView) findViewById(R.id.indication_descrptn_txt);
@@ -181,35 +187,53 @@ public class SwarnBhoota_Detail extends AppCompatActivity {
                         mParent_layout.setVisibility(View.VISIBLE);
                         JSONObject joj = jo.getJSONObject("response").getJSONObject("detail");
                         String des = joj.getString("ingredients");
-                        webView.loadDataWithBaseURL("fake://not/needed", des, mimeType, encoding, "");
-                        if(joj.getString("ingredients")!=null && joj.getString("ingredients").length()>0) {
-                            mDose_descrptn_txt.setText(Html.fromHtml(joj.getString("ingredients")));
-                        }else{
+                        if (des != null && des.length() > 0) {
+                            webView.setVisibility(View.VISIBLE);
+                            webView.loadDataWithBaseURL("fake://not/needed", des, mimeType, encoding, "");
+                        } else {
                             webView.setVisibility(View.GONE);
                         }
-                        if(joj.getString("indication")!=null && joj.getString("indication").length()>0) {
+                        if (joj.getString("dose") != null && joj.getString("dose").length() > 0) {
+                            dose_view.setVisibility(View.VISIBLE);
+                            mDose_layout.setVisibility(View.VISIBLE);
+                            mDose_descrptn_txt.setText(Html.fromHtml(joj.getString("dose")));
+                        } else {
+                            mDose_layout.setVisibility(View.GONE);
+                            dose_view.setVisibility(View.GONE);
+                        }
+
+                        if (joj.getString("indication") != null && joj.getString("indication").length() > 0) {
+                            indication_view.setVisibility(View.VISIBLE);
                             mIndiction_layout.setVisibility(View.VISIBLE);
                             mIndication_descrptn_txt.setText(joj.getString("indication"));
-                        }else{
+                        } else {
                             mIndiction_layout.setVisibility(View.GONE);
+                            indication_view.setVisibility(View.GONE);
                         }
-                        if(joj.getString("action")!=null && joj.getString("action").length()>0) {
+
+                        if (joj.getString("action") != null && joj.getString("action").length() > 0) {
+                            action_view.setVisibility(View.VISIBLE);
                             mAction_layout.setVisibility(View.VISIBLE);
                             mAction_descrptn_txt.setText(joj.getString("action"));
-                        }else{
+                        } else {
                             mAction_layout.setVisibility(View.GONE);
+                            action_view.setVisibility(View.GONE);
                         }
-                        if(joj.getString("contraindications")!=null && joj.getString("contraindications").length()>0) {
+                        if (joj.getString("contraindications") != null && joj.getString("contraindications").length() > 0) {
+                            contadiction_view.setVisibility(View.VISIBLE);
                             mContraindiction_layout.setVisibility(View.VISIBLE);
                             mContraindications_descrptn_txt.setText(joj.getString("contraindications"));
-                        }else{
+                        } else {
+                            contadiction_view.setVisibility(View.GONE);
                             mContraindiction_layout.setVisibility(View.GONE);
                         }
-                        if(joj.getString("anupan")!=null && joj.getString("anupan").length()>0) {
+                        if (joj.getString("anupan") != null && joj.getString("anupan").length() > 0) {
+                            anupan_view.setVisibility(View.VISIBLE);
                             mAnupan_layout.setVisibility(View.VISIBLE);
                             mAnupan_descrptn_txt.setText(joj.getString("anupan"));
-                        }else{
+                        } else {
                             mAnupan_layout.setVisibility(View.GONE);
+                            anupan_view.setVisibility(View.GONE);
                         }
 
                     } else {

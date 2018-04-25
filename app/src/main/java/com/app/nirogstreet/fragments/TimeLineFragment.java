@@ -14,6 +14,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ import com.app.nirogstreet.model.FeedModel;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.Methods;
 import com.app.nirogstreet.uttil.NetworkUtill;
 import com.app.nirogstreet.uttil.SesstionManager;
@@ -50,6 +52,8 @@ import com.google.android.gms.cast.framework.SessionManager;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +86,7 @@ public class TimeLineFragment extends Fragment {
     RecyclerView recyclerView;
     int totalPageCount;
     private boolean isLoading = false;
+
     StringRequest stringRequest;
     FrameLayout customViewContainer;
     int page = 1;
@@ -96,6 +101,7 @@ public class TimeLineFragment extends Fragment {
     private UserFeedsAsyncTask userFeedsAsyncTask;
     private SesstionManager session;
     String authToken, userId;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,6 +199,7 @@ public class TimeLineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.timeline_feed, container, false);
+        Event_For_Firebase.getEventCount(getActivity(), "Feed");
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView.setNestedScrollingEnabled(true);
         customViewContainer = (FrameLayout) view.findViewById(R.id.customViewContainer);
@@ -399,10 +406,8 @@ public class TimeLineFragment extends Fragment {
                             }
                         });
                     }
-
                 } else {
                     feedsAdapter.notifyDataSetChanged();
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();

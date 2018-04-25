@@ -12,17 +12,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
@@ -55,6 +57,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -85,6 +88,7 @@ import com.app.nirogstreet.model.UserDetailModel;
 import com.app.nirogstreet.parser.FeedParser;
 import com.app.nirogstreet.uttil.AppUrl;
 import com.app.nirogstreet.uttil.ApplicationSingleton;
+import com.app.nirogstreet.uttil.Event_For_Firebase;
 import com.app.nirogstreet.uttil.ExpandableTextView;
 import com.app.nirogstreet.uttil.GoToURLSpan;
 import com.app.nirogstreet.uttil.ImageProcess;
@@ -102,12 +106,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 
 import javax.net.ssl.SSLContext;
@@ -127,8 +135,11 @@ import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.SharingHelper;
+import io.branch.referral.util.BranchContentSchema;
 import io.branch.referral.util.ContentMetadata;
+import io.branch.referral.util.CurrencyType;
 import io.branch.referral.util.LinkProperties;
+import io.branch.referral.util.ProductCategory;
 import io.branch.referral.util.ShareSheetStyle;
 
 /**
@@ -139,7 +150,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     int positionat;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     SpannableString str2, spanStatus2;
-    String text, videourl, title;
+    String text, videourl, title,deeplink_title,deeplink_descrptn;
     SpannableString span, spanStatus;
 
     private static String[] PERMISSIONS_STORAGE = {
@@ -188,11 +199,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         authToken = userDetails.get(SesstionManager.AUTH_TOKEN);
         userId = userDetails.get(SesstionManager.USER_ID);
         mWebViewClient = new myWebViewClient();
-
         mWebChromeClient = new myWebChromeClient();
-
     }
-
     private boolean isPositionHeader(int position) {
         return position == 0;
     }
@@ -231,6 +239,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, PostingActivity.class);
+                        Event_For_Firebase.getEventCount(context, "Feed_PostArticle_Click");
                         if (!groupId.equalsIgnoreCase("")) {
                             intent.putExtra("groupId", groupId);
                         }
@@ -274,7 +283,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     display.getMetrics(outMetrics);
                     float scWidth = outMetrics.widthPixels;
                     viewHolder.feedImageView.getLayoutParams().width = (int) scWidth;
-                    viewHolder.feedImageView.getLayoutParams().height = (int) (scWidth * 0.6f);
+                    viewHolder.feedImageView.getLayoutParams().height = (int) (scWidth * 1.8f);
                     viewHolder.linkTitleTextView.setVisibility(View.GONE);
                     viewHolder.linkDescriptiontextView.setVisibility(View.GONE);
                     viewHolder.feedImageView.setVisibility(View.GONE);
@@ -611,7 +620,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedModel.getMessage() != null && !feedModel.getMessage().equalsIgnoreCase("")) {
 
                         viewHolder.statusTextView.setVisibility(View.VISIBLE);
-                        if (feedModel.getMessage().length() > 170) {
+                        if (feedModel.getMessage().length() > 170)
+                        {
                             try {
                                 builder1 = new SpannableStringBuilder();
                                 spanStatus = new SpannableString(feedModel.getMessage().substring(0, 170));
@@ -634,6 +644,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                     @Override
                                     public void onClick(View textView) {
+                                        Event_For_Firebase.getEventCount(context, "Feed_Post_ViewMore_Click");
                                         ApplicationSingleton.setPostSelectedPostion(position);
                                         Intent intent = new Intent(context, PostDetailActivity.class);
                                         intent.putExtra("feedId", feedModel.getFeed_id());
@@ -643,7 +654,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 String thirdspan = spanStatus2.toString();
                                 int third = builder1.toString().indexOf(thirdspan);
                                 builder1.setSpan(clickSpan1, third, third + spanStatus2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                viewHolder.statusTextView.setText(builder1, TextView.BufferType.SPANNABLE);
+
+                                   viewHolder.statusTextView.setText(builder1, TextView.BufferType.SPANNABLE);
                                 viewHolder.statusTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
 
@@ -653,10 +665,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         } else {
                             viewHolder.statusTextView.setText(feedModel.getMessage());
                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                                Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context, feedModel.getIs_pin());
+                                Methods.hyperlink(viewHolder.statusTextView, feedModel.getMessage(), context, feedModel.getIs_pin(),feedModel.getIn_app());
                             }
                         }
-
 
                     } else {
                         viewHolder.statusTextView.setVisibility(View.GONE);
@@ -717,8 +728,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, CommentsActivity.class);
                                 intent.putExtra("feedId", feedModel.getFeed_id());
-                                intent.putExtra("type","1");
-                                context.startActivity(intent);                            }
+                                intent.putExtra("type", "1");
+                                context.startActivity(intent);
+                            }
                         });
                         viewHolder.comment_section.setVisibility(View.VISIBLE);
                         if (feedModel.getCommentsModel().getProfile_pic_url() != null) {
@@ -729,7 +741,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         } else {
                             viewHolder.profileImage.setImageResource(R.drawable.user);
                         }
-                   //     viewHolder.user_comment.setText(feedModel.commentsModel.getComment());
+                        //     viewHolder.user_comment.setText(feedModel.commentsModel.getComment());
                         if (feedModel.commentsModel.getComment().length() > 120) {
                             try {
                                 builder1 = new SpannableStringBuilder();
@@ -737,7 +749,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                 spanStatus.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanStatus.length(), 0);
                                 //  spanStatus.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                Methods.hyperlinkSet(viewHolder.user_comment, spanStatus.toString(), context,0, spanStatus);
+                                Methods.hyperlinkSet(viewHolder.user_comment, spanStatus.toString(), context, 0, spanStatus);
                                 builder1.append(spanStatus);
                                 spanStatus2 = new SpannableString(" ... view more");
                                 spanStatus2.setSpan(new ForegroundColorSpan(Color.rgb(148, 148, 156)), 0, spanStatus2.length(), 0);
@@ -784,21 +796,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, CommentsActivity.class);
                                 intent.putExtra("feedId", feedModel.getFeed_id());
-                                intent.putExtra("type","1");
+                                intent.putExtra("type", "1");
                                 context.startActivity(intent);
                             }
                         });
                         viewHolder.profileImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Methods.openUserActivities(context,feedModel.getCommentsModel().getUserId(),feedModel.getCommentsModel().getName(),feedModel.getCommentsModel().getProfile_pic_url(),feedModel.getCommentsModel().getTitle(),feedModel.getCommentsModel().getUser_type());
+                                Methods.openUserActivities(context, feedModel.getCommentsModel().getUserId(), feedModel.getCommentsModel().getName(), feedModel.getCommentsModel().getProfile_pic_url(), feedModel.getCommentsModel().getTitle(), feedModel.getCommentsModel().getUser_type());
 
                             }
                         });
                         viewHolder.commenter_name.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Methods.openUserActivities(context,feedModel.getCommentsModel().getUserId(),feedModel.getCommentsModel().getName(),feedModel.getCommentsModel().getProfile_pic_url(),feedModel.getCommentsModel().getTitle(),feedModel.getCommentsModel().getUser_type());
+                                Methods.openUserActivities(context, feedModel.getCommentsModel().getUserId(), feedModel.getCommentsModel().getName(), feedModel.getCommentsModel().getProfile_pic_url(), feedModel.getCommentsModel().getTitle(), feedModel.getCommentsModel().getUser_type());
 
                             }
                         });
@@ -814,11 +826,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             viewHolder.timeStampTextView.setText(relavetime1);
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }                    }
+                        }
+                    }
                     if (feedModel.getTitleQuestion() != null && !feedModel.getTitleQuestion().equalsIgnoreCase("")) {
                         viewHolder.QuestionTextView.setText(feedModel.getTitleQuestion().trim().toString());
                         viewHolder.QuestionTextView.setVisibility(View.VISIBLE);
-                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context, feedModel.getIs_pin());
+                        Methods.hyperlink(viewHolder.QuestionTextView, feedModel.getTitleQuestion(), context, feedModel.getIs_pin(),feedModel.getIn_app());
 
                     } else {
                         viewHolder.QuestionTextView.setVisibility(View.GONE);
@@ -835,7 +848,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         public void onClick(View view) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             context.startActivity(intent);
 
@@ -844,6 +857,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.likeFeedLinearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
@@ -856,17 +870,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.feeddeletelistingLinearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            sharePopup(viewHolder.feeddeletelistingLinearLayout, feedModel);
+                            Event_For_Firebase.getEventCount(context, "Feed_Post_Share_Click");
+                            sharePopup(viewHolder.feeddeletelistingLinearLayout, viewHolder.feedImageView, feedModel);
                         }
                     });
 
                     viewHolder.feedlikeimg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Event_For_Firebase.getEventCount(context, "Feed_Post_Like_Click");
                             positionat = position;
                             if (NetworkUtill.isNetworkAvailable(context)) {
                                 LikePostAsynctask likePostAsynctask = new LikePostAsynctask(feedModel.getFeed_id(), userId, authToken, feedModel.getUser_has_liked());
-                                likePostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
+                                likePostAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                ;
                             } else {
                                 NetworkUtill.showNoInternetDialog(context);
                             }
@@ -918,6 +935,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.likesTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             Intent intent = new Intent(context, LikesDisplayActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
                             context.startActivity(intent);
@@ -928,7 +946,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         public void onClick(View v) {
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             ApplicationSingleton.setPost_position(position);
 
@@ -938,9 +956,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     viewHolder.feedcommentlistingLinearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Event_For_Firebase.getEventCount(context, "Feed_Post_Comment_Click");
                             Intent intent = new Intent(context, CommentsActivity.class);
                             intent.putExtra("feedId", feedModel.getFeed_id());
-                            intent.putExtra("type","1");
+                            intent.putExtra("type", "1");
 
                             ApplicationSingleton.setPost_position(position);
 
@@ -987,14 +1006,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 viewHolder.profilePicparent.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
                                         //Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
                                     }
                                 });
                                 viewHolder.parentname.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                        Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
                                         //    Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
 
@@ -1034,10 +1053,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                                         ds.setUnderlineText(false);// this remove the underline
                                     }
-
                                     @Override
                                     public void onClick(View textView) {
-
                                     }
                                 };
 
@@ -1083,7 +1100,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     @Override
                                     public void onClick(View textView) {
                                         if (!feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId())) {
-                                            Methods.openUserActivities(context,feedModel.getCreatedBy().getUserId(),feedModel.getCreatedBy().getName(),feedModel.getCreatedBy().getProfile_pic(),feedModel.getCreatedBy().getTitle(),feedModel.getCreatedBy().getUser_Type());
+                                            Methods.openUserActivities(context, feedModel.getCreatedBy().getUserId(), feedModel.getCreatedBy().getName(), feedModel.getCreatedBy().getProfile_pic(), feedModel.getCreatedBy().getTitle(), feedModel.getCreatedBy().getUser_Type());
 
 
                                             //   Methods.profileUser(feedModel.getCreatedBy().getUser_Type(), context, feedModel.getCreatedBy().getUserId());
@@ -1091,7 +1108,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         }
                                     }
                                 };
-
 
                                 String fourthspan = str2.toString();
                                 int fourth = builder.toString().indexOf(fourthspan);
@@ -1101,7 +1117,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                 if (feedModel.getCreatedBy().getUserId().equalsIgnoreCase(feedModel.getUserDetailModel_creator().getUserId()) && feedModel.getShareWithModels() != null && feedModel.getShareWithModels().size() > 0 && !feedModel.getShareWithModels().get(0).getShareType().equalsIgnoreCase("Public share")) {
                                     if (feedModel.getCommunity_Id() != null && !feedModel.getCommunity_Id().equalsIgnoreCase("") && feedModel.getCommunity_name() != null && !feedModel.getCommunity_name().equalsIgnoreCase(""))
-
                                         str2 = new SpannableString(" post in ");
                                     else
                                         str2 = new SpannableString(" post ");
@@ -1243,7 +1258,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         @Override
                         public void onClick(View textView) {
-                            Methods.openUserActivities(context,userDetailModel.getUserId(),userDetailModel.getName(),userDetailModel.getProfile_pic(),userDetailModel.getTitle(),userDetailModel.getUser_Type());
+                            Methods.openUserActivities(context, userDetailModel.getUserId(), userDetailModel.getName(), userDetailModel.getProfile_pic(), userDetailModel.getTitle(), userDetailModel.getUser_Type());
 
                             //   Methods.profileUser(userDetailModel.getUser_Type(), context, userDetailModel.getUserId());
 
@@ -1324,13 +1339,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView likesTextView, commntsTextView;
         TextView statusTextView;
         CircleImageView profilePicparent;
-        ProportionalImageView  feedImageView;
+        ImageView feedImageView;
         TextView nameTextView, QuestionTextView,
                 timeStampTextView, announcementTextView,
                 noOfLikeTextView, whisesTextView, noOfCommentTextView,
                 linkTitleTextView, linkDescriptiontextView, docNameTextView, docTypeTextView,
                 anniversaryTextView, announcementTypeTextView, notificationTitleTextView, viewAllTextView, moreviewTextView;
-        ImageView  linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
+        ImageView linkImageView, anniverasaryLayoutImage, docImageView, announcementImage, userImage, feedlikeimg, cancelAnnouncementImageView, basicAnnouncemetImage;
         LinearLayout docTypeLayout, sharedLay, announcementLinearLayout, feeddeletelistingLinearLayout, CommentSectionLinearLayout, feedcommentlistingLinearLayout, feedcommentlisting, feedlikeLinearLayout, likeFeedLinearLayout, share_feedLinearLayout, normalFeedLayout, cardshoderLinearLayout;
         CircleImageView profileImageView;
         FrameLayout frameVideoFrameLayout;
@@ -1423,7 +1438,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             linkDescriptiontextView = (TextView) itemView.findViewById(R.id.description);
             linkTitleTextView = (TextView) itemView.findViewById(R.id.title);
             profileImageView = (CircleImageView) itemView.findViewById(R.id.profilePic);
-            feedImageView = (ProportionalImageView) itemView.findViewById(R.id.feedImage);
+            feedImageView = (ImageView) itemView.findViewById(R.id.feedImage);
             linkImageView = (ImageView) itemView.findViewById(R.id.linkImage);
             CommentSectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.CommentSection);
             basicAnnouncemet_view = (View) itemView.findViewById(R.id.basicAnnouncemet_view);
@@ -1596,8 +1611,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void sharePopup(LinearLayout view, final FeedModel feedModel) {
-        PopupMenu popup = new PopupMenu((Activity)context, view);
+    public void sharePopup(LinearLayout view, final ImageView imageView, final FeedModel feedModel) {
+        PopupMenu popup = new PopupMenu((Activity) context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_share, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                              public boolean onMenuItemClick(MenuItem item) {
@@ -1607,6 +1622,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                  //  System.out.print(index);
                                                  switch (item.getItemId()) {
                                                      case R.id.publicshare:
+                                                         Event_For_Firebase.getEventCount(context, "Feed_Post_Share_PublicButton_Click");
                                                          Intent intent = new Intent(context, PublicShare.class);
                                                          intent.putExtra("feedId", feedModel.getFeed_id());
                                                          intent.putExtra("userId", userId);
@@ -1624,165 +1640,110 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                          }*/
                                                          break;
                                                      case R.id.groupstimeline:
+                                                         Event_For_Firebase.getEventCount(context, "Feed_Post_Share_ShareCommunityButton_Click");
                                                          Intent intent1 = new Intent(context, ShareOnFriendsTimeline.class);
-
                                                          intent1.putExtra("feedId", feedModel.getFeed_id());
                                                          if (feedModel.getParentFeedDetail() != null) {
                                                              intent1.putExtra("parentFeedId", feedModel.getParent_feed());
-
                                                          }
                                                          intent1.putExtra("userId", userId);
                                                          intent1.putExtra("shareOnGroup", true);
                                                          context.startActivity(intent1);
-
                                                          break;
                                                      case R.id.share_exteraly:
                                                          try {
-                                                             if (feedModel.getMessage() != null && feedModel.getMessage().length() > 0) {
-                                                                 text = feedModel.getMessage();
-                                                                 /*BranchUniversalObject buo = new BranchUniversalObject()
-                                                                         .setCanonicalIdentifier("content/12345")
-                                                                         .setTitle("My Content Title")
-                                                                         .setContentDescription("My Content Description")
-                                                                         .setContentImageUrl("https://lorempixel.com/400/400")
-                                                                         .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                                                                         //.setLocalIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                                                                         .setContentMetadata(new ContentMetadata().addCustomMetadata("postId", feedModel.getFeed_id()));
-
-                                                                 LinkProperties lp = new LinkProperties()
-                                                                         .setChannel("facebook")
-                                                                         .setFeature("sharing")
-                                                                         //.setCampaign("content 123 launch")
-                                                                         .setStage("new user")
-                                                                         .addControlParameter("$desktop_url", "http://example.com/home")
-                                                                         .addControlParameter("custom", "data")
-                                                                         .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
-
-                                                                 ShareSheetStyle ss = new ShareSheetStyle(context, "Check this out!", "This stuff is awesome: ")
-                                                                         .setCopyUrlStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
-                                                                         .setMoreOptionStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_search), "Show more")
-                                                                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
-                                                                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
-                                                                         .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE).setAsFullWidthStyle(true)
-                                                                         .setSharingTitle("Share With");
-                                                                         //.addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT)
-
-
-                                                                 buo.showShareSheet(activity, lp,  ss,  new Branch.BranchLinkShareListener() {
-                                                                     @Override
-                                                                     public void onShareLinkDialogLaunched() {
-                                                                     }
-                                                                     @Override
-                                                                     public void onShareLinkDialogDismissed() {
-                                                                     }
-                                                                     @Override
-                                                                     public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
-                                                                         System.out.print(sharedLink);
-                                                                     }
-                                                                     @Override
-                                                                     public void onChannelSelected(String channelName) {
-                                                                     }
-
-                                                                 });*/
+                                                             text = feedModel.getMessage();
+                                                             deeplink_title=feedModel.getDoc_name();
+                                                             if(feedModel.getMessage()!=null && feedModel.getMessage().length()>0) {
+                                                                 deeplink_descrptn = feedModel.getMessage();
+                                                             }else{
+                                                                 deeplink_descrptn="Read it on NirogStreet app";
                                                              }
 
-                                                             String path = null;
-                                                             Uri imageUri = null;
-                                                             ArrayList<Uri> files = new ArrayList<Uri>();
-                                                             if (feedModel.getFeedSourceArrayList() != null && feedModel.getFeedSourceArrayList().size() > 0) {
-                                                                 try {
-                                                                     for (int i = 0; i < feedModel.getFeedSourceArrayList().size(); i++) {
-                                                                         URL url = new URL(feedModel.getFeedSourceArrayList().get(i));
-                                                                         Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                                             BranchUniversalObject buo = new BranchUniversalObject()
+                                                                     .setCanonicalIdentifier("content/12345")
+                                                                     .setTitle(deeplink_title)
+                                                                     .setContentDescription(deeplink_descrptn)
+                                                                     .setContentImageUrl("https://lorempixel.com/400/400")
+                                                                     .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                                     //.setLocalIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                                                                     .setContentMetadata(new ContentMetadata().addCustomMetadata("postId", feedModel.getFeed_id()));
 
-                                                                         Uri bitmapUri = null;
-
-                                                                         String bitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, "title", null);
-                                                                         bitmapUri = Uri.parse(bitmapPath);
-                                                                         files.add(bitmapUri);
+                                                             LinkProperties lp = new LinkProperties()
+                                                                     .setChannel("facebook")
+                                                                     .setFeature("sharing")
+                                                                     //.setCampaign("content 123 launch")
+                                                                     .setStage("new user")
+                                                                     .addControlParameter("$desktop_url", "http://example.com/home")
+                                                                     .addControlParameter("custom", "data")
+                                                                     .addControlParameter("custom_random", Long.toString(Calendar.getInstance().getTimeInMillis()));
+                                                             buo.generateShortUrl(context, lp, new Branch.BranchLinkCreateListener() {
+                                                                 @Override
+                                                                 public void onLinkCreate(String url, BranchError error) {
+                                                                     if (error == null) {
+                                                                         Log.i("BRANCH SDK", "got my Branch link to share: " + url);
                                                                      }
-                                                                     //  f.getAbsoluteFile();
-                                                                 } catch (IOException e) {
-                                                                     System.out.println(e);
                                                                  }
-                                                             }
-                                                             if (feedModel.getTitleQuestion() != null && feedModel.getTitleQuestion().length() > 0) {
-                                                                 title = feedModel.getTitleQuestion();
-                                                             }
-                                                             if (feedModel.getLink_type() != null && feedModel.getLink_type().equalsIgnoreCase("2")) {
+                                                             });
+                                                             ShareSheetStyle ss = new ShareSheetStyle(context, "Check this out!", "Click on this link to read ")
+                                                                     .setCopyUrlStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
+                                                                     .setMoreOptionStyle(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_search), "Show more")
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.WHATS_APP)
 
-                                                                 videourl = feedModel.getFeed_source();
-                                                             }
-                                                             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                                                             shareIntent.setType("text/plain");
-                                                             if (files != null && files.size() > 0) {
-                                                                 // shareIntent.setDataAndType(imageUri,context. getContentResolver().getType(imageUri));
+                                                                     .setAsFullWidthStyle(true)
+                                                                     .setSharingTitle("Share With")
+                                                                     .addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT);
 
-                                                                 shareIntent.putExtra(Intent.EXTRA_STREAM, files);
-                                                                 shareIntent.setType("image/*");
-                                                                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                                             }
-                                                             if (title != null && title.length() > 0 || text != null && text.length() > 0 || videourl != null && videourl.length() > 0 || files.size() > 0 || feedModel.getLink_type() != null) {
-                                                                 if (title != null && title.length() > 0 && text != null && text.length() > 0 && videourl != null && videourl.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text + "\n\n" + videourl);
-                                                                 } else if (title != null && title.length() > 0 && text != null && text.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n\n" + text);
-                                                                 } else if (title != null && title.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, title);
-                                                                 } else if (text != null && text.length() > 0) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                                                                 } else if (feedModel.getLink_type() != null) {
-                                                                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedModel.getFeed_source());
 
+                                                             buo.showShareSheet((Activity) context, lp, ss, new Branch.BranchLinkShareListener() {
+                                                                 @Override
+                                                                 public void onShareLinkDialogLaunched() {
                                                                  }
-                                                                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "I found this Etiquettes ");
-                                                                context.startActivity(Intent.createChooser(shareIntent,
-                                                                         context.getResources().getString(R.string.share_with)));
 
+                                                                 @Override
+                                                                 public void onShareLinkDialogDismissed() {
+                                                                 }
 
-                                                             }
+                                                                 @Override
+                                                                 public void onLinkShareResponse(String sharedLink, String sharedChannel, BranchError error) {
+                                                                     Log.e("sharelink", "" + sharedLink);
+                                                                 }
+
+                                                                 @Override
+                                                                 public void onChannelSelected(String channelName) {
+                                                                 }
+                                                             });
                                                          } catch (Exception e) {
                                                              // TODO: handle exception
                                                              e.printStackTrace();
                                                          }
                                                          break;
                                                  }
-                /*if (item.getTitle().equals(R.string.SharePublic)) {
 
-
-                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
-
-                } else {
-
-                }*/
                                                  return true;
                                              }
                                          }
 
         );
-
         popup.show();//showing popup menu
     }
 
     public void deleteOrEditPopup(ImageView view, final FeedModel feedModel, final int position) {
-        PopupMenu popup = new PopupMenu((Activity)context, view);
+        PopupMenu popup = new PopupMenu((Activity) context, view);
         popup.getMenuInflater().inflate(R.menu.popup_menu_edit_delete, popup.getMenu());
-
         if (feedModel.getParentFeedDetail() != null) {
             popup.getMenu().getItem(0).setVisible(false);
         }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                //        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-                //  int index = info.position;
-                //  System.out.print(index);
                 switch (item.getItemId()) {
                     case R.id.edit:
-
-
                         Intent intent = new Intent(context, PostEditActivity.class);
                         intent.putExtra("position", position);
+                        intent.putExtra("title",feedModel.getTitleQuestion());
                         intent.putExtra("feedId", feedModel.getFeed_id());
                         context.startActivity(intent);
                         break;
@@ -1790,18 +1751,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         setDialog(feedModel);
                         break;
                 }
-                /*if (item.getTitle().equals(R.string.SharePublic)) {
-
-
-                } else if (item.getTitle().equals(R.string.shareonFriendsTimeline)) {
-
-                } else {
-
-                }*/
                 return true;
             }
         });
-
         popup.show();//showing popup menu
     }
 
@@ -1827,9 +1779,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
         builder.show();
-// Set other dialog properties
-
-// Create the AlertDialog
         AlertDialog dialog = builder.create();
     }
 
@@ -2020,7 +1969,46 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    // Returns the URI path to the Bitmap displayed in specified ImageView
+    public Uri getLocalBitmapUri(ImageView imageView) {
+        // Extract Bitmap from ImageView drawable
+        Drawable drawable = imageView.getDrawable();
+        Bitmap bmp = null;
+        if (drawable instanceof BitmapDrawable) {
+            bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        } else {
+            return null;
+        }
+        // Store image to default external storage directory
+        Uri bmpUri = null;
+        try {
+            File file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
+            file.getParentFile().mkdirs();
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            bmpUri = Uri.fromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
+    }
 }
 
 
