@@ -112,7 +112,6 @@
         <activity
             android:name=".activites.Student_Profile"
             android:screenOrientation="portrait" />
-        <activity android:name=".activites.Test" />
         <activity
             android:name=".activites.MyActivities"
             android:launchMode="standard"
